@@ -1,0 +1,3034 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "packages/cli/src/release-extensions.ts": 661,
+    "packages/cli/src/release-surface-record.ts": 251
+  },
+  "anchors": [
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 1,
+      "column": 87,
+      "expression": "\"node:fs\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-001",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 2,
+      "column": 31,
+      "expression": "\"node:module\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-002",
+      "kind": "excluded",
+      "english": "node:module",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 3,
+      "column": 62,
+      "expression": "\"node:path\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-003",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 4,
+      "column": 31,
+      "expression": "\"node:url\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-004",
+      "kind": "excluded",
+      "english": "node:url",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 12,
+      "column": 8,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-005",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 13,
+      "column": 48,
+      "expression": "\"./camoufox-adapter.js\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-006",
+      "kind": "excluded",
+      "english": "./camoufox-adapter.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 14,
+      "column": 45,
+      "expression": "\"./cli-messages.js\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-007",
+      "kind": "excluded",
+      "english": "./cli-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 15,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-008",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 26,
+      "column": 17,
+      "expression": "\"jouzu.cli.releaseExtensions.disabledTools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-001",
+      "kind": "catalog",
+      "english": "Disabled tools: { $tools }.",
+      "catalog_id": "jouzu.cli.releaseExtensions.disabledTools"
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 27,
+      "column": 15,
+      "expression": "\"jouzu.cli.releaseExtensions.unavailable\"",
+      "item_id": "RELEASE-SURFACE-TEXT-002",
+      "kind": "catalog",
+      "english": "Optional extension { $package }@{ $version } is unavailable.{ $tools } { $error } Run `jz doctor` for details.",
+      "catalog_id": "jouzu.cli.releaseExtensions.unavailable"
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 28,
+      "column": 23,
+      "expression": "\"jouzu.cli.releaseExtensions.requiredUnavailable\"",
+      "item_id": "RELEASE-SURFACE-TEXT-003",
+      "kind": "catalog",
+      "english": "release-owned extensions are unavailable: { $errors }",
+      "catalog_id": "jouzu.cli.releaseExtensions.requiredUnavailable"
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 29,
+      "column": 11,
+      "expression": "\"jouzu.cli.releaseExtensions.warning\"",
+      "item_id": "RELEASE-SURFACE-TEXT-004",
+      "kind": "catalog",
+      "english": "Jouzu warning: { $message }",
+      "catalog_id": "jouzu.cli.releaseExtensions.warning"
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 30,
+      "column": 15,
+      "expression": "\"jouzu.cli.releaseExtensions.conflict.one\"",
+      "item_id": "RELEASE-SURFACE-TEXT-005",
+      "kind": "catalog",
+      "english": "conflicts with Jouzu release-owned tool \"{ $tool }\"; disable this extension or its package with `jz config`",
+      "catalog_id": "jouzu.cli.releaseExtensions.conflict.one"
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 31,
+      "column": 16,
+      "expression": "\"jouzu.cli.releaseExtensions.conflict.many\"",
+      "item_id": "RELEASE-SURFACE-TEXT-006",
+      "kind": "catalog",
+      "english": "conflicts with Jouzu release-owned tools { $tools }; disable this extension or its package with `jz config`",
+      "catalog_id": "jouzu.cli.releaseExtensions.conflict.many"
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 47,
+      "column": 12,
+      "expression": "\"jouzu-lazy-camoufox\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-009",
+      "kind": "excluded",
+      "english": "jouzu-lazy-camoufox",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 106,
+      "column": 35,
+      "expression": "\"config\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-010",
+      "kind": "excluded",
+      "english": "config",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 106,
+      "column": 45,
+      "expression": "\"install\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-011",
+      "kind": "excluded",
+      "english": "install",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 106,
+      "column": 56,
+      "expression": "\"list\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-012",
+      "kind": "excluded",
+      "english": "list",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 106,
+      "column": 64,
+      "expression": "\"remove\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-013",
+      "kind": "excluded",
+      "english": "remove",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 106,
+      "column": 74,
+      "expression": "\"uninstall\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-014",
+      "kind": "excluded",
+      "english": "uninstall",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 106,
+      "column": 87,
+      "expression": "\"update\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-015",
+      "kind": "excluded",
+      "english": "update",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 107,
+      "column": 28,
+      "expression": "/^(?!\\/)(?!.*(?:^|\\/)\\.\\.(?:\\/|$))[^\\\\\\0]+$/u",
+      "item_id": "RELEASE-SURFACE-TEXT-X-016",
+      "kind": "excluded",
+      "english": "/^(?!\\/)(?!.*(?:^|\\/)\\.\\.(?:\\/|$))[^\\\\\\0]+$/u",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 110,
+      "column": 23,
+      "expression": "\"./release-extensions.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-017",
+      "kind": "excluded",
+      "english": "./release-extensions.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 111,
+      "column": 46,
+      "expression": "\"utf8\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-018",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 118,
+      "column": 19,
+      "expression": "\"release extension manifest is invalid\"",
+      "item_id": "RELEASE-SURFACE-TEXT-007",
+      "kind": "fixed",
+      "english": "release extension manifest is invalid",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 126,
+      "column": 37,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-019",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 129,
+      "column": 59,
+      "expression": "\"utf8\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-020",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 136,
+      "column": 43,
+      "expression": "`could not locate package root from ${entry}`",
+      "item_id": "RELEASE-SURFACE-TEXT-008",
+      "kind": "fixed",
+      "english": "could not locate package root from ${entry}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 143,
+      "column": 34,
+      "expression": "`${name}/package.json`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-021",
+      "kind": "excluded",
+      "english": "${name}/package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 153,
+      "column": 68,
+      "expression": "\"name\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-022",
+      "kind": "excluded",
+      "english": "name",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 153,
+      "column": 77,
+      "expression": "\"version\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-023",
+      "kind": "excluded",
+      "english": "version",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 154,
+      "column": 33,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-024",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 156,
+      "column": 63,
+      "expression": "\"package.json is not a regular file\"",
+      "item_id": "RELEASE-SURFACE-TEXT-009",
+      "kind": "fixed",
+      "english": "package.json is not a regular file",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 157,
+      "column": 56,
+      "expression": "\"utf8\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-025",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 160,
+      "column": 4,
+      "expression": "`resolved ${String(metadata.name)}@${String(metadata.version)} instead of ${record.name}@${record.version}`",
+      "item_id": "RELEASE-SURFACE-TEXT-010",
+      "kind": "fixed",
+      "english": "resolved ${String(metadata.name)}@${String(metadata.version)} instead of ${record.name}@${record.version}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 166,
+      "column": 82,
+      "expression": "`unsafe resource path ${resource}`",
+      "item_id": "RELEASE-SURFACE-TEXT-011",
+      "kind": "fixed",
+      "english": "unsafe resource path ${resource}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 169,
+      "column": 22,
+      "expression": "\"..\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-026",
+      "kind": "excluded",
+      "english": "..",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 169,
+      "column": 45,
+      "expression": "`..${process.platform === \"win32\" ? \"\\\\\" : \"/\"}`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-027",
+      "kind": "excluded",
+      "english": "..${process.platform === \"win32\" ? \"\\\\\" : \"/\"}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 169,
+      "column": 71,
+      "expression": "\"win32\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-028",
+      "kind": "excluded",
+      "english": "win32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 169,
+      "column": 81,
+      "expression": "\"\\\\\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-029",
+      "kind": "excluded",
+      "english": "\\",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 169,
+      "column": 88,
+      "expression": "\"/\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-030",
+      "kind": "excluded",
+      "english": "/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 170,
+      "column": 19,
+      "expression": "`resource escapes package root: ${resource}`",
+      "item_id": "RELEASE-SURFACE-TEXT-012",
+      "kind": "fixed",
+      "english": "resource escapes package root: ${resource}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 173,
+      "column": 63,
+      "expression": "`resource is not a regular file: ${resource}`",
+      "item_id": "RELEASE-SURFACE-TEXT-013",
+      "kind": "fixed",
+      "english": "resource is not a regular file: ${resource}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 177,
+      "column": 58,
+      "expression": "\"adapter\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-031",
+      "kind": "excluded",
+      "english": "adapter",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 178,
+      "column": 18,
+      "expression": "\"jouzu-lazy-camoufox\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-032",
+      "kind": "excluded",
+      "english": "jouzu-lazy-camoufox",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 178,
+      "column": 57,
+      "expression": "`unsupported release adapter: ${String(adapter)}`",
+      "item_id": "RELEASE-SURFACE-TEXT-014",
+      "kind": "fixed",
+      "english": "unsupported release adapter: ${String(adapter)}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 180,
+      "column": 37,
+      "expression": "\"./camoufox-adapter.js\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-033",
+      "kind": "excluded",
+      "english": "./camoufox-adapter.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 182,
+      "column": 63,
+      "expression": "\"release adapter is not a regular file\"",
+      "item_id": "RELEASE-SURFACE-TEXT-015",
+      "kind": "fixed",
+      "english": "release adapter is not a regular file",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 195,
+      "column": 67,
+      "expression": "`Caused by: ${message}`",
+      "item_id": "RELEASE-SURFACE-TEXT-016",
+      "kind": "fixed",
+      "english": "Caused by: ${message}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 195,
+      "column": 98,
+      "expression": "\"\\n\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-034",
+      "kind": "excluded",
+      "english": "\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 205,
+      "column": 31,
+      "expression": "`unknown release extension ${packageName}`",
+      "item_id": "RELEASE-SURFACE-TEXT-017",
+      "kind": "fixed",
+      "english": "unknown release extension ${packageName}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 208,
+      "column": 22,
+      "expression": "`${record.name}@${record.version}: ${message}`",
+      "item_id": "RELEASE-SURFACE-TEXT-018",
+      "kind": "fixed",
+      "english": "${record.name}@${record.version}: ${message}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 214,
+      "column": 29,
+      "expression": "\"; \"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-035",
+      "kind": "excluded",
+      "english": "; ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 214,
+      "column": 71,
+      "expression": "`${existing.error}; ${message}`",
+      "item_id": "RELEASE-SURFACE-TEXT-019",
+      "kind": "fixed",
+      "english": "${existing.error}; ${message}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 235,
+      "column": 19,
+      "expression": "\"..\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-036",
+      "kind": "excluded",
+      "english": "..",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 235,
+      "column": 42,
+      "expression": "`..${process.platform === \"win32\" ? \"\\\\\" : \"/\"}`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-037",
+      "kind": "excluded",
+      "english": "..${process.platform === \"win32\" ? \"\\\\\" : \"/\"}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 235,
+      "column": 68,
+      "expression": "\"win32\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-038",
+      "kind": "excluded",
+      "english": "win32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 235,
+      "column": 78,
+      "expression": "\"\\\\\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-039",
+      "kind": "excluded",
+      "english": "\\",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 235,
+      "column": 85,
+      "expression": "\"/\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-040",
+      "kind": "excluded",
+      "english": "/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 261,
+      "column": 51,
+      "expression": "\"release adapters cannot declare package skills\"",
+      "item_id": "RELEASE-SURFACE-TEXT-020",
+      "kind": "fixed",
+      "english": "release adapters cannot declare package skills",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 290,
+      "column": 23,
+      "expression": "`${record.name}@${record.version}: ${messageFromError(error)}`",
+      "item_id": "RELEASE-SURFACE-TEXT-021",
+      "kind": "fixed",
+      "english": "${record.name}@${record.version}: ${messageFromError(error)}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 304,
+      "column": 73,
+      "expression": "\"\\\\\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-041",
+      "kind": "excluded",
+      "english": "\\",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 304,
+      "column": 79,
+      "expression": "\"/\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-042",
+      "kind": "excluded",
+      "english": "/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 305,
+      "column": 65,
+      "expression": "\"\\\\\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-043",
+      "kind": "excluded",
+      "english": "\\",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 305,
+      "column": 71,
+      "expression": "\"/\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-044",
+      "kind": "excluded",
+      "english": "/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 313,
+      "column": 35,
+      "expression": "\"package\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-045",
+      "kind": "excluded",
+      "english": "package",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 317,
+      "column": 58,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-046",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 317,
+      "column": 75,
+      "expression": "\"utf8\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-047",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 318,
+      "column": 32,
+      "expression": "\"string\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-048",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 328,
+      "column": 8,
+      "expression": "\"extensions\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-049",
+      "kind": "excluded",
+      "english": "extensions",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 328,
+      "column": 23,
+      "expression": "\"skills\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-050",
+      "kind": "excluded",
+      "english": "skills",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 337,
+      "column": 86,
+      "expression": "\"\\\\\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-051",
+      "kind": "excluded",
+      "english": "\\",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 337,
+      "column": 92,
+      "expression": "\"/\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-052",
+      "kind": "excluded",
+      "english": "/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 351,
+      "column": 66,
+      "expression": "\"extensions\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-053",
+      "kind": "excluded",
+      "english": "extensions",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 352,
+      "column": 58,
+      "expression": "\"skills\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-054",
+      "kind": "excluded",
+      "english": "skills",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 362,
+      "column": 37,
+      "expression": "\"errors\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-055",
+      "kind": "excluded",
+      "english": "errors",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 365,
+      "column": 17,
+      "expression": "/^Tool \"([^\"]+)\" conflicts with (.+)$/u",
+      "item_id": "RELEASE-SURFACE-TEXT-X-056",
+      "kind": "excluded",
+      "english": "/^Tool \"([^\"]+)\" conflicts with (.+)$/u",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 374,
+      "column": 48,
+      "expression": "\"\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-057",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 386,
+      "column": 35,
+      "expression": "`\"${tool}\"`",
+      "item_id": "RELEASE-SURFACE-TEXT-022",
+      "kind": "fixed",
+      "english": "\"${tool}\"",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 386,
+      "column": 53,
+      "expression": "\", \"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-058",
+      "kind": "excluded",
+      "english": ", ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 404,
+      "column": 37,
+      "expression": "\"errors\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-059",
+      "kind": "excluded",
+      "english": "errors",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 422,
+      "column": 6,
+      "expression": "` ${catalogText(catalog, RELEASE_EXTENSION_IDS.disabledTools, { tools: failure.tools.join(\", \") })}`",
+      "item_id": "RELEASE-SURFACE-TEXT-023",
+      "kind": "fixed",
+      "english": " ${catalogText(catalog, RELEASE_EXTENSION_IDS.disabledTools, { tools: failure.tools.join(\", \") })}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 422,
+      "column": 96,
+      "expression": "\", \"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-060",
+      "kind": "excluded",
+      "english": ", ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 423,
+      "column": 6,
+      "expression": "\"\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-061",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 438,
+      "column": 9,
+      "expression": "\"jouzu-release-extension-diagnostics\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-062",
+      "kind": "excluded",
+      "english": "jouzu-release-extension-diagnostics",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 441,
+      "column": 82,
+      "expression": "\"warning\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-063",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 445,
+      "column": 52,
+      "expression": "\"warning\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-064",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 449,
+      "column": 10,
+      "expression": "\"agent_end\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-065",
+      "kind": "excluded",
+      "english": "agent_end",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 450,
+      "column": 10,
+      "expression": "\"session_start\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-066",
+      "kind": "excluded",
+      "english": "session_start",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 455,
+      "column": 52,
+      "expression": "\"warning\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-067",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 478,
+      "column": 47,
+      "expression": "\"resolve\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-068",
+      "kind": "excluded",
+      "english": "resolve",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 482,
+      "column": 53,
+      "expression": "\"getExtensions\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-069",
+      "kind": "excluded",
+      "english": "getExtensions",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 502,
+      "column": 22,
+      "expression": "/^(?:@[a-z0-9._~-]+\\/)?[a-z0-9._~-]+$/u",
+      "item_id": "RELEASE-SURFACE-TEXT-X-070",
+      "kind": "excluded",
+      "english": "/^(?:@[a-z0-9._~-]+\\/)?[a-z0-9._~-]+$/u",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 505,
+      "column": 48,
+      "expression": "`unsafe package name ${name}`",
+      "item_id": "RELEASE-SURFACE-TEXT-024",
+      "kind": "fixed",
+      "english": "unsafe package name ${name}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 506,
+      "column": 20,
+      "expression": "\"node_modules\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-071",
+      "kind": "excluded",
+      "english": "node_modules",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 506,
+      "column": 50,
+      "expression": "\"/\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-072",
+      "kind": "excluded",
+      "english": "/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 510,
+      "column": 59,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-073",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 513,
+      "column": 42,
+      "expression": "`${record.dependency}/package.json`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-074",
+      "kind": "excluded",
+      "english": "${record.dependency}/package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 533,
+      "column": 37,
+      "expression": "`runtime compatibility consumer ${record.consumer} is unavailable`",
+      "item_id": "RELEASE-SURFACE-TEXT-025",
+      "kind": "fixed",
+      "english": "runtime compatibility consumer ${record.consumer} is unavailable",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 534,
+      "column": 40,
+      "expression": "`runtime compatibility dependency ${record.dependency} is unavailable`",
+      "item_id": "RELEASE-SURFACE-TEXT-026",
+      "kind": "fixed",
+      "english": "runtime compatibility dependency ${record.dependency} is unavailable",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 544,
+      "column": 19,
+      "expression": "`${record.consumer} has an unsafe nested ${record.dependency} entry`",
+      "item_id": "RELEASE-SURFACE-TEXT-027",
+      "kind": "fixed",
+      "english": "${record.consumer} has an unsafe nested ${record.dependency} entry",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 546,
+      "column": 66,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-075",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 546,
+      "column": 83,
+      "expression": "\"utf8\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-076",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 551,
+      "column": 19,
+      "expression": "`${record.consumer} nested dependency identifies as ${String(nestedMetadata.name)}`",
+      "item_id": "RELEASE-SURFACE-TEXT-028",
+      "kind": "fixed",
+      "english": "${record.consumer} nested dependency identifies as ${String(nestedMetadata.name)}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 558,
+      "column": 21,
+      "expression": "`${nestedRoot}.jouzu-compat-${process.pid}`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-077",
+      "kind": "excluded",
+      "english": "${nestedRoot}.jouzu-compat-${process.pid}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 559,
+      "column": 46,
+      "expression": "`stale compatibility backup exists at ${backupRoot}`",
+      "item_id": "RELEASE-SURFACE-TEXT-029",
+      "kind": "fixed",
+      "english": "stale compatibility backup exists at ${backupRoot}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 573,
+      "column": 48,
+      "expression": "`unsafe package name ${name}`",
+      "item_id": "RELEASE-SURFACE-TEXT-030",
+      "kind": "fixed",
+      "english": "unsafe package name ${name}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 574,
+      "column": 59,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-078",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 576,
+      "column": 42,
+      "expression": "`${name}/package.json`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-079",
+      "kind": "excluded",
+      "english": "${name}/package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 590,
+      "column": 30,
+      "expression": "\"package.json\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-080",
+      "kind": "excluded",
+      "english": "package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 600,
+      "column": 42,
+      "expression": "`runtime compatibility dependency ${record.dependency} is unavailable`",
+      "item_id": "RELEASE-SURFACE-TEXT-031",
+      "kind": "fixed",
+      "english": "runtime compatibility dependency ${record.dependency} is unavailable",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 615,
+      "column": 19,
+      "expression": "`${record.consumer} -> ${record.dependency}@${record.version}`",
+      "item_id": "RELEASE-SURFACE-TEXT-032",
+      "kind": "fixed",
+      "english": "${record.consumer} -> ${record.dependency}@${record.version}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 636,
+      "column": 97,
+      "expression": "\"; \"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-081",
+      "kind": "excluded",
+      "english": "; ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 640,
+      "column": 55,
+      "expression": "\"--extension\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-082",
+      "kind": "excluded",
+      "english": "--extension",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 641,
+      "column": 51,
+      "expression": "\"--skill\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-083",
+      "kind": "excluded",
+      "english": "--skill",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 653,
+      "column": 8,
+      "expression": "\"./release-surface-record.js\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-084",
+      "kind": "excluded",
+      "english": "./release-surface-record.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 661,
+      "column": 8,
+      "expression": "\"./release-surface-record.js\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-085",
+      "kind": "excluded",
+      "english": "./release-surface-record.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 19,
+      "column": 11,
+      "expression": "\"1.0.0\"",
+      "item_id": "RELEASE-SURFACE-TEXT-033",
+      "kind": "fixed",
+      "english": "1.0.0",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 20,
+      "column": 7,
+      "expression": "\"v1.0.0\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-086",
+      "kind": "excluded",
+      "english": "v1.0.0",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 21,
+      "column": 10,
+      "expression": "\"a13d35a742c6ef8462812a28fbe1d8c8b7431c32\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-087",
+      "kind": "excluded",
+      "english": "a13d35a742c6ef8462812a28fbe1d8c8b7431c32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 28,
+      "column": 34,
+      "expression": "\"Pi TUI\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-088",
+      "kind": "excluded",
+      "english": "Pi TUI",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 28,
+      "column": 45,
+      "expression": "\"extension\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-089",
+      "kind": "excluded",
+      "english": "extension",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 28,
+      "column": 59,
+      "expression": "\"browser\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-090",
+      "kind": "excluded",
+      "english": "browser",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 35,
+      "column": 39,
+      "expression": "\"available\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-091",
+      "kind": "excluded",
+      "english": "available",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 35,
+      "column": 53,
+      "expression": "\"none-known\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-092",
+      "kind": "excluded",
+      "english": "none-known",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 35,
+      "column": 68,
+      "expression": "\"not-inspected\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-093",
+      "kind": "excluded",
+      "english": "not-inspected",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 38,
+      "column": 34,
+      "expression": "\"translated\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-094",
+      "kind": "excluded",
+      "english": "translated",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 38,
+      "column": 49,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-095",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 38,
+      "column": 68,
+      "expression": "\"not-inspected\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-096",
+      "kind": "excluded",
+      "english": "not-inspected",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 38,
+      "column": 86,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-097",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 57,
+      "column": 10,
+      "expression": "\"pi\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-098",
+      "kind": "excluded",
+      "english": "pi",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 59,
+      "column": 16,
+      "expression": "\"Pi TUI\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-099",
+      "kind": "excluded",
+      "english": "Pi TUI",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 60,
+      "column": 21,
+      "expression": "\"none-known\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-100",
+      "kind": "excluded",
+      "english": "none-known",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 61,
+      "column": 16,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-101",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 62,
+      "column": 14,
+      "expression": "`pi@${PI_VERSION}`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-102",
+      "kind": "excluded",
+      "english": "pi@${PI_VERSION}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 71,
+      "column": 46,
+      "expression": "\"none-known\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-103",
+      "kind": "excluded",
+      "english": "none-known",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 77,
+      "column": 16,
+      "expression": "\"extension\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-104",
+      "kind": "excluded",
+      "english": "extension",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 80,
+      "column": 14,
+      "expression": "`${owner}@${version}`",
+      "item_id": "RELEASE-SURFACE-TEXT-X-105",
+      "kind": "excluded",
+      "english": "${owner}@${version}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 87,
+      "column": 10,
+      "expression": "\"service\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-106",
+      "kind": "excluded",
+      "english": "service",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 88,
+      "column": 12,
+      "expression": "\"unversioned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-107",
+      "kind": "excluded",
+      "english": "unversioned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 89,
+      "column": 16,
+      "expression": "\"browser\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-108",
+      "kind": "excluded",
+      "english": "browser",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 90,
+      "column": 21,
+      "expression": "\"not-inspected\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-109",
+      "kind": "excluded",
+      "english": "not-inspected",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 91,
+      "column": 16,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-110",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 92,
+      "column": 14,
+      "expression": "\"service@unversioned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-111",
+      "kind": "excluded",
+      "english": "service@unversioned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 106,
+      "column": 12,
+      "expression": "\"pi.startup.header\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-112",
+      "kind": "excluded",
+      "english": "pi.startup.header",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 107,
+      "column": 12,
+      "expression": "\"pi.startup.logo\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-113",
+      "kind": "excluded",
+      "english": "pi.startup.logo",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 108,
+      "column": 12,
+      "expression": "\"pi.startup.firstRun\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-114",
+      "kind": "excluded",
+      "english": "pi.startup.firstRun",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 109,
+      "column": 12,
+      "expression": "\"pi.startup.announcement\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-115",
+      "kind": "excluded",
+      "english": "pi.startup.announcement",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 111,
+      "column": 12,
+      "expression": "\"pi.palette.models\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-116",
+      "kind": "excluded",
+      "english": "pi.palette.models",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 112,
+      "column": 12,
+      "expression": "\"pi.palette.thinking\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-117",
+      "kind": "excluded",
+      "english": "pi.palette.thinking",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 113,
+      "column": 12,
+      "expression": "\"pi.palette.scopedModels\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-118",
+      "kind": "excluded",
+      "english": "pi.palette.scopedModels",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 114,
+      "column": 12,
+      "expression": "\"pi.palette.sessions\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-119",
+      "kind": "excluded",
+      "english": "pi.palette.sessions",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 115,
+      "column": 12,
+      "expression": "\"pi.palette.theme\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-120",
+      "kind": "excluded",
+      "english": "pi.palette.theme",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 116,
+      "column": 12,
+      "expression": "\"pi.palette.settings\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-121",
+      "kind": "excluded",
+      "english": "pi.palette.settings",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 117,
+      "column": 12,
+      "expression": "\"pi.palette.projectTrust\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-122",
+      "kind": "excluded",
+      "english": "pi.palette.projectTrust",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 118,
+      "column": 12,
+      "expression": "\"pi.palette.resources\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-123",
+      "kind": "excluded",
+      "english": "pi.palette.resources",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 119,
+      "column": 12,
+      "expression": "\"pi.palette.branchTree\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-124",
+      "kind": "excluded",
+      "english": "pi.palette.branchTree",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 120,
+      "column": 12,
+      "expression": "\"pi.palette.userMessages\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-125",
+      "kind": "excluded",
+      "english": "pi.palette.userMessages",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 121,
+      "column": 12,
+      "expression": "\"pi.palette.showImages\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-126",
+      "kind": "excluded",
+      "english": "pi.palette.showImages",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 122,
+      "column": 12,
+      "expression": "\"pi.palette.providers\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-127",
+      "kind": "excluded",
+      "english": "pi.palette.providers",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 123,
+      "column": 12,
+      "expression": "\"pi.palette.radiusLogin\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-128",
+      "kind": "excluded",
+      "english": "pi.palette.radiusLogin",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 125,
+      "column": 12,
+      "expression": "\"pi.dialog.login\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-129",
+      "kind": "excluded",
+      "english": "pi.dialog.login",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 126,
+      "column": 12,
+      "expression": "\"pi.dialog.extension\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-130",
+      "kind": "excluded",
+      "english": "pi.dialog.extension",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 127,
+      "column": 12,
+      "expression": "\"pi.dialog.bugReport\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-131",
+      "kind": "excluded",
+      "english": "pi.dialog.bugReport",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 129,
+      "column": 12,
+      "expression": "\"pi.status.footer\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-132",
+      "kind": "excluded",
+      "english": "pi.status.footer",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 130,
+      "column": 12,
+      "expression": "\"pi.status.indicator\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-133",
+      "kind": "excluded",
+      "english": "pi.status.indicator",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 131,
+      "column": 12,
+      "expression": "\"pi.status.keyHints\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-134",
+      "kind": "excluded",
+      "english": "pi.status.keyHints",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 132,
+      "column": 12,
+      "expression": "\"pi.status.loader\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-135",
+      "kind": "excluded",
+      "english": "pi.status.loader",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 133,
+      "column": 12,
+      "expression": "\"pi.status.hotkeys\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-136",
+      "kind": "excluded",
+      "english": "pi.status.hotkeys",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 135,
+      "column": 12,
+      "expression": "\"pi.error.authGuidance\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-137",
+      "kind": "excluded",
+      "english": "pi.error.authGuidance",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 136,
+      "column": 12,
+      "expression": "\"pi.error.crashNotice\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-138",
+      "kind": "excluded",
+      "english": "pi.error.crashNotice",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 137,
+      "column": 12,
+      "expression": "\"pi.cli.help\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-139",
+      "kind": "excluded",
+      "english": "pi.cli.help",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 138,
+      "column": 12,
+      "expression": "\"pi.cli.resumeHint\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-140",
+      "kind": "excluded",
+      "english": "pi.cli.resumeHint",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 140,
+      "column": 12,
+      "expression": "\"pi.transcript.assistantMessage\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-141",
+      "kind": "excluded",
+      "english": "pi.transcript.assistantMessage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 141,
+      "column": 12,
+      "expression": "\"pi.transcript.toolExecution\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-142",
+      "kind": "excluded",
+      "english": "pi.transcript.toolExecution",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 143,
+      "column": 19,
+      "expression": "\"pi-schedule-prompt.commands\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-143",
+      "kind": "excluded",
+      "english": "pi-schedule-prompt.commands",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 143,
+      "column": 50,
+      "expression": "\"pi-schedule-prompt\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-144",
+      "kind": "excluded",
+      "english": "pi-schedule-prompt",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 143,
+      "column": 72,
+      "expression": "\"0.4.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-145",
+      "kind": "excluded",
+      "english": "0.4.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 143,
+      "column": 81,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-146",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 144,
+      "column": 19,
+      "expression": "\"pi-schedule-prompt.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-147",
+      "kind": "excluded",
+      "english": "pi-schedule-prompt.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 144,
+      "column": 47,
+      "expression": "\"pi-schedule-prompt\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-148",
+      "kind": "excluded",
+      "english": "pi-schedule-prompt",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 144,
+      "column": 69,
+      "expression": "\"0.4.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-149",
+      "kind": "excluded",
+      "english": "0.4.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 144,
+      "column": 78,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-150",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 145,
+      "column": 19,
+      "expression": "\"pi-schedule-prompt.status\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-151",
+      "kind": "excluded",
+      "english": "pi-schedule-prompt.status",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 145,
+      "column": 48,
+      "expression": "\"pi-schedule-prompt\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-152",
+      "kind": "excluded",
+      "english": "pi-schedule-prompt",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 145,
+      "column": 70,
+      "expression": "\"0.4.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-153",
+      "kind": "excluded",
+      "english": "0.4.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 145,
+      "column": 79,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-154",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 147,
+      "column": 3,
+      "expression": "\"@vanillagreen/pi-background-tasks.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-155",
+      "kind": "excluded",
+      "english": "@vanillagreen/pi-background-tasks.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 148,
+      "column": 3,
+      "expression": "\"@vanillagreen/pi-background-tasks\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-156",
+      "kind": "excluded",
+      "english": "@vanillagreen/pi-background-tasks",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 149,
+      "column": 3,
+      "expression": "\"2.0.0\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-157",
+      "kind": "excluded",
+      "english": "2.0.0",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 150,
+      "column": 3,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-158",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 153,
+      "column": 3,
+      "expression": "\"@vanillagreen/pi-background-tasks.status\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-159",
+      "kind": "excluded",
+      "english": "@vanillagreen/pi-background-tasks.status",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 154,
+      "column": 3,
+      "expression": "\"@vanillagreen/pi-background-tasks\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-160",
+      "kind": "excluded",
+      "english": "@vanillagreen/pi-background-tasks",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 155,
+      "column": 3,
+      "expression": "\"2.0.0\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-161",
+      "kind": "excluded",
+      "english": "2.0.0",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 156,
+      "column": 3,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-162",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 158,
+      "column": 19,
+      "expression": "\"pi-webaio.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-163",
+      "kind": "excluded",
+      "english": "pi-webaio.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 158,
+      "column": 38,
+      "expression": "\"pi-webaio\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-164",
+      "kind": "excluded",
+      "english": "pi-webaio",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 158,
+      "column": 51,
+      "expression": "\"1.0.5\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-165",
+      "kind": "excluded",
+      "english": "1.0.5",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 158,
+      "column": 60,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-166",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 159,
+      "column": 19,
+      "expression": "\"pi-webaio.status\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-167",
+      "kind": "excluded",
+      "english": "pi-webaio.status",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 159,
+      "column": 39,
+      "expression": "\"pi-webaio\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-168",
+      "kind": "excluded",
+      "english": "pi-webaio",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 159,
+      "column": 52,
+      "expression": "\"1.0.5\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-169",
+      "kind": "excluded",
+      "english": "1.0.5",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 159,
+      "column": 61,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-170",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 160,
+      "column": 19,
+      "expression": "\"jouzu-camoufox-adapter.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-171",
+      "kind": "excluded",
+      "english": "jouzu-camoufox-adapter.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 160,
+      "column": 51,
+      "expression": "\"jouzu-camoufox-adapter\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-172",
+      "kind": "excluded",
+      "english": "jouzu-camoufox-adapter",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 160,
+      "column": 77,
+      "expression": "\"1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-173",
+      "kind": "excluded",
+      "english": "1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 160,
+      "column": 82,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-174",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 161,
+      "column": 19,
+      "expression": "\"jouzu-camoufox-adapter.labels\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-175",
+      "kind": "excluded",
+      "english": "jouzu-camoufox-adapter.labels",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 161,
+      "column": 52,
+      "expression": "\"jouzu-camoufox-adapter\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-176",
+      "kind": "excluded",
+      "english": "jouzu-camoufox-adapter",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 161,
+      "column": 78,
+      "expression": "\"1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-177",
+      "kind": "excluded",
+      "english": "1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 161,
+      "column": 83,
+      "expression": "\"translated\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-178",
+      "kind": "excluded",
+      "english": "translated",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 161,
+      "column": 97,
+      "expression": "\"available\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-179",
+      "kind": "excluded",
+      "english": "available",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 162,
+      "column": 19,
+      "expression": "\"pi-code-previews.commands\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-180",
+      "kind": "excluded",
+      "english": "pi-code-previews.commands",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 162,
+      "column": 48,
+      "expression": "\"pi-code-previews\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-181",
+      "kind": "excluded",
+      "english": "pi-code-previews",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 162,
+      "column": 68,
+      "expression": "\"0.1.36\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-182",
+      "kind": "excluded",
+      "english": "0.1.36",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 162,
+      "column": 78,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-183",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 163,
+      "column": 19,
+      "expression": "\"pi-code-previews.status\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-184",
+      "kind": "excluded",
+      "english": "pi-code-previews.status",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 163,
+      "column": 46,
+      "expression": "\"pi-code-previews\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-185",
+      "kind": "excluded",
+      "english": "pi-code-previews",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 163,
+      "column": 66,
+      "expression": "\"0.1.36\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-186",
+      "kind": "excluded",
+      "english": "0.1.36",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 163,
+      "column": 76,
+      "expression": "\"not-inspected\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-187",
+      "kind": "excluded",
+      "english": "not-inspected",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 163,
+      "column": 93,
+      "expression": "\"not-inspected\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-188",
+      "kind": "excluded",
+      "english": "not-inspected",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 164,
+      "column": 19,
+      "expression": "\"@lhl/pi-tasks.commands\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-189",
+      "kind": "excluded",
+      "english": "@lhl/pi-tasks.commands",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 164,
+      "column": 45,
+      "expression": "\"@lhl/pi-tasks\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-190",
+      "kind": "excluded",
+      "english": "@lhl/pi-tasks",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 164,
+      "column": 62,
+      "expression": "\"0.6.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-191",
+      "kind": "excluded",
+      "english": "0.6.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 164,
+      "column": 71,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-192",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 165,
+      "column": 19,
+      "expression": "\"@lhl/pi-tasks.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-193",
+      "kind": "excluded",
+      "english": "@lhl/pi-tasks.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 165,
+      "column": 42,
+      "expression": "\"@lhl/pi-tasks\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-194",
+      "kind": "excluded",
+      "english": "@lhl/pi-tasks",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 165,
+      "column": 59,
+      "expression": "\"0.6.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-195",
+      "kind": "excluded",
+      "english": "0.6.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 165,
+      "column": 68,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-196",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 166,
+      "column": 19,
+      "expression": "\"@lhl/pi-tasks.status\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-197",
+      "kind": "excluded",
+      "english": "@lhl/pi-tasks.status",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 166,
+      "column": 43,
+      "expression": "\"@lhl/pi-tasks\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-198",
+      "kind": "excluded",
+      "english": "@lhl/pi-tasks",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 166,
+      "column": 60,
+      "expression": "\"0.6.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-199",
+      "kind": "excluded",
+      "english": "0.6.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 166,
+      "column": 69,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-200",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 167,
+      "column": 19,
+      "expression": "\"pi-multiloop.commands\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-201",
+      "kind": "excluded",
+      "english": "pi-multiloop.commands",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 167,
+      "column": 44,
+      "expression": "\"pi-multiloop\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-202",
+      "kind": "excluded",
+      "english": "pi-multiloop",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 167,
+      "column": 60,
+      "expression": "\"0.4.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-203",
+      "kind": "excluded",
+      "english": "0.4.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 167,
+      "column": 69,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-204",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 168,
+      "column": 19,
+      "expression": "\"pi-multiloop.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-205",
+      "kind": "excluded",
+      "english": "pi-multiloop.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 168,
+      "column": 41,
+      "expression": "\"pi-multiloop\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-206",
+      "kind": "excluded",
+      "english": "pi-multiloop",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 168,
+      "column": 57,
+      "expression": "\"0.4.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-207",
+      "kind": "excluded",
+      "english": "0.4.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 168,
+      "column": 66,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-208",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 169,
+      "column": 19,
+      "expression": "\"pi-multiloop.status\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-209",
+      "kind": "excluded",
+      "english": "pi-multiloop.status",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 169,
+      "column": 42,
+      "expression": "\"pi-multiloop\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-210",
+      "kind": "excluded",
+      "english": "pi-multiloop",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 169,
+      "column": 58,
+      "expression": "\"0.4.1\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-211",
+      "kind": "excluded",
+      "english": "0.4.1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 169,
+      "column": 67,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-212",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 170,
+      "column": 19,
+      "expression": "\"@sting8k/pi-vcc.commands\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-213",
+      "kind": "excluded",
+      "english": "@sting8k/pi-vcc.commands",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 170,
+      "column": 47,
+      "expression": "\"@sting8k/pi-vcc\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-214",
+      "kind": "excluded",
+      "english": "@sting8k/pi-vcc",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 170,
+      "column": 66,
+      "expression": "\"0.7.2\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-215",
+      "kind": "excluded",
+      "english": "0.7.2",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 170,
+      "column": 75,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-216",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 171,
+      "column": 19,
+      "expression": "\"@sting8k/pi-vcc.tools\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-217",
+      "kind": "excluded",
+      "english": "@sting8k/pi-vcc.tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 171,
+      "column": 44,
+      "expression": "\"@sting8k/pi-vcc\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-218",
+      "kind": "excluded",
+      "english": "@sting8k/pi-vcc",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 171,
+      "column": 63,
+      "expression": "\"0.7.2\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-219",
+      "kind": "excluded",
+      "english": "0.7.2",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 171,
+      "column": 72,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-220",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 172,
+      "column": 19,
+      "expression": "\"pi-skill-dollar.autocomplete\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-221",
+      "kind": "excluded",
+      "english": "pi-skill-dollar.autocomplete",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 172,
+      "column": 51,
+      "expression": "\"pi-skill-dollar\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-222",
+      "kind": "excluded",
+      "english": "pi-skill-dollar",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 172,
+      "column": 70,
+      "expression": "\"0.2.0\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-223",
+      "kind": "excluded",
+      "english": "0.2.0",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 172,
+      "column": 79,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-224",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 174,
+      "column": 17,
+      "expression": "\"service.account.dashboard\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-225",
+      "kind": "excluded",
+      "english": "service.account.dashboard",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 175,
+      "column": 17,
+      "expression": "\"service.account.signIn\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-226",
+      "kind": "excluded",
+      "english": "service.account.signIn",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 191,
+      "column": 42,
+      "expression": "\"service\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-227",
+      "kind": "excluded",
+      "english": "service",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 233,
+      "column": 9,
+      "expression": "\"translated\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-228",
+      "kind": "excluded",
+      "english": "translated",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 236,
+      "column": 9,
+      "expression": "\"upstream-owned\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-229",
+      "kind": "excluded",
+      "english": "upstream-owned",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 239,
+      "column": 9,
+      "expression": "\"not-inspected\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-230",
+      "kind": "excluded",
+      "english": "not-inspected",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 242,
+      "column": 9,
+      "expression": "\"out-of-scope\"",
+      "item_id": "RELEASE-SURFACE-TEXT-X-231",
+      "kind": "excluded",
+      "english": "out-of-scope",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 186,
+      "column": 1,
+      "expression": "function messageFromError",
+      "item_id": "RELEASE-SURFACE-TEXT-034",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 241,
+      "column": 1,
+      "expression": "export function inspectReleaseExtensions",
+      "item_id": "RELEASE-SURFACE-TEXT-035",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 316,
+      "column": 2,
+      "expression": "try {",
+      "item_id": "RELEASE-SURFACE-TEXT-036",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 365,
+      "column": 3,
+      "expression": "const match",
+      "item_id": "RELEASE-SURFACE-TEXT-037",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 405,
+      "column": 2,
+      "expression": "for (const diagnostic",
+      "item_id": "RELEASE-SURFACE-TEXT-038",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 440,
+      "column": 4,
+      "expression": "const warn",
+      "item_id": "RELEASE-SURFACE-TEXT-039",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 492,
+      "column": 2,
+      "expression": "try {",
+      "item_id": "RELEASE-SURFACE-TEXT-040",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 560,
+      "column": 2,
+      "expression": "renameSync",
+      "item_id": "RELEASE-SURFACE-TEXT-041",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 582,
+      "column": 1,
+      "expression": "export function probeReleaseRuntimeCompatibility",
+      "item_id": "RELEASE-SURFACE-TEXT-042",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 186,
+      "column": 1,
+      "expression": "export function releaseSurfacesNeedingRecheck",
+      "item_id": "RELEASE-SURFACE-TEXT-043",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/release-surface-record.ts",
+      "line": 219,
+      "column": 1,
+      "expression": "export function summarizeReleaseSurfaces",
+      "item_id": "RELEASE-SURFACE-TEXT-044",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 118,
+      "column": 9,
+      "expression": "new Error(\"release extension manifest is invalid\")",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 131,
+      "column": 6,
+      "expression": "catch {\n\t\t\t\t// Continue toward the filesystem root and report one bounded error to the caller.\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Package/root resolver fallback can replace earlier failure."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 136,
+      "column": 33,
+      "expression": "new Error(`could not locate package root from ${entry}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 144,
+      "column": 4,
+      "expression": "catch {\n\t\ttry {\n\t\t\treturn packageRootFromEntry(name, require.resolve(name));\n\t\t} catch {\n\t\t\treturn packageRootFromEntry(name, fileURLToPath(import.meta.resolve(name)));\n\t\t}\n\t}",
+      "kind": "catch",
+      "disposition": "Package/root resolver fallback can replace earlier failure."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 147,
+      "column": 5,
+      "expression": "catch {\n\t\t\treturn packageRootFromEntry(name, fileURLToPath(import.meta.resolve(name)));\n\t\t}",
+      "kind": "catch",
+      "disposition": "Package/root resolver fallback can replace earlier failure."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 156,
+      "column": 53,
+      "expression": "new Error(\"package.json is not a regular file\")",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 159,
+      "column": 9,
+      "expression": "new Error(\n\t\t\t`resolved ${String(metadata.name)}@${String(metadata.version)} instead of ${record.name}@${record.version}`,\n\t\t)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 166,
+      "column": 72,
+      "expression": "new Error(`unsafe resource path ${resource}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 170,
+      "column": 9,
+      "expression": "new Error(`resource escapes package root: ${resource}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 173,
+      "column": 53,
+      "expression": "new Error(`resource is not a regular file: ${resource}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 178,
+      "column": 47,
+      "expression": "new Error(`unsupported release adapter: ${String(adapter)}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 182,
+      "column": 53,
+      "expression": "new Error(\"release adapter is not a regular file\")",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 205,
+      "column": 21,
+      "expression": "new Error(`unknown release extension ${packageName}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 261,
+      "column": 41,
+      "expression": "new Error(\"release adapters cannot declare package skills\")",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 280,
+      "column": 5,
+      "expression": "catch (error) {\n\t\t\tmarkReleaseExtensionUnavailable(status, record.name, error);\n\t\t}",
+      "kind": "catch",
+      "disposition": "Per-record failure retained via optional/required status and cause-chain flattening; later delivery remains conditional."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 289,
+      "column": 5,
+      "expression": "catch (error) {\n\t\t\tstatus.errors.push(`${record.name}@${record.version}: ${messageFromError(error)}`);\n\t\t}",
+      "kind": "catch",
+      "disposition": "Per-record failure retained via optional/required status and cause-chain flattening; later delivery remains conditional."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 319,
+      "column": 4,
+      "expression": "catch {\n\t\t// Pi reports unreadable package metadata; this filter leaves that diagnostic unchanged.\n\t}",
+      "kind": "catch",
+      "disposition": "Unreadable configured-package metadata suppressed; original upstream diagnostic preserved."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 505,
+      "column": 38,
+      "expression": "new Error(`unsafe package name ${name}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 514,
+      "column": 4,
+      "expression": "catch {\n\t\troot = packageRootFromEntry(record.dependency, consumerRequire.resolve(record.dependency));\n\t}",
+      "kind": "catch",
+      "disposition": "Package/root resolver fallback can replace earlier failure."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 533,
+      "column": 27,
+      "expression": "new Error(`runtime compatibility consumer ${record.consumer} is unavailable`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 534,
+      "column": 30,
+      "expression": "new Error(`runtime compatibility dependency ${record.dependency} is unavailable`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 544,
+      "column": 9,
+      "expression": "new Error(`${record.consumer} has an unsafe nested ${record.dependency} entry`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 551,
+      "column": 9,
+      "expression": "new Error(`${record.consumer} nested dependency identifies as ${String(nestedMetadata.name)}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 559,
+      "column": 36,
+      "expression": "new Error(`stale compatibility backup exists at ${backupRoot}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 565,
+      "column": 4,
+      "expression": "catch (error) {\n\t\tif (existsSync(nestedRoot)) rmSync(nestedRoot, { recursive: true, force: true });\n\t\trenameSync(backupRoot, nestedRoot);\n\t\tthrow error;\n\t}",
+      "kind": "catch",
+      "disposition": "Repair cleanup/rollback may replace original error before rethrow."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 573,
+      "column": 38,
+      "expression": "new Error(`unsafe package name ${name}`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 577,
+      "column": 4,
+      "expression": "catch {\n\t\treturn packageRootFromEntry(name, consumerRequire.resolve(name));\n\t}",
+      "kind": "catch",
+      "disposition": "Package/root resolver fallback can replace earlier failure."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 591,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\tmarkReleaseExtensionUnavailable(status, record.name, error);\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Per-record failure retained via optional/required status and cause-chain flattening; later delivery remains conditional."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 600,
+      "column": 32,
+      "expression": "new Error(`runtime compatibility dependency ${record.dependency} is unavailable`)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 603,
+      "column": 5,
+      "expression": "catch (error) {\n\t\t\tmarkReleaseExtensionUnavailable(status, record.consumer, error);\n\t\t}",
+      "kind": "catch",
+      "disposition": "Per-record failure retained via optional/required status and cause-chain flattening; later delivery remains conditional."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 617,
+      "column": 5,
+      "expression": "catch (error) {\n\t\t\tmarkReleaseExtensionUnavailable(status, record.consumer, error);\n\t\t}",
+      "kind": "catch",
+      "disposition": "Per-record failure retained via optional/required status and cause-chain flattening; later delivery remains conditional."
+    },
+    {
+      "path": "packages/cli/src/release-extensions.ts",
+      "line": 635,
+      "column": 9,
+      "expression": "new Error(\n\t\t\tcatalogText(catalog, RELEASE_EXTENSION_IDS.requiredUnavailable, { errors: status.errors.join(\"; \") }),\n\t\t)",
+      "kind": "error",
+      "disposition": "Source-specific own Error guard or localized required-unavailable Error; primary rows retain pinned-record/API and caller publication conditions."
+    }
+  ],
+  "counts": {
+    "primary": 44,
+    "catalog": 6,
+    "fixed": 27,
+    "boundaries": 11,
+    "excluded": 231,
+    "nodes": 264,
+    "errors": 20,
+    "catches": 12,
+    "scope": 17
+  },
+  "reviewed_data": {
+    "release-surface-text.csv": "fbde40bc5ac77963c85a386823d0b8c9e4009b11f33e5cb05e8d42f2b45cb786",
+    "release-surface-text-exclusions.csv": "bf19c7b886abc7c94a8650287d2be7f794197664121942b7369e816ad06062cf",
+    "release-surface-text-scope.csv": "16bcbefd5ba773c26533728e8483b06d560e4cbfe5b7c8bd4b788d08e1db3e1b"
+  },
+  "canonical_runtime_census_sha256_utf8_lf": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225"
+}

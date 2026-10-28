@@ -146,6 +146,21 @@ Path/digest/SQL identities are protected data, and caller onBusy callbacks own
 their wording. Five corruption controls pass without locks, SQLite, process
 probes, native or user-state IO.
 
+[release-surface-text.csv](release-surface-text.csv) adds 44 release-helper
+records: six catalog occurrences, 27 fixed/protected fragments and eleven
+boundaries. Two complete diagnostic/record bodies cover 912 lines. The
+[scope](release-surface-text-scope.csv) pins seventeen sources; all 264 AST
+string/template/regex nodes are partitioned against 231
+[exclusions](release-surface-text-exclusions.csv), with twenty Error constructors
+and twelve catches. Current diagnostic and conflict-policy callers omit catalog
+arguments and use English; required-extension arguments receive the active
+catalog. Cause-chain text, optional-failure retention, doctor rerendering and
+native Tool-conflict recognition have separate conditions. The pinned redirect
+list is empty, so repair wording has qualified API guards. Versioned surface
+records feed counts/recheck metadata and do not certify translation coverage or
+exclude wording from this audit. Five corruption controls pass without package
+loading, native initialization, prototype wrapping, repair or user-state IO.
+
 [host-ui.csv](host-ui.csv) adds 30 help/host-policy records: 14 catalog
 occurrences, ten fixed or protected command/key/refusal occurrences and six
 payload boundaries. Three complete bodies and all 65 lexical occurrences are
@@ -1099,6 +1114,7 @@ python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 node review/text-inventory/verify-cli-startup-support.cjs
 node review/text-inventory/verify-file-state-support.cjs
+node review/text-inventory/verify-release-surface-text.cjs
 node review/text-inventory/verify-host-ui.cjs
 node review/text-inventory/verify-scrollback.cjs
 python -B review/text-inventory/verify-doctor.py
