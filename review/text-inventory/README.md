@@ -823,6 +823,19 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-codemode-support.csv](pi-codemode-support.csv) records 121 qualified raw
+source occurrences across six complete codemode bodies (1,214 lines), including
+message fragments, API descriptions, formatting and renderer values. The 251
+[exclusions](pi-codemode-support-exclusions.csv) complete the local lexical
+partition, with eighteen [boundaries](pi-codemode-support-boundaries.csv). The
+current Jouzu built-in override supplies a no-op factory; standalone/optional
+registration and direct module APIs retain separate conditions. Inspected progress
+suppression differs from final TextGuard scanning of content and metadata.
+Sandbox/parser/native errors, script output, worker cleanup, spills and export
+presentation remain qualified. The [scope](pi-codemode-support-scope.csv) retains
+four dependency wording graphs as pending. Nineteen corruption controls pass
+against both installed trees and canonical archive/patch provenance.
+
 [pi-cli-support.csv](pi-cli-support.csv) adds twenty qualified native file,
 model-table and confirm-API definitions across six complete CLI helper bodies
 (287 lines), with 43 [exclusions](pi-cli-support-exclusions.csv) and eleven
@@ -1901,6 +1914,7 @@ node review/text-inventory/verify-pi-core-config-support.cjs --node-modules <roo
 node review/text-inventory/verify-pi-rpc-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-request-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
+python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 

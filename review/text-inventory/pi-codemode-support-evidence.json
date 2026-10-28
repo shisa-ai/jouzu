@@ -1,0 +1,3633 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "inventory_file": "pi-codemode-support.csv",
+  "scope_file": "pi-codemode-support-scope.csv",
+  "boundary_file": "pi-codemode-support-boundaries.csv",
+  "exclusion_file": "pi-codemode-support-exclusions.csv",
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      }
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      }
+    }
+  ],
+  "archive_provenance": {
+    "name": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "archive_name": "earendil-works-pi-coding-agent-1.4.0.tgz",
+    "archive_sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+    "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "integrity_authorities": [
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:upstream/pi.lock.json",
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:package-lock.json"
+    ],
+    "metadata_qualification": "Installed package.json copies pinned independently; file-level archive/patch provenance checked, not a claim every installed package byte equals pristine archive."
+  },
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.js",
+      "root_sha256": "8eeffb5184f5129e84258f7e9861097f8cae5cc8850c8058f267e4683d13b10a",
+      "cli_nested_sha256": "8eeffb5184f5129e84258f7e9861097f8cae5cc8850c8058f267e4683d13b10a",
+      "archive_sha256": "8eeffb5184f5129e84258f7e9861097f8cae5cc8850c8058f267e4683d13b10a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 34666,
+      "lines": 740
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.lazy.js",
+      "root_sha256": "57bf6e887990f539083658baa3616249900a5ad3bde0c73de8082bd1032dd85a",
+      "cli_nested_sha256": "57bf6e887990f539083658baa3616249900a5ad3bde0c73de8082bd1032dd85a",
+      "archive_sha256": "57bf6e887990f539083658baa3616249900a5ad3bde0c73de8082bd1032dd85a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 186,
+      "lines": 3
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/index.js",
+      "root_sha256": "7306902a1079689f601231d4c9bd3abb1d92ec388d202ff08920e4aee87343f4",
+      "cli_nested_sha256": "7306902a1079689f601231d4c9bd3abb1d92ec388d202ff08920e4aee87343f4",
+      "archive_sha256": "7306902a1079689f601231d4c9bd3abb1d92ec388d202ff08920e4aee87343f4",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1620,
+      "lines": 33
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/renderer.js",
+      "root_sha256": "fd3c5ab90f1e4105528a872536b911722cdd2cbb0060fc9d454a53995058b9a2",
+      "cli_nested_sha256": "fd3c5ab90f1e4105528a872536b911722cdd2cbb0060fc9d454a53995058b9a2",
+      "archive_sha256": "fd3c5ab90f1e4105528a872536b911722cdd2cbb0060fc9d454a53995058b9a2",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 6847,
+      "lines": 143
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/tool.js",
+      "root_sha256": "8915e8f8b04444018bd8a97161c8c5c0b289a24793701b94362395c0249bd814",
+      "cli_nested_sha256": "8915e8f8b04444018bd8a97161c8c5c0b289a24793701b94362395c0249bd814",
+      "archive_sha256": "8915e8f8b04444018bd8a97161c8c5c0b289a24793701b94362395c0249bd814",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 15894,
+      "lines": 288
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/worker.js",
+      "root_sha256": "3f4e59ba9fdff9b68aa3d0bc91d67ce1a2a97c5a3d63b04112c2f2825d73b1fe",
+      "cli_nested_sha256": "3f4e59ba9fdff9b68aa3d0bc91d67ce1a2a97c5a3d63b04112c2f2825d73b1fe",
+      "archive_sha256": "3f4e59ba9fdff9b68aa3d0bc91d67ce1a2a97c5a3d63b04112c2f2825d73b1fe",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 346,
+      "lines": 7
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "root_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "archive_sha256": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "root_nested_equal": true,
+      "provenance": "pinned-source-patch-after",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "bytes": 38661,
+      "lines": 838
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+      "root_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "cli_nested_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "archive_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 5194,
+      "lines": 54
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js",
+      "root_sha256": "ed7f805d46160c30db9be874b2350d0bd01f8b390f94a55ec1d8d4ed9474bf9b",
+      "cli_nested_sha256": "ed7f805d46160c30db9be874b2350d0bd01f8b390f94a55ec1d8d4ed9474bf9b",
+      "archive_sha256": "ed7f805d46160c30db9be874b2350d0bd01f8b390f94a55ec1d8d4ed9474bf9b",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 786,
+      "lines": 13
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "root_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "archive_sha256": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "root_nested_equal": true,
+      "provenance": "pinned-source-patch-after",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "bytes": 47930,
+      "lines": 1031
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "root_nested_equal": true,
+      "provenance": "pinned-source-patch-after",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "bytes": 181728,
+      "lines": 3816
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/system-prompt.js",
+      "root_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "cli_nested_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "archive_sha256": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "root_nested_equal": true,
+      "provenance": "pinned-source-patch-after",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "bytes": 8103,
+      "lines": 151
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 9942,
+      "lines": 228
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/tool-renderer.js",
+      "root_sha256": "8d3bd1f1b068996fe8f7d003bdb6623284043e1393a2db92ff45aeb9d6c33b9a",
+      "cli_nested_sha256": "8d3bd1f1b068996fe8f7d003bdb6623284043e1393a2db92ff45aeb9d6c33b9a",
+      "archive_sha256": "8d3bd1f1b068996fe8f7d003bdb6623284043e1393a2db92ff45aeb9d6c33b9a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 4598,
+      "lines": 110
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js",
+      "root_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "cli_nested_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "archive_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 12867,
+      "lines": 324
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js",
+      "root_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "cli_nested_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "archive_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 6595,
+      "lines": 158
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/output-files.js",
+      "root_sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+      "cli_nested_sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+      "archive_sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1533,
+      "lines": 30
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/truncate.js",
+      "root_sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+      "cli_nested_sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+      "archive_sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 8614,
+      "lines": 244
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "root_sha256": "187336777248b8b5cce52a904d7c341e10be9842543cac4a98992027a8d39aa5",
+      "cli_nested_sha256": "187336777248b8b5cce52a904d7c341e10be9842543cac4a98992027a8d39aa5",
+      "archive_sha256": "187336777248b8b5cce52a904d7c341e10be9842543cac4a98992027a8d39aa5",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 8204,
+      "lines": 187
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/tool-definition-wrapper.js",
+      "root_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "cli_nested_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "archive_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1711,
+      "lines": 38
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/wrapper.js",
+      "root_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "cli_nested_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "archive_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 983,
+      "lines": 22
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js",
+      "root_sha256": "b53418ca3bc54b70e18ccb192eb471696f5211c5aa2e80d68fe6fe3851ff23ae",
+      "cli_nested_sha256": "b53418ca3bc54b70e18ccb192eb471696f5211c5aa2e80d68fe6fe3851ff23ae",
+      "archive_sha256": "b53418ca3bc54b70e18ccb192eb471696f5211c5aa2e80d68fe6fe3851ff23ae",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 22684,
+      "lines": 534
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "git_blob_sha1": "97ef3313123007e937e6a52064ed6e089e250b57",
+      "read_ranges": [
+        [
+          757,
+          775
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367",
+      "git_blob_sha1": "8e3ec48c5f6529bb7bfe0d8729ce91252172e566",
+      "read_ranges": [
+        [
+          41,
+          52
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/textguard-policy.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "16322c507662368353a312b0ce0c777ee7325e7e438aab107ef3a37b8fabdbac",
+      "git_blob_sha1": "727b0abcb0cc799953e1846fefd3da5d57d5f47e",
+      "read_ranges": [
+        [
+          17,
+          30
+        ],
+        [
+          263,
+          268
+        ],
+        [
+          372,
+          435
+        ]
+      ]
+    },
+    {
+      "source": "upstream/pi.lock.json",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+      "git_blob_sha1": "8fb30b6e5192d43ffcded8569a696565fb898788",
+      "read_ranges": null
+    },
+    {
+      "source": "package-lock.json",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+      "git_blob_sha1": "b71bc0c61af4a1f4fe2b6abb986f1b9313ea46d4",
+      "read_ranges": null
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "read_ranges": [
+        [
+          38,
+          38
+        ],
+        [
+          451,
+          455
+        ],
+        [
+          634,
+          646
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+      "read_ranges": [
+        [
+          1,
+          39
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js",
+      "read_ranges": [
+        [
+          1,
+          13
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "read_ranges": [
+        [
+          246,
+          258
+        ],
+        [
+          530,
+          549
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "read_ranges": [
+        [
+          352,
+          455
+        ],
+        [
+          750,
+          759
+        ],
+        [
+          1251,
+          1310
+        ],
+        [
+          1354,
+          1417
+        ],
+        [
+          3074,
+          3085
+        ],
+        [
+          3128,
+          3132
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/system-prompt.js",
+      "read_ranges": [
+        [
+          31,
+          64
+        ],
+        [
+          68,
+          119
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "read_ranges": [
+        [
+          120,
+          219
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/tool-renderer.js",
+      "read_ranges": [
+        [
+          27,
+          109
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js",
+      "read_ranges": [
+        [
+          62,
+          94
+        ],
+        [
+          120,
+          141
+        ],
+        [
+          221,
+          255
+        ],
+        [
+          276,
+          309
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js",
+      "read_ranges": [
+        [
+          22,
+          28
+        ],
+        [
+          50,
+          74
+        ],
+        [
+          114,
+          145
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/output-files.js",
+      "read_ranges": [
+        [
+          19,
+          24
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/truncate.js",
+      "read_ranges": [
+        [
+          24,
+          36
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "read_ranges": [
+        [
+          84,
+          128
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/tool-definition-wrapper.js",
+      "read_ranges": [
+        [
+          1,
+          17
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/wrapper.js",
+      "read_ranges": [
+        [
+          1,
+          22
+        ]
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js",
+      "read_ranges": [
+        [
+          397,
+          432
+        ]
+      ]
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.js.map",
+      "root_sha256": "a98fc762adda0ed2336d84da8f6dd283f945205cec3886105411934f30ece926",
+      "cli_nested_sha256": "a98fc762adda0ed2336d84da8f6dd283f945205cec3886105411934f30ece926",
+      "archive_sha256": "a98fc762adda0ed2336d84da8f6dd283f945205cec3886105411934f30ece926",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 66841,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.d.ts",
+      "root_sha256": "6d72bb29b2bb25b6e6cd266751e38f1c57c00e2cf7b902ae741de829e41a0ee6",
+      "cli_nested_sha256": "6d72bb29b2bb25b6e6cd266751e38f1c57c00e2cf7b902ae741de829e41a0ee6",
+      "archive_sha256": "6d72bb29b2bb25b6e6cd266751e38f1c57c00e2cf7b902ae741de829e41a0ee6",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1193,
+      "lines": 16
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.d.ts.map",
+      "root_sha256": "dc0f7c5b51ea755f94a1d417609301e76c232f5de8a655c57fb240cc1ab5dd22",
+      "cli_nested_sha256": "dc0f7c5b51ea755f94a1d417609301e76c232f5de8a655c57fb240cc1ab5dd22",
+      "archive_sha256": "dc0f7c5b51ea755f94a1d417609301e76c232f5de8a655c57fb240cc1ab5dd22",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 777,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.lazy.js.map",
+      "root_sha256": "4c99e6e43f20fcd960a181bc347e61090cc699985abcdffad2cc47029cd52232",
+      "cli_nested_sha256": "4c99e6e43f20fcd960a181bc347e61090cc699985abcdffad2cc47029cd52232",
+      "archive_sha256": "4c99e6e43f20fcd960a181bc347e61090cc699985abcdffad2cc47029cd52232",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 398,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.lazy.d.ts",
+      "root_sha256": "52ce8f1d2a64a9237284f4acc9b55c20d2c7da07625fd682465a0d8c966b3aed",
+      "cli_nested_sha256": "52ce8f1d2a64a9237284f4acc9b55c20d2c7da07625fd682465a0d8c966b3aed",
+      "archive_sha256": "52ce8f1d2a64a9237284f4acc9b55c20d2c7da07625fd682465a0d8c966b3aed",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 211,
+      "lines": 3
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.lazy.d.ts.map",
+      "root_sha256": "35741d8c760ebd98f7628990a7f3336be4b3f65c8ea26414f89f213c97bccd65",
+      "cli_nested_sha256": "35741d8c760ebd98f7628990a7f3336be4b3f65c8ea26414f89f213c97bccd65",
+      "archive_sha256": "35741d8c760ebd98f7628990a7f3336be4b3f65c8ea26414f89f213c97bccd65",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 190,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/index.js.map",
+      "root_sha256": "ea2b08331f576cde5ad028a4a3748d5a04d77a11c2bcd9439de040df904a37c3",
+      "cli_nested_sha256": "ea2b08331f576cde5ad028a4a3748d5a04d77a11c2bcd9439de040df904a37c3",
+      "archive_sha256": "ea2b08331f576cde5ad028a4a3748d5a04d77a11c2bcd9439de040df904a37c3",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 3634,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/index.d.ts",
+      "root_sha256": "e94902883fb8a18dfc4bcadf0cfc7e09b2701702754f5ae60967c1c6e07b75a2",
+      "cli_nested_sha256": "e94902883fb8a18dfc4bcadf0cfc7e09b2701702754f5ae60967c1c6e07b75a2",
+      "archive_sha256": "e94902883fb8a18dfc4bcadf0cfc7e09b2701702754f5ae60967c1c6e07b75a2",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1033,
+      "lines": 21
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/index.d.ts.map",
+      "root_sha256": "98c0e9e07ba53d7b6a88530cf911059bde077b60be33c961f27382c07dd167bf",
+      "cli_nested_sha256": "98c0e9e07ba53d7b6a88530cf911059bde077b60be33c961f27382c07dd167bf",
+      "archive_sha256": "98c0e9e07ba53d7b6a88530cf911059bde077b60be33c961f27382c07dd167bf",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 462,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/renderer.js.map",
+      "root_sha256": "1bca6db271f502d392402c1da3178f4e0b85a4d3660cbc857f0b3715db60f666",
+      "cli_nested_sha256": "1bca6db271f502d392402c1da3178f4e0b85a4d3660cbc857f0b3715db60f666",
+      "archive_sha256": "1bca6db271f502d392402c1da3178f4e0b85a4d3660cbc857f0b3715db60f666",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 13827,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/renderer.d.ts",
+      "root_sha256": "5ca1a382628803e6c15fe2223763a4637e5462d960977b64e041dd020e2a8e4e",
+      "cli_nested_sha256": "5ca1a382628803e6c15fe2223763a4637e5462d960977b64e041dd020e2a8e4e",
+      "archive_sha256": "5ca1a382628803e6c15fe2223763a4637e5462d960977b64e041dd020e2a8e4e",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 730,
+      "lines": 12
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/renderer.d.ts.map",
+      "root_sha256": "39f3d9a6f8263d2768d1f29f05f68d4e169474da64ab4661c497ba781f408eb7",
+      "cli_nested_sha256": "39f3d9a6f8263d2768d1f29f05f68d4e169474da64ab4661c497ba781f408eb7",
+      "archive_sha256": "39f3d9a6f8263d2768d1f29f05f68d4e169474da64ab4661c497ba781f408eb7",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 362,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/tool.js.map",
+      "root_sha256": "291175b1df92970e422d57c19bbe126eda51b4230b29caf84e60a8d1f0f1c8c6",
+      "cli_nested_sha256": "291175b1df92970e422d57c19bbe126eda51b4230b29caf84e60a8d1f0f1c8c6",
+      "archive_sha256": "291175b1df92970e422d57c19bbe126eda51b4230b29caf84e60a8d1f0f1c8c6",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 31258,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/tool.d.ts",
+      "root_sha256": "9ac3563ffb125661b24f1e3333d43aa74e225a013915398b2740f8f05ce01a2e",
+      "cli_nested_sha256": "9ac3563ffb125661b24f1e3333d43aa74e225a013915398b2740f8f05ce01a2e",
+      "archive_sha256": "9ac3563ffb125661b24f1e3333d43aa74e225a013915398b2740f8f05ce01a2e",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 7361,
+      "lines": 124
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/tool.d.ts.map",
+      "root_sha256": "dc54bd9c34454f3f180f7dc22d5584780f4a60c1b6aafe97fd9de4e5b33dd333",
+      "cli_nested_sha256": "dc54bd9c34454f3f180f7dc22d5584780f4a60c1b6aafe97fd9de4e5b33dd333",
+      "archive_sha256": "dc54bd9c34454f3f180f7dc22d5584780f4a60c1b6aafe97fd9de4e5b33dd333",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 2864,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/worker.js.map",
+      "root_sha256": "7d2312f37adf29a71cb134b93da710c69384ddb066f5d7ec8090d011fd3141ce",
+      "cli_nested_sha256": "7d2312f37adf29a71cb134b93da710c69384ddb066f5d7ec8090d011fd3141ce",
+      "archive_sha256": "7d2312f37adf29a71cb134b93da710c69384ddb066f5d7ec8090d011fd3141ce",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 506,
+      "lines": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/worker.d.ts",
+      "root_sha256": "0ea390158515204a33608b4c6829f19fc7018f07416740e9bdad444f09b279e9",
+      "cli_nested_sha256": "0ea390158515204a33608b4c6829f19fc7018f07416740e9bdad444f09b279e9",
+      "archive_sha256": "0ea390158515204a33608b4c6829f19fc7018f07416740e9bdad444f09b279e9",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 348,
+      "lines": 7
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/worker.d.ts.map",
+      "root_sha256": "a58d2cabcbb078cf0b6588f56fd4b9c3222db0fed9a4c2afe18d5ddb4ea561e1",
+      "cli_nested_sha256": "a58d2cabcbb078cf0b6588f56fd4b9c3222db0fed9a4c2afe18d5ddb4ea561e1",
+      "archive_sha256": "a58d2cabcbb078cf0b6588f56fd4b9c3222db0fed9a4c2afe18d5ddb4ea561e1",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 166,
+      "lines": 1
+    }
+  ],
+  "dependencies_pending": [
+    {
+      "name": "@earendil-works/pi-codemode",
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@earendil-works/pi-codemode/-/pi-codemode-1.4.0.tgz",
+      "integrity": "sha512-23CNAXpS9DuLzPMyYuvrXVVio46x4YhffCgCqaWmF7F5H8PooqjrQvX4ucF6M0BhUd+x2tV6r1J0dv8cCME4Cg==",
+      "dependencies": {
+        "quickjs-wasi": "3.6.2"
+      },
+      "status": "pinned-metadata-only; exact inherited parser/sandbox/worker/WASM/schema/TUI wording not fully audited in this unit"
+    },
+    {
+      "name": "quickjs-wasi",
+      "version": "3.6.2",
+      "resolved": "https://registry.npmjs.org/quickjs-wasi/-/quickjs-wasi-3.6.2.tgz",
+      "integrity": "sha512-FCqGtGOrMgzUiIrMNMA2YnsOxCNwo31dzqXvclXUC6xeT35NJLKXQJsvbeCTjvoFAwZgEAPg8U6+KAPDGXn8Mg==",
+      "dependencies": {},
+      "status": "pinned-metadata-only; exact inherited parser/sandbox/worker/WASM/schema/TUI wording not fully audited in this unit"
+    },
+    {
+      "name": "typebox",
+      "version": "1.3.27",
+      "resolved": "https://registry.npmjs.org/typebox/-/typebox-1.3.27.tgz",
+      "integrity": "sha512-zu+jc1pcy4UiNThxikUr36f0Rybk9PEeCg/NE6adeWr/SKsdNO4EzZHYRDlv2YCVAfj3Odq3dESSo/jNyoBXzA==",
+      "dependencies": {},
+      "status": "pinned-metadata-only; exact inherited parser/sandbox/worker/WASM/schema/TUI wording not fully audited in this unit"
+    },
+    {
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@earendil-works/pi-tui/-/pi-tui-1.4.0.tgz",
+      "integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+      "dependencies": {
+        "get-east-asian-width": "1.6.0",
+        "marked": "18.0.11",
+        "marked-cjk-friendly": "0.1.2"
+      },
+      "status": "pinned-metadata-only; exact inherited parser/sandbox/worker/WASM/schema/TUI wording not fully audited in this unit"
+    }
+  ],
+  "source_review": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.js",
+      "status": "full-body-source-read",
+      "lines": 740,
+      "literal_occurrences": 222,
+      "fixed_definitions": 74,
+      "excluded_occurrences": 148,
+      "comments": [
+        {
+          "start": 0,
+          "end": 162,
+          "raw": "/**\n * Runs one codemode script in the sandbox. Split from tool.ts and loaded through\n * execute.lazy.ts so the sandbox runtime only loads when a script runs.\n */"
+        },
+        {
+          "start": 864,
+          "end": 1004,
+          "raw": "/** `models.classify()` and `models.generateImages()` calls one script may have in flight; `Promise.all` over many items queues the rest. */"
+        },
+        {
+          "start": 1043,
+          "end": 1277,
+          "raw": "/**\n * Heap limit for the QuickJS VM. The worker shares pi's process, so without a limit a runaway\n * script can grow to wasm32's 4 GiB and take the session down. Overruns throw\n * `InternalError: out of memory` inside the script.\n */"
+        },
+        {
+          "start": 1333,
+          "end": 1434,
+          "raw": "// Shared across calls and sessions. Allow one replacement while a cancelled worker is still exiting."
+        },
+        {
+          "start": 1475,
+          "end": 1586,
+          "raw": "/** `PI_CODEMODE_MAX_WORKERS` if it is a positive integer. Read per call so SDK hosts can set it at runtime. */"
+        },
+        {
+          "start": 1772,
+          "end": 1982,
+          "raw": "/**\n * How long a script waits for a free worker before failing. Bounds the wait when every worker is\n * held by a script that waits on another script, for example an in-process subagent that uses codemode.\n */"
+        },
+        {
+          "start": 2054,
+          "end": 2108,
+          "raw": "/** Scripts waiting for a worker, in arrival order. */"
+        },
+        {
+          "start": 2143,
+          "end": 2314,
+          "raw": "/**\n * Reserve one worker slot, waiting in arrival order while all are taken. Resolves with why it could\n * not reserve one: the signal aborted, or `timeoutMs` passed.\n */"
+        },
+        {
+          "start": 3112,
+          "end": 3171,
+          "raw": "/** Give free slots to waiting scripts in arrival order. */"
+        },
+        {
+          "start": 4473,
+          "end": 4578,
+          "raw": "/** Catalog entry for scripts. `headers` is dropped because models.json headers can carry credentials. */"
+        },
+        {
+          "start": 4684,
+          "end": 4718,
+          "raw": "/** `an image`, `a classifier`. */"
+        },
+        {
+          "start": 4810,
+          "end": 4917,
+          "raw": "/** A script value in an error message: `undefined`, `a string`, `an array`, or its keys (`{ prompt }`). */"
+        },
+        {
+          "start": 5791,
+          "end": 5904,
+          "raw": "/** Check a script's classifier context, so mistakes fail with the expected shape instead of a provider error. */"
+        },
+        {
+          "start": 8870,
+          "end": 8971,
+          "raw": "/** Check a script's image context, so mistakes such as `{ prompt }` fail with the expected shape. */"
+        },
+        {
+          "start": 10052,
+          "end": 10109,
+          "raw": "/** Runs at most `limit` calls at once, in call order. */"
+        },
+        {
+          "start": 10783,
+          "end": 10876,
+          "raw": "/** Values of `load()`: the `codemode-store` entries on the branch, applied from the root. */"
+        },
+        {
+          "start": 11362,
+          "end": 11408,
+          "raw": "/** Default token budget for script output. */"
+        },
+        {
+          "start": 11451,
+          "end": 11495,
+          "raw": "/** Characters per token when estimating. */"
+        },
+        {
+          "start": 11523,
+          "end": 11602,
+          "raw": "/** Like the script's `text()`: strings as is, other values as compact JSON. */"
+        },
+        {
+          "start": 11741,
+          "end": 12073,
+          "raw": "/**\n * Lay out the script's output so the model can tell items apart: providers join adjacent text\n * blocks with a newline or with nothing. With more than one text item (`text()` or the returned\n * value), each starts with a `==> text N/M <==` line. `console.*` lines follow all other output in\n * one `<console_output>` block.\n */"
+        },
+        {
+          "start": 12804,
+          "end": 13070,
+          "raw": "/**\n * Join adjacent text items into one, each part starting on its own line. The separator check looks\n * at the last non-empty part, not the joined text: reading the end of a growing concatenation makes\n * V8 copy it on every item, which is quadratic (#10678).\n */"
+        },
+        {
+          "start": 14481,
+          "end": 14567,
+          "raw": "/** Write the full text output to a temp file, like bash does for truncated output. */"
+        },
+        {
+          "start": 14806,
+          "end": 14920,
+          "raw": "/** File extensions of the image types `image()` accepts. Must list every type the sandbox's `image()` detects. */"
+        },
+        {
+          "start": 15054,
+          "end": 15313,
+          "raw": "/**\n * Save each image to a temp file and put a text item with its path before it. The model sees the\n * image but has no other way to reach its bytes: scripts cannot write files, and `write` only takes\n * text. Images shown more than once are saved once.\n */"
+        },
+        {
+          "start": 15708,
+          "end": 15804,
+          "raw": "// A failed write (disk full, unwritable temp dir) must not discard the result of a script whose"
+        },
+        {
+          "start": 15813,
+          "end": 15872,
+          "raw": "// tool calls already ran, so it becomes part of the label."
+        },
+        {
+          "start": 16578,
+          "end": 16789,
+          "raw": "/**\n * Apply the token budget: when the combined text exceeds it, the text items become one\n * item that keeps the start and end of the text, and images follow it. The full text is written to\n * a temp file.\n */"
+        },
+        {
+          "start": 18025,
+          "end": 18335,
+          "raw": "/**\n * The value a script receives for a nested call: a tool that declares\n * `outputSchema` resolves to its `structuredContent`, also for error results that carry one (such\n * as MCP results with `isError`); any other tool resolves to its text content. Other failures\n * reject with the tool's error text.\n */"
+        },
+        {
+          "start": 18658,
+          "end": 18821,
+          "raw": "/**\n * Run one script. Without a session context (a plain Agent or a direct call) scripts cannot call\n * tools, `store()` starts empty, and writes are dropped.\n */"
+        },
+        {
+          "start": 19063,
+          "end": 19158,
+          "raw": "// Usage of the script's `models.*` calls. Nested tool calls report theirs through the session."
+        },
+        {
+          "start": 19183,
+          "end": 19273,
+          "raw": "// Images returned by `models.generateImages()`, to notice a script that never shows them."
+        },
+        {
+          "start": 19665,
+          "end": 19751,
+          "raw": "// Show the script as running before its first nested call, so the row's timer starts."
+        },
+        {
+          "start": 19840,
+          "end": 19883,
+          "raw": "// ALL_TOOLS entries carry the declaration."
+        },
+        {
+          "start": 20571,
+          "end": 20633,
+          "raw": "// Only tools from ctx.tools are callable, so ctx is set here."
+        },
+        {
+          "start": 21336,
+          "end": 21397,
+          "raw": "// The wait for a worker counts toward the script's deadline."
+        },
+        {
+          "start": 22703,
+          "end": 22802,
+          "raw": "// The reservation covers the one worker this script starts. A launch that resumes after the result"
+        },
+        {
+          "start": 22807,
+          "end": 22857,
+          "raw": "// settled finds it released and starts no worker."
+        },
+        {
+          "start": 23687,
+          "end": 23761,
+          "raw": "// From here the sandbox releases the slot when the worker actually exits."
+        },
+        {
+          "start": 24181,
+          "end": 24269,
+          "raw": "// Calls still marked running were cut off by the script ending, a timeout, or an abort."
+        },
+        {
+          "start": 24684,
+          "end": 24742,
+          "raw": "// pi extension: a returned value is appended like text()."
+        },
+        {
+          "start": 25512,
+          "end": 25607,
+          "raw": "// After truncation, which joins the text items and moves images after them, so each path stays"
+        },
+        {
+          "start": 25612,
+          "end": 25650,
+          "raw": "// next to its image and is never cut."
+        },
+        {
+          "start": 26242,
+          "end": 26423,
+          "raw": "/**\n * Whether `query` names the namespace: its name or one of its aliases, as written or as the same\n * script identifier (`dev-radius` and `dev_radius` are both `dev_radius`).\n */"
+        },
+        {
+          "start": 26652,
+          "end": 26805,
+          "raw": "/**\n * `searchTools()`, `describeTool()`, and `describeNamespace()`: ranked search and lookup over the\n * script's nested tools and their namespaces.\n */"
+        },
+        {
+          "start": 29944,
+          "end": 30216,
+          "raw": "/**\n * `models.*` for scripts: the model registry methods documented in docs/codemode.md.\n * Classifier and image calls appear as nested call rows so the renderer shows them, and their usage\n * goes to `addUsage`. Rows show only the model, never prompts or image data.\n */"
+        },
+        {
+          "start": 30401,
+          "end": 30610,
+          "raw": "/**\n     * Resolve the script's model by provider and id only, check the context, then run the call as a\n     * nested call row. A script-supplied baseUrl or headers must never receive the credentials.\n     */"
+        },
+        {
+          "start": 30928,
+          "end": 31009,
+          "raw": "// undefined arrives as null: spread arguments cross the sandbox as a JSON array."
+        },
+        {
+          "start": 34627,
+          "end": 34662,
+          "raw": "//# sourceMappingURL=execute.js.map"
+        }
+      ],
+      "comment_disposition": "Nonruntime source documentation/import-map comments; prose not independently executed.",
+      "prior_status_at_assignment": "remaining_body=true, no whole_body_reviews; execute bounded references only; census remains parent-owned."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.lazy.js",
+      "status": "full-body-source-read",
+      "lines": 3,
+      "literal_occurrences": 1,
+      "fixed_definitions": 0,
+      "excluded_occurrences": 1,
+      "comments": [
+        {
+          "start": 0,
+          "end": 79,
+          "raw": "/** Loads the codemode sandbox runtime on the first script (see execute.ts). */"
+        },
+        {
+          "start": 146,
+          "end": 186,
+          "raw": "//# sourceMappingURL=execute.lazy.js.map"
+        }
+      ],
+      "comment_disposition": "Nonruntime source documentation/import-map comments; prose not independently executed.",
+      "prior_status_at_assignment": "remaining_body=true, no whole_body_reviews; execute bounded references only; census remains parent-owned."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/index.js",
+      "status": "full-body-source-read",
+      "lines": 33,
+      "literal_occurrences": 5,
+      "fixed_definitions": 0,
+      "excluded_occurrences": 5,
+      "comments": [
+        {
+          "start": 0,
+          "end": 366,
+          "raw": "/**\n * The `codemode` tool as an extension. The CLI loads it as a built-in extension; SDK users\n * add `createCodemodeExtension()` to their extension factories.\n *\n * `codemode` is registered inactive. Activate it with `--tools`, the `defaultTools` setting, or\n * `setActiveTools()`; the MCP extension activates it when MCP tools are only reachable from scripts.\n */"
+        },
+        {
+          "start": 1587,
+          "end": 1620,
+          "raw": "//# sourceMappingURL=index.js.map"
+        }
+      ],
+      "comment_disposition": "Nonruntime source documentation/import-map comments; prose not independently executed.",
+      "prior_status_at_assignment": "remaining_body=true, no whole_body_reviews; execute bounded references only; census remains parent-owned."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/renderer.js",
+      "status": "full-body-source-read",
+      "lines": 143,
+      "literal_occurrences": 74,
+      "fixed_definitions": 22,
+      "excluded_occurrences": 52,
+      "comments": [
+        {
+          "start": 0,
+          "end": 436,
+          "raw": "/**\n * Presentation for the codemode tool.\n *\n * The call shows the script; the result lists the nested tool calls with their status as they\n * run and the cost of its model calls, followed by the script output without the \"Script completed\"\n * header, and the time the script has been running (`Elapsed`) or took (`Took`), like bash rows.\n * Nested calls are not separate tool rows because they never reach the model as tool calls.\n */"
+        },
+        {
+          "start": 1414,
+          "end": 1520,
+          "raw": "/** Cents for larger amounts, two significant digits for the fractions of a cent classifier calls cost. */"
+        },
+        {
+          "start": 2753,
+          "end": 2837,
+          "raw": "// The code includes the `// @options:` line, so options show as part of the script."
+        },
+        {
+          "start": 4535,
+          "end": 4604,
+          "raw": "// Collapsed rows hide earlier calls, so the total covers every call."
+        },
+        {
+          "start": 5020,
+          "end": 5117,
+          "raw": "// Drop the \"Script completed\\nWall time ...\\nOutput:\\n\" header. Rejected input (invalid options)"
+        },
+        {
+          "start": 5126,
+          "end": 5143,
+          "raw": "// has no header."
+        },
+        {
+          "start": 5891,
+          "end": 5975,
+          "raw": "// Limit wrapped lines, not logical ones: script output is often one long JSON line."
+        },
+        {
+          "start": 6279,
+          "end": 6366,
+          "raw": "// The collapsed preview hides the truncation notice at the end, so name the file here."
+        },
+        {
+          "start": 6803,
+          "end": 6839,
+          "raw": "//# sourceMappingURL=renderer.js.map"
+        }
+      ],
+      "comment_disposition": "Nonruntime source documentation/import-map comments; prose not independently executed.",
+      "prior_status_at_assignment": "remaining_body=true, no whole_body_reviews; execute bounded references only; census remains parent-owned."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/tool.js",
+      "status": "full-body-source-read",
+      "lines": 288,
+      "literal_occurrences": 69,
+      "fixed_definitions": 25,
+      "excluded_occurrences": 44,
+      "comments": [
+        {
+          "start": 0,
+          "end": 1461,
+          "raw": "/**\n * The `codemode` tool: the model writes JavaScript that calls other tools. Scripts use `tools`,\n * `ALL_TOOLS`, `text()`, `image()`, `exit()`, `store()`/`load()`, `console.*`, and `return <value>`,\n * may start with a `// @options:` line, and reach the model catalog, classifiers, and image models\n * through `models.*`. Results start with a \"Script completed\" or \"Script failed\" header.\n *\n * Scripts can call the agent loop's nested tools: active `direct` tools and every `codemode` or\n * `deferred` tool. Nested calls run through the agent loop's tool pipeline (`ctx.executeTool`), so\n * validation, `tool_call`/`tool_result` hooks, and permission checks apply exactly as for direct\n * calls. Only the script's output reaches the model; nested results do not.\n *\n * Nested results are handed to the script as follows:\n * - A tool that declares `outputSchema` resolves to its `structuredContent`, also for error\n *   results that carry one.\n * - Any other tool resolves to its text content as one string.\n * - A failed, blocked, or invalid call rejects with an Error carrying the tool's error text.\n *\n * A script that fails returns a normal error result that keeps its partial output, followed by\n * \"Script error:\" and the error. `store(key, value)` and `load(key)` keep JSON values across\n * calls; successful scripts append their writes to the session as `codemode-store` custom entries,\n * so each branch sees the values written on its own path.\n */"
+        },
+        {
+          "start": 2080,
+          "end": 2175,
+          "raw": "/** Custom entry type holding one script's `store()` writes: {@link CodemodeStoreEntryData}. */"
+        },
+        {
+          "start": 2691,
+          "end": 2788,
+          "raw": "/** The reference for scripts: globals, tool results, `store()`, the `models` API, and limits. */"
+        },
+        {
+          "start": 3524,
+          "end": 3599,
+          "raw": "/** One line per global. The details live in {@link CODEMODE_DOCS_PATH}. */"
+        },
+        {
+          "start": 4472,
+          "end": 4560,
+          "raw": "/** Default for {@link CodemodeDescriptionOptions.inlineBudget}, in estimated tokens. */"
+        },
+        {
+          "start": 4648,
+          "end": 4719,
+          "raw": "/** Characters per token when estimating the cost of a tool section. */"
+        },
+        {
+          "start": 4747,
+          "end": 4955,
+          "raw": "/**\n * What a script sees of a tool: its description followed by its prompt guidelines, which the system\n * prompt only has for declared tools. Tools without an output schema resolve to their text output.\n */"
+        },
+        {
+          "start": 5391,
+          "end": 5472,
+          "raw": "/** Tools a script may call: every given tool except the codemode tool itself. */"
+        },
+        {
+          "start": 5594,
+          "end": 5680,
+          "raw": "/** `### \\`id\\` (\\`raw name\\`)` followed by the tool's description and declaration. */"
+        },
+        {
+          "start": 5953,
+          "end": 6301,
+          "raw": "/**\n * Pick the tool sections that fit the budget, like OpenCode's catalog: in each round every group\n * (tools without a namespace first, then namespaces by name) places its cheapest remaining tool; a\n * group whose next tool does not fit drops out while the others continue. Every namespace is\n * represented before any namespace is complete.\n */"
+        },
+        {
+          "start": 7030,
+          "end": 7428,
+          "raw": "/**\n * Model-facing description: the helper list, guidance for finding tools that are not listed, the\n * `models` API, and one section per listed tool, grouped by namespace. Deferred tools are never\n * listed and do not affect the description at all, so it stays the same while tools are registered\n * late (for example by MCP servers that connect). Tool sections are limited to `inlineBudget`.\n */"
+        },
+        {
+          "start": 8831,
+          "end": 8904,
+          "raw": "// Only tools that did not fit the budget are counted as not listed here."
+        },
+        {
+          "start": 9470,
+          "end": 9704,
+          "raw": "/**\n * The field names of an object schema, `{ output, exit_code, full_output_path? }`, with the fields of\n * object-typed fields `depth` levels deep: `{ content, structuredContent?: { results } }`. Undefined\n * for other schemas.\n */"
+        },
+        {
+          "start": 10358,
+          "end": 10527,
+          "raw": "/**\n * What a script call resolves to, in one line: `a string`, the field names of an object (see\n * {@link describeFields}), or the rendered type for anything else.\n */"
+        },
+        {
+          "start": 10768,
+          "end": 10950,
+          "raw": "/**\n * A declared tool's description followed by how scripts call it and what the call resolves to. The\n * arguments are the tool's declared parameters, so they are not repeated.\n */"
+        },
+        {
+          "start": 11167,
+          "end": 11814,
+          "raw": "/**\n * How the codemode tool presents tools that are both declared and callable from scripts:\n * - `on`: their descriptions say how scripts call them, and the codemode description\n *   lists only the callable tools without `direct` exposure.\n * - `only`: the codemode description lists every callable tool, and requests leave out the\n *   declarations of active `direct` tools.\n *\n * Listed tools carry their prompt guidelines, which the system prompt only has for declared tools.\n *\n * Listing by exposure, not by the active set, keeps the codemode description unchanged when\n * `tool_search` loads a tool, so loads do not redeclare codemode.\n */"
+        },
+        {
+          "start": 13435,
+          "end": 13543,
+          "raw": "/** Script globals that list or look up tools and namespaces, which the script may then call by any name. */"
+        },
+        {
+          "start": 13632,
+          "end": 13883,
+          "raw": "/**\n * The tools a script may call (`ToolDefinition.reachesTools`): every tool when it uses a discovery\n * global, else the words of its source, so `tools.mcp__docs__search` and\n * `tools[\"mcp__docs__\" + name]` both name the `mcp__docs` namespace.\n */"
+        },
+        {
+          "start": 14200,
+          "end": 14283,
+          "raw": "// Replaced with the declarations of the callable tools when the tool is activated."
+        },
+        {
+          "start": 14566,
+          "end": 14606,
+          "raw": "// Scripts must not start other scripts."
+        },
+        {
+          "start": 14787,
+          "end": 14867,
+          "raw": "// Capable models write the script as raw text instead of a JSON-escaped string."
+        },
+        {
+          "start": 14978,
+          "end": 15056,
+          "raw": "// The sandbox (worker, QuickJS wasm) loads on the first call, not at startup."
+        },
+        {
+          "start": 15266,
+          "end": 15438,
+          "raw": "/**\n * Create the codemode tool as an AgentTool. The description lists the given tools; the script can\n * call whatever tools the agent loop provides at execution time.\n */"
+        },
+        {
+          "start": 15862,
+          "end": 15894,
+          "raw": "//# sourceMappingURL=tool.js.map"
+        }
+      ],
+      "comment_disposition": "Nonruntime source documentation/import-map comments; prose not independently executed.",
+      "prior_status_at_assignment": "remaining_body=true, no whole_body_reviews; execute bounded references only; census remains parent-owned."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/worker.js",
+      "status": "full-body-source-read",
+      "lines": 7,
+      "literal_occurrences": 1,
+      "fixed_definitions": 0,
+      "excluded_occurrences": 1,
+      "comments": [
+        {
+          "start": 0,
+          "end": 266,
+          "raw": "/**\n * Worker entry for the codemode sandbox in bundled builds. The Node bundle and the Bun binary\n * build this file as a separate entrypoint because pi-codemode's own worker file is not on disk\n * there; `getCodemodeWorkerSpecifier()` in config.ts resolves it.\n */"
+        },
+        {
+          "start": 312,
+          "end": 346,
+          "raw": "//# sourceMappingURL=worker.js.map"
+        }
+      ],
+      "comment_disposition": "Nonruntime source documentation/import-map comments; prose not independently executed.",
+      "prior_status_at_assignment": "remaining_body=true, no whole_body_reviews; execute bounded references only; census remains parent-owned."
+    }
+  ],
+  "counts": {
+    "rows": 121,
+    "excluded_occurrences": 251,
+    "external_boundaries": 18,
+    "scopes": 49,
+    "proofs": 121,
+    "whole_local_bodies": 6,
+    "whole_local_lines": 1214,
+    "literal_occurrences": 372,
+    "catalog_linked_rows": 0
+  },
+  "proofs": [
+    {
+      "item_id": "pi.codemode-support.fixed.1",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 4173,
+      "end": 4257,
+      "token_kind": "template",
+      "raw_source": "`Unknown model type ${JSON.stringify(value)}. Use \"chat\", \"image\", or \"classifier\".`",
+      "guards": [],
+      "line": 95,
+      "column": 21,
+      "english": "Unknown model type ${JSON.stringify(value)}. Use \"chat\", \"image\", or \"classifier\"."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.2",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 4423,
+      "end": 4450,
+      "token_kind": "string",
+      "raw_source": "\"provider must be a string\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 100,
+          "start": 4372,
+          "end": 4397,
+          "raw": "typeof value !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 101,
+      "column": 25,
+      "english": "provider must be a string"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.3",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 4759,
+      "end": 4806,
+      "token_kind": "template",
+      "raw_source": "`${/^[aeiou]/.test(word) ? \"an\" : \"a\"} ${word}`",
+      "guards": [],
+      "line": 112,
+      "column": 12,
+      "english": "${/^[aeiou]/.test(word) ? \"an\" : \"a\"} ${word}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.4",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 4786,
+      "end": 4790,
+      "token_kind": "string",
+      "raw_source": "\"an\"",
+      "guards": [],
+      "line": 112,
+      "column": 39,
+      "english": "an"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.5",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 4793,
+      "end": 4796,
+      "token_kind": "string",
+      "raw_source": "\"a\"",
+      "guards": [],
+      "line": 112,
+      "column": 46,
+      "english": "a"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.6",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5093,
+      "end": 5109,
+      "token_kind": "string",
+      "raw_source": "\"an empty array\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 118,
+          "start": 5035,
+          "end": 5055,
+          "raw": "Array.isArray(value)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 119,
+      "column": 37,
+      "english": "an empty array"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.7",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5112,
+      "end": 5122,
+      "token_kind": "string",
+      "raw_source": "\"an array\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 118,
+          "start": 5035,
+          "end": 5055,
+          "raw": "Array.isArray(value)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 119,
+      "column": 56,
+      "english": "an array"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.8",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5252,
+      "end": 5256,
+      "token_kind": "string",
+      "raw_source": "\"{}\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 120,
+          "start": 5132,
+          "end": 5157,
+          "raw": "typeof value === \"object\"",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 122,
+          "start": 5214,
+          "end": 5231,
+          "raw": "keys.length === 0",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 123,
+      "column": 20,
+      "english": "{}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.9",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5273,
+      "end": 5342,
+      "token_kind": "template",
+      "raw_source": "`{ ${keys.slice(0, 6).join(\", \")}${keys.length > 6 ? \", ...\" : \"\"} }`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 120,
+          "start": 5132,
+          "end": 5157,
+          "raw": "typeof value === \"object\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 124,
+      "column": 16,
+      "english": "{ ${keys.slice(0, 6).join(\", \")}${keys.length > 6 ? \", ...\" : \"\"} }"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.10",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5326,
+      "end": 5333,
+      "token_kind": "string",
+      "raw_source": "\", ...\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 120,
+          "start": 5132,
+          "end": 5157,
+          "raw": "typeof value === \"object\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 124,
+      "column": 69,
+      "english": ", ..."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.11",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5389,
+      "end": 5399,
+      "token_kind": "string",
+      "raw_source": "\"a string\"",
+      "guards": [],
+      "line": 126,
+      "column": 40,
+      "english": "a string"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.12",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5402,
+      "end": 5421,
+      "token_kind": "template",
+      "raw_source": "`a ${typeof value}`",
+      "guards": [],
+      "line": 126,
+      "column": 53,
+      "english": "a ${typeof value}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.13",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5458,
+      "end": 5789,
+      "token_kind": "string",
+      "raw_source": "'{ state: { ... }, images?: [{ type: \"image\", data: <base64>, mimeType }], questions: { <id>: { type: \"choice\", instructions, criteria: { <label>: <meaning> } } | { type: \"score\", instructions, criteria: [<lowest level>, ..., <highest level>] } | { type: \"bool\", instructions, criteria: { true: <meaning>, false: <meaning> } } } }'",
+      "guards": [],
+      "line": 128,
+      "column": 34,
+      "english": "{ state: { ... }, images?: [{ type: \"image\", data: <base64>, mimeType }], questions: { <id>: { type: \"choice\", instructions, criteria: { <label>: <meaning> } } | { type: \"score\", instructions, criteria: [<lowest level>, ..., <highest level>] } | { type: \"bool\", instructions, criteria: { true: <meaning>, false: <meaning> } } } }"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.14",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 5988,
+      "end": 6107,
+      "token_kind": "template",
+      "raw_source": "`models.classify() ${problem}. Expected context: ${CLASSIFIER_CONTEXT_SHAPE}. See \"Classify\" in ${CODEMODE_DOCS_PATH}.`",
+      "guards": [],
+      "line": 131,
+      "column": 41,
+      "english": "models.classify() ${problem}. Expected context: ${CLASSIFIER_CONTEXT_SHAPE}. See \"Classify\" in ${CODEMODE_DOCS_PATH}."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.15",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 6214,
+      "end": 6294,
+      "token_kind": "template",
+      "raw_source": "`expects a context object as its second argument, got ${describeValue(context)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 132,
+          "start": 6118,
+          "end": 6191,
+          "raw": "typeof context !== \"object\" || context === null || Array.isArray(context)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 133,
+      "column": 20,
+      "english": "expects a context object as its second argument, got ${describeValue(context)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.16",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 6451,
+      "end": 6513,
+      "token_kind": "template",
+      "raw_source": "`context.state must be an object, got ${describeValue(state)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 136,
+          "start": 6361,
+          "end": 6428,
+          "raw": "typeof state !== \"object\" || state === null || Array.isArray(state)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 137,
+      "column": 20,
+      "english": "context.state must be an object, got ${describeValue(state)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.17",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 6613,
+      "end": 6676,
+      "token_kind": "template",
+      "raw_source": "`context.images must be an array, got ${describeValue(images)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 139,
+          "start": 6530,
+          "end": 6550,
+          "raw": "images !== undefined",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 140,
+          "start": 6566,
+          "end": 6588,
+          "raw": "!Array.isArray(images)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 141,
+      "column": 24,
+      "english": "context.images must be an array, got ${describeValue(images)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.18",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 6864,
+      "end": 6942,
+      "token_kind": "template",
+      "raw_source": "`context.images[${index}] must be an image block, got ${describeValue(image)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 139,
+          "start": 6530,
+          "end": 6550,
+          "raw": "images !== undefined",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 143,
+          "start": 6738,
+          "end": 6833,
+          "raw": "image?.type !== \"image\" || typeof image.data !== \"string\" || typeof image.mimeType !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 144,
+      "column": 28,
+      "english": "context.images[${index}] must be an image block, got ${describeValue(image)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.19",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 7150,
+      "end": 7237,
+      "token_kind": "template",
+      "raw_source": "`context.questions must map question IDs to questions, got ${describeValue(questions)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 148,
+          "start": 6985,
+          "end": 7127,
+          "raw": "typeof questions !== \"object\" ||\n        questions === null ||\n        Array.isArray(questions) ||\n        Object.keys(questions).length === 0",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 152,
+      "column": 20,
+      "english": "context.questions must map question IDs to questions, got ${describeValue(questions)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.20",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 7434,
+      "end": 7459,
+      "token_kind": "template",
+      "raw_source": "`context.questions.${id}`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        }
+      ],
+      "line": 156,
+      "column": 20,
+      "english": "context.questions.${id}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.21",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 7576,
+      "end": 7641,
+      "token_kind": "template",
+      "raw_source": "`${at} must be a question object, got ${describeValue(question)}`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 157,
+          "start": 7473,
+          "end": 7549,
+          "raw": "typeof question !== \"object\" || question === null || Array.isArray(question)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 158,
+      "column": 24,
+      "english": "${at} must be a question object, got ${describeValue(question)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.22",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 7782,
+      "end": 7819,
+      "token_kind": "template",
+      "raw_source": "`${at}.instructions must be a string`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 161,
+          "start": 7725,
+          "end": 7757,
+          "raw": "typeof instructions !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 162,
+      "column": 24,
+      "english": "${at}.instructions must be a string"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.23",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 8065,
+      "end": 8143,
+      "token_kind": "template",
+      "raw_source": "`${at} is a \"choice\" question, so criteria must map each label to its meaning`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 163,
+          "start": 7834,
+          "end": 7851,
+          "raw": "type === \"choice\"",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 164,
+          "start": 7871,
+          "end": 8034,
+          "raw": "typeof criteria !== \"object\" ||\n                criteria === null ||\n                Array.isArray(criteria) ||\n                !isStrings(Object.values(criteria))",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 168,
+      "column": 28,
+      "english": "${at} is a \"choice\" question, so criteria must map each label to its meaning"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.24",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 8302,
+      "end": 8390,
+      "token_kind": "template",
+      "raw_source": "`${at} is a \"score\" question, so criteria must list the levels as strings, lowest first`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 163,
+          "start": 7834,
+          "end": 7851,
+          "raw": "type === \"choice\"",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 171,
+          "start": 8187,
+          "end": 8203,
+          "raw": "type === \"score\"",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 172,
+          "start": 8223,
+          "end": 8271,
+          "raw": "!Array.isArray(criteria) || !isStrings(criteria)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 173,
+      "column": 28,
+      "english": "${at} is a \"score\" question, so criteria must list the levels as strings, lowest first"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.25",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 8605,
+      "end": 8686,
+      "token_kind": "template",
+      "raw_source": "`${at} is a \"bool\" question, so criteria must be { true: string, false: string }`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 163,
+          "start": 7834,
+          "end": 7851,
+          "raw": "type === \"choice\"",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 171,
+          "start": 8187,
+          "end": 8203,
+          "raw": "type === \"score\"",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 176,
+          "start": 8434,
+          "end": 8449,
+          "raw": "type === \"bool\"",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 178,
+          "start": 8506,
+          "end": 8574,
+          "raw": "typeof labels?.true !== \"string\" || typeof labels.false !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 179,
+      "column": 28,
+      "english": "${at} is a \"bool\" question, so criteria must be { true: string, false: string }"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.26",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 8751,
+      "end": 8829,
+      "token_kind": "template",
+      "raw_source": "`${at}.type must be \"choice\", \"score\", or \"bool\", got ${JSON.stringify(type)}`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 155,
+          "start": 7362,
+          "end": 7411,
+          "raw": "const [id, question] of Object.entries(questions)",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 163,
+          "start": 7834,
+          "end": 7851,
+          "raw": "type === \"choice\"",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 171,
+          "start": 8187,
+          "end": 8203,
+          "raw": "type === \"score\"",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 176,
+          "start": 8434,
+          "end": 8449,
+          "raw": "type === \"bool\"",
+          "polarity": "false/else"
+        }
+      ],
+      "line": 183,
+      "column": 24,
+      "english": "${at}.type must be \"choice\", \"score\", or \"bool\", got ${JSON.stringify(type)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.27",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 9051,
+      "end": 9269,
+      "token_kind": "template",
+      "raw_source": "`models.generateImages() ${problem}. Expected context: { input: [{ type: \"text\", text: <prompt> }, ...optional { type: \"image\", data: <base64>, mimeType } references] }. See \"Generate images\" in ${CODEMODE_DOCS_PATH}.`",
+      "guards": [],
+      "line": 190,
+      "column": 41,
+      "english": "models.generateImages() ${problem}. Expected context: { input: [{ type: \"text\", text: <prompt> }, ...optional { type: \"image\", data: <base64>, mimeType } references] }. See \"Generate images\" in ${CODEMODE_DOCS_PATH}."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.28",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 9376,
+      "end": 9456,
+      "token_kind": "template",
+      "raw_source": "`expects a context object as its second argument, got ${describeValue(context)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 191,
+          "start": 9280,
+          "end": 9353,
+          "raw": "typeof context !== \"object\" || context === null || Array.isArray(context)",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 192,
+      "column": 20,
+      "english": "expects a context object as its second argument, got ${describeValue(context)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.29",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 9570,
+      "end": 9650,
+      "token_kind": "template",
+      "raw_source": "`context.input must be a non-empty array of blocks, got ${describeValue(input)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 195,
+          "start": 9504,
+          "end": 9547,
+          "raw": "!Array.isArray(input) || input.length === 0",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 196,
+      "column": 20,
+      "english": "context.input must be a non-empty array of blocks, got ${describeValue(input)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.30",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 9935,
+      "end": 10019,
+      "token_kind": "template",
+      "raw_source": "`context.input[${index}] must be a text or image block, got ${describeValue(block)}`",
+      "guards": [],
+      "line": 203,
+      "column": 20,
+      "english": "context.input[${index}] must be a text or image block, got ${describeValue(block)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.31",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 12553,
+      "end": 12599,
+      "token_kind": "template",
+      "raw_source": "`==> text ${index}/${total} <==\\n${item.text}`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 268,
+          "start": 12274,
+          "end": 12294,
+          "raw": "const item of output",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 269,
+          "start": 12310,
+          "end": 12331,
+          "raw": "item.type === \"image\"",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 272,
+          "start": 12392,
+          "end": 12404,
+          "raw": "item.console",
+          "polarity": "false/else"
+        }
+      ],
+      "line": 277,
+      "column": 58,
+      "english": "==> text ${index}/${total} <==\\n${item.text}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.32",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 12708,
+      "end": 12773,
+      "token_kind": "template",
+      "raw_source": "`<console_output>\\n${consoleLines.join(\"\\n\")}\\n</console_output>`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 280,
+          "start": 12640,
+          "end": 12663,
+          "raw": "consoleLines.length > 0",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 281,
+      "column": 42,
+      "english": "<console_output>\\n${consoleLines.join(\"\\n\")}\\n</console_output>"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.33",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 13837,
+      "end": 13863,
+      "token_kind": "string",
+      "raw_source": "\"No tool calls were made.\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 318,
+          "start": 13802,
+          "end": 13820,
+          "raw": "calls.length === 0",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 319,
+      "column": 16,
+      "english": "No tool calls were made."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.34",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 13876,
+      "end": 14002,
+      "token_kind": "template",
+      "raw_source": "`Tool calls made before the failure (they are not undone): ${calls.map((call) => `${call.name} (${call.status})`).join(\", \")}`",
+      "guards": [],
+      "line": 320,
+      "column": 12,
+      "english": "Tool calls made before the failure (they are not undone): ${calls.map((call) => `${call.name} (${call.status})`).join(\", \")}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.35",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 13957,
+      "end": 13988,
+      "token_kind": "template",
+      "raw_source": "`${call.name} (${call.status})`",
+      "guards": [],
+      "line": 320,
+      "column": 93,
+      "english": "${call.name} (${call.status})"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.36",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 14141,
+      "end": 14185,
+      "token_kind": "template",
+      "raw_source": "`${error.name ?? \"Error\"}: ${error.message}`",
+      "guards": [],
+      "line": 325,
+      "column": 27,
+      "english": "${error.name ?? \"Error\"}: ${error.message}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.37",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 14158,
+      "end": 14165,
+      "token_kind": "string",
+      "raw_source": "\"Error\"",
+      "guards": [],
+      "line": 325,
+      "column": 44,
+      "english": "Error"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.38",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 14236,
+      "end": 14272,
+      "token_kind": "template",
+      "raw_source": "`Script timed out: ${error.message}`",
+      "guards": [],
+      "line": 327,
+      "column": 15,
+      "english": "Script timed out: ${error.message}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.39",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 14330,
+      "end": 14364,
+      "token_kind": "template",
+      "raw_source": "`Script aborted: ${error.message}`",
+      "guards": [],
+      "line": 329,
+      "column": 19,
+      "english": "Script aborted: ${error.message}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.40",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 14383,
+      "end": 14424,
+      "token_kind": "template",
+      "raw_source": "`Script sandbox failed: ${error.message}`",
+      "guards": [],
+      "line": 330,
+      "column": 19,
+      "english": "Script sandbox failed: ${error.message}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.41",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 14437,
+      "end": 14477,
+      "token_kind": "template",
+      "raw_source": "`${head}\\n\\n${formatCallSummary(calls)}`",
+      "guards": [],
+      "line": 331,
+      "column": 12,
+      "english": "${head}\\n\\n${formatCallSummary(calls)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.42",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 15651,
+      "end": 15697,
+      "token_kind": "template",
+      "raw_source": "`No file extension for image type ${mimeType}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 360,
+          "start": 15611,
+          "end": 15621,
+          "raw": "!extension",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 361,
+      "column": 29,
+      "english": "No file extension for image type ${mimeType}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.43",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 15987,
+      "end": 16023,
+      "token_kind": "template",
+      "raw_source": "`[Image saved to ${path} (${kind})]`",
+      "guards": [],
+      "line": 366,
+      "column": 20,
+      "english": "[Image saved to ${path} (${kind})]"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.44",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 16078,
+      "end": 16175,
+      "token_kind": "template",
+      "raw_source": "`[Image (${kind}) could not be saved: ${error instanceof Error ? error.message : String(error)}]`",
+      "guards": [],
+      "line": 369,
+      "column": 20,
+      "english": "[Image (${kind}) could not be saved: ${error instanceof Error ? error.message : String(error)}]"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.45",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 17376,
+      "end": 17603,
+      "token_kind": "template",
+      "raw_source": "`Warning: truncated output (original token count: ${Math.ceil(combined.length / CHARS_PER_TOKEN)})\\nTotal output lines: ${combined.split(\"\\n\").length}\\n\\n${head}\u2026${Math.ceil(removed / CHARS_PER_TOKEN)} tokens truncated\u2026${tail}`",
+      "guards": [],
+      "line": 400,
+      "column": 16,
+      "english": "Warning: truncated output (original token count: ${Math.ceil(combined.length / CHARS_PER_TOKEN)})\\nTotal output lines: ${combined.split(\"\\n\").length}\\n\\n${head}\u2026${Math.ceil(removed / CHARS_PER_TOKEN)} tokens truncated\u2026${tail}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.46",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 17706,
+      "end": 17767,
+      "token_kind": "template",
+      "raw_source": "`\\n\\n[Full output: ${spilled.path} (read with offset/limit)]`",
+      "guards": [],
+      "line": 404,
+      "column": 15,
+      "english": "\\n\\n[Full output: ${spilled.path} (read with offset/limit)]"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.47",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 17782,
+      "end": 17838,
+      "token_kind": "template",
+      "raw_source": "`\\n\\n[Could not save the full output: ${spilled.error}]`",
+      "guards": [],
+      "line": 405,
+      "column": 15,
+      "english": "\\n\\n[Could not save the full output: ${spilled.error}]"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.48",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 18608,
+      "end": 18636,
+      "token_kind": "template",
+      "raw_source": "`Tool \"${tool.name}\" failed`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 422,
+          "start": 18559,
+          "end": 18574,
+          "raw": "outcome.isError",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 423,
+      "column": 33,
+      "english": "Tool \"${tool.name}\" failed"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.49",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 20688,
+      "end": 20715,
+      "token_kind": "string",
+      "raw_source": "\"Tool calls need a session\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 466,
+          "start": 20650,
+          "end": 20654,
+          "raw": "!ctx",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 467,
+      "column": 33,
+      "english": "Tool calls need a session"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.50",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 21103,
+      "end": 21131,
+      "token_kind": "template",
+      "raw_source": "`Tool \"${tool.name}\" failed`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 471,
+          "start": 20938,
+          "end": 20953,
+          "raw": "outcome.isError",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 473,
+      "column": 71,
+      "english": "Tool \"${tool.name}\" failed"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.51",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 21888,
+      "end": 21971,
+      "token_kind": "template",
+      "raw_source": "`Script aborted: ${reason instanceof Error ? reason.message : \"Execution aborted\"}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 487,
+          "start": 21685,
+          "end": 21709,
+          "raw": "admission !== \"reserved\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 491,
+      "column": 15,
+      "english": "Script aborted: ${reason instanceof Error ? reason.message : \"Execution aborted\"}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.52",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 21950,
+      "end": 21969,
+      "token_kind": "string",
+      "raw_source": "\"Execution aborted\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 487,
+          "start": 21685,
+          "end": 21709,
+          "raw": "admission !== \"reserved\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 491,
+      "column": 77,
+      "english": "Execution aborted"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.53",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 22040,
+      "end": 22141,
+      "token_kind": "template",
+      "raw_source": "`Script timed out: Execution timed out after ${deadline} ms while waiting for a free codemode worker`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 487,
+          "start": 21685,
+          "end": 21709,
+          "raw": "admission !== \"reserved\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 493,
+      "column": 19,
+      "english": "Script timed out: Execution timed out after ${deadline} ms while waiting for a free codemode worker"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.54",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 22160,
+      "end": 22372,
+      "token_kind": "template",
+      "raw_source": "`No codemode worker became free within ${CODEMODE_WORKER_WAIT_MS / 1000} seconds. All ${maxCodemodeWorkers()} workers, shared by every session in this process, are held by other scripts. Retry after they finish.`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 487,
+          "start": 21685,
+          "end": 21709,
+          "raw": "admission !== \"reserved\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 494,
+      "column": 19,
+      "english": "No codemode worker became free within ${CODEMODE_WORKER_WAIT_MS / 1000} seconds. All ${maxCodemodeWorkers()} workers, shared by every session in this process, are held by other scripts. Retry after they finish."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.55",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 22452,
+      "end": 22507,
+      "token_kind": "template",
+      "raw_source": "`Script failed\\nWall time ${waited} seconds\\nOutput:\\n`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 487,
+          "start": 21685,
+          "end": 21709,
+          "raw": "admission !== \"reserved\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 497,
+      "column": 39,
+      "english": "Script failed\\nWall time ${waited} seconds\\nOutput:\\n"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.56",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 22549,
+      "end": 22603,
+      "token_kind": "template",
+      "raw_source": "`Script error:\\n${error}\\n\\nThe script did not start.`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 487,
+          "start": 21685,
+          "end": 21709,
+          "raw": "admission !== \"reserved\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 498,
+      "column": 39,
+      "english": "Script error:\\n${error}\\n\\nThe script did not start."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.57",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 23640,
+      "end": 23668,
+      "token_kind": "string",
+      "raw_source": "\"The script already settled\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 523,
+          "start": 23593,
+          "end": 23602,
+          "raw": "!reserved",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 524,
+      "column": 37,
+      "english": "The script already settled"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.58",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 24976,
+      "end": 25022,
+      "token_kind": "template",
+      "raw_source": "`Script error:\\n${formatError(result, calls)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 556,
+          "start": 24923,
+          "end": 24933,
+          "raw": "!result.ok",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 557,
+      "column": 42,
+      "english": "Script error:\\n${formatError(result, calls)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.59",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 25171,
+      "end": 25359,
+      "token_kind": "template",
+      "raw_source": "`Note: models.generateImages() returned ${generatedImages} image${generatedImages === 1 ? \"\" : \"s\"} that the script did not show. Show each image block of result.output with image(block).`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 558,
+          "start": 25035,
+          "end": 25102,
+          "raw": "generatedImages > 0 && !items.some((item) => item.type === \"image\")",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 561,
+      "column": 19,
+      "english": "Note: models.generateImages() returned ${generatedImages} image${generatedImages === 1 ? \"\" : \"s\"} that the script did not show. Show each image block of result.output with image(block)."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.60",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 25266,
+      "end": 25269,
+      "token_kind": "string",
+      "raw_source": "\"s\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 558,
+          "start": 25035,
+          "end": 25102,
+          "raw": "generatedImages > 0 && !items.some((item) => item.type === \"image\")",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 561,
+      "column": 114,
+      "english": "s"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.61",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 25816,
+      "end": 25911,
+      "token_kind": "template",
+      "raw_source": "`${result.ok ? \"Script completed\" : \"Script failed\"}\\nWall time ${wallTime} seconds\\nOutput:\\n`",
+      "guards": [],
+      "line": 569,
+      "column": 20,
+      "english": "${result.ok ? \"Script completed\" : \"Script failed\"}\\nWall time ${wallTime} seconds\\nOutput:\\n"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.62",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 25831,
+      "end": 25849,
+      "token_kind": "string",
+      "raw_source": "\"Script completed\"",
+      "guards": [],
+      "line": 569,
+      "column": 35,
+      "english": "Script completed"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.63",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 25852,
+      "end": 25867,
+      "token_kind": "string",
+      "raw_source": "\"Script failed\"",
+      "guards": [],
+      "line": 569,
+      "column": 56,
+      "english": "Script failed"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.64",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 27259,
+      "end": 27297,
+      "token_kind": "string",
+      "raw_source": "\"searchTools() expects a query string\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 601,
+          "start": 27196,
+          "end": 27221,
+          "raw": "typeof query !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 602,
+      "column": 37,
+      "english": "searchTools() expects a query string"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.65",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 27508,
+      "end": 27556,
+      "token_kind": "string",
+      "raw_source": "\"searchTools() limit must be a positive integer\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 604,
+          "start": 27401,
+          "end": 27468,
+          "raw": "typeof limit !== \"number\" || !Number.isInteger(limit) || limit <= 0",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 605,
+      "column": 37,
+      "english": "searchTools() limit must be a positive integer"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.66",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 27775,
+      "end": 27817,
+      "token_kind": "string",
+      "raw_source": "\"searchTools() namespace must be a string\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 608,
+          "start": 27657,
+          "end": 27735,
+          "raw": "namespace !== undefined && namespace !== null && typeof namespace !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 609,
+      "column": 37,
+      "english": "searchTools() namespace must be a string"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.67",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 28554,
+      "end": 28590,
+      "token_kind": "string",
+      "raw_source": "\"describeTool() expects a tool name\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 625,
+          "start": 28492,
+          "end": 28516,
+          "raw": "typeof name !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 626,
+      "column": 37,
+      "english": "describeTool() expects a tool name"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.68",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 29042,
+      "end": 29088,
+      "token_kind": "string",
+      "raw_source": "\"describeNamespace() expects a namespace name\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 636,
+          "start": 28980,
+          "end": 29004,
+          "raw": "typeof name !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 637,
+      "column": 37,
+      "english": "describeNamespace() expects a namespace name"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.69",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 30722,
+      "end": 30802,
+      "token_kind": "template",
+      "raw_source": "`List the ${type} models you can use with models.getAvailableOfType(\"${type}\").`",
+      "guards": [],
+      "line": 672,
+      "column": 26,
+      "english": "List the ${type} models you can use with models.getAvailableOfType(\"${type}\")."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.70",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 31100,
+      "end": 31175,
+      "token_kind": "string",
+      "raw_source": "\" models.getModelOfType() returns undefined for an unknown provider or id.\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 674,
+          "start": 30845,
+          "end": 30912,
+          "raw": "typeof given?.provider !== \"string\" || typeof given.id !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 677,
+      "column": 19,
+      "english": " models.getModelOfType() returns undefined for an unknown provider or id."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.71",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 31226,
+      "end": 31352,
+      "token_kind": "template",
+      "raw_source": "`${name}() expects ${withArticle(type)} model as its first argument, got ${describeValue(model)}.${undefinedHint} ${listHint}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 674,
+          "start": 30845,
+          "end": 30912,
+          "raw": "typeof given?.provider !== \"string\" || typeof given.id !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 679,
+      "column": 29,
+      "english": "${name}() expects ${withArticle(type)} model as its first argument, got ${describeValue(model)}.${undefinedHint} ${listHint}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.72",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 31767,
+      "end": 31858,
+      "token_kind": "template",
+      "raw_source": "`\"${ref}\" is ${withArticle(actualType)} model, not ${withArticle(type)} model. ${listHint}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 685,
+          "start": 31556,
+          "end": 31565,
+          "raw": "!resolved",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 688,
+      "column": 19,
+      "english": "\"${ref}\" is ${withArticle(actualType)} model, not ${withArticle(type)} model. ${listHint}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.73",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 31877,
+      "end": 31922,
+      "token_kind": "template",
+      "raw_source": "`Unknown ${type} model \"${ref}\". ${listHint}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 685,
+          "start": 31556,
+          "end": 31565,
+          "raw": "!resolved",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 689,
+      "column": 19,
+      "english": "Unknown ${type} model \"${ref}\". ${listHint}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.74",
+      "path": "dist/extensions/codemode/execute.js",
+      "start": 33519,
+      "end": 33753,
+      "token_kind": "template",
+      "raw_source": "`models.getModelOfType(type, provider, id) expects three strings, got (${args.map(describeValue).join(\", \")}). The provider and the id are separate arguments, for example models.getModelOfType(\"classifier\", \"typesafe\", \"jev-latest\").`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 725,
+          "start": 33429,
+          "end": 33483,
+          "raw": "typeof provider !== \"string\" || typeof id !== \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 726,
+      "column": 33,
+      "english": "models.getModelOfType(type, provider, id) expects three strings, got (${args.map(describeValue).join(\", \")}). The provider and the id are separate arguments, for example models.getModelOfType(\"classifier\", \"typesafe\", \"jev-latest\")."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.75",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 1133,
+      "end": 1256,
+      "token_kind": "template",
+      "raw_source": "`${theme.fg(\"muted\", `... (${hidden} more ${noun},`)} ${keyHint(\"app.tools.expand\", \"to expand\")}${theme.fg(\"muted\", \")\")}`",
+      "guards": [],
+      "line": 20,
+      "column": 12,
+      "english": "${theme.fg(\"muted\", `... (${hidden} more ${noun},`)} ${keyHint(\"app.tools.expand\", \"to expand\")}${theme.fg(\"muted\", \")\")}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.76",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 1154,
+      "end": 1184,
+      "token_kind": "template",
+      "raw_source": "`... (${hidden} more ${noun},`",
+      "guards": [],
+      "line": 20,
+      "column": 33,
+      "english": "... (${hidden} more ${noun},"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.77",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 1217,
+      "end": 1228,
+      "token_kind": "string",
+      "raw_source": "\"to expand\"",
+      "guards": [],
+      "line": 20,
+      "column": 96,
+      "english": "to expand"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.78",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 1358,
+      "end": 1379,
+      "token_kind": "template",
+      "raw_source": "`${Math.round(ms)}ms`",
+      "guards": [],
+      "line": 25,
+      "column": 24,
+      "english": "${Math.round(ms)}ms"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.79",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 1382,
+      "end": 1410,
+      "token_kind": "template",
+      "raw_source": "`${(ms / 1000).toFixed(1)}s`",
+      "guards": [],
+      "line": 25,
+      "column": 48,
+      "english": "${(ms / 1000).toFixed(1)}s"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.80",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 1560,
+      "end": 1618,
+      "token_kind": "template",
+      "raw_source": "`$${cost >= 0.01 ? cost.toFixed(2) : cost.toPrecision(2)}`",
+      "guards": [],
+      "line": 29,
+      "column": 12,
+      "english": "$${cost >= 0.01 ? cost.toFixed(2) : cost.toPrecision(2)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.81",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2084,
+      "end": 2136,
+      "token_kind": "template",
+      "raw_source": "`${call.args.slice(0, COLLAPSED_ARGS_CHARS - 3)}...`",
+      "guards": [],
+      "line": 45,
+      "column": 11,
+      "english": "${call.args.slice(0, COLLAPSED_ARGS_CHARS - 3)}..."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.82",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2227,
+      "end": 2291,
+      "token_kind": "template",
+      "raw_source": "`${statusIcon(call, theme)} ${theme.fg(\"toolTitle\", call.name)}`",
+      "guards": [],
+      "line": 48,
+      "column": 16,
+      "english": "${statusIcon(call, theme)} ${theme.fg(\"toolTitle\", call.name)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.83",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2323,
+      "end": 2352,
+      "token_kind": "template",
+      "raw_source": "` ${theme.fg(\"muted\", args)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 49,
+          "start": 2301,
+          "end": 2305,
+          "raw": "args",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 50,
+      "column": 17,
+      "english": " ${theme.fg(\"muted\", args)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.84",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2388,
+      "end": 2419,
+      "token_kind": "template",
+      "raw_source": "` ${theme.fg(\"dim\", duration)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 51,
+          "start": 2362,
+          "end": 2370,
+          "raw": "duration",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 52,
+      "column": 17,
+      "english": " ${theme.fg(\"dim\", duration)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.85",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2456,
+      "end": 2500,
+      "token_kind": "template",
+      "raw_source": "` ${theme.fg(\"dim\", formatCost(call.cost))}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 53,
+          "start": 2429,
+          "end": 2438,
+          "raw": "call.cost",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 54,
+      "column": 17,
+      "english": " ${theme.fg(\"dim\", formatCost(call.cost))}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.86",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2550,
+      "end": 2617,
+      "token_kind": "template",
+      "raw_source": "`\\n    ${theme.fg(\"error\", call.error.split(\"\\n\").join(\"\\n    \"))}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 55,
+          "start": 2510,
+          "end": 2532,
+          "raw": "expanded && call.error",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 56,
+      "column": 17,
+      "english": "\\n    ${theme.fg(\"error\", call.error.split(\"\\n\").join(\"\\n    \"))}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.87",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 2931,
+      "end": 2941,
+      "token_kind": "string",
+      "raw_source": "\"codemode\"",
+      "guards": [],
+      "line": 64,
+      "column": 56,
+      "english": "codemode"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.88",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 3109,
+      "end": 3157,
+      "token_kind": "template",
+      "raw_source": "`${title} ${theme.fg(\"error\", \"[invalid arg]\")}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 67,
+          "start": 3052,
+          "end": 3065,
+          "raw": "code === null",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 68,
+      "column": 41,
+      "english": "${title} ${theme.fg(\"error\", \"[invalid arg]\")}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.89",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 3139,
+      "end": 3154,
+      "token_kind": "string",
+      "raw_source": "\"[invalid arg]\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 67,
+          "start": 3052,
+          "end": 3065,
+          "raw": "code === null",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 68,
+      "column": 71,
+      "english": "[invalid arg]"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.90",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 3734,
+      "end": 3741,
+      "token_kind": "string",
+      "raw_source": "\"lines\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 72,
+          "start": 3270,
+          "end": 3274,
+          "raw": "code",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 80,
+      "column": 71,
+      "english": "lines"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.91",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 4361,
+      "end": 4506,
+      "token_kind": "template",
+      "raw_source": "`${theme.fg(\"muted\", `... (${calls.length - shown.length} earlier calls,`)} ${keyHint(\"app.tools.expand\", \"to expand\")}${theme.fg(\"muted\", \")\")}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 90,
+          "start": 4087,
+          "end": 4103,
+          "raw": "calls.length > 0",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 93,
+          "start": 4300,
+          "end": 4327,
+          "raw": "shown.length < calls.length",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 94,
+      "column": 31,
+      "english": "${theme.fg(\"muted\", `... (${calls.length - shown.length} earlier calls,`)} ${keyHint(\"app.tools.expand\", \"to expand\")}${theme.fg(\"muted\", \")\")}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.92",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 4382,
+      "end": 4434,
+      "token_kind": "template",
+      "raw_source": "`... (${calls.length - shown.length} earlier calls,`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 90,
+          "start": 4087,
+          "end": 4103,
+          "raw": "calls.length > 0",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 93,
+          "start": 4300,
+          "end": 4327,
+          "raw": "shown.length < calls.length",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 94,
+      "column": 52,
+      "english": "... (${calls.length - shown.length} earlier calls,"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.93",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 4467,
+      "end": 4478,
+      "token_kind": "string",
+      "raw_source": "\"to expand\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 90,
+          "start": 4087,
+          "end": 4103,
+          "raw": "calls.length > 0",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 93,
+          "start": 4300,
+          "end": 4327,
+          "raw": "shown.length < calls.length",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 94,
+      "column": 137,
+      "english": "to expand"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.94",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 4836,
+      "end": 4871,
+      "token_kind": "template",
+      "raw_source": "`Model calls: ${formatCost(total)}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 90,
+          "start": 4087,
+          "end": 4103,
+          "raw": "calls.length > 0",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 98,
+          "start": 4683,
+          "end": 4700,
+          "raw": "priced.length > 1",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 100,
+      "column": 46,
+      "english": "Model calls: ${formatCost(total)}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.95",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 6232,
+      "end": 6239,
+      "token_kind": "string",
+      "raw_source": "\"lines\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 112,
+          "start": 5462,
+          "end": 5468,
+          "raw": "output",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 119,
+          "start": 5762,
+          "end": 5778,
+          "raw": "options.expanded",
+          "polarity": "false/else"
+        }
+      ],
+      "line": 128,
+      "column": 71,
+      "english": "lines"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.96",
+      "path": "dist/extensions/codemode/renderer.js",
+      "start": 6540,
+      "end": 6572,
+      "token_kind": "template",
+      "raw_source": "`Full output: ${fullOutputPath}`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 112,
+          "start": 5462,
+          "end": 5468,
+          "raw": "output",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 119,
+          "start": 5762,
+          "end": 5778,
+          "raw": "options.expanded",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 132,
+          "start": 6458,
+          "end": 6472,
+          "raw": "fullOutputPath",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 133,
+      "column": 67,
+      "english": "Full output: ${fullOutputPath}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.97",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 2371,
+      "end": 2395,
+      "token_kind": "string",
+      "raw_source": "\"Raw JavaScript source.\"",
+      "guards": [],
+      "line": 38,
+      "column": 22,
+      "english": "Raw JavaScript source."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.98",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 2476,
+      "end": 2515,
+      "token_kind": "string",
+      "raw_source": "\"Run JavaScript that calls other tools\"",
+      "guards": [],
+      "line": 42,
+      "column": 14,
+      "english": "Run JavaScript that calls other tools"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.99",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 2543,
+      "end": 2679,
+      "token_kind": "string",
+      "raw_source": "\"Use codemode to batch independent tool calls (Promise.allSettled), chain them, or filter large output, instead of many separate calls.\"",
+      "guards": [],
+      "line": 44,
+      "column": 9,
+      "english": "Use codemode to batch independent tool calls (Promise.allSettled), chain them, or filter large output, instead of many separate calls."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.100",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 2885,
+      "end": 3522,
+      "token_kind": "template",
+      "raw_source": "`Run JavaScript that calls other tools. The input is raw JavaScript (not JSON, no code fence), run as an async function body in a QuickJS sandbox: top-level \\`await\\` and \\`return\\` work. No Node, file system, network, or timers.\n- \\`await tools.<name>({ ...args })\\` resolves to a string, or an object if the tool's declaration says so, and rejects with an Error on failure. A tool whose declaration returns an object resolves on failure too when it returned that object; check its fields. Calls still running when the script ends are cancelled.\n- Optional first line: \\`// @options: {\"max_output_tokens\": 10000, \"timeout_ms\": 60000}\\``",
+      "guards": [],
+      "line": 49,
+      "column": 27,
+      "english": "Run JavaScript that calls other tools. The input is raw JavaScript (not JSON, no code fence), run as an async function body in a QuickJS sandbox: top-level \\`await\\` and \\`return\\` work. No Node, file system, network, or timers.\n- \\`await tools.<name>({ ...args })\\` resolves to a string, or an object if the tool's declaration says so, and rejects with an Error on failure. A tool whose declaration returns an object resolves on failure too when it returned that object; check its fields. Calls still running when the script ends are cancelled.\n- Optional first line: \\`// @options: {\"max_output_tokens\": 10000, \"timeout_ms\": 60000}\\`"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.101",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 3663,
+      "end": 3673,
+      "token_kind": "string",
+      "raw_source": "\"Globals:\"",
+      "guards": [],
+      "line": 55,
+      "column": 9,
+      "english": "Globals:"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.102",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 3683,
+      "end": 4035,
+      "token_kind": "string",
+      "raw_source": "\"- `text(value)`, `image(dataUrlOrImageBlock)`, `console.log(...)`, and top-level `return` add output; `exit()` ends the script. With several text items, each starts with a `==> text N/M <==` line, and `console` lines follow the other output in one `<console_output>` block. `image()` also saves the image to a temp file and the result names its path.\"",
+      "guards": [],
+      "line": 56,
+      "column": 9,
+      "english": "- `text(value)`, `image(dataUrlOrImageBlock)`, `console.log(...)`, and top-level `return` add output; `exit()` ends the script. With several text items, each starts with a `==> text N/M <==` line, and `console` lines follow the other output in one `<console_output>` block. `image()` also saves the image to a temp file and the result names its path."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.103",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 4045,
+      "end": 4124,
+      "token_kind": "string",
+      "raw_source": "\"- `store(key, value)` and `load(key)` keep JSON values across codemode calls.\"",
+      "guards": [],
+      "line": 57,
+      "column": 9,
+      "english": "- `store(key, value)` and `load(key)` keep JSON values across codemode calls."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.104",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 4134,
+      "end": 4303,
+      "token_kind": "string",
+      "raw_source": "\"- `ALL_TOOLS`, `await searchTools(query, { limit?, namespace? })`, `await describeTool(name)`, `await describeNamespace(name)`: find unlisted tools, such as MCP tools.\"",
+      "guards": [],
+      "line": 58,
+      "column": 9,
+      "english": "- `ALL_TOOLS`, `await searchTools(query, { limit?, namespace? })`, `await describeTool(name)`, `await describeNamespace(name)`: find unlisted tools, such as MCP tools."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.105",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 4349,
+      "end": 4432,
+      "token_kind": "template",
+      "raw_source": "`- \\`models\\`: classifiers and image generation. Read ${CODEMODE_DOCS_PATH} first.`",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 60,
+          "start": 4320,
+          "end": 4326,
+          "raw": "models",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 61,
+      "column": 20,
+      "english": "- \\`models\\`: classifiers and image generation. Read ${CODEMODE_DOCS_PATH} first."
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.106",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 5094,
+      "end": 5117,
+      "token_kind": "template",
+      "raw_source": "`- ${guideline.trim()}`",
+      "guards": [],
+      "line": 74,
+      "column": 76,
+      "english": "- ${guideline.trim()}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.107",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 5207,
+      "end": 5260,
+      "token_kind": "template",
+      "raw_source": "`${tool.description.trim()}\\n\\n${bullets.join(\"\\n\")}`",
+      "guards": [],
+      "line": 77,
+      "column": 43,
+      "english": "${tool.description.trim()}\\n\\n${bullets.join(\"\\n\")}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.108",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 5824,
+      "end": 5839,
+      "token_kind": "template",
+      "raw_source": "`### \\`${id}\\``",
+      "guards": [],
+      "line": 89,
+      "column": 47,
+      "english": "### \\`${id}\\`"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.109",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 5842,
+      "end": 5883,
+      "token_kind": "template",
+      "raw_source": "`### \\`${id}\\` (\\`${declaration.name}\\`)`",
+      "guards": [],
+      "line": 89,
+      "column": 65,
+      "english": "### \\`${id}\\` (\\`${declaration.name}\\`)"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.110",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 5896,
+      "end": 5949,
+      "token_kind": "template",
+      "raw_source": "`${heading}\\n${renderToolSample(declaration).trim()}`",
+      "guards": [],
+      "line": 90,
+      "column": 12,
+      "english": "${heading}\\n${renderToolSample(declaration).trim()}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.111",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 8650,
+      "end": 8665,
+      "token_kind": "string",
+      "raw_source": "\"Nested tools:\"",
+      "guards": [],
+      "line": 142,
+      "column": 27,
+      "english": "Nested tools:"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.112",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 9049,
+      "end": 9070,
+      "token_kind": "string",
+      "raw_source": "\" (tools not listed)\"",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 143,
+          "start": 8677,
+          "end": 8716,
+          "raw": "const { namespace, entries } of ordered",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 145,
+          "start": 8806,
+          "end": 8815,
+          "raw": "namespace",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 150,
+      "column": 23,
+      "english": " (tools not listed)"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.113",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 9093,
+      "end": 9119,
+      "token_kind": "string",
+      "raw_source": "\" (some tools not listed)\"",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 143,
+          "start": 8677,
+          "end": 8716,
+          "raw": "const { namespace, entries } of ordered",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 145,
+          "start": 8806,
+          "end": 8815,
+          "raw": "namespace",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 151,
+      "column": 23,
+      "english": " (some tools not listed)"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.114",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 9214,
+      "end": 9286,
+      "token_kind": "template",
+      "raw_source": "`## ${namespace.name}${listing}${description ? `\\n${description}` : \"\"}`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 143,
+          "start": 8677,
+          "end": 8716,
+          "raw": "const { namespace, entries } of ordered",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 145,
+          "start": 8806,
+          "end": 8815,
+          "raw": "namespace",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 153,
+      "column": 31,
+      "english": "## ${namespace.name}${listing}${description ? `\\n${description}` : \"\"}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.115",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 9261,
+      "end": 9279,
+      "token_kind": "template",
+      "raw_source": "`\\n${description}`",
+      "guards": [
+        {
+          "kind": "for",
+          "line": 143,
+          "start": 8677,
+          "end": 8716,
+          "raw": "const { namespace, entries } of ordered",
+          "polarity": "for-body"
+        },
+        {
+          "kind": "if",
+          "line": 145,
+          "start": 8806,
+          "end": 8815,
+          "raw": "namespace",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 153,
+      "column": 78,
+      "english": "\\n${description}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.116",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 10231,
+      "end": 10307,
+      "token_kind": "template",
+      "raw_source": "`${name}${requiredNames.has(name) ? \"\" : \"?\"}${nested ? `: ${nested}` : \"\"}`",
+      "guards": [],
+      "line": 175,
+      "column": 16,
+      "english": "${name}${requiredNames.has(name) ? \"\" : \"?\"}${nested ? `: ${nested}` : \"\"}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.117",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 10287,
+      "end": 10300,
+      "token_kind": "template",
+      "raw_source": "`: ${nested}`",
+      "guards": [],
+      "line": 175,
+      "column": 72,
+      "english": ": ${nested}"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.118",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 10328,
+      "end": 10354,
+      "token_kind": "template",
+      "raw_source": "`{ ${fields.join(\", \")} }`",
+      "guards": [],
+      "line": 177,
+      "column": 12,
+      "english": "{ ${fields.join(\", \")} }"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.119",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 10651,
+      "end": 10661,
+      "token_kind": "string",
+      "raw_source": "\"a string\"",
+      "guards": [
+        {
+          "kind": "if",
+          "line": 185,
+          "start": 10617,
+          "end": 10634,
+          "raw": "type === \"string\"",
+          "polarity": "true/body"
+        }
+      ],
+      "line": 186,
+      "column": 16,
+      "english": "a string"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.120",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 10720,
+      "end": 10764,
+      "token_kind": "template",
+      "raw_source": "`\\`${fields ?? type.replace(/\\s+/g, \" \")}\\``",
+      "guards": [],
+      "line": 188,
+      "column": 12,
+      "english": "\\`${fields ?? type.replace(/\\s+/g, \" \")}\\`"
+    },
+    {
+      "item_id": "pi.codemode-support.fixed.122",
+      "path": "dist/extensions/codemode/tool.js",
+      "start": 10998,
+      "end": 11163,
+      "token_kind": "template",
+      "raw_source": "`${tool.description.trim()}\\n\\nCodemode: \\`tools.${toCodemodeIdentifier(tool.name)}(args)\\` resolves to ${describeOutput(toCodemodeDeclaration(tool).outputSchema)}.`",
+      "guards": [],
+      "line": 195,
+      "column": 12,
+      "english": "${tool.description.trim()}\\n\\nCodemode: \\`tools.${toCodemodeIdentifier(tool.name)}(args)\\` resolves to ${describeOutput(toCodemodeDeclaration(tool).outputSchema)}."
+    }
+  ],
+  "corrections": [
+    {
+      "former_item_id": "pi.codemode-support.fixed.121",
+      "new_item_id": "pi.codemode-support.excluded.251",
+      "source": "dist/extensions/codemode/tool.js:188",
+      "reason": "Non-emitted regex source syntax in String.replace, not rendered English or a translation target. Other fixed IDs1-120/122 and exclusion IDs1-250 retained."
+    }
+  ],
+  "sink_proofs": {
+    "default_override": "Default Jouzu BASE main-cli759-764 supplies classicHostBuiltinOverrides42-51 AFTER native builtInExtensions (main454); resource-loader253 Map last name wins, so codemode factory is a no-op. No ordinary default Jouzu codemode activation established. Native standalone CLI with builtin enabled/activated or explicit SDK extension/direct exported API callers remain conditional routes. index19-29 registers defaultActive:false; models defaults true in extension; direct tool factory options.models defaults absent/false. Package root index35 exports createCodemodeExtension; executeCodemode/createCodemodeTool are module exports without package-root re-export or exported codemode subpath, so direct helper access is qualified file/module-level API access.",
+    "final_vs_progress": "Optional native AgentSession afterToolCall352-419 runs tool_result hooks/image normalization then contentPolicy. BASE policy263-268 treats codemode external when mode!=off; inspected progress events suppressed agent-session752-759, checked nested onUpdate rejected426-427. Final checkResult372-435 scans content AND details/usage/structured/nested metadata; advisory clears metadata, blocked/failed/cancelled replacement can erase it. Mode off/no policy follows native output. Direct execute/tool APIs bypass these session gates unless caller adds them. Do not infer partial details survive final inspection.",
+    "metadata_export": "Optional registered active/nonhidden/declarable codemode description prepareLoadout209-240 -> AgentSession1264-1309 agent.state.tools -> request declarations and live-state HTML export169-190; saved-file-only export202-219 has tools undefined. Snippet/guidelines3074-3085 ->1376-1417 ->system-prompt68-119 selected/nonhidden, no customPrompt default tools/rules and no overriding nonempty custom section; current persisted sections can enter request/transcript/HTML. Forced prompt projection is distinct. Direct declaration/description APIs return strings to caller, not automatic UI. Parameters descriptions remain schema metadata.",
+    "renderer_export": "Optional native tool-definition renderer -> ToolExecutionComponent134-138/221-255: partial/final context forwarded; renderer exceptions swallowed into generic fallback. HTML preRenderCustomTools125-159 with provided toolRenderer invokes collapsed+expanded tool-renderer77-105 isPartial:false, no timer duration; exceptions return undefined/fallback. Renderer reads admitted content/details, not guaranteed original data."
+  },
+  "limits": [
+    "Source-only full closure of six1214LOC native codemode bodies; no sandbox/model/worker/UI/file/config/session execution.",
+    "Canonical package archive exact locked SRI; two installed source trees equal; patch support lineage immutable BASE deviation manifests.",
+    "Default Jouzu no-op builtin override kept separate from optional standalone/SDK/exported direct APIs. No absolute API unreachability claim.",
+    "Dependency bodies/schema/parser/native/OS/provider outputs remain pending or prior-owned, not fabricated English.",
+    "Fixed count includes diagnostic fragments and nested raw-source occurrences, not unique rendered strings or active Jouzu surfaces."
+  ]
+}
