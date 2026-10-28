@@ -1,0 +1,2069 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "7a5bab3195d6aa27d39c1a6d6134ae15ce975e7f",
+  "inventory_file": "pi-ai-provider-helpers.csv",
+  "scope_file": "pi-ai-provider-helpers-scope.csv",
+  "boundary_file": "pi-ai-provider-helpers-boundaries.csv",
+  "exclusion_file": "pi-ai-provider-helpers-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54"
+    }
+  ],
+  "ai_archive_pin": {
+    "source": "package-lock.json",
+    "entry": "node_modules/@earendil-works/pi-ai",
+    "version": "1.4.0",
+    "resolved": "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-1.4.0.tgz",
+    "integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+    "root_lock_sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+    "upstream_pin_separately_names_ai": false,
+    "authority": "BASE346 exact transitive pi-ai1.4.0 lock; pinned coding-agent metadata declares exact1.4.0 dependency. Upstream/pi.lock Agent/TUI/deviations still verified, no invented AI package integrity field."
+  },
+  "metadata_transform": {
+    "source": "scripts/configure-release-packlists.mjs",
+    "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "read_ranges": [
+      [
+        7,
+        18
+      ],
+      [
+        48,
+        58
+      ]
+    ],
+    "root_disposition": "canonical-archive-package-json-byte-exact",
+    "cli_nested_disposition": "exact-public-releaseDependencyFiles-and-JSON2-newline-transform-only-files-changed",
+    "exclusions": [
+      "!**/*.map",
+      "!**/*.d.ts",
+      "!**/*.d.mts",
+      "!**/*.d.cts"
+    ]
+  },
+  "ai_metadata_proof": {
+    "canonical_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+    "root_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+    "cli_nested_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+    "expected_release_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+    "changed_fields": [
+      "files"
+    ],
+    "source": "scripts/configure-release-packlists.mjs",
+    "source_sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "canonical_archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ=="
+  },
+  "repo_trace_sources": [
+    {
+      "source": "package-lock.json",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76"
+    },
+    {
+      "source": "scripts/configure-release-packlists.mjs",
+      "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab"
+    },
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/args.ts",
+      "sha256": "ba6b4a474a3fb7ddd859efdefc6217335283e11fbc298487db9c4bbfd11d8cce"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          26
+        ],
+        [
+          99,
+          119
+        ],
+        [
+          475,
+          507
+        ],
+        [
+          577,
+          602
+        ],
+        [
+          619,
+          662
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          4826,
+          4858
+        ],
+        [
+          5187,
+          5203
+        ],
+        [
+          5232,
+          5241
+        ],
+        [
+          5276,
+          5287
+        ],
+        [
+          4361,
+          4363
+        ],
+        [
+          4566,
+          4568
+        ],
+        [
+          5132,
+          5134
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js",
+      "sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          9,
+          25
+        ],
+        [
+          85,
+          117
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/login-dialog.js",
+      "sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+      "cli_nested_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          124,
+          137
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js",
+      "sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          540,
+          556
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js",
+      "sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+      "cli_nested_sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          12,
+          28
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js",
+      "sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          24
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images.js",
+      "sha256": "ba363450c047ac2573f1f65c60898b02b606c9258b9dd113755af5c1968a9915",
+      "cli_nested_sha256": "ba363450c047ac2573f1f65c60898b02b606c9258b9dd113755af5c1968a9915",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images-api-registry.js",
+      "sha256": "f0c1987d73ba7e84ee398e70755e309d9ec813d724f2a3116f2376b1cd1b0ab7",
+      "cli_nested_sha256": "f0c1987d73ba7e84ee398e70755e309d9ec813d724f2a3116f2376b1cd1b0ab7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          22
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.lazy.js",
+      "sha256": "0ae9c490e8050e8e958d076a9c7ecb21715aa8bc5f85127619d822ca10bc62a6",
+      "cli_nested_sha256": "0ae9c490e8050e8e958d076a9c7ecb21715aa8bc5f85127619d822ca10bc62a6",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js",
+      "sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+      "cli_nested_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          88,
+          98
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-ai-gateway.js",
+      "sha256": "e099b01f7df70041f7e9f5d3237f4da25eabef7e7015e77c13b465036e90ea59",
+      "cli_nested_sha256": "e099b01f7df70041f7e9f5d3237f4da25eabef7e7015e77c13b465036e90ea59",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          8,
+          24
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-workers-ai.js",
+      "sha256": "d07ebc882420d601fd54493deda1fac0a0c37c4f48a65dc7f3b93e93786969c5",
+      "cli_nested_sha256": "d07ebc882420d601fd54493deda1fac0a0c37c4f48a65dc7f3b93e93786969c5",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          7,
+          21
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode.js",
+      "sha256": "36e5c35c6f449783c672d44b4cc59eb97c4bad858df8ad5ce52612ed7d3951f8",
+      "cli_nested_sha256": "36e5c35c6f449783c672d44b4cc59eb97c4bad858df8ad5ce52612ed7d3951f8",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          10,
+          25
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-go.js",
+      "sha256": "7c14ba02605949d7c937d89cad55e2e2eed81d13086728b4173c3d3640d5d6f5",
+      "cli_nested_sha256": "7c14ba02605949d7c937d89cad55e2e2eed81d13086728b4173c3d3640d5d6f5",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          9,
+          22
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter.js",
+      "sha256": "158f877d062114c8a283c2687ae4a30f8ba34ae43aea81de4b7f43a57e0f59f0",
+      "cli_nested_sha256": "158f877d062114c8a283c2687ae4a30f8ba34ae43aea81de4b7f43a57e0f59f0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          21,
+          58
+        ],
+        [
+          60,
+          86
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius.js",
+      "sha256": "9f5516e81b00b8aff7f986052eacf822d2c1dc9f78c8cbafbf4e2cf91e2b9d2b",
+      "cli_nested_sha256": "9f5516e81b00b8aff7f986052eacf822d2c1dc9f78c8cbafbf4e2cf91e2b9d2b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          7,
+          69
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          357,
+          401
+        ],
+        [
+          500,
+          527
+        ]
+      ],
+      "purpose": "Bounded actual caller/helper source; not new full body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.js",
+      "sha256": "6a45b7d63b6f25cabc3c6837311af8ab3cb585bd1656fb59fe106d58795d1deb",
+      "cli_nested_sha256": "6a45b7d63b6f25cabc3c6837311af8ab3cb585bd1656fb59fe106d58795d1deb",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "purpose": "Dynamic client import hash/pin only, no request/error/client whole-body closure."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.d.ts",
+      "sha256": "5ae331a39af35de1c986a706383841fd79c3b7dd8c7fae258cc8ae225499f4c1",
+      "cli_nested_sha256": "5ae331a39af35de1c986a706383841fd79c3b7dd8c7fae258cc8ae225499f4c1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.d.ts.map",
+      "sha256": "309f275d31b437e40c86bd09a152ac07ec330b7fb5031f0f141bab8d7ef1d633",
+      "cli_nested_sha256": "309f275d31b437e40c86bd09a152ac07ec330b7fb5031f0f141bab8d7ef1d633",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js.map",
+      "sha256": "c5a989f1f5604d3852e38b51e18e6323f1a14417da096ae77cbf8db923543477",
+      "cli_nested_sha256": "c5a989f1f5604d3852e38b51e18e6323f1a14417da096ae77cbf8db923543477",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.d.ts",
+      "sha256": "58dcef8737fe94310bff56b5f66afc2fc2271b883514be234aaea2d67179c3b9",
+      "cli_nested_sha256": "58dcef8737fe94310bff56b5f66afc2fc2271b883514be234aaea2d67179c3b9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.d.ts.map",
+      "sha256": "057ca128422e86aa987088166720588f09fd8d8f0bc6d5673e2b6ce4bba7b55c",
+      "cli_nested_sha256": "057ca128422e86aa987088166720588f09fd8d8f0bc6d5673e2b6ce4bba7b55c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.js.map",
+      "sha256": "668b6ab267f2e8c5f1b9d9148c4b303ebb5287ee9dbf59a47ba319dfc6123502",
+      "cli_nested_sha256": "668b6ab267f2e8c5f1b9d9148c4b303ebb5287ee9dbf59a47ba319dfc6123502",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.d.ts",
+      "sha256": "429fe3674c7950eb89080f08859d7b70838b8c3b522b2b2742cebad974e37423",
+      "cli_nested_sha256": "429fe3674c7950eb89080f08859d7b70838b8c3b522b2b2742cebad974e37423",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.d.ts.map",
+      "sha256": "d071579e5ad5a6ffd8aac13cfb2154ca4b2da3800bdb8fffc53d0a9ae796ad0d",
+      "cli_nested_sha256": "d071579e5ad5a6ffd8aac13cfb2154ca4b2da3800bdb8fffc53d0a9ae796ad0d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.js.map",
+      "sha256": "b75fba7b04b3158eeac6c92f3426a928d1cac3aa05a4cc04d580afab8b83fb3b",
+      "cli_nested_sha256": "b75fba7b04b3158eeac6c92f3426a928d1cac3aa05a4cc04d580afab8b83fb3b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.d.ts",
+      "sha256": "429c7ba360392f3aeebc371269d565bb72c981de70e45c1601851ff8bdd80dfc",
+      "cli_nested_sha256": "429c7ba360392f3aeebc371269d565bb72c981de70e45c1601851ff8bdd80dfc",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.d.ts.map",
+      "sha256": "aa66250188c370acb98f0a827f69109723e94e6cbad086176e31456a34d53e07",
+      "cli_nested_sha256": "aa66250188c370acb98f0a827f69109723e94e6cbad086176e31456a34d53e07",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.js.map",
+      "sha256": "13d0f212e2c8c1e893941b37b4bca0bcc92c59cc8dd46fc20231500c88a6cd43",
+      "cli_nested_sha256": "13d0f212e2c8c1e893941b37b4bca0bcc92c59cc8dd46fc20231500c88a6cd43",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.d.ts",
+      "sha256": "1877ad6c794498523b27f7015f9b9ac29a37582989cf05492bcdb5e4b76a7234",
+      "cli_nested_sha256": "1877ad6c794498523b27f7015f9b9ac29a37582989cf05492bcdb5e4b76a7234",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.d.ts.map",
+      "sha256": "f4a94d64b51bc56521023041cf0aa7739e567dbe5d11c43412e801fb6c15efa9",
+      "cli_nested_sha256": "f4a94d64b51bc56521023041cf0aa7739e567dbe5d11c43412e801fb6c15efa9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js.map",
+      "sha256": "eacddae0ee8a16c49a10cff74be41cddd58b44db96e086feaaa6b6f79956affa",
+      "cli_nested_sha256": "eacddae0ee8a16c49a10cff74be41cddd58b44db96e086feaaa6b6f79956affa",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.d.ts",
+      "sha256": "8805276adfba5bb15718e63bd28f3c635489c13916e976aee225d5913f69d608",
+      "cli_nested_sha256": "8805276adfba5bb15718e63bd28f3c635489c13916e976aee225d5913f69d608",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.d.ts.map",
+      "sha256": "5ce26c460d3b78a5a5fcf8f97640adcb633cf51e9f2830d7d288cbd9d63bb939",
+      "cli_nested_sha256": "5ce26c460d3b78a5a5fcf8f97640adcb633cf51e9f2830d7d288cbd9d63bb939",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js.map",
+      "sha256": "b4e67ad9fec51e27c082508cc3ed776ba420e23274baf54d28058a9138c38d84",
+      "cli_nested_sha256": "b4e67ad9fec51e27c082508cc3ed776ba420e23274baf54d28058a9138c38d84",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "source_edges": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js",
+      "line": 1,
+      "specifier": "../../images-api-registry.js",
+      "target": "npm:@earendil-works/pi-ai@1.4.0/dist/images-api-registry.js",
+      "kind": "static-import"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js",
+      "line": 15,
+      "specifier": "../../api/openrouter-images.js",
+      "target": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.js",
+      "kind": "dynamic-import"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/login-dialog.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images-api-registry.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.lazy.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-ai-gateway.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-workers-ai.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-go.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 10,
+    "proofs": 10,
+    "scopes": 6,
+    "external_boundaries": 9,
+    "excluded_occurrences": 46,
+    "dispositioned_source_files": 6,
+    "string_template_occurrences": 56,
+    "protected_regex_literals": 2,
+    "error_constructors": 2,
+    "models_error_constructors": 0,
+    "aggregate_error_constructors": 0,
+    "error_super_calls": 0,
+    "catch_clauses": 1,
+    "throw_statements": 2,
+    "all_new_expressions": 3,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 273,
+    "runtime_source_bytes": 11500,
+    "nonruntime_assets": 18,
+    "direct_import_edges": 2,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 6
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.32.30",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 32,
+      "column": 30,
+      "kind": "string-literal",
+      "english": "stored credential",
+      "evidence": "\"stored credential\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.37.15",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 37,
+      "column": 15,
+      "kind": "string-literal",
+      "english": "Cloudflare API key",
+      "evidence": "\"Cloudflare API key\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.39.77",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 39,
+      "column": 77,
+      "kind": "string-literal",
+      "english": "Enter Cloudflare API key",
+      "evidence": "\"Enter Cloudflare API key\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.40.81",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 40,
+      "column": 81,
+      "kind": "string-literal",
+      "english": "Enter Cloudflare account ID",
+      "evidence": "\"Enter Cloudflare account ID\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.57.15",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 57,
+      "column": 15,
+      "kind": "string-literal",
+      "english": "Cloudflare API key",
+      "evidence": "\"Cloudflare API key\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.59.77",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 59,
+      "column": 77,
+      "kind": "string-literal",
+      "english": "Enter Cloudflare API key",
+      "evidence": "\"Enter Cloudflare API key\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.60.81",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 60,
+      "column": 81,
+      "kind": "string-literal",
+      "english": "Enter Cloudflare account ID",
+      "evidence": "\"Enter Cloudflare account ID\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.cloudflare-auth.61.81",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "line": 61,
+      "column": 81,
+      "kind": "string-literal",
+      "english": "Enter Cloudflare AI Gateway ID",
+      "evidence": "\"Enter Cloudflare AI Gateway ID\""
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.radius-config.56.25",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js",
+      "line": 56,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Could not load Radius config from ${gateway}: ${response.status}: ${truncateHttpBody(await response.text())}",
+      "evidence": "`Could not load Radius config from ${gateway}: ${response.status}: ${truncateHttpBody(await response.text())}`"
+    },
+    {
+      "item_id": "pi.ai-provider-helpers.providers.radius-config.60.25",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js",
+      "line": 60,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Invalid Radius config from ${gateway}",
+      "evidence": "`Invalid Radius config from ${gateway}`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+        "read_lines": [
+          1,
+          86
+        ],
+        "string_template_occurrences": 25,
+        "fixed_rows": 8,
+        "excluded_occurrences": 17,
+        "protected_regex_literals": 0,
+        "protected_regex_source_census": [],
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 15,
+            "column": 5,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 16,
+            "column": 25,
+            "callee": "ctx.env",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 5,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 21,
+            "column": 26,
+            "callee": "resolveValue",
+            "arguments": [
+              "CLOUDFLARE_API_KEY",
+              "ctx",
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 29,
+            "callee": "resolveValue",
+            "arguments": [
+              "CLOUDFLARE_ACCOUNT_ID",
+              "ctx",
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 53,
+            "callee": "resolveValue",
+            "arguments": [
+              "CLOUDFLARE_GATEWAY_ID",
+              "ctx",
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 31,
+            "callee": "interaction.prompt",
+            "arguments": [
+              "{ type: \"secret\", message: \"Enter Cloudflare API key\" }"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 37,
+            "callee": "interaction.prompt",
+            "arguments": [
+              "{ type: \"text\", message: \"Enter Cloudflare account ID\" }"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 36,
+            "callee": "resolveCloudflareEnv",
+            "arguments": [
+              "\"workers-ai\"",
+              "ctx",
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 59,
+            "column": 31,
+            "callee": "interaction.prompt",
+            "arguments": [
+              "{ type: \"secret\", message: \"Enter Cloudflare API key\" }"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 37,
+            "callee": "interaction.prompt",
+            "arguments": [
+              "{ type: \"text\", message: \"Enter Cloudflare account ID\" }"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 37,
+            "callee": "interaction.prompt",
+            "arguments": [
+              "{ type: \"text\", message: \"Enter Cloudflare AI Gateway ID\" }"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 36,
+            "callee": "resolveCloudflareEnv",
+            "arguments": [
+              "\"ai-gateway\"",
+              "ctx",
+              "credential",
+              "signal"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full86 lines read: API method metadata/prompts/source literal tracked; per-field credential !==undefined fallback versus ambient, required truthy key/account/gateway, workers/gateway header/null behavior and exact lack of own login abort checks. Credential/key/env/header/source/abort/native failures protected; no local catches."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.js",
+        "read_lines": [
+          1,
+          27
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "protected_regex_literals": 0,
+        "protected_regex_source_census": [],
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 6,
+            "column": 21,
+            "callee": "model.baseUrl\n        .replaceAll(`{${CLOUDFLARE_ACCOUNT_ID}}`, env[CLOUDFLARE_ACCOUNT_ID] ?? `{${CLOUDFLARE_ACCOUNT_ID}}`)\n        .replaceAll",
+            "arguments": [
+              "`{${CLOUDFLARE_GATEWAY_ID}}`",
+              "env[CLOUDFLARE_GATEWAY_ID] ?? `{${CLOUDFLARE_GATEWAY_ID}}`"
+            ]
+          },
+          {
+            "line": 6,
+            "column": 21,
+            "callee": "model.baseUrl\n        .replaceAll",
+            "arguments": [
+              "`{${CLOUDFLARE_ACCOUNT_ID}}`",
+              "env[CLOUDFLARE_ACCOUNT_ID] ?? `{${CLOUDFLARE_ACCOUNT_ID}}`"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 46,
+            "callee": "streams.stream",
+            "arguments": [
+              "resolveCloudflareModel(model, options?.env)",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 61,
+            "callee": "resolveCloudflareModel",
+            "arguments": [
+              "model",
+              "options?.env"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 52,
+            "callee": "streams.streamSimple",
+            "arguments": [
+              "resolveCloudflareModel(model, options?.env)",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 73,
+            "callee": "resolveCloudflareModel",
+            "arguments": [
+              "model",
+              "options?.env"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 48,
+            "callee": "classifier.classify",
+            "arguments": [
+              "resolveCloudflareModel(model, options?.env)",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 68,
+            "callee": "resolveCloudflareModel",
+            "arguments": [
+              "model",
+              "options?.env"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full27 lines read: account/gateway placeholder replacement, nullish retain versus empty replacement, original/new model identity, stream/simple-only wrapper and classifier-only counterpart. No own prose/Error; underlying implementation methods/callbacks/native errors pending. Extra capabilities are not spread."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.js",
+        "read_lines": [
+          1,
+          22
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "protected_regex_source_census": [],
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 22,
+            "callee": "name.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 4,
+            "column": 12,
+            "callee": "Object.keys(headers ?? {}).some",
+            "arguments": [
+              "(key) => key.toLowerCase() === expected"
+            ]
+          },
+          {
+            "line": 4,
+            "column": 12,
+            "callee": "Object.keys",
+            "arguments": [
+              "headers ?? {}"
+            ]
+          },
+          {
+            "line": 4,
+            "column": 53,
+            "callee": "key.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 7,
+            "column": 32,
+            "callee": "hasHeader",
+            "arguments": [
+              "options.headers",
+              "OPENCODE_SESSION_HEADER"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 46,
+            "callee": "streams.stream",
+            "arguments": [
+              "model",
+              "context",
+              "withSessionHeader(options)"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 77,
+            "callee": "withSessionHeader",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 52,
+            "callee": "streams.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "withSessionHeader(options)"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 89,
+            "callee": "withSessionHeader",
+            "arguments": [
+              "options"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full22 lines read: truthy sessionId and no case-insensitive existing key triggers shallow injection; any existing null/undefined key suppresses. Native generic session header often preempts this branch. Wrapper spreads extra methods but wraps only stream/streamSimple. Protected header identity only, no own prose/Error."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.js",
+        "read_lines": [
+          1,
+          41
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "protected_regex_source_census": [],
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 7,
+            "column": 22,
+            "callee": "Number.parseFloat",
+            "arguments": [
+              "value ?? \"\""
+            ]
+          },
+          {
+            "line": 8,
+            "column": 28,
+            "callee": "Number",
+            "arguments": [
+              "(perToken * 1_000_000).toFixed(6)"
+            ]
+          },
+          {
+            "line": 8,
+            "column": 35,
+            "callee": "(perToken * 1_000_000).toFixed",
+            "arguments": [
+              "6"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 16,
+            "callee": "perMillion",
+            "arguments": [
+              "pricing?.prompt",
+              "0"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 17,
+            "callee": "perMillion",
+            "arguments": [
+              "pricing?.completion",
+              "0"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 20,
+            "callee": "perMillion",
+            "arguments": [
+              "pricing?.input_cache_read",
+              "0"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 21,
+            "callee": "perMillion",
+            "arguments": [
+              "pricing?.input_cache_write",
+              "0"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 19,
+            "callee": "(pricing?.overrides ?? []).flatMap",
+            "arguments": [
+              "(override) => {\n        if (override.min_prompt_tokens === undefined ||\n            override.utc_start !== undefined ||\n            override.utc_end !== undefined ||\n            override.utc_days !== undefined) {\n            return [];\n        }\n        return [\n            {\n                inputTokensAbove: override.min_prompt_tokens,\n                input: perMillion(override.prompt, base.input),\n                output: perMillion(override.completion, base.output),\n                cacheRead: perMillion(override.input_cache_read, base.cacheRead),\n                cacheWrite: perMillion(override.input_cache_write, base.cacheWrite),\n            },\n        ];\n    }"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 24,
+            "callee": "perMillion",
+            "arguments": [
+              "override.prompt",
+              "base.input"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 25,
+            "callee": "perMillion",
+            "arguments": [
+              "override.completion",
+              "base.output"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 28,
+            "callee": "perMillion",
+            "arguments": [
+              "override.input_cache_read",
+              "base.cacheRead"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 29,
+            "callee": "perMillion",
+            "arguments": [
+              "override.input_cache_write",
+              "base.cacheWrite"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full41 lines read: parseFloat,>=0 rates (Infinity not rejected),1M scale/6decimal rounding and per-field fallback; tiers require defined min and all UTC fields undefined (not merely falsy), preserve order/raw threshold and fallback rates. Pure numeric payload, no own prose/Error or pricing correctness claim."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js",
+        "read_lines": [
+          1,
+          63
+        ],
+        "string_template_occurrences": 19,
+        "fixed_rows": 2,
+        "excluded_occurrences": 17,
+        "protected_regex_literals": 2,
+        "protected_regex_source_census": [
+          {
+            "line": 28,
+            "column": 24,
+            "source": "/^https?:\\/\\//iu"
+          },
+          {
+            "line": 29,
+            "column": 31,
+            "source": "/\\/+$/u"
+          }
+        ],
+        "regex_census_sha256": "13ed9efb83973279fc1e02b6eb7a6b6cc4b1e72dcc707406102555990b807bea",
+        "error_constructors": [
+          {
+            "line": 56,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Could not load Radius config from ${gateway}: ${response.status}: ${truncateHttpBody(await response.text())}`"
+          },
+          {
+            "line": 60,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid Radius config from ${gateway}`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 54,
+            "column": 34,
+            "callee": "URL",
+            "source": "new URL(\"/v1/config\", gateway)"
+          },
+          {
+            "line": 56,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Could not load Radius config from ${gateway}: ${response.status}: ${truncateHttpBody(await response.text())}`)"
+          },
+          {
+            "line": 60,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Invalid Radius config from ${gateway}`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 56,
+            "column": 9,
+            "expression": "new Error(`Could not load Radius config from ${gateway}: ${response.status}: ${truncateHttpBody(await response.text())}`)"
+          },
+          {
+            "line": 60,
+            "column": 9,
+            "expression": "new Error(`Invalid Radius config from ${gateway}`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 56,
+            "callee": "Array.isArray",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 9,
+            "column": 9,
+            "callee": "Array.isArray",
+            "arguments": [
+              "model.input"
+            ]
+          },
+          {
+            "line": 12,
+            "column": 10,
+            "callee": "Array.isArray",
+            "arguments": [
+              "model.cost"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 58,
+            "callee": "Array.isArray",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 41,
+            "callee": "Array.isArray",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 17,
+            "callee": "models.filter(isRadiusGatewayModel).map",
+            "arguments": [
+              "(model) => ({ ...model })"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 17,
+            "callee": "models.filter",
+            "arguments": [
+              "isRadiusGatewayModel"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 24,
+            "callee": "/^https?:\\/\\//iu.test",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 12,
+            "callee": "withScheme.replace",
+            "arguments": [
+              "/\\/+$/u",
+              "\"\""
+            ]
+          },
+          {
+            "line": 32,
+            "column": 12,
+            "callee": "sanitizeRadiusGatewayConfig",
+            "arguments": [
+              "credential?.gatewayConfig"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 12,
+            "callee": "config.models.map",
+            "arguments": [
+              "(model) => ({\n        ...model,\n        api: \"pi-messages\",\n        provider: providerId,\n        baseUrl: config.baseUrl,\n    })"
+            ]
+          },
+          {
+            "line": 43,
+            "column": 20,
+            "callee": "getRadiusCredentialConfig",
+            "arguments": [
+              "credential"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 21,
+            "callee": "getRadiusModelsFromConfig",
+            "arguments": [
+              "providerId",
+              "config"
+            ]
+          },
+          {
+            "line": 47,
+            "column": 21,
+            "callee": "body.trim",
+            "arguments": []
+          },
+          {
+            "line": 48,
+            "column": 38,
+            "callee": "trimmed.slice",
+            "arguments": [
+              "0",
+              "512"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 28,
+            "callee": "fetch",
+            "arguments": [
+              "new URL(\"/v1/config\", gateway)",
+              "{ headers, signal }"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 94,
+            "callee": "truncateHttpBody",
+            "arguments": [
+              "await response.text()"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 117,
+            "callee": "response.text",
+            "arguments": []
+          },
+          {
+            "line": 58,
+            "column": 20,
+            "callee": "sanitizeRadiusGatewayConfig",
+            "arguments": [
+              "await response.json()"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 54,
+            "callee": "response.json",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full63 lines read: shallow config/model shape filter, permissive string/number fields/extra data, normalization, provider/api/baseUrl override and dynamic remote model payload; two fixed Error headlines; trim512UTF16/ellipsis formatting protected. No local catches; JSON/fetch/URL/native failures separate."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js",
+        "read_lines": [
+          1,
+          34
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "protected_regex_literals": 0,
+        "protected_regex_source_census": [],
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 23,
+            "column": 5,
+            "source": "catch (error) {\n        return createLazyLoadErrorImages(model, error);\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "../../images-api-registry.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 10,
+            "column": 64,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 20,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 15,
+            "column": 47,
+            "callee": "import(\"../../api/openrouter-images.js\").then",
+            "arguments": [
+              "(module) => module"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 47,
+            "callee": "import",
+            "arguments": [
+              "\"../../api/openrouter-images.js\""
+            ]
+          },
+          {
+            "line": 20,
+            "column": 30,
+            "callee": "loadOpenRouterImagesProviderModule",
+            "arguments": []
+          },
+          {
+            "line": 21,
+            "column": 22,
+            "callee": "module.generateImages",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 16,
+            "callee": "createLazyLoadErrorImages",
+            "arguments": [
+              "model",
+              "error"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 5,
+            "callee": "registerImagesApiProvider",
+            "arguments": [
+              "{\n        api: \"openrouter-images\",\n        generateImages: generateImagesOpenRouter,\n    }"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 1,
+            "callee": "registerBuiltInImagesApiProviders",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full34 lines read: module-level global images registration, cached ||= import (including rejection), broad load/operation catch returns zero-output error result with stopReason error regardless abort. Native compat import triggers global registration; normal provider.generateImages dispatch bypasses that registry wrapper. No own fixed prose; foreign failure message payload."
+      }
+    ],
+    "method": "All six finite helper local bodies read,273lines/11500B.56literal/templates partitioned plus2exact protected regex, Error/new/throw/catch/control/import/export/callback census. Actual native module-load registration versus normal direct image execution, Cloudflare per-field/header/prompt and OpenCode preemption, numeric cost/Radius dynamic payload/error branches traced. No audited JS/JSON/module/registration/native/model/credential/prompt/network execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-ai",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/providers/cloudflare-auth.js",
+      "dist/providers/cloudflare-stream.js",
+      "dist/providers/images/register-builtins.js",
+      "dist/providers/opencode-headers.js",
+      "dist/providers/openrouter-api.js",
+      "dist/providers/radius-config.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/providers/cloudflare-auth.d.ts",
+      "dist/providers/cloudflare-auth.d.ts.map",
+      "dist/providers/cloudflare-auth.js.map",
+      "dist/providers/cloudflare-stream.d.ts",
+      "dist/providers/cloudflare-stream.d.ts.map",
+      "dist/providers/cloudflare-stream.js.map",
+      "dist/providers/images/register-builtins.d.ts",
+      "dist/providers/images/register-builtins.d.ts.map",
+      "dist/providers/images/register-builtins.js.map",
+      "dist/providers/opencode-headers.d.ts",
+      "dist/providers/opencode-headers.d.ts.map",
+      "dist/providers/opencode-headers.js.map",
+      "dist/providers/openrouter-api.d.ts",
+      "dist/providers/openrouter-api.d.ts.map",
+      "dist/providers/openrouter-api.js.map",
+      "dist/providers/radius-config.d.ts",
+      "dist/providers/radius-config.d.ts.map",
+      "dist/providers/radius-config.js.map"
+    ],
+    "status": "six-full-local-bodies-only-not-whole-provider-schema-JSON-client-or-package-closure"
+  },
+  "prior_scope_references": [
+    {
+      "owner": "pi-ai-lexical-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "status": "lexical-only"
+    },
+    {
+      "owner": "pi-ai-lexical-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.js",
+      "status": "lexical-only"
+    },
+    {
+      "owner": "pi-ai-lexical-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js",
+      "status": "lexical-only"
+    },
+    {
+      "owner": "pi-ai-lexical-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.js",
+      "status": "lexical-only"
+    },
+    {
+      "owner": "pi-ai-lexical-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.js",
+      "status": "lexical-only"
+    },
+    {
+      "owner": "pi-ai-lexical-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js",
+      "status": "lexical-only"
+    }
+  ],
+  "prior_full_body_owners": [],
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/compat-schema.js",
+      "status": "whole-local-body-pending separate schema/faux unit"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/model-schema.js",
+      "status": "whole-local-body-pending separate schema/faux unit"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/faux.js",
+      "status": "whole-local-body-pending separate schema/faux unit"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/data/*.json",
+      "status": "43staticcatalog/manifest data values pending separate inventory; import/hash membership not names/prose/UI coverage"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images-api-registry.js",
+      "status": "bounded installed canonical source1-22only; whole local error/registry API body pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images.js",
+      "status": "bounded global generateImages entrypoint19lines; whole local Error/dispatch producer review pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js",
+      "status": "bounded actual legacy import/export registration route12-28only; whole API/module/default-state graph pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.js",
+      "status": "dynamic import/pin/hash only; provider/client/image/native/API/error/payload graph pending"
+    },
+    {
+      "source": "external:HTTP-URL-JSON-SDK-env-credential-header-price-schema-remote-radius-catalog-data",
+      "status": "dynamic/native/remote/extra-callback producers and optional presentation/admission pending"
+    }
+  ],
+  "limits": [
+    "Six complete helper local JS bodies273lines/11500B only, exactBASE346 native1.4.0.56fixed string/template source occurrences plus2protected regex,18declarations/maps census, imported helper/caller boundaries independently pinned. No whole AI/provider/JSON/schema/faux/API graph closure.",
+    "Cloudflare credential values win by !==undefined, including falsy values/no own signal check; ambient fields checked separately. Own login lacks abort checks; enclosing native/Models/callback races can preempt. Source stored credential can describe partial/ambient merge and is normally replaced by generic configured/type status, not proof persistence.",
+    "Cloudflare env placeholders nullish-retain/empty-replace and model identity/capability omission exact. OpenCode any case-insensitive existing key prevents injection, native generic preparation usually preempts it; extra methods preserved but unwrapped.",
+    "Numeric pricing is parseFloat/>=0 rather than finite/type validation; UTC tier presence excludes even null, threshold type/order not normalized. These are numeric payload, no authored English or pricing correctness claim.",
+    "Radius shape filter preserves many unvalidated/extraneous/model-type fields, silently drops invalid entries and accepts empty models. Fixed HTTP/body/config errors may be preempted by response/text/JSON/native failure; trim512UTF16 plusellipsis is formatting, not independent prose. Remote names/model/schema data remain external.",
+    "Corrected activation premise: native ModelRuntime static compat import triggers global image registration on load; registration is not itself image execution. Normal native provider.generateImages bypasses global registry wrapper. Optional compat/global/direct wrapper invocation caches both load success/rejection and catches load/operation Error to stopReason error even when aborted.",
+    "Schema pair/faux/static43JSON values stay separate pending; nonchat result payload not automatically main assistant/TUI/JSON/RPC/HTML. Other parser/client/SDK/native/body/callback wording/delivery remains pending.",
+    "Same three canonical archives/root+nested/package lock/public release metadata transform and118after hashes checked. Historical prior owners at unit_source_commit immutable snapshot, no later mutable inventory dependency. Only new six artifacts; no old/shared/census/index/product/dependency/git changes."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-ai-provider-helpers.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-ai-provider-helpers.csv": "a961bf53ad34e04d6431727625389d4190e0ee7459aa127994727bff68e3c0c5",
+    "pi-ai-provider-helpers-boundaries.csv": "8b3c24c20f836ca028d376dbea103390577aee8c78beb891e7c5700f74f04217",
+    "pi-ai-provider-helpers-scope.csv": "8f30398396dbcf782bd814821b05caaf4308e040d6485b995aec793fe327c49c",
+    "pi-ai-provider-helpers-exclusions.csv": "2c0a45be41f85e94b10b960e9f705a41d689b3cceef9311b43d729d617f6cdd8"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/oauth-selector.js",
+            "archive_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "root_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/login-dialog.js",
+            "archive_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+            "root_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+            "cli_nested_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/package-manager-cli.js",
+            "archive_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "root_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      },
+      {
+        "name": "@earendil-works/pi-ai",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/providers/cloudflare-auth.js",
+            "archive_sha256": "5a3aaf34dadc97773b77150be31b2327532dab92c8982c77ca8d32e1d84faa59",
+            "root_sha256": "5a3aaf34dadc97773b77150be31b2327532dab92c8982c77ca8d32e1d84faa59",
+            "cli_nested_sha256": "5a3aaf34dadc97773b77150be31b2327532dab92c8982c77ca8d32e1d84faa59",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-stream.js",
+            "archive_sha256": "b815d17959fe76c2b916d16f74be51f6393939aaf640e865db514832e0fadbf4",
+            "root_sha256": "b815d17959fe76c2b916d16f74be51f6393939aaf640e865db514832e0fadbf4",
+            "cli_nested_sha256": "b815d17959fe76c2b916d16f74be51f6393939aaf640e865db514832e0fadbf4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/opencode-headers.js",
+            "archive_sha256": "24b5878ceb19abaa3987c2526ac14afdd6fc1e796f6e187a49e71b058972a741",
+            "root_sha256": "24b5878ceb19abaa3987c2526ac14afdd6fc1e796f6e187a49e71b058972a741",
+            "cli_nested_sha256": "24b5878ceb19abaa3987c2526ac14afdd6fc1e796f6e187a49e71b058972a741",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/openrouter-api.js",
+            "archive_sha256": "3259b64988618c8839427173408c5d642a448c7aff3a502c019a73e839192e36",
+            "root_sha256": "3259b64988618c8839427173408c5d642a448c7aff3a502c019a73e839192e36",
+            "cli_nested_sha256": "3259b64988618c8839427173408c5d642a448c7aff3a502c019a73e839192e36",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/radius-config.js",
+            "archive_sha256": "d9d863bda4b33f3d98c2717c912cc7f394b93301f9c87d73adc7c8c7e8f8cb5e",
+            "root_sha256": "d9d863bda4b33f3d98c2717c912cc7f394b93301f9c87d73adc7c8c7e8f8cb5e",
+            "cli_nested_sha256": "d9d863bda4b33f3d98c2717c912cc7f394b93301f9c87d73adc7c8c7e8f8cb5e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/images/register-builtins.js",
+            "archive_sha256": "c29932ca6dd008a5421bb91e489341f14a8be7d408cbde71894cc15546d37377",
+            "root_sha256": "c29932ca6dd008a5421bb91e489341f14a8be7d408cbde71894cc15546d37377",
+            "cli_nested_sha256": "c29932ca6dd008a5421bb91e489341f14a8be7d408cbde71894cc15546d37377",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/compat.js",
+            "archive_sha256": "df55dca273cb2a7053187b7b29d0fe5b91966a5099ab02d2efe38bb31c3f9738",
+            "root_sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+            "cli_nested_sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-provider-receipts/patch.lock.json"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "root_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/images.js",
+            "archive_sha256": "ba363450c047ac2573f1f65c60898b02b606c9258b9dd113755af5c1968a9915",
+            "root_sha256": "ba363450c047ac2573f1f65c60898b02b606c9258b9dd113755af5c1968a9915",
+            "cli_nested_sha256": "ba363450c047ac2573f1f65c60898b02b606c9258b9dd113755af5c1968a9915",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/images-api-registry.js",
+            "archive_sha256": "f0c1987d73ba7e84ee398e70755e309d9ec813d724f2a3116f2376b1cd1b0ab7",
+            "root_sha256": "f0c1987d73ba7e84ee398e70755e309d9ec813d724f2a3116f2376b1cd1b0ab7",
+            "cli_nested_sha256": "f0c1987d73ba7e84ee398e70755e309d9ec813d724f2a3116f2376b1cd1b0ab7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/openrouter-images.lazy.js",
+            "archive_sha256": "0ae9c490e8050e8e958d076a9c7ecb21715aa8bc5f85127619d822ca10bc62a6",
+            "root_sha256": "0ae9c490e8050e8e958d076a9c7ecb21715aa8bc5f85127619d822ca10bc62a6",
+            "cli_nested_sha256": "0ae9c490e8050e8e958d076a9c7ecb21715aa8bc5f85127619d822ca10bc62a6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/identity.js",
+            "archive_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+            "root_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+            "cli_nested_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-ai-gateway.js",
+            "archive_sha256": "e099b01f7df70041f7e9f5d3237f4da25eabef7e7015e77c13b465036e90ea59",
+            "root_sha256": "e099b01f7df70041f7e9f5d3237f4da25eabef7e7015e77c13b465036e90ea59",
+            "cli_nested_sha256": "e099b01f7df70041f7e9f5d3237f4da25eabef7e7015e77c13b465036e90ea59",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-workers-ai.js",
+            "archive_sha256": "d07ebc882420d601fd54493deda1fac0a0c37c4f48a65dc7f3b93e93786969c5",
+            "root_sha256": "d07ebc882420d601fd54493deda1fac0a0c37c4f48a65dc7f3b93e93786969c5",
+            "cli_nested_sha256": "d07ebc882420d601fd54493deda1fac0a0c37c4f48a65dc7f3b93e93786969c5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/opencode.js",
+            "archive_sha256": "36e5c35c6f449783c672d44b4cc59eb97c4bad858df8ad5ce52612ed7d3951f8",
+            "root_sha256": "36e5c35c6f449783c672d44b4cc59eb97c4bad858df8ad5ce52612ed7d3951f8",
+            "cli_nested_sha256": "36e5c35c6f449783c672d44b4cc59eb97c4bad858df8ad5ce52612ed7d3951f8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/opencode-go.js",
+            "archive_sha256": "7c14ba02605949d7c937d89cad55e2e2eed81d13086728b4173c3d3640d5d6f5",
+            "root_sha256": "7c14ba02605949d7c937d89cad55e2e2eed81d13086728b4173c3d3640d5d6f5",
+            "cli_nested_sha256": "7c14ba02605949d7c937d89cad55e2e2eed81d13086728b4173c3d3640d5d6f5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/openrouter.js",
+            "archive_sha256": "158f877d062114c8a283c2687ae4a30f8ba34ae43aea81de4b7f43a57e0f59f0",
+            "root_sha256": "158f877d062114c8a283c2687ae4a30f8ba34ae43aea81de4b7f43a57e0f59f0",
+            "cli_nested_sha256": "158f877d062114c8a283c2687ae4a30f8ba34ae43aea81de4b7f43a57e0f59f0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/radius.js",
+            "archive_sha256": "9f5516e81b00b8aff7f986052eacf822d2c1dc9f78c8cbafbf4e2cf91e2b9d2b",
+            "root_sha256": "9f5516e81b00b8aff7f986052eacf822d2c1dc9f78c8cbafbf4e2cf91e2b9d2b",
+            "cli_nested_sha256": "9f5516e81b00b8aff7f986052eacf822d2c1dc9f78c8cbafbf4e2cf91e2b9d2b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models.js",
+            "archive_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "root_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/openrouter-images.js",
+            "archive_sha256": "6a45b7d63b6f25cabc3c6837311af8ab3cb585bd1656fb59fe106d58795d1deb",
+            "root_sha256": "6a45b7d63b6f25cabc3c6837311af8ab3cb585bd1656fb59fe106d58795d1deb",
+            "cli_nested_sha256": "6a45b7d63b6f25cabc3c6837311af8ab3cb585bd1656fb59fe106d58795d1deb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-auth.d.ts",
+            "archive_sha256": "5ae331a39af35de1c986a706383841fd79c3b7dd8c7fae258cc8ae225499f4c1",
+            "root_sha256": "5ae331a39af35de1c986a706383841fd79c3b7dd8c7fae258cc8ae225499f4c1",
+            "cli_nested_sha256": "5ae331a39af35de1c986a706383841fd79c3b7dd8c7fae258cc8ae225499f4c1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-auth.d.ts.map",
+            "archive_sha256": "309f275d31b437e40c86bd09a152ac07ec330b7fb5031f0f141bab8d7ef1d633",
+            "root_sha256": "309f275d31b437e40c86bd09a152ac07ec330b7fb5031f0f141bab8d7ef1d633",
+            "cli_nested_sha256": "309f275d31b437e40c86bd09a152ac07ec330b7fb5031f0f141bab8d7ef1d633",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-auth.js.map",
+            "archive_sha256": "c5a989f1f5604d3852e38b51e18e6323f1a14417da096ae77cbf8db923543477",
+            "root_sha256": "c5a989f1f5604d3852e38b51e18e6323f1a14417da096ae77cbf8db923543477",
+            "cli_nested_sha256": "c5a989f1f5604d3852e38b51e18e6323f1a14417da096ae77cbf8db923543477",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-stream.d.ts",
+            "archive_sha256": "58dcef8737fe94310bff56b5f66afc2fc2271b883514be234aaea2d67179c3b9",
+            "root_sha256": "58dcef8737fe94310bff56b5f66afc2fc2271b883514be234aaea2d67179c3b9",
+            "cli_nested_sha256": "58dcef8737fe94310bff56b5f66afc2fc2271b883514be234aaea2d67179c3b9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-stream.d.ts.map",
+            "archive_sha256": "057ca128422e86aa987088166720588f09fd8d8f0bc6d5673e2b6ce4bba7b55c",
+            "root_sha256": "057ca128422e86aa987088166720588f09fd8d8f0bc6d5673e2b6ce4bba7b55c",
+            "cli_nested_sha256": "057ca128422e86aa987088166720588f09fd8d8f0bc6d5673e2b6ce4bba7b55c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/cloudflare-stream.js.map",
+            "archive_sha256": "668b6ab267f2e8c5f1b9d9148c4b303ebb5287ee9dbf59a47ba319dfc6123502",
+            "root_sha256": "668b6ab267f2e8c5f1b9d9148c4b303ebb5287ee9dbf59a47ba319dfc6123502",
+            "cli_nested_sha256": "668b6ab267f2e8c5f1b9d9148c4b303ebb5287ee9dbf59a47ba319dfc6123502",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/opencode-headers.d.ts",
+            "archive_sha256": "429fe3674c7950eb89080f08859d7b70838b8c3b522b2b2742cebad974e37423",
+            "root_sha256": "429fe3674c7950eb89080f08859d7b70838b8c3b522b2b2742cebad974e37423",
+            "cli_nested_sha256": "429fe3674c7950eb89080f08859d7b70838b8c3b522b2b2742cebad974e37423",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/opencode-headers.d.ts.map",
+            "archive_sha256": "d071579e5ad5a6ffd8aac13cfb2154ca4b2da3800bdb8fffc53d0a9ae796ad0d",
+            "root_sha256": "d071579e5ad5a6ffd8aac13cfb2154ca4b2da3800bdb8fffc53d0a9ae796ad0d",
+            "cli_nested_sha256": "d071579e5ad5a6ffd8aac13cfb2154ca4b2da3800bdb8fffc53d0a9ae796ad0d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/opencode-headers.js.map",
+            "archive_sha256": "b75fba7b04b3158eeac6c92f3426a928d1cac3aa05a4cc04d580afab8b83fb3b",
+            "root_sha256": "b75fba7b04b3158eeac6c92f3426a928d1cac3aa05a4cc04d580afab8b83fb3b",
+            "cli_nested_sha256": "b75fba7b04b3158eeac6c92f3426a928d1cac3aa05a4cc04d580afab8b83fb3b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/openrouter-api.d.ts",
+            "archive_sha256": "429c7ba360392f3aeebc371269d565bb72c981de70e45c1601851ff8bdd80dfc",
+            "root_sha256": "429c7ba360392f3aeebc371269d565bb72c981de70e45c1601851ff8bdd80dfc",
+            "cli_nested_sha256": "429c7ba360392f3aeebc371269d565bb72c981de70e45c1601851ff8bdd80dfc",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/openrouter-api.d.ts.map",
+            "archive_sha256": "aa66250188c370acb98f0a827f69109723e94e6cbad086176e31456a34d53e07",
+            "root_sha256": "aa66250188c370acb98f0a827f69109723e94e6cbad086176e31456a34d53e07",
+            "cli_nested_sha256": "aa66250188c370acb98f0a827f69109723e94e6cbad086176e31456a34d53e07",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/openrouter-api.js.map",
+            "archive_sha256": "13d0f212e2c8c1e893941b37b4bca0bcc92c59cc8dd46fc20231500c88a6cd43",
+            "root_sha256": "13d0f212e2c8c1e893941b37b4bca0bcc92c59cc8dd46fc20231500c88a6cd43",
+            "cli_nested_sha256": "13d0f212e2c8c1e893941b37b4bca0bcc92c59cc8dd46fc20231500c88a6cd43",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/radius-config.d.ts",
+            "archive_sha256": "1877ad6c794498523b27f7015f9b9ac29a37582989cf05492bcdb5e4b76a7234",
+            "root_sha256": "1877ad6c794498523b27f7015f9b9ac29a37582989cf05492bcdb5e4b76a7234",
+            "cli_nested_sha256": "1877ad6c794498523b27f7015f9b9ac29a37582989cf05492bcdb5e4b76a7234",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/radius-config.d.ts.map",
+            "archive_sha256": "f4a94d64b51bc56521023041cf0aa7739e567dbe5d11c43412e801fb6c15efa9",
+            "root_sha256": "f4a94d64b51bc56521023041cf0aa7739e567dbe5d11c43412e801fb6c15efa9",
+            "cli_nested_sha256": "f4a94d64b51bc56521023041cf0aa7739e567dbe5d11c43412e801fb6c15efa9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/radius-config.js.map",
+            "archive_sha256": "eacddae0ee8a16c49a10cff74be41cddd58b44db96e086feaaa6b6f79956affa",
+            "root_sha256": "eacddae0ee8a16c49a10cff74be41cddd58b44db96e086feaaa6b6f79956affa",
+            "cli_nested_sha256": "eacddae0ee8a16c49a10cff74be41cddd58b44db96e086feaaa6b6f79956affa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/images/register-builtins.d.ts",
+            "archive_sha256": "8805276adfba5bb15718e63bd28f3c635489c13916e976aee225d5913f69d608",
+            "root_sha256": "8805276adfba5bb15718e63bd28f3c635489c13916e976aee225d5913f69d608",
+            "cli_nested_sha256": "8805276adfba5bb15718e63bd28f3c635489c13916e976aee225d5913f69d608",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/images/register-builtins.d.ts.map",
+            "archive_sha256": "5ce26c460d3b78a5a5fcf8f97640adcb633cf51e9f2830d7d288cbd9d63bb939",
+            "root_sha256": "5ce26c460d3b78a5a5fcf8f97640adcb633cf51e9f2830d7d288cbd9d63bb939",
+            "cli_nested_sha256": "5ce26c460d3b78a5a5fcf8f97640adcb633cf51e9f2830d7d288cbd9d63bb939",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/images/register-builtins.js.map",
+            "archive_sha256": "b4e67ad9fec51e27c082508cc3ed776ba420e23274baf54d28058a9138c38d84",
+            "root_sha256": "b4e67ad9fec51e27c082508cc3ed776ba420e23274baf54d28058a9138c38d84",
+            "cli_nested_sha256": "b4e67ad9fec51e27c082508cc3ed776ba420e23274baf54d28058a9138c38d84",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 43,
+    "byte_identical_scope_files": 40,
+    "pinned_patch_scope_files": 3,
+    "unresolved_scope_differences": 0
+  }
+}

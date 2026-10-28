@@ -19,13 +19,14 @@
   "physical_lines": 20585,
   "exact_archive_matches": 184,
   "pinned_source_patch_after_matches": 16,
-  "local_source_owners_present": 100,
-  "local_source_bodies_pending": 100,
-  "pending_bytes": 760113,
+  "local_source_owners_present": 106,
+  "local_source_bodies_pending": 94,
+  "pending_bytes": 748613,
   "owner_input_sha256_utf8_lf": {
     "pi-ai-model-auth-scope.csv": "f2d604651785a90908a2943a3ef184a2a3dfcc43f0c44b9fcac8d679fadcd55e",
     "pi-ai-request-text-scope.csv": "186226a506db80c9b177149664e1674e9c677a54470290d35007406b9d441324",
-    "pi-ai-provider-definitions-scope.csv": "e20a73bbd33b2d567c0ef20b473b90145c083a876e9450f43f73f5ed2f44a245"
+    "pi-ai-provider-definitions-scope.csv": "e20a73bbd33b2d567c0ef20b473b90145c083a876e9450f43f73f5ed2f44a245",
+    "pi-ai-provider-helpers-scope.csv": "8f30398396dbcf782bd814821b05caaf4308e040d6485b995aec793fe327c49c"
   },
   "coverage_boundary": "File identity and local review ownership only. Retain each owner's wording, guards, exclusions and native/SDK/caller limits. Hashing, packaging, importing or lexical indexing does not establish complete English, caller, dependency or runtime visibility coverage.",
   "separate_census": "Pi AI only; does not change the coding-agent/TUI 384-source census.",
