@@ -1,0 +1,4436 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "ac9d4f7e9071631c70fd4fe600af07c49b1cea81",
+  "inventory_file": "pi-tui-input.csv",
+  "scope_file": "pi-tui-input-scope.csv",
+  "boundary_file": "pi-tui-input-boundaries.csv",
+  "exclusion_file": "pi-tui-input-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/session-ui/src/layout.ts",
+      "sha256": "7dde7851cb79dda5ec3e95aa0a3080a65475add638496fb7b66104d8e511e5c3"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/input.js",
+      "sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+      "cli_nested_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          343,
+          374
+        ]
+      ],
+      "purpose": "Bounded actual input/search/output consumer route; prior full engine/component inventories independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          327,
+          455
+        ],
+        [
+          535,
+          556
+        ],
+        [
+          1449,
+          1558
+        ]
+      ],
+      "purpose": "Bounded actual input/search/output consumer route; prior full engine/component inventories independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js",
+      "sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+      "cli_nested_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          591,
+          604
+        ],
+        [
+          712,
+          855
+        ]
+      ],
+      "purpose": "Bounded actual input/search/output consumer route; prior full engine/component inventories independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+      "cli_nested_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          159,
+          178
+        ],
+        [
+          285,
+          324
+        ]
+      ],
+      "purpose": "Bounded native definition/schema/association/factory route only. Shipped schema relevant TUI descriptions checked; broader schema/APP/doc/validator producer text remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.js",
+      "sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+      "cli_nested_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          16
+        ]
+      ],
+      "purpose": "Bounded native definition/schema/association/factory route only. Shipped schema relevant TUI descriptions checked; broader schema/APP/doc/validator producer text remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+      "cli_nested_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          198
+        ]
+      ],
+      "purpose": "Bounded native definition/schema/association/factory route only. Shipped schema relevant TUI descriptions checked; broader schema/APP/doc/validator producer text remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/keybindings.md",
+      "sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+      "cli_nested_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "purpose": "Bounded native definition/schema/association/factory route only. Shipped schema relevant TUI descriptions checked; broader schema/APP/doc/validator producer text remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+      "sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+      "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "purpose": "Bounded native definition/schema/association/factory route only. Shipped schema relevant TUI descriptions checked; broader schema/APP/doc/validator producer text remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          405,
+          426
+        ],
+        [
+          1516,
+          1523
+        ]
+      ],
+      "purpose": "Bounded native definition/schema/association/factory route only. Shipped schema relevant TUI descriptions checked; broader schema/APP/doc/validator producer text remains pending."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.d.ts",
+      "sha256": "0353a0b7aaf54967b7ecb323047c7072862833753af35f88d7804cf74b7e8b4e",
+      "cli_nested_sha256": "0353a0b7aaf54967b7ecb323047c7072862833753af35f88d7804cf74b7e8b4e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.d.ts.map",
+      "sha256": "f33fe828a87305475913cd6dc3a65de39345e88d790846d58a7b15b6dc244035",
+      "cli_nested_sha256": "f33fe828a87305475913cd6dc3a65de39345e88d790846d58a7b15b6dc244035",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js.map",
+      "sha256": "c2872dda9aaf17ffe7715e8343aff2d2414d2a6dcd5721ac41a63bdd5ead2f57",
+      "cli_nested_sha256": "c2872dda9aaf17ffe7715e8343aff2d2414d2a6dcd5721ac41a63bdd5ead2f57",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.d.ts",
+      "sha256": "2e641fc426f7d47035d690f8a9dcf07e1aa7924c850a7913325ef3952872371f",
+      "cli_nested_sha256": "2e641fc426f7d47035d690f8a9dcf07e1aa7924c850a7913325ef3952872371f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.d.ts.map",
+      "sha256": "6005a82918e23e6630adcaeeb945e5f1832a388a125fa7e510bcd5eec9d05cf0",
+      "cli_nested_sha256": "6005a82918e23e6630adcaeeb945e5f1832a388a125fa7e510bcd5eec9d05cf0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.js.map",
+      "sha256": "7b8a8d9d641dc95cdb581bbb2246cf3e938f2951e6b83202fc54823103e6f953",
+      "cli_nested_sha256": "7b8a8d9d641dc95cdb581bbb2246cf3e938f2951e6b83202fc54823103e6f953",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.d.ts",
+      "sha256": "58d05b6227c8657e2109931eb2875de3a675e7bccc7f5eafde5467d539636344",
+      "cli_nested_sha256": "58d05b6227c8657e2109931eb2875de3a675e7bccc7f5eafde5467d539636344",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.d.ts.map",
+      "sha256": "771b218361fd5717d94a4e4702c44c697b24d616a6928e0a00010baaf9077594",
+      "cli_nested_sha256": "771b218361fd5717d94a4e4702c44c697b24d616a6928e0a00010baaf9077594",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.js.map",
+      "sha256": "1008b11e7af57d8547495f58d2ca7b83a7465bc936018f74502cb88cb248fb0c",
+      "cli_nested_sha256": "1008b11e7af57d8547495f58d2ca7b83a7465bc936018f74502cb88cb248fb0c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.d.ts",
+      "sha256": "8f0959a84ecabefd00ee7a00987618abb75d7a26d704b3a8c774ad4f5312f44c",
+      "cli_nested_sha256": "8f0959a84ecabefd00ee7a00987618abb75d7a26d704b3a8c774ad4f5312f44c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.d.ts.map",
+      "sha256": "1527af810a26c2e1c7f70fde0176ef480b584169c459171246eb67ab85657218",
+      "cli_nested_sha256": "1527af810a26c2e1c7f70fde0176ef480b584169c459171246eb67ab85657218",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js.map",
+      "sha256": "371b6b9457a817f964c2ee85902db94e5876cf5f9e00b4c8f26b42b46ea7e7b6",
+      "cli_nested_sha256": "371b6b9457a817f964c2ee85902db94e5876cf5f9e00b4c8f26b42b46ea7e7b6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.d.ts",
+      "sha256": "5412dc695998f036bd5546cc947faa59422130fab9fd8939de4c24b27a09ae44",
+      "cli_nested_sha256": "5412dc695998f036bd5546cc947faa59422130fab9fd8939de4c24b27a09ae44",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.d.ts.map",
+      "sha256": "b3befceec0929dc73a387a951c1c6469713fc78aa914d5124a7e45700517ea28",
+      "cli_nested_sha256": "b3befceec0929dc73a387a951c1c6469713fc78aa914d5124a7e45700517ea28",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.js.map",
+      "sha256": "36cdae2ddc803c6b331fc3363d68340b56a5be283df057f081ad8f971b005c65",
+      "cli_nested_sha256": "36cdae2ddc803c6b331fc3363d68340b56a5be283df057f081ad8f971b005c65",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.d.ts",
+      "sha256": "3483a2719c60f951114d91789541efbca74b7e7be45e625c2f2271422443ceb7",
+      "cli_nested_sha256": "3483a2719c60f951114d91789541efbca74b7e7be45e625c2f2271422443ceb7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.d.ts.map",
+      "sha256": "f6733b60cbb37a51c308c9974574ac29b9576a335a3a4c26aae9f8b847f0622e",
+      "cli_nested_sha256": "f6733b60cbb37a51c308c9974574ac29b9576a335a3a4c26aae9f8b847f0622e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js.map",
+      "sha256": "aaa4fc7614d5ad0b46f889b8cdd8b0fb8fe886e3279ddc8c05c775f75c3bef09",
+      "cli_nested_sha256": "aaa4fc7614d5ad0b46f889b8cdd8b0fb8fe886e3279ddc8c05c775f75c3bef09",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.d.ts",
+      "sha256": "aafa66c408b1a583f57f2e1c5c05f003bbecd9fc7fc610449c0f7e521bedc634",
+      "cli_nested_sha256": "aafa66c408b1a583f57f2e1c5c05f003bbecd9fc7fc610449c0f7e521bedc634",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.d.ts.map",
+      "sha256": "02c3f4463b54ecd5f380c5d424e011dc7d506fc6ca9e0fac50183b467504a927",
+      "cli_nested_sha256": "02c3f4463b54ecd5f380c5d424e011dc7d506fc6ca9e0fac50183b467504a927",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.js.map",
+      "sha256": "bd616fcfb6533a78f61536066e3bdf85a0b235200ddbbfd73d4a59334327cdab",
+      "cli_nested_sha256": "bd616fcfb6533a78f61536066e3bdf85a0b235200ddbbfd73d4a59334327cdab",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.d.ts",
+      "sha256": "733b2f174d7ead064d26a91fad7b53c2cb0a0be9079e0452cac53f8345366b2c",
+      "cli_nested_sha256": "733b2f174d7ead064d26a91fad7b53c2cb0a0be9079e0452cac53f8345366b2c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.d.ts.map",
+      "sha256": "0aef49f180fc3492413398b2586626ab85a325686401e866441c2d992e1f8f44",
+      "cli_nested_sha256": "0aef49f180fc3492413398b2586626ab85a325686401e866441c2d992e1f8f44",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.js.map",
+      "sha256": "a78fd4a8e9c1790bcc6612aa6f4d1314fb549c2c7b17ec37780ea3074ef5fa26",
+      "cli_nested_sha256": "a78fd4a8e9c1790bcc6612aa6f4d1314fb549c2c7b17ec37780ea3074ef5fa26",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.d.ts",
+      "sha256": "1960be1d984828fe9edc182eb10b4381a2e52157f09b48728722cbbcfa560571",
+      "cli_nested_sha256": "1960be1d984828fe9edc182eb10b4381a2e52157f09b48728722cbbcfa560571",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.d.ts.map",
+      "sha256": "96cde7cf363984bb98bc54966b0da5faa71866673398eced452b3c5c91f491a1",
+      "cli_nested_sha256": "96cde7cf363984bb98bc54966b0da5faa71866673398eced452b3c5c91f491a1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.js.map",
+      "sha256": "3be357ea3ffbccddcf515b474c7b2c9ec59497b7832cd2a114db53f28c2ff4b7",
+      "cli_nested_sha256": "3be357ea3ffbccddcf515b474c7b2c9ec59497b7832cd2a114db53f28c2ff4b7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.d.ts",
+      "sha256": "fc427a2624d32a0c05fcc50de4ed29a5a8ca57bd23503c88f8c9b9ea3c88c66b",
+      "cli_nested_sha256": "fc427a2624d32a0c05fcc50de4ed29a5a8ca57bd23503c88f8c9b9ea3c88c66b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.d.ts.map",
+      "sha256": "9ea059fd6c5d4cea3f90dc85e9c9924d8d1ea34eb4749f20791e00c3c7ee1312",
+      "cli_nested_sha256": "9ea059fd6c5d4cea3f90dc85e9c9924d8d1ea34eb4749f20791e00c3c7ee1312",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.js.map",
+      "sha256": "d2cba5521b35c864fede6aaaf1cd076c22eda73caed5681d40cd5c9244d8a99f",
+      "cli_nested_sha256": "d2cba5521b35c864fede6aaaf1cd076c22eda73caed5681d40cd5c9244d8a99f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/input.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/keybindings.md"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.js.map"
+    }
+  ],
+  "external_dependency_resolution": [
+    {
+      "tree": "root",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "get-east-asian-width/index.js",
+      "package_json_sha256": "d263e50dd1a43aee9acda4d7f066e66b0d0bde1f2852ea6e7153750a5e3a3e52",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "node_modules/get-east-asian-width",
+      "exact_path_lock_record": {
+        "source": "node_modules/get-east-asian-width",
+        "version": "1.6.0",
+        "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+      },
+      "path_lock_disposition": "resolved package path/version matches this main-lock record"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "@earendil-works/pi-tui/node_modules/get-east-asian-width/index.js",
+      "package_json_sha256": "61f4c4194938a9dd225d1871d743e5266c63fb4faad133802579f21bbaead41a",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "packages/cli/node_modules/@earendil-works/pi-tui/node_modules/get-east-asian-width",
+      "exact_path_lock_record": null,
+      "path_lock_disposition": "shadowed pi-tui-local1.6.0 path has no exact main-lock entry; CLI top-level1.7.0 record is not the import resolution target"
+    }
+  ],
+  "counts": {
+    "rows": 56,
+    "proofs": 56,
+    "scopes": 10,
+    "external_boundaries": 10,
+    "excluded_occurrences": 847,
+    "dispositioned_source_files": 10,
+    "string_template_occurrences": 903,
+    "protected_regex_literals": 20,
+    "error_constructors": 0,
+    "catch_clauses": 10,
+    "throw_statements": 0,
+    "all_new_expressions": 16,
+    "protected_control_occurrences": 206,
+    "full_runtime_lines": 2823,
+    "runtime_source_bytes": 113033,
+    "nonruntime_assets": 30,
+    "search_display_rows": 9,
+    "schema_resource_rows": 47,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 10
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.tui-input.alt_screen_search.165.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 165,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Find in transcript",
+      "evidence": "\"Find in transcript\""
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.226.28",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 226,
+      "column": 28,
+      "kind": "string-literal",
+      "english": "Option",
+      "evidence": "\"Option\""
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.230.15",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 230,
+      "column": 15,
+      "kind": "string-literal",
+      "english": "Unbound",
+      "evidence": "\"Unbound\""
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.238.19",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 238,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "No matches",
+      "evidence": "\"No matches\""
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.239.19",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 239,
+      "column": 19,
+      "kind": "template-expression",
+      "english": "${this.resultIndex + 1}/${this.resultCount}",
+      "evidence": "`${this.resultIndex + 1}/${this.resultCount}`"
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.247.30",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 247,
+      "column": 30,
+      "kind": "template-expression",
+      "english": "↑ ${previousKey}",
+      "evidence": "`↑ ${previousKey}`"
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.248.26",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 248,
+      "column": 26,
+      "kind": "template-expression",
+      "english": "↓ ${nextKey}",
+      "evidence": "`↓ ${nextKey}`"
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.254.30",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 254,
+      "column": 30,
+      "kind": "string-literal",
+      "english": "↑",
+      "evidence": "\"↑\""
+    },
+    {
+      "item_id": "pi.tui-input.alt_screen_search.255.26",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "line": 255,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "↓",
+      "evidence": "\"↓\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.3.62",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 3,
+      "column": 62,
+      "kind": "string-literal",
+      "english": "Move cursor up",
+      "evidence": "\"Move cursor up\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.4.66",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 4,
+      "column": 66,
+      "kind": "string-literal",
+      "english": "Move cursor down",
+      "evidence": "\"Move cursor down\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.7.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 7,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Select previous prompt history entry",
+      "evidence": "\"Select previous prompt history entry\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.11.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 11,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Select next prompt history entry",
+      "evidence": "\"Select next prompt history entry\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.15.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 15,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move cursor left",
+      "evidence": "\"Move cursor left\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.19.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 19,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move cursor right",
+      "evidence": "\"Move cursor right\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.23.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 23,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move cursor word left",
+      "evidence": "\"Move cursor word left\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.27.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 27,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move cursor word right",
+      "evidence": "\"Move cursor word right\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.31.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 31,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move to line start",
+      "evidence": "\"Move to line start\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.35.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 35,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move to line end",
+      "evidence": "\"Move to line end\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.39.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 39,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Jump forward to character",
+      "evidence": "\"Jump forward to character\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.43.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 43,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Jump backward to character",
+      "evidence": "\"Jump backward to character\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.45.81",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 45,
+      "column": 81,
+      "kind": "string-literal",
+      "english": "Page up",
+      "evidence": "\"Page up\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.46.87",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 46,
+      "column": 87,
+      "kind": "string-literal",
+      "english": "Page down",
+      "evidence": "\"Page down\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.49.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 49,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete character backward",
+      "evidence": "\"Delete character backward\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.53.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 53,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete character forward",
+      "evidence": "\"Delete character forward\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.57.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 57,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete word backward",
+      "evidence": "\"Delete word backward\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.61.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 61,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete word forward",
+      "evidence": "\"Delete word forward\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.65.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 65,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete to line start",
+      "evidence": "\"Delete to line start\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.69.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 69,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete to line end",
+      "evidence": "\"Delete to line end\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.71.62",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 71,
+      "column": 62,
+      "kind": "string-literal",
+      "english": "Yank",
+      "evidence": "\"Yank\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.72.64",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 72,
+      "column": 64,
+      "kind": "string-literal",
+      "english": "Yank pop",
+      "evidence": "\"Yank pop\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.73.62",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 73,
+      "column": 62,
+      "kind": "string-literal",
+      "english": "Undo",
+      "evidence": "\"Undo\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.74.81",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 74,
+      "column": 81,
+      "kind": "string-literal",
+      "english": "Insert newline",
+      "evidence": "\"Insert newline\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.75.62",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 75,
+      "column": 62,
+      "kind": "string-literal",
+      "english": "Submit input",
+      "evidence": "\"Submit input\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.76.57",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 76,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Tab / autocomplete",
+      "evidence": "\"Tab / autocomplete\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.77.61",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 77,
+      "column": 61,
+      "kind": "string-literal",
+      "english": "Copy selection",
+      "evidence": "\"Copy selection\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.78.56",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 78,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Move selection up",
+      "evidence": "\"Move selection up\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.79.60",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 79,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "Move selection down",
+      "evidence": "\"Move selection down\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.80.64",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 80,
+      "column": 64,
+      "kind": "string-literal",
+      "english": "Selection page up",
+      "evidence": "\"Selection page up\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.83.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 83,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Selection page down",
+      "evidence": "\"Selection page down\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.85.64",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 85,
+      "column": 64,
+      "kind": "string-literal",
+      "english": "Confirm selection",
+      "evidence": "\"Confirm selection\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.88.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 88,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Cancel selection",
+      "evidence": "\"Cancel selection\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.93.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 93,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Scroll viewport up one page",
+      "evidence": "\"Scroll viewport up one page\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.97.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 97,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Scroll viewport down one page",
+      "evidence": "\"Scroll viewport down one page\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.101.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 101,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Scroll viewport up half a page",
+      "evidence": "\"Scroll viewport up half a page\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.105.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 105,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Scroll viewport down half a page",
+      "evidence": "\"Scroll viewport down half a page\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.109.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 109,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Scroll viewport up one line",
+      "evidence": "\"Scroll viewport up one line\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.113.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 113,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Scroll viewport down one line",
+      "evidence": "\"Scroll viewport down one line\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.117.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 117,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Jump to previous semantic prompt",
+      "evidence": "\"Jump to previous semantic prompt\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.121.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 121,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Jump to next semantic prompt",
+      "evidence": "\"Jump to next semantic prompt\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.125.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 125,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Search the primary scroll view",
+      "evidence": "\"Search the primary scroll view\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.129.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 129,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Select the next search match",
+      "evidence": "\"Select the next search match\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.133.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 133,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Select the previous search match",
+      "evidence": "\"Select the previous search match\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.137.22",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 137,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Close transcript search",
+      "evidence": "\"Close transcript search\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.139.67",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 139,
+      "column": 67,
+      "kind": "string-literal",
+      "english": "Scroll viewport to top",
+      "evidence": "\"Scroll viewport to top\""
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.140.69",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "line": 140,
+      "column": 69,
+      "kind": "string-literal",
+      "english": "Scroll viewport to bottom",
+      "evidence": "\"Scroll viewport to bottom\""
+    }
+  ],
+  "schema_crosslinks": [
+    {
+      "item_id": "pi.tui-input.keybindings.3.62",
+      "action": "tui.editor.cursorUp",
+      "description": "Move cursor up",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 12,
+      "artifact_column": 22,
+      "source_line": 3,
+      "source_column": 62
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.4.66",
+      "action": "tui.editor.cursorDown",
+      "description": "Move cursor down",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 16,
+      "artifact_column": 22,
+      "source_line": 4,
+      "source_column": 66
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.7.22",
+      "action": "tui.editor.historyPrevious",
+      "description": "Select previous prompt history entry",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 20,
+      "artifact_column": 22,
+      "source_line": 7,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.11.22",
+      "action": "tui.editor.historyNext",
+      "description": "Select next prompt history entry",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 24,
+      "artifact_column": 22,
+      "source_line": 11,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.15.22",
+      "action": "tui.editor.cursorLeft",
+      "description": "Move cursor left",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 28,
+      "artifact_column": 22,
+      "source_line": 15,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.19.22",
+      "action": "tui.editor.cursorRight",
+      "description": "Move cursor right",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 32,
+      "artifact_column": 22,
+      "source_line": 19,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.23.22",
+      "action": "tui.editor.cursorWordLeft",
+      "description": "Move cursor word left",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 36,
+      "artifact_column": 22,
+      "source_line": 23,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.27.22",
+      "action": "tui.editor.cursorWordRight",
+      "description": "Move cursor word right",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 40,
+      "artifact_column": 22,
+      "source_line": 27,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.31.22",
+      "action": "tui.editor.cursorLineStart",
+      "description": "Move to line start",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 44,
+      "artifact_column": 22,
+      "source_line": 31,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.35.22",
+      "action": "tui.editor.cursorLineEnd",
+      "description": "Move to line end",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 48,
+      "artifact_column": 22,
+      "source_line": 35,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.39.22",
+      "action": "tui.editor.jumpForward",
+      "description": "Jump forward to character",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 52,
+      "artifact_column": 22,
+      "source_line": 39,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.43.22",
+      "action": "tui.editor.jumpBackward",
+      "description": "Jump backward to character",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 56,
+      "artifact_column": 22,
+      "source_line": 43,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.45.81",
+      "action": "tui.editor.pageUp",
+      "description": "Page up",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 60,
+      "artifact_column": 22,
+      "source_line": 45,
+      "source_column": 81
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.46.87",
+      "action": "tui.editor.pageDown",
+      "description": "Page down",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 64,
+      "artifact_column": 22,
+      "source_line": 46,
+      "source_column": 87
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.49.22",
+      "action": "tui.editor.deleteCharBackward",
+      "description": "Delete character backward",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 68,
+      "artifact_column": 22,
+      "source_line": 49,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.53.22",
+      "action": "tui.editor.deleteCharForward",
+      "description": "Delete character forward",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 72,
+      "artifact_column": 22,
+      "source_line": 53,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.57.22",
+      "action": "tui.editor.deleteWordBackward",
+      "description": "Delete word backward",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 76,
+      "artifact_column": 22,
+      "source_line": 57,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.61.22",
+      "action": "tui.editor.deleteWordForward",
+      "description": "Delete word forward",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 80,
+      "artifact_column": 22,
+      "source_line": 61,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.65.22",
+      "action": "tui.editor.deleteToLineStart",
+      "description": "Delete to line start",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 84,
+      "artifact_column": 22,
+      "source_line": 65,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.69.22",
+      "action": "tui.editor.deleteToLineEnd",
+      "description": "Delete to line end",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 88,
+      "artifact_column": 22,
+      "source_line": 69,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.71.62",
+      "action": "tui.editor.yank",
+      "description": "Yank",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 92,
+      "artifact_column": 22,
+      "source_line": 71,
+      "source_column": 62
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.72.64",
+      "action": "tui.editor.yankPop",
+      "description": "Yank pop",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 96,
+      "artifact_column": 22,
+      "source_line": 72,
+      "source_column": 64
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.73.62",
+      "action": "tui.editor.undo",
+      "description": "Undo",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 100,
+      "artifact_column": 22,
+      "source_line": 73,
+      "source_column": 62
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.74.81",
+      "action": "tui.input.newLine",
+      "description": "Insert newline",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 104,
+      "artifact_column": 22,
+      "source_line": 74,
+      "source_column": 81
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.75.62",
+      "action": "tui.input.submit",
+      "description": "Submit input",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 108,
+      "artifact_column": 22,
+      "source_line": 75,
+      "source_column": 62
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.76.57",
+      "action": "tui.input.tab",
+      "description": "Tab / autocomplete",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 112,
+      "artifact_column": 22,
+      "source_line": 76,
+      "source_column": 57
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.77.61",
+      "action": "tui.input.copy",
+      "description": "Copy selection",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 116,
+      "artifact_column": 22,
+      "source_line": 77,
+      "source_column": 61
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.78.56",
+      "action": "tui.select.up",
+      "description": "Move selection up",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 120,
+      "artifact_column": 22,
+      "source_line": 78,
+      "source_column": 56
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.79.60",
+      "action": "tui.select.down",
+      "description": "Move selection down",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 124,
+      "artifact_column": 22,
+      "source_line": 79,
+      "source_column": 60
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.80.64",
+      "action": "tui.select.pageUp",
+      "description": "Selection page up",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 128,
+      "artifact_column": 22,
+      "source_line": 80,
+      "source_column": 64
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.83.22",
+      "action": "tui.select.pageDown",
+      "description": "Selection page down",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 132,
+      "artifact_column": 22,
+      "source_line": 83,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.85.64",
+      "action": "tui.select.confirm",
+      "description": "Confirm selection",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 136,
+      "artifact_column": 22,
+      "source_line": 85,
+      "source_column": 64
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.88.22",
+      "action": "tui.select.cancel",
+      "description": "Cancel selection",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 140,
+      "artifact_column": 22,
+      "source_line": 88,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.93.22",
+      "action": "tui.altScreen.pageUp",
+      "description": "Scroll viewport up one page",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 144,
+      "artifact_column": 22,
+      "source_line": 93,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.97.22",
+      "action": "tui.altScreen.pageDown",
+      "description": "Scroll viewport down one page",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 148,
+      "artifact_column": 22,
+      "source_line": 97,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.101.22",
+      "action": "tui.altScreen.halfPageUp",
+      "description": "Scroll viewport up half a page",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 152,
+      "artifact_column": 22,
+      "source_line": 101,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.105.22",
+      "action": "tui.altScreen.halfPageDown",
+      "description": "Scroll viewport down half a page",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 156,
+      "artifact_column": 22,
+      "source_line": 105,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.109.22",
+      "action": "tui.altScreen.lineUp",
+      "description": "Scroll viewport up one line",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 160,
+      "artifact_column": 22,
+      "source_line": 109,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.113.22",
+      "action": "tui.altScreen.lineDown",
+      "description": "Scroll viewport down one line",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 164,
+      "artifact_column": 22,
+      "source_line": 113,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.117.22",
+      "action": "tui.altScreen.previousPrompt",
+      "description": "Jump to previous semantic prompt",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 168,
+      "artifact_column": 22,
+      "source_line": 117,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.121.22",
+      "action": "tui.altScreen.nextPrompt",
+      "description": "Jump to next semantic prompt",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 172,
+      "artifact_column": 22,
+      "source_line": 121,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.125.22",
+      "action": "tui.altScreen.search",
+      "description": "Search the primary scroll view",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 176,
+      "artifact_column": 22,
+      "source_line": 125,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.129.22",
+      "action": "tui.altScreen.searchNext",
+      "description": "Select the next search match",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 180,
+      "artifact_column": 22,
+      "source_line": 129,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.133.22",
+      "action": "tui.altScreen.searchPrevious",
+      "description": "Select the previous search match",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 184,
+      "artifact_column": 22,
+      "source_line": 133,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.137.22",
+      "action": "tui.altScreen.searchClose",
+      "description": "Close transcript search",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 188,
+      "artifact_column": 22,
+      "source_line": 137,
+      "source_column": 22
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.139.67",
+      "action": "tui.altScreen.top",
+      "description": "Scroll viewport to top",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 192,
+      "artifact_column": 22,
+      "source_line": 139,
+      "source_column": 67
+    },
+    {
+      "item_id": "pi.tui-input.keybindings.140.69",
+      "action": "tui.altScreen.bottom",
+      "description": "Scroll viewport to bottom",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_line": 196,
+      "artifact_column": 22,
+      "source_line": 140,
+      "source_column": 69
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js",
+        "read_lines": [
+          1,
+          511
+        ],
+        "string_template_occurrences": 75,
+        "fixed_rows": 0,
+        "excluded_occurrences": 75,
+        "protected_regex_literals": 3,
+        "regex_census_sha256": "fb8eaa3208e9634a03e7a5ba824abaac2446c2d223fa9294b298a7792b158c9e",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 101,
+            "column": 29,
+            "callee": "Date",
+            "source": "new Date()"
+          },
+          {
+            "line": 152,
+            "column": 28,
+            "callee": "StdinBuffer",
+            "source": "new StdinBuffer({ escapeTimeout: resolveEscapeTimeoutMs() })"
+          },
+          {
+            "line": 358,
+            "column": 23,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => setTimeout(resolve, Math.min(idleMs, timeLeft)))"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 43,
+            "column": 5,
+            "source": "catch {\n        // Signal delivery not permitted in this environment; ignore.\n    }"
+          },
+          {
+            "line": 106,
+            "column": 9,
+            "source": "catch {\n            // Not an existing directory - use as-is (file path)\n        }"
+          },
+          {
+            "line": 326,
+            "column": 9,
+            "source": "catch {\n            // Native helper not available — Shift+Tab won't be distinguishable from Tab.\n        }"
+          },
+          {
+            "line": 426,
+            "column": 9,
+            "source": "catch {\n            // The terminal may already be gone.\n        }"
+          },
+          {
+            "line": 436,
+            "column": 13,
+            "source": "catch {\n                // Ignore logging errors\n            }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:fs"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./keys.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./native-modifiers.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./native-platform.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./program-status.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./stdin-buffer.js"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 41,
+            "column": 9,
+            "callee": "process.kill",
+            "arguments": [
+              "process.pid",
+              "\"SIGWINCH\""
+            ]
+          },
+          {
+            "line": 100,
+            "column": 17,
+            "callee": "fs.statSync",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[?2004h\""
+            ]
+          },
+          {
+            "line": 176,
+            "column": 17,
+            "callee": "this.inputHandler",
+            "arguments": [
+              "`\\x1b[200~${content}\\x1b[201~`"
+            ]
+          },
+          {
+            "line": 210,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "`${KITTY_KEYBOARD_PROTOCOL_QUERY}${programStatusQuery}${DEVICE_ATTRIBUTES_QUERY}`"
+            ]
+          },
+          {
+            "line": 300,
+            "column": 9,
+            "callee": "this.inputHandler",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 305,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[>4;2m\""
+            ]
+          },
+          {
+            "line": 311,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[>4;0m\""
+            ]
+          },
+          {
+            "line": 336,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[<u\""
+            ]
+          },
+          {
+            "line": 368,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "TERMINAL_PROGRESS_CLEAR_SEQUENCE"
+            ]
+          },
+          {
+            "line": 372,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "formatProgramStatus({ state: \"clear\" })"
+            ]
+          },
+          {
+            "line": 377,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[?2004l\""
+            ]
+          },
+          {
+            "line": 382,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[<u\""
+            ]
+          },
+          {
+            "line": 424,
+            "column": 13,
+            "callee": "fs.writeSync",
+            "arguments": [
+              "process.stdout.fd",
+              "sequence"
+            ]
+          },
+          {
+            "line": 431,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 434,
+            "column": 17,
+            "callee": "fs.appendFileSync",
+            "arguments": [
+              "this.writeLogPath",
+              "data",
+              "{ encoding: \"utf8\" }"
+            ]
+          },
+          {
+            "line": 450,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "`\\x1b[${lines}B`"
+            ]
+          },
+          {
+            "line": 454,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "`\\x1b[${-lines}A`"
+            ]
+          },
+          {
+            "line": 459,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[?25l\""
+            ]
+          },
+          {
+            "line": 462,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[?25h\""
+            ]
+          },
+          {
+            "line": 465,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[K\""
+            ]
+          },
+          {
+            "line": 468,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[J\""
+            ]
+          },
+          {
+            "line": 471,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "\"\\x1b[2J\\x1b[H\""
+            ]
+          },
+          {
+            "line": 475,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "`\\x1b]0;${title}\\x07`"
+            ]
+          },
+          {
+            "line": 480,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "formatProgramStatus(status)"
+            ]
+          },
+          {
+            "line": 484,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "formatProgramStatus(this.programStatus)"
+            ]
+          },
+          {
+            "line": 490,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "TERMINAL_PROGRESS_ACTIVE_SEQUENCE"
+            ]
+          },
+          {
+            "line": 493,
+            "column": 21,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "TERMINAL_PROGRESS_ACTIVE_SEQUENCE"
+            ]
+          },
+          {
+            "line": 500,
+            "column": 13,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "TERMINAL_PROGRESS_CLEAR_SEQUENCE"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 9,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001b]9;4;3\u0007"
+          },
+          {
+            "line": 10,
+            "column": 42,
+            "kind": "string-literal",
+            "text": "\u001b]9;4;0\u0007"
+          },
+          {
+            "line": 11,
+            "column": 37,
+            "kind": "string-literal",
+            "text": "\u001b[13;2u"
+          },
+          {
+            "line": 14,
+            "column": 39,
+            "kind": "template-expression",
+            "text": "\\x1b[>${DESIRED_KITTY_KEYBOARD_PROTOCOL_FLAGS}u\\x1b[?u"
+          },
+          {
+            "line": 15,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001b[c"
+          },
+          {
+            "line": 27,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b["
+          },
+          {
+            "line": 128,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[?2004h"
+          },
+          {
+            "line": 176,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[200~${content}\\x1b[201~"
+          },
+          {
+            "line": 305,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[>4;2m"
+          },
+          {
+            "line": 311,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[>4;0m"
+          },
+          {
+            "line": 336,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[<u"
+          },
+          {
+            "line": 377,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[?2004l"
+          },
+          {
+            "line": 382,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[<u"
+          },
+          {
+            "line": 416,
+            "column": 21,
+            "kind": "string-literal",
+            "text": "\u001b[?2004l"
+          },
+          {
+            "line": 418,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b[<u"
+          },
+          {
+            "line": 420,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b[>4;0m"
+          },
+          {
+            "line": 450,
+            "column": 34,
+            "kind": "template-expression",
+            "text": "\\x1b[${lines}B"
+          },
+          {
+            "line": 454,
+            "column": 34,
+            "kind": "template-expression",
+            "text": "\\x1b[${-lines}A"
+          },
+          {
+            "line": 459,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[?25l"
+          },
+          {
+            "line": 462,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[?25h"
+          },
+          {
+            "line": 465,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[K"
+          },
+          {
+            "line": 468,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[J"
+          },
+          {
+            "line": 471,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b[2J\u001b[H"
+          },
+          {
+            "line": 475,
+            "column": 30,
+            "kind": "template-expression",
+            "text": "\\x1b]0;${title}\\x07"
+          }
+        ],
+        "definition_descriptions": [],
+        "review": "Full body read. ProcessTerminal handles raw input/protocol/status negotiation, dimensions/resize, teardown and stdout control writes. No fixed human caption or Error headline. Optional PI_TUI_WRITE_LOG snapshots path at construction, appends only caller write(data) bytes after stdout, and catches logging failure; user-opened file is a valid payload sink. Five catches separately preserved: resize signal, path stat, Windows VT helper, exit restore and log append. Native stdout/OS/addon exceptions outside these catches remain external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/stdin-buffer.js",
+        "read_lines": [
+          1,
+          401
+        ],
+        "string_template_occurrences": 75,
+        "fixed_rows": 0,
+        "excluded_occurrences": 75,
+        "protected_regex_literals": 4,
+        "regex_census_sha256": "5721d89234cac8b67884ae81d02a3d5c4d8b7d7f92632ac3ea3d98074ff2e705",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 19,
+            "column": 1,
+            "specifier": "events"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 298,
+            "column": 17,
+            "callee": "this.emit",
+            "arguments": [
+              "\"paste\"",
+              "pastedContent"
+            ]
+          },
+          {
+            "line": 326,
+            "column": 17,
+            "callee": "this.emit",
+            "arguments": [
+              "\"paste\"",
+              "pastedContent"
+            ]
+          },
+          {
+            "line": 369,
+            "column": 9,
+            "callee": "this.emit",
+            "arguments": [
+              "\"data\"",
+              "sequence"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 20,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 23,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b[200~"
+          },
+          {
+            "line": 24,
+            "column": 29,
+            "kind": "string-literal",
+            "text": "\u001b[201~"
+          },
+          {
+            "line": 206,
+            "column": 39,
+            "kind": "string-literal",
+            "text": "\u001b\u001b"
+          },
+          {
+            "line": 274,
+            "column": 23,
+            "kind": "template-expression",
+            "text": "\\x1b${String.fromCharCode(byte)}"
+          }
+        ],
+        "definition_descriptions": [],
+        "review": "Full body read. CSI/OSC/DCS/APC/SS3/Alt completeness and paste/Kitty duplicate handling use protected sequence/state/event IDs. Completed data and paste payloads reach EventEmitter/caller listeners; no local prose/Error/throw/catch. Known reply headers remain buffered, while eligible partial/lone ESC buffers flush on configured timeout. Runtime Buffer/EventEmitter/listener failures remain external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.js",
+        "read_lines": [
+          1,
+          1206
+        ],
+        "string_template_occurrences": 505,
+        "fixed_rows": 0,
+        "excluded_occurrences": 505,
+        "protected_regex_literals": 6,
+        "regex_census_sha256": "507d44907a5535495b82f83e6a96c83734df7212f49dfd6a0fdf1567536832a5",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 135,
+            "column": 21,
+            "callee": "Set",
+            "source": "new Set([\n    \"`\",\n    \"-\",\n    \"=\",\n    \"[\",\n    \"]\",\n    \"\\\\\",\n    \";\",\n    \"'\",\n    \",\",\n    \".\",\n    \"/\",\n    \"!\",\n    \"@\",\n    \"#\",\n    \"$\",\n    \"%\",\n    \"^\",\n    \"&\",\n    \"*\",\n    \"(\",\n    \")\",\n    \"_\",\n    \"+\",\n    \"|\",\n    \"~\",\n    \"{\",\n    \"}\",\n    \":\",\n    \"<\",\n    \">\",\n    \"?\",\n])"
+          },
+          {
+            "line": 168,
+            "column": 29,
+            "callee": "Set",
+            "source": "new Set(\"~!@#$%^&*()_+|{}:<>?\")"
+          },
+          {
+            "line": 199,
+            "column": 42,
+            "callee": "Map",
+            "source": "new Map([\n    [57399, 48], // KP_0 -> 0\n    [57400, 49], // KP_1 -> 1\n    [57401, 50], // KP_2 -> 2\n    [57402, 51], // KP_3 -> 3\n    [57403, 52], // KP_4 -> 4\n    [57404, 53], // KP_5 -> 5\n    [57405, 54], // KP_6 -> 6\n    [57406, 55], // KP_7 -> 7\n    [57407, 56], // KP_8 -> 8\n    [57408, 57], // KP_9 -> 9\n    [57409, 46], // KP_DECIMAL -> .\n    [57410, 47], // KP_DIVIDE -> /\n    [57411, 42], // KP_MULTIPLY -> *\n    [57412, 45], // KP_SUBTRACT -> -\n    [57413, 43], // KP_ADD -> +\n    [57415, 61], // KP_EQUAL -> =\n    [57416, 44], // KP_SEPARATOR -> ,\n    [57417, ARROW_CODEPOINTS.left],\n    [57418, ARROW_CODEPOINTS.right],\n    [57419, ARROW_CODEPOINTS.up],\n    [57420, ARROW_CODEPOINTS.down],\n    [57421, FUNCTIONAL_CODEPOINTS.pageUp],\n    [57422, FUNCTIONAL_CODEPOINTS.pageDown],\n    [57423, FUNCTIONAL_CODEPOINTS.home],\n    [57424, FUNCTIONAL_CODEPOINTS.end],\n    [57425, FUNCTIONAL_CODEPOINTS.insert],\n    [57426, FUNCTIONAL_CODEPOINTS.delete],\n])"
+          },
+          {
+            "line": 626,
+            "column": 23,
+            "callee": "Set",
+            "source": "new Set()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 1183,
+            "column": 5,
+            "source": "catch {\n        return undefined;\n    }"
+          },
+          {
+            "line": 1199,
+            "column": 5,
+            "source": "catch {\n        return undefined;\n    }"
+          }
+        ],
+        "direct_imports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 1181,
+            "column": 16,
+            "callee": "String.fromCodePoint",
+            "arguments": [
+              "effectiveCodepoint"
+            ]
+          },
+          {
+            "line": 1197,
+            "column": 16,
+            "callee": "String.fromCodePoint",
+            "arguments": [
+              "parsed.codepoint"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 247,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[A"
+          },
+          {
+            "line": 247,
+            "column": 20,
+            "kind": "string-literal",
+            "text": "\u001bOA"
+          },
+          {
+            "line": 248,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[B"
+          },
+          {
+            "line": 248,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001bOB"
+          },
+          {
+            "line": 249,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001b[C"
+          },
+          {
+            "line": 249,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001bOC"
+          },
+          {
+            "line": 250,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[D"
+          },
+          {
+            "line": 250,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001bOD"
+          },
+          {
+            "line": 251,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[H"
+          },
+          {
+            "line": 251,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001bOH"
+          },
+          {
+            "line": 251,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b[1~"
+          },
+          {
+            "line": 251,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001b[7~"
+          },
+          {
+            "line": 252,
+            "column": 11,
+            "kind": "string-literal",
+            "text": "\u001b[F"
+          },
+          {
+            "line": 252,
+            "column": 21,
+            "kind": "string-literal",
+            "text": "\u001bOF"
+          },
+          {
+            "line": 252,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b[4~"
+          },
+          {
+            "line": 252,
+            "column": 42,
+            "kind": "string-literal",
+            "text": "\u001b[8~"
+          },
+          {
+            "line": 253,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[2~"
+          },
+          {
+            "line": 254,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[3~"
+          },
+          {
+            "line": 255,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[5~"
+          },
+          {
+            "line": 255,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b[[5~"
+          },
+          {
+            "line": 256,
+            "column": 16,
+            "kind": "string-literal",
+            "text": "\u001b[6~"
+          },
+          {
+            "line": 256,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "\u001b[[6~"
+          },
+          {
+            "line": 257,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001b[E"
+          },
+          {
+            "line": 257,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001bOE"
+          },
+          {
+            "line": 258,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001bOP"
+          },
+          {
+            "line": 258,
+            "column": 20,
+            "kind": "string-literal",
+            "text": "\u001b[11~"
+          },
+          {
+            "line": 258,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b[[A"
+          },
+          {
+            "line": 259,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001bOQ"
+          },
+          {
+            "line": 259,
+            "column": 20,
+            "kind": "string-literal",
+            "text": "\u001b[12~"
+          },
+          {
+            "line": 259,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b[[B"
+          },
+          {
+            "line": 260,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001bOR"
+          },
+          {
+            "line": 260,
+            "column": 20,
+            "kind": "string-literal",
+            "text": "\u001b[13~"
+          },
+          {
+            "line": 260,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b[[C"
+          },
+          {
+            "line": 261,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001bOS"
+          },
+          {
+            "line": 261,
+            "column": 20,
+            "kind": "string-literal",
+            "text": "\u001b[14~"
+          },
+          {
+            "line": 261,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b[[D"
+          },
+          {
+            "line": 262,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[15~"
+          },
+          {
+            "line": 262,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001b[[E"
+          },
+          {
+            "line": 263,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[17~"
+          },
+          {
+            "line": 264,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[18~"
+          },
+          {
+            "line": 265,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[19~"
+          },
+          {
+            "line": 266,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[20~"
+          },
+          {
+            "line": 267,
+            "column": 11,
+            "kind": "string-literal",
+            "text": "\u001b[21~"
+          },
+          {
+            "line": 268,
+            "column": 11,
+            "kind": "string-literal",
+            "text": "\u001b[23~"
+          },
+          {
+            "line": 269,
+            "column": 11,
+            "kind": "string-literal",
+            "text": "\u001b[24~"
+          },
+          {
+            "line": 272,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001b[a"
+          },
+          {
+            "line": 273,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[b"
+          },
+          {
+            "line": 274,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001b[c"
+          },
+          {
+            "line": 275,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[d"
+          },
+          {
+            "line": 276,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001b[e"
+          },
+          {
+            "line": 277,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[2$"
+          },
+          {
+            "line": 278,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[3$"
+          },
+          {
+            "line": 279,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[5$"
+          },
+          {
+            "line": 280,
+            "column": 16,
+            "kind": "string-literal",
+            "text": "\u001b[6$"
+          },
+          {
+            "line": 281,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[7$"
+          },
+          {
+            "line": 282,
+            "column": 11,
+            "kind": "string-literal",
+            "text": "\u001b[8$"
+          },
+          {
+            "line": 285,
+            "column": 10,
+            "kind": "string-literal",
+            "text": "\u001bOa"
+          },
+          {
+            "line": 286,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001bOb"
+          },
+          {
+            "line": 287,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001bOc"
+          },
+          {
+            "line": 288,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001bOd"
+          },
+          {
+            "line": 289,
+            "column": 13,
+            "kind": "string-literal",
+            "text": "\u001bOe"
+          },
+          {
+            "line": 290,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[2^"
+          },
+          {
+            "line": 291,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[3^"
+          },
+          {
+            "line": 292,
+            "column": 14,
+            "kind": "string-literal",
+            "text": "\u001b[5^"
+          },
+          {
+            "line": 293,
+            "column": 16,
+            "kind": "string-literal",
+            "text": "\u001b[6^"
+          },
+          {
+            "line": 294,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b[7^"
+          },
+          {
+            "line": 295,
+            "column": 11,
+            "kind": "string-literal",
+            "text": "\u001b[8^"
+          },
+          {
+            "line": 298,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOA"
+          },
+          {
+            "line": 299,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOB"
+          },
+          {
+            "line": 300,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOC"
+          },
+          {
+            "line": 301,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOD"
+          },
+          {
+            "line": 302,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOH"
+          },
+          {
+            "line": 303,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOF"
+          },
+          {
+            "line": 304,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[E"
+          },
+          {
+            "line": 305,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOE"
+          },
+          {
+            "line": 306,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOe"
+          },
+          {
+            "line": 307,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[e"
+          },
+          {
+            "line": 308,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[2~"
+          },
+          {
+            "line": 309,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[2$"
+          },
+          {
+            "line": 310,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[2^"
+          },
+          {
+            "line": 311,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[3$"
+          },
+          {
+            "line": 312,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[3^"
+          },
+          {
+            "line": 313,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[5~"
+          },
+          {
+            "line": 314,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[6~"
+          },
+          {
+            "line": 315,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[a"
+          },
+          {
+            "line": 316,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[b"
+          },
+          {
+            "line": 317,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[c"
+          },
+          {
+            "line": 318,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[d"
+          },
+          {
+            "line": 319,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOa"
+          },
+          {
+            "line": 320,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOb"
+          },
+          {
+            "line": 321,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOc"
+          },
+          {
+            "line": 322,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOd"
+          },
+          {
+            "line": 323,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[5$"
+          },
+          {
+            "line": 324,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[6$"
+          },
+          {
+            "line": 325,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[7$"
+          },
+          {
+            "line": 326,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[8$"
+          },
+          {
+            "line": 327,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[5^"
+          },
+          {
+            "line": 328,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[6^"
+          },
+          {
+            "line": 329,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[7^"
+          },
+          {
+            "line": 330,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[8^"
+          },
+          {
+            "line": 331,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOP"
+          },
+          {
+            "line": 332,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOQ"
+          },
+          {
+            "line": 333,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOR"
+          },
+          {
+            "line": 334,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bOS"
+          },
+          {
+            "line": 335,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[11~"
+          },
+          {
+            "line": 336,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[12~"
+          },
+          {
+            "line": 337,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[13~"
+          },
+          {
+            "line": 338,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[14~"
+          },
+          {
+            "line": 339,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[A"
+          },
+          {
+            "line": 340,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[B"
+          },
+          {
+            "line": 341,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[C"
+          },
+          {
+            "line": 342,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[D"
+          },
+          {
+            "line": 343,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[[E"
+          },
+          {
+            "line": 344,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[15~"
+          },
+          {
+            "line": 345,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[17~"
+          },
+          {
+            "line": 346,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[18~"
+          },
+          {
+            "line": 347,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[19~"
+          },
+          {
+            "line": 348,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[20~"
+          },
+          {
+            "line": 349,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[21~"
+          },
+          {
+            "line": 350,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[23~"
+          },
+          {
+            "line": 351,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001b[24~"
+          },
+          {
+            "line": 352,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bb"
+          },
+          {
+            "line": 353,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bf"
+          },
+          {
+            "line": 354,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bp"
+          },
+          {
+            "line": 355,
+            "column": 5,
+            "kind": "string-literal",
+            "text": "\u001bn"
+          },
+          {
+            "line": 378,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[200~"
+          },
+          {
+            "line": 402,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[200~"
+          },
+          {
+            "line": 682,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 690,
+            "column": 60,
+            "kind": "string-literal",
+            "text": "\u001b "
+          },
+          {
+            "line": 703,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[Z"
+          },
+          {
+            "line": 728,
+            "column": 37,
+            "kind": "string-literal",
+            "text": "\u001b\r"
+          },
+          {
+            "line": 745,
+            "column": 37,
+            "kind": "string-literal",
+            "text": "\u001b\r"
+          },
+          {
+            "line": 752,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001bOM"
+          },
+          {
+            "line": 761,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 761,
+            "column": 53,
+            "kind": "string-literal",
+            "text": "\u001b\b"
+          },
+          {
+            "line": 844,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001bp"
+          },
+          {
+            "line": 856,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001bn"
+          },
+          {
+            "line": 868,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[1;3D"
+          },
+          {
+            "line": 869,
+            "column": 56,
+            "kind": "string-literal",
+            "text": "\u001bB"
+          },
+          {
+            "line": 870,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001bb"
+          },
+          {
+            "line": 874,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[1;5D"
+          },
+          {
+            "line": 888,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[1;3C"
+          },
+          {
+            "line": 889,
+            "column": 56,
+            "kind": "string-literal",
+            "text": "\u001bF"
+          },
+          {
+            "line": 890,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001bf"
+          },
+          {
+            "line": 894,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b[1;5C"
+          },
+          {
+            "line": 935,
+            "column": 26,
+            "kind": "template-expression",
+            "text": "\\x1b${rawCtrl}"
+          },
+          {
+            "line": 940,
+            "column": 26,
+            "kind": "template-expression",
+            "text": "\\x1b${key}"
+          },
+          {
+            "line": 1045,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001b\r"
+          },
+          {
+            "line": 1052,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 1060,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b\u001b"
+          },
+          {
+            "line": 1062,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b\u001c"
+          },
+          {
+            "line": 1064,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b\u001d"
+          },
+          {
+            "line": 1066,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b\u001f"
+          },
+          {
+            "line": 1070,
+            "column": 79,
+            "kind": "string-literal",
+            "text": "\u001bOM"
+          },
+          {
+            "line": 1080,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[Z"
+          },
+          {
+            "line": 1082,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001b\r"
+          },
+          {
+            "line": 1084,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001b "
+          },
+          {
+            "line": 1086,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 1086,
+            "column": 41,
+            "kind": "string-literal",
+            "text": "\u001b\b"
+          },
+          {
+            "line": 1088,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001bB"
+          },
+          {
+            "line": 1090,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001bF"
+          },
+          {
+            "line": 1092,
+            "column": 67,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 1103,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[A"
+          },
+          {
+            "line": 1105,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[B"
+          },
+          {
+            "line": 1107,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[C"
+          },
+          {
+            "line": 1109,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[D"
+          },
+          {
+            "line": 1111,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[H"
+          },
+          {
+            "line": 1111,
+            "column": 39,
+            "kind": "string-literal",
+            "text": "\u001bOH"
+          },
+          {
+            "line": 1113,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[F"
+          },
+          {
+            "line": 1113,
+            "column": 39,
+            "kind": "string-literal",
+            "text": "\u001bOF"
+          },
+          {
+            "line": 1115,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[3~"
+          },
+          {
+            "line": 1117,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[5~"
+          },
+          {
+            "line": 1119,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[6~"
+          }
+        ],
+        "definition_descriptions": [],
+        "review": "Full body read. Canonical modifier/key IDs, legacy/Kitty/modifyOtherKeys maps and builder/parser/matcher outputs are technical identities even when later shown as key hints. No local human Error/throw. Printable decoder catches both String.fromCodePoint failure sites and returns undefined. Full maps, regular expressions, constructors and control escapes retained in exact census; arbitrary input/optional invalid API values remain external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+        "read_lines": [
+          1,
+          233
+        ],
+        "string_template_occurrences": 155,
+        "fixed_rows": 47,
+        "excluded_occurrences": 108,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 146,
+            "column": 18,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 159,
+            "column": 16,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 169,
+            "column": 28,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 174,
+            "column": 58,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 229,
+            "column": 29,
+            "callee": "KeybindingsManager",
+            "source": "new KeybindingsManager(TUI_KEYBINDINGS)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./keys.js"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "definition_descriptions": [
+          {
+            "line": 3,
+            "column": 62,
+            "kind": "string-literal",
+            "text": "Move cursor up",
+            "action": "tui.editor.cursorUp"
+          },
+          {
+            "line": 4,
+            "column": 66,
+            "kind": "string-literal",
+            "text": "Move cursor down",
+            "action": "tui.editor.cursorDown"
+          },
+          {
+            "line": 7,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Select previous prompt history entry",
+            "action": "tui.editor.historyPrevious"
+          },
+          {
+            "line": 11,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Select next prompt history entry",
+            "action": "tui.editor.historyNext"
+          },
+          {
+            "line": 15,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Move cursor left",
+            "action": "tui.editor.cursorLeft"
+          },
+          {
+            "line": 19,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Move cursor right",
+            "action": "tui.editor.cursorRight"
+          },
+          {
+            "line": 23,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Move cursor word left",
+            "action": "tui.editor.cursorWordLeft"
+          },
+          {
+            "line": 27,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Move cursor word right",
+            "action": "tui.editor.cursorWordRight"
+          },
+          {
+            "line": 31,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Move to line start",
+            "action": "tui.editor.cursorLineStart"
+          },
+          {
+            "line": 35,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Move to line end",
+            "action": "tui.editor.cursorLineEnd"
+          },
+          {
+            "line": 39,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Jump forward to character",
+            "action": "tui.editor.jumpForward"
+          },
+          {
+            "line": 43,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Jump backward to character",
+            "action": "tui.editor.jumpBackward"
+          },
+          {
+            "line": 45,
+            "column": 81,
+            "kind": "string-literal",
+            "text": "Page up",
+            "action": "tui.editor.pageUp"
+          },
+          {
+            "line": 46,
+            "column": 87,
+            "kind": "string-literal",
+            "text": "Page down",
+            "action": "tui.editor.pageDown"
+          },
+          {
+            "line": 49,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Delete character backward",
+            "action": "tui.editor.deleteCharBackward"
+          },
+          {
+            "line": 53,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Delete character forward",
+            "action": "tui.editor.deleteCharForward"
+          },
+          {
+            "line": 57,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Delete word backward",
+            "action": "tui.editor.deleteWordBackward"
+          },
+          {
+            "line": 61,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Delete word forward",
+            "action": "tui.editor.deleteWordForward"
+          },
+          {
+            "line": 65,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Delete to line start",
+            "action": "tui.editor.deleteToLineStart"
+          },
+          {
+            "line": 69,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Delete to line end",
+            "action": "tui.editor.deleteToLineEnd"
+          },
+          {
+            "line": 71,
+            "column": 62,
+            "kind": "string-literal",
+            "text": "Yank",
+            "action": "tui.editor.yank"
+          },
+          {
+            "line": 72,
+            "column": 64,
+            "kind": "string-literal",
+            "text": "Yank pop",
+            "action": "tui.editor.yankPop"
+          },
+          {
+            "line": 73,
+            "column": 62,
+            "kind": "string-literal",
+            "text": "Undo",
+            "action": "tui.editor.undo"
+          },
+          {
+            "line": 74,
+            "column": 81,
+            "kind": "string-literal",
+            "text": "Insert newline",
+            "action": "tui.input.newLine"
+          },
+          {
+            "line": 75,
+            "column": 62,
+            "kind": "string-literal",
+            "text": "Submit input",
+            "action": "tui.input.submit"
+          },
+          {
+            "line": 76,
+            "column": 57,
+            "kind": "string-literal",
+            "text": "Tab / autocomplete",
+            "action": "tui.input.tab"
+          },
+          {
+            "line": 77,
+            "column": 61,
+            "kind": "string-literal",
+            "text": "Copy selection",
+            "action": "tui.input.copy"
+          },
+          {
+            "line": 78,
+            "column": 56,
+            "kind": "string-literal",
+            "text": "Move selection up",
+            "action": "tui.select.up"
+          },
+          {
+            "line": 79,
+            "column": 60,
+            "kind": "string-literal",
+            "text": "Move selection down",
+            "action": "tui.select.down"
+          },
+          {
+            "line": 80,
+            "column": 64,
+            "kind": "string-literal",
+            "text": "Selection page up",
+            "action": "tui.select.pageUp"
+          },
+          {
+            "line": 83,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Selection page down",
+            "action": "tui.select.pageDown"
+          },
+          {
+            "line": 85,
+            "column": 64,
+            "kind": "string-literal",
+            "text": "Confirm selection",
+            "action": "tui.select.confirm"
+          },
+          {
+            "line": 88,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Cancel selection",
+            "action": "tui.select.cancel"
+          },
+          {
+            "line": 93,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Scroll viewport up one page",
+            "action": "tui.altScreen.pageUp"
+          },
+          {
+            "line": 97,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Scroll viewport down one page",
+            "action": "tui.altScreen.pageDown"
+          },
+          {
+            "line": 101,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Scroll viewport up half a page",
+            "action": "tui.altScreen.halfPageUp"
+          },
+          {
+            "line": 105,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Scroll viewport down half a page",
+            "action": "tui.altScreen.halfPageDown"
+          },
+          {
+            "line": 109,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Scroll viewport up one line",
+            "action": "tui.altScreen.lineUp"
+          },
+          {
+            "line": 113,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Scroll viewport down one line",
+            "action": "tui.altScreen.lineDown"
+          },
+          {
+            "line": 117,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Jump to previous semantic prompt",
+            "action": "tui.altScreen.previousPrompt"
+          },
+          {
+            "line": 121,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Jump to next semantic prompt",
+            "action": "tui.altScreen.nextPrompt"
+          },
+          {
+            "line": 125,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Search the primary scroll view",
+            "action": "tui.altScreen.search"
+          },
+          {
+            "line": 129,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Select the next search match",
+            "action": "tui.altScreen.searchNext"
+          },
+          {
+            "line": 133,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Select the previous search match",
+            "action": "tui.altScreen.searchPrevious"
+          },
+          {
+            "line": 137,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "Close transcript search",
+            "action": "tui.altScreen.searchClose"
+          },
+          {
+            "line": 139,
+            "column": 67,
+            "kind": "string-literal",
+            "text": "Scroll viewport to top",
+            "action": "tui.altScreen.top"
+          },
+          {
+            "line": 140,
+            "column": 69,
+            "kind": "string-literal",
+            "text": "Scroll viewport to bottom",
+            "action": "tui.altScreen.bottom"
+          }
+        ],
+        "review": "Full body read. 47 source descriptions individually match shipped Pi schema property descriptions and are positive conditional user-inspection/editor resource records. Manager normalization/matches/getKeys/conflict output uses key/action identities; getDefinition exposes original metadata, getResolvedBindings does not paint descriptions. Empty user binding array disables keys without removing schema prose. Native APP merge/schema assignment/association are bounded support; native terminal/export rendering of these descriptions is not established."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.js",
+        "read_lines": [
+          1,
+          73
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "definition_descriptions": [],
+        "review": "Full body read. Auto mode, explicit finite numeric normalization, local Darwin/SSH choice, direction/velocity/burst/gesture state are controls; no local prose/Error/throw/catch. Platform/env/time/hardware behavior remains source-only."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+        "read_lines": [
+          1,
+          282
+        ],
+        "string_template_occurrences": 52,
+        "fixed_rows": 9,
+        "excluded_occurrences": 43,
+        "protected_regex_literals": 4,
+        "regex_census_sha256": "4bcb10bd52e9d2361ec8b0c0414fa7a247551f6dda5c5ab458632300d911e911",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 90,
+            "column": 24,
+            "callee": "RegExp",
+            "source": "new RegExp(escapeRegExp(normalizedQuery), \"giu\")"
+          },
+          {
+            "line": 163,
+            "column": 13,
+            "callee": "Input",
+            "source": "new Input({\n        prompt: \" \",\n        placeholder: \"Find in transcript\",\n        placeholderStyle: (text) => `\\x1b[2m${text}\\x1b[22m`,\n    })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./components/input.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./keybindings.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 213,
+            "column": 13,
+            "callee": "this.onQueryChange",
+            "arguments": [
+              "query"
+            ]
+          },
+          {
+            "line": 261,
+            "column": 15,
+            "callee": "this.navigationButtonStyle",
+            "arguments": [
+              "previousButton",
+              "this.hoveredNavigationDirection === -1"
+            ]
+          },
+          {
+            "line": 263,
+            "column": 17,
+            "callee": "this.navigationButtonStyle",
+            "arguments": [
+              "nextButton",
+              "this.hoveredNavigationDirection === 1"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 166,
+            "column": 37,
+            "kind": "template-expression",
+            "text": "\\x1b[2m${text}\\x1b[22m"
+          },
+          {
+            "line": 242,
+            "column": 44,
+            "kind": "template-expression",
+            "text": "\\x1b[2m ${visibleResult} \\x1b[22m"
+          }
+        ],
+        "definition_descriptions": [],
+        "review": "Full body read. Nine fixed display occurrences retain raw-query truthiness versus normalized search, result-count/index, empty input placeholder, Darwin Alt naming, missing first binding and full/glyph/hidden width branches. Transcript/query are payload and escaped literal search, with source parser/layout/control glyphs protected. Native fullscreen factory/engine and Input placeholder render are bounded actual consumers; optional invalid RegExp/Intl/layout/runtime behavior remains external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.js",
+        "read_lines": [
+          1,
+          43
+        ],
+        "string_template_occurrences": 14,
+        "fixed_rows": 0,
+        "excluded_occurrences": 14,
+        "protected_regex_literals": 3,
+        "regex_census_sha256": "696123dec2752da9a1b527e8c820772b10b0eba84862dd5a45e3baa399f4d8c3",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [
+          {
+            "line": 8,
+            "column": 37,
+            "kind": "string-literal",
+            "text": "\u001b]7501;?\u001b\\"
+          },
+          {
+            "line": 41,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b]7501;${pairs.join(\":\")}\\x1b\\\\"
+          }
+        ],
+        "definition_descriptions": [],
+        "review": "Full body read. OSC7501 query/reply and state/app/kind/msg formatting contain no human caption. Caller message is control-sanitized, trimmed, UTF-8 limited to 2048 bytes and base64 encoded for supporting terminal client; app validation and blocked-kind gate are controls. Reporter body/client/Buffer behavior pending; no own Error/throw/catch."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.js",
+        "read_lines": [
+          1,
+          42
+        ],
+        "string_template_occurrences": 17,
+        "fixed_rows": 0,
+        "excluded_occurrences": 17,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 6,
+            "column": 17,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 22,
+            "column": 9,
+            "source": "catch {\n            // Try the next possible packaging location.\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:module"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./native-module-path.js"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 16,
+            "column": 28,
+            "callee": "cjsRequire",
+            "arguments": [
+              "modulePath"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "definition_descriptions": [],
+        "review": "Full body read. Only x64/arm64 are attempted; platform helper Darwin/Windows, Linux clipboard requires DISPLAY and -x11 helper. Candidate require must expose getText/getImage, success/absence cached. Each candidate thrown load failure is caught; addon logging/OS initialization side effects are not proved absent. No addon was loaded in audit."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.js",
+        "read_lines": [
+          1,
+          19
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 17,
+            "column": 23,
+            "callee": "Set",
+            "source": "new Set(candidates)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 13,
+            "column": 5,
+            "source": "catch {\n        // Standalone binaries do not have an installed TUI package.\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:module"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "node:url"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "definition_descriptions": [],
+        "review": "Full body read. Optional package resolution is caught, then package/module/executable candidate paths are deduplicated. No human headline. fileURLToPath outside catch can throw native diagnostics for invalid optional API moduleUrl; native caller supplies import.meta.url. Package/Node resolution/source/native implementation remains external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.js",
+        "read_lines": [
+          1,
+          13
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 9,
+            "column": 5,
+            "source": "catch {\n        return false;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./native-platform.js"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 7,
+            "column": 16,
+            "callee": "helper.isModifierPressed",
+            "arguments": [
+              "key"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "definition_descriptions": [],
+        "review": "Full body read. Missing helper returns false; isModifierPressed native call exceptions caught to false. No own prose/Error/throw. Addon/OS modifier implementation and any internal diagnostic side effects remain pending."
+      }
+    ],
+    "method": "Full ten local source bodies read without evaluation. All literals/templates partitioned; regex/new/Error/throw/catch/import/selected output/native callback/control censuses preserved. Source-defined search UI and matching shipped schema descriptions have exact consumer/branch/read gates; raw terminal write log retained as user-inspectable payload sink. Native/OS/editor/live endpoint behavior not executed or assumed."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-tui",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/alt-screen-search.js",
+      "dist/keybindings.js",
+      "dist/keys.js",
+      "dist/native-modifiers.js",
+      "dist/native-module-path.js",
+      "dist/native-platform.js",
+      "dist/program-status.js",
+      "dist/stdin-buffer.js",
+      "dist/terminal.js",
+      "dist/wheel-scroll.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/alt-screen-search.d.ts",
+      "dist/alt-screen-search.d.ts.map",
+      "dist/alt-screen-search.js.map",
+      "dist/keybindings.d.ts",
+      "dist/keybindings.d.ts.map",
+      "dist/keybindings.js.map",
+      "dist/keys.d.ts",
+      "dist/keys.d.ts.map",
+      "dist/keys.js.map",
+      "dist/native-modifiers.d.ts",
+      "dist/native-modifiers.d.ts.map",
+      "dist/native-modifiers.js.map",
+      "dist/native-module-path.d.ts",
+      "dist/native-module-path.d.ts.map",
+      "dist/native-module-path.js.map",
+      "dist/native-platform.d.ts",
+      "dist/native-platform.d.ts.map",
+      "dist/native-platform.js.map",
+      "dist/program-status.d.ts",
+      "dist/program-status.d.ts.map",
+      "dist/program-status.js.map",
+      "dist/stdin-buffer.d.ts",
+      "dist/stdin-buffer.d.ts.map",
+      "dist/stdin-buffer.js.map",
+      "dist/terminal.d.ts",
+      "dist/terminal.d.ts.map",
+      "dist/terminal.js.map",
+      "dist/wheel-scroll.d.ts",
+      "dist/wheel-scroll.d.ts.map",
+      "dist/wheel-scroll.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native",
+      "status": "native-source-addon-build-and-binary-producers-pending",
+      "reason": "Candidate/loading JS closed; platform addon internals/OS/ABI side effects and native stderr require separate source/binary boundary, no addon executed."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "status": "bounded-merge-config-consumer-only",
+      "reason": "Native APP action descriptions/config read/migration/typebox/key schema producer text remains pending, not covered by full TUI binding manager."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "status": "bounded47-description-facets-only",
+      "reason": "Exact47 TUI description matches verified; other properties/$defs/APP descriptions/comment and full schema artifact text closure remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/keybindings.md",
+      "status": "bounded-schema-association-lines1-25-only",
+      "reason": "Full documentation prose separate; live https://pi.dev schema body and external editor doc/completion renderer not fetched or verified."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js",
+      "status": "caller-producer-pending",
+      "reason": "Status message/state caller text and full reporter behavior are independent, not local fixed OSC framing."
+    },
+    {
+      "source": "npm:get-east-asian-width@1.6.0/index.js",
+      "status": "metadata-resolution-only-pending",
+      "reason": "Actual width import resolution remains1.6.0 both trees; CLI shadowed nested path missing main-lock entry, not equivalent to CLI top-level1.7.0. No archive/body closure."
+    },
+    {
+      "source": "external:os-stdio-fs-signal-module-intl-regexp-buffer-terminal-editor",
+      "status": "external-implementation-or-caller-payload",
+      "reason": "Underlying native/API diagnostics, terminal client status/title UI, external schema/editor display and arbitrary input/log/callback text remain pending. No local source-defined Error headline in these ten bodies."
+    }
+  ],
+  "limits": [
+    "Finite ten runtime helper bodies and30 exact associated nonruntime assets only; broader Pi/native/schema/doc/dependency graph remains open.",
+    "56 fixed source occurrences: nine search display labels/templates/glyph buttons and47 descriptions with matching shipped schema resource sinks. No invented terminal rendering of schema metadata.",
+    "External editor doc display requires association resolving to this pinned schema; documented remote URL is not proof its live contents equal installed1.4.0 artifact. User inspection of shipped local schema is separately established.",
+    "PI_TUI_WRITE_LOG appends raw caller bytes only from write(data), with no local English wrapper; file delivery is recorded as payload boundary, not excluded simply for being file-only.",
+    "Key/action/modifier IDs, terminal sequences, source-state enums, native paths/filenames, schema refs and numeric/glyph/layout code remain protected even where technical data can be displayed.",
+    "Native addon loading/resolution/modifier and terminal/OS errors may be suppressed by exact catches or propagate externally; no source-defined fixed Error/throw found. Catch does not prove absence of addon side-effect logging.",
+    "Existing external EAW1.6 metadata/path limitations preserved, no CLI1.7 equivalence or canonical transitive claim.",
+    "Ordinary source strings are TypeScript-decoded; template-expression bodies preserve raw escape spelling; source_text_json preserves exact exclusion text.",
+    "Source parsing/metadata reads only, no audited input/terminal/addon/native/OS/child/browser/schema-editor execution or state mutation; no old/shared/product/git edits."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-tui-input.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-tui-input.csv": "b747c57bf6fcfaf756245895f6a2bd3221f0a4ca352fdfd9f825cfb9d80d0c04",
+    "pi-tui-input-boundaries.csv": "eff0b31f0fbc57ff74fa2adde73fc5f3e077f8c5381ed5c8d1e0cdf325e9f7ec",
+    "pi-tui-input-scope.csv": "e8b71f0b5e6279586d2b9f93edeba91200b15ed6dc0fe70e59e0d7395c5430c5",
+    "pi-tui-input-exclusions.csv": "d0b5baca621988e4c373999474aa3333abc265960aff484ad41c3b178b7dde33"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/keybindings.js",
+            "archive_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+            "root_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+            "cli_nested_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings-schema.js",
+            "archive_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+            "root_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+            "cli_nested_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "schemas/keybindings.schema.json",
+            "archive_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+            "root_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+            "cli_nested_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "docs/keybindings.md",
+            "archive_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+            "root_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+            "cli_nested_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/tui-renderer.js",
+            "archive_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "root_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/terminal.js",
+            "archive_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+            "root_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+            "cli_nested_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/stdin-buffer.js",
+            "archive_sha256": "c0f3bbe4432ea639989691b4be4663e7e9c3f86dc383556b4ea4b5a64bec8b92",
+            "root_sha256": "c0f3bbe4432ea639989691b4be4663e7e9c3f86dc383556b4ea4b5a64bec8b92",
+            "cli_nested_sha256": "c0f3bbe4432ea639989691b4be4663e7e9c3f86dc383556b4ea4b5a64bec8b92",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keys.js",
+            "archive_sha256": "7adb7a7a316004d64e8a2afd943cf785959af2bff2b16570f45255378be1e0b9",
+            "root_sha256": "7adb7a7a316004d64e8a2afd943cf785959af2bff2b16570f45255378be1e0b9",
+            "cli_nested_sha256": "7adb7a7a316004d64e8a2afd943cf785959af2bff2b16570f45255378be1e0b9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keybindings.js",
+            "archive_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+            "root_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+            "cli_nested_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/wheel-scroll.js",
+            "archive_sha256": "8d4eb2d65ec42e97399ff827246bc938cf1c49d887d05a8fa47852ca958dfdeb",
+            "root_sha256": "8d4eb2d65ec42e97399ff827246bc938cf1c49d887d05a8fa47852ca958dfdeb",
+            "cli_nested_sha256": "8d4eb2d65ec42e97399ff827246bc938cf1c49d887d05a8fa47852ca958dfdeb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/alt-screen-search.js",
+            "archive_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+            "root_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+            "cli_nested_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/program-status.js",
+            "archive_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+            "root_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+            "cli_nested_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-platform.js",
+            "archive_sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2",
+            "root_sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2",
+            "cli_nested_sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-module-path.js",
+            "archive_sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056",
+            "root_sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056",
+            "cli_nested_sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-modifiers.js",
+            "archive_sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4",
+            "root_sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4",
+            "cli_nested_sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/input.js",
+            "archive_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+            "root_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+            "cli_nested_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-alt-screen.js",
+            "archive_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "root_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui.js",
+            "archive_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "root_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "cli_nested_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal.d.ts",
+            "archive_sha256": "0353a0b7aaf54967b7ecb323047c7072862833753af35f88d7804cf74b7e8b4e",
+            "root_sha256": "0353a0b7aaf54967b7ecb323047c7072862833753af35f88d7804cf74b7e8b4e",
+            "cli_nested_sha256": "0353a0b7aaf54967b7ecb323047c7072862833753af35f88d7804cf74b7e8b4e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal.d.ts.map",
+            "archive_sha256": "f33fe828a87305475913cd6dc3a65de39345e88d790846d58a7b15b6dc244035",
+            "root_sha256": "f33fe828a87305475913cd6dc3a65de39345e88d790846d58a7b15b6dc244035",
+            "cli_nested_sha256": "f33fe828a87305475913cd6dc3a65de39345e88d790846d58a7b15b6dc244035",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal.js.map",
+            "archive_sha256": "c2872dda9aaf17ffe7715e8343aff2d2414d2a6dcd5721ac41a63bdd5ead2f57",
+            "root_sha256": "c2872dda9aaf17ffe7715e8343aff2d2414d2a6dcd5721ac41a63bdd5ead2f57",
+            "cli_nested_sha256": "c2872dda9aaf17ffe7715e8343aff2d2414d2a6dcd5721ac41a63bdd5ead2f57",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/stdin-buffer.d.ts",
+            "archive_sha256": "2e641fc426f7d47035d690f8a9dcf07e1aa7924c850a7913325ef3952872371f",
+            "root_sha256": "2e641fc426f7d47035d690f8a9dcf07e1aa7924c850a7913325ef3952872371f",
+            "cli_nested_sha256": "2e641fc426f7d47035d690f8a9dcf07e1aa7924c850a7913325ef3952872371f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/stdin-buffer.d.ts.map",
+            "archive_sha256": "6005a82918e23e6630adcaeeb945e5f1832a388a125fa7e510bcd5eec9d05cf0",
+            "root_sha256": "6005a82918e23e6630adcaeeb945e5f1832a388a125fa7e510bcd5eec9d05cf0",
+            "cli_nested_sha256": "6005a82918e23e6630adcaeeb945e5f1832a388a125fa7e510bcd5eec9d05cf0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/stdin-buffer.js.map",
+            "archive_sha256": "7b8a8d9d641dc95cdb581bbb2246cf3e938f2951e6b83202fc54823103e6f953",
+            "root_sha256": "7b8a8d9d641dc95cdb581bbb2246cf3e938f2951e6b83202fc54823103e6f953",
+            "cli_nested_sha256": "7b8a8d9d641dc95cdb581bbb2246cf3e938f2951e6b83202fc54823103e6f953",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keys.d.ts",
+            "archive_sha256": "58d05b6227c8657e2109931eb2875de3a675e7bccc7f5eafde5467d539636344",
+            "root_sha256": "58d05b6227c8657e2109931eb2875de3a675e7bccc7f5eafde5467d539636344",
+            "cli_nested_sha256": "58d05b6227c8657e2109931eb2875de3a675e7bccc7f5eafde5467d539636344",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keys.d.ts.map",
+            "archive_sha256": "771b218361fd5717d94a4e4702c44c697b24d616a6928e0a00010baaf9077594",
+            "root_sha256": "771b218361fd5717d94a4e4702c44c697b24d616a6928e0a00010baaf9077594",
+            "cli_nested_sha256": "771b218361fd5717d94a4e4702c44c697b24d616a6928e0a00010baaf9077594",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keys.js.map",
+            "archive_sha256": "1008b11e7af57d8547495f58d2ca7b83a7465bc936018f74502cb88cb248fb0c",
+            "root_sha256": "1008b11e7af57d8547495f58d2ca7b83a7465bc936018f74502cb88cb248fb0c",
+            "cli_nested_sha256": "1008b11e7af57d8547495f58d2ca7b83a7465bc936018f74502cb88cb248fb0c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keybindings.d.ts",
+            "archive_sha256": "8f0959a84ecabefd00ee7a00987618abb75d7a26d704b3a8c774ad4f5312f44c",
+            "root_sha256": "8f0959a84ecabefd00ee7a00987618abb75d7a26d704b3a8c774ad4f5312f44c",
+            "cli_nested_sha256": "8f0959a84ecabefd00ee7a00987618abb75d7a26d704b3a8c774ad4f5312f44c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keybindings.d.ts.map",
+            "archive_sha256": "1527af810a26c2e1c7f70fde0176ef480b584169c459171246eb67ab85657218",
+            "root_sha256": "1527af810a26c2e1c7f70fde0176ef480b584169c459171246eb67ab85657218",
+            "cli_nested_sha256": "1527af810a26c2e1c7f70fde0176ef480b584169c459171246eb67ab85657218",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keybindings.js.map",
+            "archive_sha256": "371b6b9457a817f964c2ee85902db94e5876cf5f9e00b4c8f26b42b46ea7e7b6",
+            "root_sha256": "371b6b9457a817f964c2ee85902db94e5876cf5f9e00b4c8f26b42b46ea7e7b6",
+            "cli_nested_sha256": "371b6b9457a817f964c2ee85902db94e5876cf5f9e00b4c8f26b42b46ea7e7b6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/wheel-scroll.d.ts",
+            "archive_sha256": "5412dc695998f036bd5546cc947faa59422130fab9fd8939de4c24b27a09ae44",
+            "root_sha256": "5412dc695998f036bd5546cc947faa59422130fab9fd8939de4c24b27a09ae44",
+            "cli_nested_sha256": "5412dc695998f036bd5546cc947faa59422130fab9fd8939de4c24b27a09ae44",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/wheel-scroll.d.ts.map",
+            "archive_sha256": "b3befceec0929dc73a387a951c1c6469713fc78aa914d5124a7e45700517ea28",
+            "root_sha256": "b3befceec0929dc73a387a951c1c6469713fc78aa914d5124a7e45700517ea28",
+            "cli_nested_sha256": "b3befceec0929dc73a387a951c1c6469713fc78aa914d5124a7e45700517ea28",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/wheel-scroll.js.map",
+            "archive_sha256": "36cdae2ddc803c6b331fc3363d68340b56a5be283df057f081ad8f971b005c65",
+            "root_sha256": "36cdae2ddc803c6b331fc3363d68340b56a5be283df057f081ad8f971b005c65",
+            "cli_nested_sha256": "36cdae2ddc803c6b331fc3363d68340b56a5be283df057f081ad8f971b005c65",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/alt-screen-search.d.ts",
+            "archive_sha256": "3483a2719c60f951114d91789541efbca74b7e7be45e625c2f2271422443ceb7",
+            "root_sha256": "3483a2719c60f951114d91789541efbca74b7e7be45e625c2f2271422443ceb7",
+            "cli_nested_sha256": "3483a2719c60f951114d91789541efbca74b7e7be45e625c2f2271422443ceb7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/alt-screen-search.d.ts.map",
+            "archive_sha256": "f6733b60cbb37a51c308c9974574ac29b9576a335a3a4c26aae9f8b847f0622e",
+            "root_sha256": "f6733b60cbb37a51c308c9974574ac29b9576a335a3a4c26aae9f8b847f0622e",
+            "cli_nested_sha256": "f6733b60cbb37a51c308c9974574ac29b9576a335a3a4c26aae9f8b847f0622e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/alt-screen-search.js.map",
+            "archive_sha256": "aaa4fc7614d5ad0b46f889b8cdd8b0fb8fe886e3279ddc8c05c775f75c3bef09",
+            "root_sha256": "aaa4fc7614d5ad0b46f889b8cdd8b0fb8fe886e3279ddc8c05c775f75c3bef09",
+            "cli_nested_sha256": "aaa4fc7614d5ad0b46f889b8cdd8b0fb8fe886e3279ddc8c05c775f75c3bef09",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/program-status.d.ts",
+            "archive_sha256": "aafa66c408b1a583f57f2e1c5c05f003bbecd9fc7fc610449c0f7e521bedc634",
+            "root_sha256": "aafa66c408b1a583f57f2e1c5c05f003bbecd9fc7fc610449c0f7e521bedc634",
+            "cli_nested_sha256": "aafa66c408b1a583f57f2e1c5c05f003bbecd9fc7fc610449c0f7e521bedc634",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/program-status.d.ts.map",
+            "archive_sha256": "02c3f4463b54ecd5f380c5d424e011dc7d506fc6ca9e0fac50183b467504a927",
+            "root_sha256": "02c3f4463b54ecd5f380c5d424e011dc7d506fc6ca9e0fac50183b467504a927",
+            "cli_nested_sha256": "02c3f4463b54ecd5f380c5d424e011dc7d506fc6ca9e0fac50183b467504a927",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/program-status.js.map",
+            "archive_sha256": "bd616fcfb6533a78f61536066e3bdf85a0b235200ddbbfd73d4a59334327cdab",
+            "root_sha256": "bd616fcfb6533a78f61536066e3bdf85a0b235200ddbbfd73d4a59334327cdab",
+            "cli_nested_sha256": "bd616fcfb6533a78f61536066e3bdf85a0b235200ddbbfd73d4a59334327cdab",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-platform.d.ts",
+            "archive_sha256": "733b2f174d7ead064d26a91fad7b53c2cb0a0be9079e0452cac53f8345366b2c",
+            "root_sha256": "733b2f174d7ead064d26a91fad7b53c2cb0a0be9079e0452cac53f8345366b2c",
+            "cli_nested_sha256": "733b2f174d7ead064d26a91fad7b53c2cb0a0be9079e0452cac53f8345366b2c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-platform.d.ts.map",
+            "archive_sha256": "0aef49f180fc3492413398b2586626ab85a325686401e866441c2d992e1f8f44",
+            "root_sha256": "0aef49f180fc3492413398b2586626ab85a325686401e866441c2d992e1f8f44",
+            "cli_nested_sha256": "0aef49f180fc3492413398b2586626ab85a325686401e866441c2d992e1f8f44",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-platform.js.map",
+            "archive_sha256": "a78fd4a8e9c1790bcc6612aa6f4d1314fb549c2c7b17ec37780ea3074ef5fa26",
+            "root_sha256": "a78fd4a8e9c1790bcc6612aa6f4d1314fb549c2c7b17ec37780ea3074ef5fa26",
+            "cli_nested_sha256": "a78fd4a8e9c1790bcc6612aa6f4d1314fb549c2c7b17ec37780ea3074ef5fa26",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-module-path.d.ts",
+            "archive_sha256": "1960be1d984828fe9edc182eb10b4381a2e52157f09b48728722cbbcfa560571",
+            "root_sha256": "1960be1d984828fe9edc182eb10b4381a2e52157f09b48728722cbbcfa560571",
+            "cli_nested_sha256": "1960be1d984828fe9edc182eb10b4381a2e52157f09b48728722cbbcfa560571",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-module-path.d.ts.map",
+            "archive_sha256": "96cde7cf363984bb98bc54966b0da5faa71866673398eced452b3c5c91f491a1",
+            "root_sha256": "96cde7cf363984bb98bc54966b0da5faa71866673398eced452b3c5c91f491a1",
+            "cli_nested_sha256": "96cde7cf363984bb98bc54966b0da5faa71866673398eced452b3c5c91f491a1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-module-path.js.map",
+            "archive_sha256": "3be357ea3ffbccddcf515b474c7b2c9ec59497b7832cd2a114db53f28c2ff4b7",
+            "root_sha256": "3be357ea3ffbccddcf515b474c7b2c9ec59497b7832cd2a114db53f28c2ff4b7",
+            "cli_nested_sha256": "3be357ea3ffbccddcf515b474c7b2c9ec59497b7832cd2a114db53f28c2ff4b7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-modifiers.d.ts",
+            "archive_sha256": "fc427a2624d32a0c05fcc50de4ed29a5a8ca57bd23503c88f8c9b9ea3c88c66b",
+            "root_sha256": "fc427a2624d32a0c05fcc50de4ed29a5a8ca57bd23503c88f8c9b9ea3c88c66b",
+            "cli_nested_sha256": "fc427a2624d32a0c05fcc50de4ed29a5a8ca57bd23503c88f8c9b9ea3c88c66b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-modifiers.d.ts.map",
+            "archive_sha256": "9ea059fd6c5d4cea3f90dc85e9c9924d8d1ea34eb4749f20791e00c3c7ee1312",
+            "root_sha256": "9ea059fd6c5d4cea3f90dc85e9c9924d8d1ea34eb4749f20791e00c3c7ee1312",
+            "cli_nested_sha256": "9ea059fd6c5d4cea3f90dc85e9c9924d8d1ea34eb4749f20791e00c3c7ee1312",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/native-modifiers.js.map",
+            "archive_sha256": "d2cba5521b35c864fede6aaaf1cd076c22eda73caed5681d40cd5c9244d8a99f",
+            "root_sha256": "d2cba5521b35c864fede6aaaf1cd076c22eda73caed5681d40cd5c9244d8a99f",
+            "cli_nested_sha256": "d2cba5521b35c864fede6aaaf1cd076c22eda73caed5681d40cd5c9244d8a99f",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 49,
+    "byte_identical_scope_files": 48,
+    "pinned_patch_scope_files": 1,
+    "unresolved_scope_differences": 0
+  }
+}
