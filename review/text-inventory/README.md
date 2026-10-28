@@ -159,6 +159,18 @@ the context-free branch. The [scope table](flow-report-scope.csv) records three
 fully read modules and bounded supporting consumers; the underlying diagnostic,
 task and stored-reason producers remain separately in scope.
 
+[flow-storage.csv](flow-storage.csv) records 79 storage and attachment occurrences:
+67 fixed error or replacement-marker occurrences, two catalog occurrences and
+ten payload boundaries. The [scope table](flow-storage-scope.csv) covers seven
+fully read storage/ownership bodies plus supporting consumers.
+[flow-storage-exclusions.csv](flow-storage-exclusions.csv) completes the partition
+of 287 lexical occurrences, including two caught/replaced preflight errors and
+private backend guards. Specific journal-header diagnostics are qualified by
+the earlier identity check, which normally replaces them with a metadata error.
+Rows distinguish the original append failure from later fence errors, cleanup
+headlines from retained causes, and sanitized `/flow` notifications from raw
+stderr messages. This does not close the other stores or native error producers.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -190,6 +202,7 @@ python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
+node review/text-inventory/verify-flow-storage.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```

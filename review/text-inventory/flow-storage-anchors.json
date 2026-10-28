@@ -1,0 +1,2437 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-STORAGE-EX-001",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-002",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 14,
+      "column": 8,
+      "expression": "\"node:fs\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-003",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 15,
+      "column": 67,
+      "expression": "\"node:path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-004",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 23,
+      "column": 15,
+      "expression": "\"PrivatePathError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-005",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 31,
+      "column": 33,
+      "expression": "\"code\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-006",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 31,
+      "column": 67,
+      "expression": "\"ENOENT\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-001",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 39,
+      "column": 30,
+      "expression": "`Jouzu-owned directory must be a real directory: ${path}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-007",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 45,
+      "column": 27,
+      "expression": "\"win32\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-008",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 56,
+      "column": 28,
+      "expression": "\"..\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-009",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 56,
+      "column": 65,
+      "expression": "`..${sep}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-002",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 57,
+      "column": 30,
+      "expression": "`private directory escaped its Jouzu-owned root: ${directory}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-010",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 65,
+      "column": 28,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-011",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 84,
+      "column": 31,
+      "expression": "\"wx\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-012",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 101,
+      "column": 27,
+      "expression": "\"win32\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-013",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 124,
+      "column": 36,
+      "expression": "`.${randomUUID()}.tmp`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-014",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 127,
+      "column": 36,
+      "expression": "\"wx\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-015",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 140,
+      "column": 27,
+      "expression": "\"win32\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-016",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 143,
+      "column": 8,
+      "expression": "\"code\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-017",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 144,
+      "column": 8,
+      "expression": "\"EPERM\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-018",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 144,
+      "column": 17,
+      "expression": "\"EACCES\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-019",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 144,
+      "column": 27,
+      "expression": "\"EBUSY\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-020",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 8,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-021",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 24,
+      "column": 17,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-022",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 37,
+      "column": 8,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-023",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 38,
+      "column": 6,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-024",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 45,
+      "column": 8,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-025",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 46,
+      "column": 6,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-026",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 115,
+      "column": 87,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-027",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 126,
+      "column": 9,
+      "expression": "`${namespace}\\u0000${key}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-028",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 141,
+      "column": 27,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-003",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 142,
+      "column": 23,
+      "expression": "\"Value namespace must be a non-empty string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-029",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 143,
+      "column": 21,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-004",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 143,
+      "column": 51,
+      "expression": "\"Value key must be a string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-030",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 144,
+      "column": 25,
+      "expression": "\"\\u0000\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-005",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 144,
+      "column": 56,
+      "expression": "\"Value namespace must not contain \\\\u0000\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-031",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 145,
+      "column": 19,
+      "expression": "\"\\u0000\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-006",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 145,
+      "column": 50,
+      "expression": "\"Value key must not contain \\\\u0000\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-032",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 149,
+      "column": 51,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-033",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 151,
+      "column": 47,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-034",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 155,
+      "column": 17,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-035",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 155,
+      "column": 30,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-036",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 159,
+      "column": 17,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-037",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 159,
+      "column": 30,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-038",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 163,
+      "column": 23,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-007",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 163,
+      "column": 71,
+      "expression": "\"A scalar write must be an object.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-039",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 165,
+      "column": 25,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-008",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 165,
+      "column": 54,
+      "expression": "`Unsupported scalar write kind: ${String(candidate.kind)}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-040",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 166,
+      "column": 23,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-041",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 166,
+      "column": 49,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-009",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 167,
+      "column": 23,
+      "expression": "`Unsupported scalar write operation: ${String(candidate.op)}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-042",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 168,
+      "column": 37,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-010",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 169,
+      "column": 23,
+      "expression": "\"Value namespace must be a non-empty string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-043",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 170,
+      "column": 35,
+      "expression": "\"\\u0000\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-011",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 170,
+      "column": 66,
+      "expression": "\"Value namespace must not contain \\\\u0000\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-044",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 171,
+      "column": 31,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-012",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 171,
+      "column": 61,
+      "expression": "\"Value key must be a string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-045",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 172,
+      "column": 29,
+      "expression": "\"\\u0000\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-013",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 172,
+      "column": 60,
+      "expression": "\"Value key must not contain \\\\u0000\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-046",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 173,
+      "column": 23,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-047",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 174,
+      "column": 18,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-048",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 174,
+      "column": 31,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-049",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 175,
+      "column": 32,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-014",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 176,
+      "column": 23,
+      "expression": "\"A value set write requires a defined value\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-050",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 178,
+      "column": 33,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-051",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 178,
+      "column": 74,
+      "expression": "\"symbol\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-015",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 179,
+      "column": 23,
+      "expression": "\"A value set write requires a JSON-serializable value\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-052",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 180,
+      "column": 17,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-053",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 180,
+      "column": 30,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-016",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 192,
+      "column": 71,
+      "expression": "\"Invalid scalar storage sequence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-017",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 194,
+      "column": 19,
+      "expression": "\"Scalar storage sequence exceeds the safe integer range.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-054",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 211,
+      "column": 20,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-018",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 262,
+      "column": 61,
+      "expression": "\"SessionMutator commit already attempted\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-019",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 298,
+      "column": 37,
+      "expression": "\"SessionMutator cannot be used outside its mutation callback\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-020",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 304,
+      "column": 43,
+      "expression": "\"Session is closed\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-055",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 305,
+      "column": 17,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-056",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 305,
+      "column": 26,
+      "expression": "\"closing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-057",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 305,
+      "column": 38,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-058",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 305,
+      "column": 49,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-059",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 317,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-060",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 329,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-061",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 334,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-062",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 341,
+      "column": 16,
+      "expression": "\"closing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-063",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 346,
+      "column": 18,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-064",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 355,
+      "column": 17,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-065",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 355,
+      "column": 26,
+      "expression": "\"closing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-066",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 355,
+      "column": 38,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-067",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 355,
+      "column": 49,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-068",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 360,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-069",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 360,
+      "column": 62,
+      "expression": "\"Scalar storage is closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-070",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 375,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-071",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 375,
+      "column": 62,
+      "expression": "\"Scalar storage is closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-072",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 380,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-073",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 380,
+      "column": 62,
+      "expression": "\"Scalar storage is closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-074",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 386,
+      "column": 16,
+      "expression": "\"closing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-075",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 388,
+      "column": 17,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-076",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 10,
+      "column": 24,
+      "expression": "\"node:buffer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-077",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 11,
+      "column": 66,
+      "expression": "\"node:fs/promises\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-078",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 12,
+      "column": 25,
+      "expression": "\"node:path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-079",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 13,
+      "column": 70,
+      "expression": "\"./journal-checkpoint.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-080",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 30,
+      "column": 8,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-081",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 67,
+      "column": 8,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-082",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 78,
+      "column": 26,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-083",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 86,
+      "column": 31,
+      "expression": "\"utf8\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-021",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 94,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: the header is not valid JSON.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-022",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 96,
+      "column": 41,
+      "expression": "`Invalid flow journal ${path}: the header is not an object.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-084",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 97,
+      "column": 61,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-023",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 98,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: unsupported header.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-085",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 99,
+      "column": 27,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-024",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 100,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: missing session id.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-025",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 102,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: unsupported storage version.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-026",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 104,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: invalid creation time.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-086",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 105,
+      "column": 28,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-027",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 105,
+      "column": 54,
+      "expression": "`Invalid flow journal ${path}: missing working directory.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-028",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 108,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: invalid sequence floor.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-087",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 110,
+      "column": 66,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-029",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 111,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: invalid parent session id.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-088",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 113,
+      "column": 82,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-030",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 114,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: invalid legacy parent session path.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-089",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 117,
+      "column": 9,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-031",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 129,
+      "column": 40,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} has a non-object write.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-090",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 131,
+      "column": 15,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-091",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 131,
+      "column": 34,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-092",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 131,
+      "column": 50,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-032",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 132,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} has an unsupported write.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-093",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 133,
+      "column": 27,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-094",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 133,
+      "column": 84,
+      "expression": "\"\\u0000\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-033",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 134,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} has an invalid namespace.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-095",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 135,
+      "column": 21,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-096",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 135,
+      "column": 46,
+      "expression": "\"\\u0000\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-034",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 136,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} has an invalid key.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-035",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 138,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} has an invalid sequence.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-097",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 139,
+      "column": 13,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-098",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 139,
+      "column": 38,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-099",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 139,
+      "column": 51,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-100",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 140,
+      "column": 28,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-036",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 141,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} sets a value without one.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-101",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 142,
+      "column": 17,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-102",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 142,
+      "column": 30,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-037",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 150,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} is not valid JSON.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-038",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 153,
+      "column": 19,
+      "expression": "`Invalid flow journal ${path}: line ${lineNumber} is not a transaction.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-103",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 174,
+      "column": 29,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-039",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 175,
+      "column": 23,
+      "expression": "\"Journal session id must be a non-empty string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-104",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 176,
+      "column": 30,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-040",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 176,
+      "column": 60,
+      "expression": "\"Journal working directory must be a string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-041",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 178,
+      "column": 23,
+      "expression": "\"Journal creation time must be a non-negative safe integer\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-042",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 180,
+      "column": 23,
+      "expression": "\"Journal sequence floor must be a positive safe integer\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-105",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 181,
+      "column": 84,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-043",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 182,
+      "column": 23,
+      "expression": "\"Journal parent session id must be a string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-106",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 183,
+      "column": 100,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-044",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 184,
+      "column": 23,
+      "expression": "\"Journal legacy parent path must be a string\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-107",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 191,
+      "column": 17,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-108",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 191,
+      "column": 26,
+      "expression": "\"closing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-109",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 191,
+      "column": 38,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-110",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 191,
+      "column": 49,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-111",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 210,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-112",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 210,
+      "column": 62,
+      "expression": "\"Flow journal storage is closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-113",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 221,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-114",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 221,
+      "column": 62,
+      "expression": "\"Flow journal storage is closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-115",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 226,
+      "column": 22,
+      "expression": "\"open\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-116",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 226,
+      "column": 62,
+      "expression": "\"Flow journal storage is closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-117",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 232,
+      "column": 16,
+      "expression": "\"closing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-118",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 234,
+      "column": 17,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-119",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 246,
+      "column": 16,
+      "expression": "`${JSON.stringify(prepared.writes.length === 1 ? prepared.writes[0] : prepared.writes)}\\n`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-045",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 253,
+      "column": 29,
+      "expression": "\"Flow journal append failed; reopen the journal before committing again.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-120",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 279,
+      "column": 9,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-121",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 291,
+      "column": 24,
+      "expression": "`${JSON.stringify(header)}\\n`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-122",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 291,
+      "column": 63,
+      "expression": "\"wx\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-046",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 316,
+      "column": 43,
+      "expression": "`Invalid flow journal ${path}: missing complete header.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-047",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 318,
+      "column": 41,
+      "expression": "`Invalid flow journal ${path}: complete records contain invalid UTF-8.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-123",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 319,
+      "column": 34,
+      "expression": "\"utf8\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-124",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 319,
+      "column": 61,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-125",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 320,
+      "column": 48,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-126",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 326,
+      "column": 51,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-048",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 329,
+      "column": 21,
+      "expression": "`Invalid flow journal ${path}: line ${index + 1} repeats or lowers a sequence.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-127",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-128",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 2,
+      "column": 34,
+      "expression": "\"node:fs\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-129",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 3,
+      "column": 44,
+      "expression": "\"node:fs/promises\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-130",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 4,
+      "column": 31,
+      "expression": "\"node:path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-131",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 17,
+      "column": 16,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-132",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 18,
+      "column": 51,
+      "expression": "\"utf8\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-133",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 21,
+      "column": 27,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-134",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 22,
+      "column": 32,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-135",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 29,
+      "column": 22,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-136",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 30,
+      "column": 20,
+      "expression": "\"flow\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-137",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 32,
+      "column": 28,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-049",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 37,
+      "column": 22,
+      "expression": "\"Unsupported flow journal header.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-138",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 43,
+      "column": 22,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-139",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 44,
+      "column": 8,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-140",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 44,
+      "column": 15,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-141",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 45,
+      "column": 33,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-142",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 46,
+      "column": 27,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-143",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 50,
+      "column": 20,
+      "expression": "\"set\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-144",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 50,
+      "column": 51,
+      "expression": "\"value\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-050",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 52,
+      "column": 22,
+      "expression": "\"Invalid or unsupported flow journal write.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-145",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 55,
+      "column": 22,
+      "expression": "\"delete\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-051",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 61,
+      "column": 31,
+      "expression": "\"Flow journal is missing its complete header.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-146",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 62,
+      "column": 58,
+      "expression": "`.checkpoint-${randomUUID()}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-147",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 64,
+      "column": 40,
+      "expression": "\"wx\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-148",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 67,
+      "column": 5,
+      "expression": "`${JSON.stringify({ ...header, nextSeq: Math.max(Number(header.nextSeq ?? 1), sequence + 1) })}\\n`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-149",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 69,
+      "column": 99,
+      "expression": "`${value.line}\\n`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-150",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 78,
+      "column": 23,
+      "expression": "\"ENOENT\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-151",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 1,
+      "column": 54,
+      "expression": "\"node:fs/promises\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-152",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 2,
+      "column": 22,
+      "expression": "\"node:path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-153",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 3,
+      "column": 40,
+      "expression": "\"../private-fs.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-154",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 4,
+      "column": 58,
+      "expression": "\"./journal-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-155",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 5,
+      "column": 36,
+      "expression": "\"./ownership.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-156",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 6,
+      "column": 30,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-157",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 21,
+      "column": 33,
+      "expression": "\"schema.json\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-158",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 22,
+      "column": 35,
+      "expression": "\"sessions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-159",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 25,
+      "column": 61,
+      "expression": "\"utf8\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-160",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 27,
+      "column": 26,
+      "expression": "\"number\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-161",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 28,
+      "column": 33,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-052",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 28,
+      "column": 44,
+      "expression": "\"Flow state version marker is unreadable.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-162",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 31,
+      "column": 45,
+      "expression": "\"ENOENT\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-163",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 37,
+      "column": 45,
+      "expression": "\"ENOENT\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-164",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 42,
+      "column": 14,
+      "expression": "`${sessions}.v${current ?? \"unversioned\"}-${Date.now()}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-165",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 42,
+      "column": 41,
+      "expression": "\"unversioned\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-166",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 45,
+      "column": 26,
+      "expression": "`${JSON.stringify({ version: FLOW_STATE_VERSION })}\\n`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-167",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 45,
+      "column": 90,
+      "expression": "\"w\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-168",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 54,
+      "column": 31,
+      "expression": "\"sessions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-169",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 59,
+      "column": 33,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-053",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 59,
+      "column": 44,
+      "expression": "\"Unrecognized flow storage entry.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-170",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 62,
+      "column": 71,
+      "expression": "\".jsonl\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-171",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 63,
+      "column": 34,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-054",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 63,
+      "column": 45,
+      "expression": "\"Unrecognized flow session file.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-172",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 65,
+      "column": 55,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-055",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 65,
+      "column": 66,
+      "expression": "\"Flow branch storage contains multiple sessions.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-173",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 70,
+      "column": 29,
+      "expression": "\"flow\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-174",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 73,
+      "column": 20,
+      "expression": "`${new Date(createdAt).toISOString().replace(/[:.]/g, \"-\")}_flow.jsonl`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-175",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 73,
+      "column": 74,
+      "expression": "\"-\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-176",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 74,
+      "column": 61,
+      "expression": "\"flow\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-177",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 79,
+      "column": 37,
+      "expression": "\"utf8\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-178",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 80,
+      "column": 28,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-179",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 81,
+      "column": 32,
+      "expression": "\"Missing complete header.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-180",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 85,
+      "column": 20,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-181",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 87,
+      "column": 18,
+      "expression": "\"flow\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-182",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 88,
+      "column": 26,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-183",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 93,
+      "column": 20,
+      "expression": "\"Invalid journal identity.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-184",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 95,
+      "column": 45,
+      "expression": "\"ENOENT\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-185",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 96,
+      "column": 32,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-056",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 96,
+      "column": 43,
+      "expression": "\"Flow session metadata is missing or inconsistent.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-186",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 101,
+      "column": 21,
+      "expression": "\"flow\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-187",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 105,
+      "column": 34,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-057",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 105,
+      "column": 45,
+      "expression": "\"Flow session metadata is missing or inconsistent.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-188",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 1,
+      "column": 32,
+      "expression": "\"../cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-189",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 2,
+      "column": 36,
+      "expression": "\"../locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-190",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 3,
+      "column": 65,
+      "expression": "\"./local-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-191",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 4,
+      "column": 40,
+      "expression": "\"./native-request-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-192",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 5,
+      "column": 31,
+      "expression": "\"./ownership.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-193",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 6,
+      "column": 37,
+      "expression": "\"./pi-ledger-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-194",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 7,
+      "column": 51,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-195",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 8,
+      "column": 41,
+      "expression": "\"./result-manifest.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-196",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 9,
+      "column": 50,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-197",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 10,
+      "column": 37,
+      "expression": "\"./submission-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-198",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 11,
+      "column": 65,
+      "expression": "\"./submission-view.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-199",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 12,
+      "column": 42,
+      "expression": "\"./wait-producers.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-200",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 13,
+      "column": 31,
+      "expression": "\"./wait-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-058",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 79,
+      "column": 51,
+      "expression": "\"Flow attachment failed and storage did not close.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-201",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 1,
+      "column": 35,
+      "expression": "\"node:async_hooks\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-202",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 2,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-203",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 3,
+      "column": 54,
+      "expression": "\"node:fs\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-204",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 4,
+      "column": 22,
+      "expression": "\"node:path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-205",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 5,
+      "column": 63,
+      "expression": "\"../cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-206",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 6,
+      "column": 36,
+      "expression": "\"../locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-207",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 7,
+      "column": 46,
+      "expression": "\"../path-digest.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-208",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 8,
+      "column": 40,
+      "expression": "\"../private-fs.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-209",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 9,
+      "column": 72,
+      "expression": "\"../process-lock.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-210",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 10,
+      "column": 32,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-211",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 14,
+      "column": 18,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-212",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 14,
+      "column": 27,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-213",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 14,
+      "column": 38,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-214",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 14,
+      "column": 51,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-215",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 14,
+      "column": 63,
+      "expression": "\"lifecycle\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-216",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 19,
+      "column": 15,
+      "expression": "\"FlowOwnershipError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-217",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 75,
+      "column": 22,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-218",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 76,
+      "column": 34,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-059",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 76,
+      "column": 46,
+      "expression": "\"Session and branch IDs must contain 1–512 characters.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-219",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 91,
+      "column": 46,
+      "expression": "\"owner.sqlite\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-220",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 97,
+      "column": 71,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-221",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 99,
+      "column": 12,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-222",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 99,
+      "column": 21,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-223",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 109,
+      "column": 50,
+      "expression": "\"closed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-060",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 109,
+      "column": 60,
+      "expression": "\"Flow attachment is closing or closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-224",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 129,
+      "column": 49,
+      "expression": "\"lifecycle\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-061",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 129,
+      "column": 62,
+      "expression": "\"Close must run outside an admitted operation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-EX-225",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 145,
+      "column": 34,
+      "expression": "\"storage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-STORAGE-062",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 145,
+      "column": 45,
+      "expression": "\"Flow storage did not close; process restart is required.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-063",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 101,
+      "column": 29,
+      "expression": "CatalogMessageId.flowOwnershipBusy",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-STORAGE-064",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 102,
+      "column": 29,
+      "expression": "CatalogMessageId.flowOwnershipFailed",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-STORAGE-065",
+      "path": "packages/cli/src/private-fs.ts",
+      "line": 32,
+      "column": 3,
+      "expression": "throw error;",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-066",
+      "path": "packages/cli/src/flow-control/scalar-storage.ts",
+      "line": 202,
+      "column": 29,
+      "expression": "JSON.parse(JSON.stringify(validated))",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-067",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 256,
+      "column": 4,
+      "expression": "throw error;",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-068",
+      "path": "packages/cli/src/flow-control/journal-storage.ts",
+      "line": 313,
+      "column": 18,
+      "expression": "await readFile(path)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-069",
+      "path": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "line": 25,
+      "column": 19,
+      "expression": "JSON.parse(line)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-070",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 25,
+      "column": 27,
+      "expression": "JSON.parse(await readFile(marker, \"utf8\"))",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-071",
+      "path": "packages/cli/src/flow-control/local-storage.ts",
+      "line": 42,
+      "column": 14,
+      "expression": "`${sessions}.v${current ?? \"unversioned\"}-${Date.now()}`",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-072",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 45,
+      "column": 18,
+      "expression": "onIsolatedState?.(isolated)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-073",
+      "path": "packages/cli/src/flow-control/pi-attachment.ts",
+      "line": 79,
+      "column": 30,
+      "expression": "[error, closeError]",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-074",
+      "path": "packages/cli/src/flow-control/ownership.ts",
+      "line": 103,
+      "column": 5,
+      "expression": "{ cause: error }",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-STORAGE-075",
+      "path": "packages/cli/src/flow-control/flow-runtime.ts",
+      "line": 228,
+      "column": 8,
+      "expression": "`Flow state from an earlier version was moved aside to ${path}; this session starts with fresh state.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-076",
+      "path": "packages/cli/src/flow-control/diagnostic-text.ts",
+      "line": 6,
+      "column": 32,
+      "expression": "\"Bearer [redacted]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-077",
+      "path": "packages/cli/src/flow-control/diagnostic-text.ts",
+      "line": 9,
+      "column": 4,
+      "expression": "\"$1[redacted]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-078",
+      "path": "packages/cli/src/flow-control/diagnostic-text.ts",
+      "line": 11,
+      "column": 74,
+      "expression": "\"[redacted]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-STORAGE-079",
+      "path": "packages/cli/src/flow-control/diagnostic-text.ts",
+      "line": 12,
+      "column": 49,
+      "expression": "\"$1[redacted]@\"",
+      "kind": "literal"
+    }
+  ]
+}
