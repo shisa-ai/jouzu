@@ -65,6 +65,15 @@ and distinguishes 21 internal errors caught or replaced by their callers.
 Defensive helper errors and returned diagnostics without a proven display
 consumer remain explicitly qualified rather than counted as ordinary screens.
 
+[cli-entry.csv](cli-entry.csv) supplies 225 entry/startup records: 122 catalog
+occurrences across 93 IDs, 35 fixed literals/display values and 68 imported or
+dynamic boundaries. It traces bootstrap/main CLI dispatch, presentation and
+runtime diagnostics. The [scope table](cli-entry-scope.csv) records parser
+postconditions for defensive guards, source-only model guidance, and pending
+report/error producers. A catalog value used only in a proved unreachable
+guard remains in the English catalog rather than being counted as a normal
+invalid-argument response.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -144,6 +153,7 @@ node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
+python -B review/text-inventory/verify-cli-entry.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-flow.py
