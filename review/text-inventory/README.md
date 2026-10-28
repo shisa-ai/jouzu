@@ -72,6 +72,16 @@ generated dependency boundaries still lack an exact English definition; their
 English field is blank. [launcher-scope.csv](launcher-scope.csv) distinguishes
 inspected source from pending helper messages, support logging and report facts.
 
+[launcher-helpers.csv](launcher-helpers.csv) supplies the follow-on helper pass:
+278 fixed source occurrences and 37 dynamic forwarding/masking records from all
+43 packaging PowerShell/MJS helpers. Its
+[scope table](launcher-helpers-scope.csv) supersedes the earlier pending helper
+dispositions for those same source hashes; supporting callers remain partial.
+Rows preserve raw source escapes, interpolations and the two constructed log
+expressions rather than inventing flattened English. Conditions distinguish
+direct operator output, frontend replacement messages, retained diagnostics and
+acceptance-only fixtures. Generated installer dependencies remain separate.
+
 [pi.csv](pi.csv) records 615 inherited Pi source occurrences, with per-occurrence
 conditions and 155 links to Jouzu catalog IDs.
 [pi-boundaries.csv](pi-boundaries.csv) records 51 dynamic content boundaries.
@@ -121,6 +131,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-launcher.py
+python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
