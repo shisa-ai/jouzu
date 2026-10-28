@@ -71,7 +71,7 @@ The [scope](main-update-test-support-scope.csv) and
 Passing tests do not independently display every captured native status or mock
 error; failed assertions may expose expected/actual values and captured child
 streams. Five corruption/omission controls pass. No test, hook, auth, model or
-packaging scenario was run. Six other changed target test/fixture bodies and
+packaging scenario was run. One other changed target test body and
 the wider base test corpus remain open.
 
 [main-update-model-ranking-tests.csv](main-update-model-ranking-tests.csv) adds
@@ -97,6 +97,21 @@ boundary. Mock notification arrays, failed-install stderr replacement, platform
 skip conditions, generated child JSON and inherited stdio remain separate from
 product definitions. Raw fixture values and passing assertions are not promoted
 to product output. No test, fixture, auth, native or user-state operation ran.
+
+[main-update-test-fixtures.csv](main-update-test-fixtures.csv) adds 27 fixed
+occurrences and ten boundaries across five full target fixture/test bodies (904
+lines). Twelve top-level title sites, six nested case names, six fixture errors
+and three custom assertion messages retain their actual conditions. Finite loops
+can yield 24 concrete test names if registration reaches them. All 408 top-level
+AST expressions are partitioned; the
+[exclusions](main-update-test-fixtures-exclusions.csv) also retain seven nested
+source values. Ten embedded-source containers have exact interpolation-origin
+maps. The [scope](main-update-test-fixtures-scope.csv) pins five full and three
+bounded caller bodies; the [evidence](main-update-test-fixtures-evidence.json)
+retains source offsets and comment accounting. Captured native feedback, fixture
+JSON observations, RPC streams, provider result errors and teardown/patch failures
+have distinct sinks. Five corruption/omission controls pass. No test, fixture,
+provider, patch or native operation executed.
 
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
@@ -1585,6 +1600,7 @@ python -B review/text-inventory/verify-main-update-release-text.py
 node review/text-inventory/verify-main-update-test-support.cjs
 node review/text-inventory/verify-main-update-model-ranking-tests.cjs
 python -B review/text-inventory/verify-main-update-account-update-tests.py
+node review/text-inventory/verify-main-update-test-fixtures.cjs
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py

@@ -1,0 +1,4985 @@
+{
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "parser": {
+    "typescript": "6.0.3",
+    "mode": "JS AST literals/templates/regex plus AST comment ranges; inert embedded source scanner with interpolation origins"
+  },
+  "full_bodies": {
+    "packages/cli/test/fixtures/interactive-login.mjs": 55,
+    "packages/cli/test/fixtures/language-runtime-wiring.mjs": 307,
+    "packages/cli/test/model-selection-ingress.test.mjs": 177,
+    "packages/cli/test/model-thinking-startup.test.mjs": 95,
+    "scripts/pi-provider-receipts.test.mjs": 270
+  },
+  "full_lines": 904,
+  "sourceRecords": [
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "git_blob": "f2838fa84d92aa55f3b7e3e0668d16758d67ed5e",
+      "sha256": "cd91e2bea46be2e0faf8f3da562c35d7748f80b375153ebeb79363b583fad778",
+      "lines": 55
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "git_blob": "1747222885facf89ac6dc2179d77821695c792cb",
+      "sha256": "ebac64b52a7149c40535ae7fbe3d8abdf6aea9910edb1a35943a9ca7415ee316",
+      "lines": 307
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "git_blob": "a6391f8d601d49638908e7e6deb5c600cfcecba6",
+      "sha256": "ca2e15497fc4f38ef44e0012595e837bf3972df18d16924fb862c1dc1accd442",
+      "lines": 177
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "git_blob": "74e1394b9932ad8a505d15d5f5c7ffb05e33c46f",
+      "sha256": "a2f2dce50b47e4a9344e42d7e3c10624638a85177991f9d83c8e64e2807cc3a2",
+      "lines": 95
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "git_blob": "e007a32631f59cd96deefad75a532b8691d0b69b",
+      "sha256": "5906eb18b0ccae3bc7309f302aecec3469ca6f7c4b6c1c249b133a27f96d7b61",
+      "lines": 270
+    }
+  ],
+  "bounded_callers": [
+    {
+      "path": "packages/cli/test/language-runtime-callers.test.mjs",
+      "ranges": [
+        [
+          1,
+          60
+        ],
+        [
+          62,
+          91
+        ]
+      ],
+      "anchors": [
+        {
+          "line": 1,
+          "text": "import assert from \"node:assert/strict\";"
+        },
+        {
+          "line": 2,
+          "text": "import { spawnSync } from \"node:child_process\";"
+        },
+        {
+          "line": 3,
+          "text": "import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from \"node:fs\";"
+        },
+        {
+          "line": 4,
+          "text": "import { tmpdir } from \"node:os\";"
+        },
+        {
+          "line": 5,
+          "text": "import { join } from \"node:path\";"
+        },
+        {
+          "line": 6,
+          "text": "import { test } from \"node:test\";"
+        },
+        {
+          "line": 7,
+          "text": "import { fileURLToPath } from \"node:url\";"
+        },
+        {
+          "line": 8,
+          "text": ""
+        },
+        {
+          "line": 9,
+          "text": "const fixture = fileURLToPath(new URL(\"./fixtures/language-runtime-wiring.mjs\", import.meta.url));"
+        },
+        {
+          "line": 10,
+          "text": "const settings = { uiLocale: \"en\", responseLanguage: \"en\", artifactPolicy: { commits: \"en\" } };"
+        },
+        {
+          "line": 11,
+          "text": ""
+        },
+        {
+          "line": 12,
+          "text": "function assertRpcStderr(stderr) {"
+        },
+        {
+          "line": 13,
+          "text": "\t// Node 22 emits this runtime warning on import; all other stderr remains an error."
+        },
+        {
+          "line": 14,
+          "text": "\tconst sqliteWarning ="
+        },
+        {
+          "line": 15,
+          "text": "\t\t/^\\(node:\\d+\\) ExperimentalWarning: SQLite is an experimental feature and might change at any time\\r?\\n\\(Use `node --trace-warnings \\.\\.\\.` to show where the warning was created\\)\\r?\\n/u;"
+        },
+        {
+          "line": 16,
+          "text": "\tassert.equal(stderr.replace(sqliteWarning, \"\"), \"\");"
+        },
+        {
+          "line": 17,
+          "text": "}"
+        },
+        {
+          "line": 18,
+          "text": ""
+        },
+        {
+          "line": 19,
+          "text": "function run(t, scenario = {}) {"
+        },
+        {
+          "line": 20,
+          "text": "\tconst root = mkdtempSync(join(tmpdir(), \"jouzu-language-callers-\"));"
+        },
+        {
+          "line": 21,
+          "text": "\tt.after(() => rmSync(root, { recursive: true, force: true }));"
+        },
+        {
+          "line": 22,
+          "text": "\tconst home = join(root, \"jouzu\");"
+        },
+        {
+          "line": 23,
+          "text": "\tconst output = join(root, \"observed.json\");"
+        },
+        {
+          "line": 24,
+          "text": "\tmkdirSync(join(root, \".jouzu\"));"
+        },
+        {
+          "line": 25,
+          "text": "\t// This untrusted project must not override the saved artifact policy."
+        },
+        {
+          "line": 26,
+          "text": "\twriteFileSync("
+        },
+        {
+          "line": 27,
+          "text": "\t\tjoin(root, \".jouzu\", \"localization.json\"),"
+        },
+        {
+          "line": 28,
+          "text": "\t\tJSON.stringify({ localization: { artifactPolicy: { commits: \"ja\" } } }),"
+        },
+        {
+          "line": 29,
+          "text": "\t);"
+        },
+        {
+          "line": 30,
+          "text": "\tconst inheritedAgentDir = join(root, \"inherited-pi\");"
+        },
+        {
+          "line": 31,
+          "text": "\tmkdirSync(inheritedAgentDir);"
+        },
+        {
+          "line": 32,
+          "text": "\tconst authFile = join(inheritedAgentDir, \"auth.json\");"
+        },
+        {
+          "line": 33,
+          "text": "\twriteFileSync(authFile, \"{}\\n\");"
+        },
+        {
+          "line": 34,
+          "text": "\tconst result = spawnSync(process.execPath, [fixture, JSON.stringify({ ...scenario, home, output })], {"
+        },
+        {
+          "line": 35,
+          "text": "\t\tcwd: root,"
+        },
+        {
+          "line": 36,
+          "text": "\t\tencoding: \"utf8\","
+        },
+        {
+          "line": 37,
+          "text": "\t\ttimeout: 30_000,"
+        },
+        {
+          "line": 38,
+          "text": "\t\tenv: {"
+        },
+        {
+          "line": 39,
+          "text": "\t\t\tPATH: process.env.PATH,"
+        },
+        {
+          "line": 40,
+          "text": "\t\t\t...(process.env.SystemRoot ? { SystemRoot: process.env.SystemRoot } : {}),"
+        },
+        {
+          "line": 41,
+          "text": "\t\t\tHOME: root,"
+        },
+        {
+          "line": 42,
+          "text": "\t\t\tUSERPROFILE: root,"
+        },
+        {
+          "line": 43,
+          "text": "\t\t\tTERM: \"xterm\","
+        },
+        {
+          "line": 44,
+          "text": "\t\t\tNO_COLOR: \"1\","
+        },
+        {
+          "line": 45,
+          "text": "\t\t\tLANG: \"en_US.UTF-8\","
+        },
+        {
+          "line": 46,
+          "text": "\t\t\tLC_ALL: \"en_US.UTF-8\","
+        },
+        {
+          "line": 47,
+          "text": "\t\t\tPI_OFFLINE: \"1\","
+        },
+        {
+          "line": 48,
+          "text": "\t\t\tJOUZU_FLOW_CONTROL: \"0\","
+        },
+        {
+          "line": 49,
+          "text": "\t\t\tPI_CODING_AGENT_DIR: inheritedAgentDir,"
+        },
+        {
+          "line": 50,
+          "text": "\t\t\t...(scenario.envLocale ? { JOUZU_UI_LOCALE: scenario.envLocale } : {}),"
+        },
+        {
+          "line": 51,
+          "text": "\t\t},"
+        },
+        {
+          "line": 52,
+          "text": "\t});"
+        },
+        {
+          "line": 53,
+          "text": "\tassert.equal(result.error, undefined);"
+        },
+        {
+          "line": 54,
+          "text": "\tassert.equal(result.status, 0, result.stderr || result.stdout);"
+        },
+        {
+          "line": 55,
+          "text": "\tconst observed = JSON.parse(readFileSync(output, \"utf8\"));"
+        },
+        {
+          "line": 56,
+          "text": "\tassert.equal(observed.networkRequests, 0);"
+        },
+        {
+          "line": 57,
+          "text": "\tassert.equal(observed.agentDir, join(home, \"agent\"));"
+        },
+        {
+          "line": 58,
+          "text": "\tassert.equal(readFileSync(authFile, \"utf8\"), \"{}\\n\", \"the inherited Pi credential file is untouched\");"
+        },
+        {
+          "line": 59,
+          "text": "\treturn { ...observed, stdout: result.stdout, stderr: result.stderr };"
+        },
+        {
+          "line": 60,
+          "text": "}"
+        },
+        {
+          "line": 62,
+          "text": "test(\"main applies first-run display and independent response choices in the same launch\", (t) => {"
+        },
+        {
+          "line": 63,
+          "text": "\tconst observed = run(t, { settings, choice: { uiLocale: \"ja\", responseLanguage: \"zh-Hant\" } });"
+        },
+        {
+          "line": 64,
+          "text": "\tassert.equal(observed.prompts, 1);"
+        },
+        {
+          "line": 65,
+          "text": "\tassert.deepEqual(Object.values(observed.catalogs), [\"ja\", \"ja\", \"ja\", \"ja\", \"ja\"]);"
+        },
+        {
+          "line": 66,
+          "text": "\tassert.equal(observed.shortcutHint, \"Ctrl+L モデル · Ctrl+P お気に入り · Ctrl+/ ヘルプ\");"
+        },
+        {
+          "line": 67,
+          "text": "\tassert.equal(observed.profile, \"core\");"
+        },
+        {
+          "line": 68,
+          "text": "\tassert.equal(observed.initial.contract.taskLanguage, \"zh-Hant\");"
+        },
+        {
+          "line": 69,
+          "text": "\tassert.equal(observed.initial.contract.artifactPolicy.commits, \"en\", \"the untrusted project contributes nothing\");"
+        },
+        {
+          "line": 70,
+          "text": "\tassert.match(observed.initialPrompt, /Response language: Traditional Chinese \\(zh-Hant\\)/u);"
+        },
+        {
+          "line": 71,
+          "text": "\tassert.match(observed.initialPrompt, /commits: Use English \\(en\\)/u);"
+        },
+        {
+          "line": 72,
+          "text": "\tassert.equal(JSON.parse(observed.settingsAfter).localization.uiLocale, \"ja\");"
+        },
+        {
+          "line": 73,
+          "text": "\tassert.equal(JSON.parse(observed.settingsAfter).localization.responseLanguage, \"zh-Hant\");"
+        },
+        {
+          "line": 74,
+          "text": "});"
+        },
+        {
+          "line": 75,
+          "text": ""
+        },
+        {
+          "line": 76,
+          "text": "test(\"an unbound model shortcut uses the active catalog and falls back to English\", (t) => {"
+        },
+        {
+          "line": 77,
+          "text": "\tconst ja = run(t, { choice: { uiLocale: \"ja\", responseLanguage: \"ja\" }, missingCycleKey: true });"
+        },
+        {
+          "line": 78,
+          "text": "\tassert.equal(ja.shortcutHint, \"Ctrl+L モデル · 未バインド お気に入り · Ctrl+/ ヘルプ\");"
+        },
+        {
+          "line": 79,
+          "text": "\tconst en = run(t, { settings, missingCycleKey: true });"
+        },
+        {
+          "line": 80,
+          "text": "\tassert.equal(en.shortcutHint, \"Ctrl+L models · unbound favorites · Ctrl+/ help\");"
+        },
+        {
+          "line": 81,
+          "text": "});"
+        },
+        {
+          "line": 82,
+          "text": ""
+        },
+        {
+          "line": 83,
+          "text": "test(\"Japanese first-run UI with Automatic responses does not install a Japanese-response profile\", (t) => {"
+        },
+        {
+          "line": 84,
+          "text": "\tconst observed = run(t, { choice: { uiLocale: \"ja\", responseLanguage: \"auto\" } });"
+        },
+        {
+          "line": 85,
+          "text": "\tassert.ok(Object.values(observed.catalogs).every((locale) => locale === \"ja\"));"
+        },
+        {
+          "line": 86,
+          "text": "\tassert.equal(observed.profile, \"core\");"
+        },
+        {
+          "line": 87,
+          "text": "\tassert.equal(observed.initial.contract.taskLanguage, \"preserve\");"
+        },
+        {
+          "line": 88,
+          "text": "\tassert.doesNotMatch(observed.initialPrompt, /Response language:|Write user-facing explanations in Japanese/u);"
+        },
+        {
+          "line": 89,
+          "text": "\tassert.equal(JSON.parse(observed.settingsAfter).localization.responseLanguage, \"auto\");"
+        },
+        {
+          "line": 90,
+          "text": "\tassert.equal(observed.installedAppendSystem, undefined, \"onboarding must not install a fixed response profile\");"
+        },
+        {
+          "line": 91,
+          "text": "});"
+        }
+      ]
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "ranges": [
+        [
+          1,
+          70
+        ]
+      ],
+      "anchors": [
+        {
+          "line": 1,
+          "text": "import assert from \"node:assert/strict\";"
+        },
+        {
+          "line": 2,
+          "text": "import { test } from \"node:test\";"
+        },
+        {
+          "line": 3,
+          "text": "import { InteractiveMode } from \"@earendil-works/pi-coding-agent\";"
+        },
+        {
+          "line": 4,
+          "text": "import { withPiAuthCompletion } from \"../dist/pi-auth-completion.js\";"
+        },
+        {
+          "line": 5,
+          "text": "import { interactiveLoginHost } from \"./fixtures/interactive-login.mjs\";"
+        },
+        {
+          "line": 6,
+          "text": ""
+        },
+        {
+          "line": 7,
+          "text": "const unknown = { provider: \"unknown\", id: \"unknown\", api: \"unknown\" };"
+        },
+        {
+          "line": 8,
+          "text": "const selected = { provider: \"catalog:shisa\", id: \"flash-next\", api: \"openai-completions\" };"
+        },
+        {
+          "line": 9,
+          "text": "function session(before, after = before) {"
+        },
+        {
+          "line": 10,
+          "text": "\tconst result = {"
+        },
+        {
+          "line": 11,
+          "text": "\t\tmodel: before,"
+        },
+        {
+          "line": 12,
+          "text": "\t\tsetModel: async () => assert.fail(\"completion must not replace a selected model\"),"
+        },
+        {
+          "line": 13,
+          "text": "\t\tmodelRuntime: {"
+        },
+        {
+          "line": 14,
+          "text": "\t\t\tlogin: async () => {"
+        },
+        {
+          "line": 15,
+          "text": "\t\t\t\tresult.model = after;"
+        },
+        {
+          "line": 16,
+          "text": "\t\t\t},"
+        },
+        {
+          "line": 17,
+          "text": "\t\t\tgetAvailableSnapshot: () => [selected],"
+        },
+        {
+          "line": 18,
+          "text": "\t\t},"
+        },
+        {
+          "line": 19,
+          "text": "\t};"
+        },
+        {
+          "line": 20,
+          "text": "\treturn result;"
+        },
+        {
+          "line": 21,
+          "text": "}"
+        },
+        {
+          "line": 22,
+          "text": ""
+        },
+        {
+          "line": 23,
+          "text": "test(\"interactive Shisa login keeps an already selected catalog model and success feedback\", async () => {"
+        },
+        {
+          "line": 24,
+          "text": "\tconst s = session(unknown, selected);"
+        },
+        {
+          "line": 25,
+          "text": "\tconst h = interactiveLoginHost(s);"
+        },
+        {
+          "line": 26,
+          "text": "\tconst original = InteractiveMode.prototype.completeProviderAuthentication;"
+        },
+        {
+          "line": 27,
+          "text": "\tawait withPiAuthCompletion(() => h.login());"
+        },
+        {
+          "line": 28,
+          "text": "\tassert.equal(s.model, selected);"
+        },
+        {
+          "line": 29,
+          "text": "\tassert.deepEqual(h.errors, []);"
+        },
+        {
+          "line": 30,
+          "text": "\tassert.match(h.statuses[0], /Logged in to Shisa.*Credentials saved/);"
+        },
+        {
+          "line": 31,
+          "text": "\tassert.equal(h.refreshes.length, 1);"
+        },
+        {
+          "line": 32,
+          "text": "\tassert.equal(InteractiveMode.prototype.completeProviderAuthentication, original);"
+        },
+        {
+          "line": 33,
+          "text": "});"
+        },
+        {
+          "line": 34,
+          "text": ""
+        },
+        {
+          "line": 35,
+          "text": "test(\"unchanged unknown models retain Pi's default-selection guidance\", async () => {"
+        },
+        {
+          "line": 36,
+          "text": "\tconst h = interactiveLoginHost(session(unknown));"
+        },
+        {
+          "line": 37,
+          "text": "\tawait withPiAuthCompletion(() => h.login());"
+        },
+        {
+          "line": 38,
+          "text": "\tassert.match(h.errors[0], /no default model is configured/);"
+        },
+        {
+          "line": 39,
+          "text": "});"
+        },
+        {
+          "line": 40,
+          "text": ""
+        },
+        {
+          "line": 41,
+          "text": "test(\"an existing real model and refresh warnings keep native behavior\", async () => {"
+        },
+        {
+          "line": 42,
+          "text": "\tconst h = interactiveLoginHost(session(selected), {"
+        },
+        {
+          "line": 43,
+          "text": "\t\trefresh: () => ({ aborted: false, errors: new Map([[\"shisa\", new Error(\"offline\")]]) }),"
+        },
+        {
+          "line": 44,
+          "text": "\t});"
+        },
+        {
+          "line": 45,
+          "text": "\tawait withPiAuthCompletion(() => h.login());"
+        },
+        {
+          "line": 46,
+          "text": "\tassert.deepEqual(h.errors, []);"
+        },
+        {
+          "line": 47,
+          "text": "\tassert.match(h.warnings[0], /model catalog could not be refreshed/);"
+        },
+        {
+          "line": 48,
+          "text": "});"
+        },
+        {
+          "line": 49,
+          "text": ""
+        },
+        {
+          "line": 50,
+          "text": "test(\"other providers and API-key authentication are passed through\", async () => {"
+        },
+        {
+          "line": 51,
+          "text": "\tfor (const [provider, auth] of ["
+        },
+        {
+          "line": 52,
+          "text": "\t\t[\"other\", \"oauth\"],"
+        },
+        {
+          "line": 53,
+          "text": "\t\t[\"shisa\", \"api_key\"],"
+        },
+        {
+          "line": 54,
+          "text": "\t]) {"
+        },
+        {
+          "line": 55,
+          "text": "\t\tconst h = interactiveLoginHost(session(selected));"
+        },
+        {
+          "line": 56,
+          "text": "\t\tawait withPiAuthCompletion(async () => {"
+        },
+        {
+          "line": 57,
+          "text": "\t\t\tawait h.completeProviderAuthentication(provider, provider, auth, unknown);"
+        },
+        {
+          "line": 58,
+          "text": "\t\t\tawait new Promise((resolve) => setImmediate(resolve));"
+        },
+        {
+          "line": 59,
+          "text": "\t\t});"
+        },
+        {
+          "line": 60,
+          "text": "\t\tassert.match(h.errors[0], /no default model is configured/);"
+        },
+        {
+          "line": 61,
+          "text": "\t}"
+        },
+        {
+          "line": 62,
+          "text": "});"
+        },
+        {
+          "line": 63,
+          "text": ""
+        },
+        {
+          "line": 64,
+          "text": "test(\"completion adapter restores ownership after nested calls and exceptions\", async () => {"
+        },
+        {
+          "line": 65,
+          "text": "\tconst prototype = InteractiveMode.prototype;"
+        },
+        {
+          "line": 66,
+          "text": "\tconst original = prototype.completeProviderAuthentication;"
+        },
+        {
+          "line": 67,
+          "text": "\tawait assert.rejects("
+        },
+        {
+          "line": 68,
+          "text": "\t\twithPiAuthCompletion(async () => {"
+        },
+        {
+          "line": 69,
+          "text": "\t\t\tconst outer = prototype.completeProviderAuthentication;"
+        },
+        {
+          "line": 70,
+          "text": "\t\t\tawait withPiAuthCompletion(async () => {});"
+        }
+      ]
+    },
+    {
+      "path": "packages/cli/test/shisa-connect-integration.test.mjs",
+      "ranges": [
+        [
+          535,
+          593
+        ]
+      ],
+      "anchors": [
+        {
+          "line": 535,
+          "text": "\tassert.equal(h.session.thinkingLevel, \"medium\", \"catalog thinking default accompanies its model\");"
+        },
+        {
+          "line": 536,
+          "text": "\tassert.equal("
+        },
+        {
+          "line": 537,
+          "text": "\t\th.settingsManager.getSettings().defaultModel,"
+        },
+        {
+          "line": 538,
+          "text": "\t\tundefined,"
+        },
+        {
+          "line": 539,
+          "text": "\t\t\"automatic selection does not write a user preference\","
+        },
+        {
+          "line": 540,
+          "text": "\t);"
+        },
+        {
+          "line": 541,
+          "text": "\tassert.equal(new ModelPickerStore(h.paths).load().state.last, undefined, \"selection is not a dispatch\");"
+        },
+        {
+          "line": 542,
+          "text": "});"
+        },
+        {
+          "line": 543,
+          "text": ""
+        },
+        {
+          "line": 544,
+          "text": "test(\"interactive first login selects Flash Next without false default-selection guidance\", async (t) => {"
+        },
+        {
+          "line": 545,
+          "text": "\tconst h = await harness(t, { catalogDocument: priorityCatalog(), pickerOptions: firstUseOptions });"
+        },
+        {
+          "line": 546,
+          "text": "\tconst ui = interactiveLoginHost(h.session);"
+        },
+        {
+          "line": 547,
+          "text": "\tawait withPiAuthCompletion(() => ui.login());"
+        },
+        {
+          "line": 548,
+          "text": "\tassert.equal(h.session.model?.id, \"flash-next\");"
+        },
+        {
+          "line": 549,
+          "text": "\tassert.deepEqual(ui.errors, []);"
+        },
+        {
+          "line": 550,
+          "text": "\tassert.match(ui.statuses[0], /Logged in to Shisa.*Credentials saved/);"
+        },
+        {
+          "line": 551,
+          "text": "\tassert.equal(ui.refreshes.length, 1);"
+        },
+        {
+          "line": 552,
+          "text": "});"
+        },
+        {
+          "line": 553,
+          "text": ""
+        },
+        {
+          "line": 554,
+          "text": "test(\"interactive cancellation after authorization reports signed in with refresh cancelled\", async (t) => {"
+        },
+        {
+          "line": 555,
+          "text": "\tconst entered = Promise.withResolvers();"
+        },
+        {
+          "line": 556,
+          "text": "\tconst settled = Promise.withResolvers();"
+        },
+        {
+          "line": 557,
+          "text": "\tconst h = await harness(t, {"
+        },
+        {
+          "line": 558,
+          "text": "\t\tpickerOptions: firstUseOptions,"
+        },
+        {
+          "line": 559,
+          "text": "\t\tonRefreshSettled: () => settled.resolve(),"
+        },
+        {
+          "line": 560,
+          "text": "\t\tcatalogFetch: async (_url, { signal }) => {"
+        },
+        {
+          "line": 561,
+          "text": "\t\t\tentered.resolve();"
+        },
+        {
+          "line": 562,
+          "text": "\t\t\treturn new Promise((_resolve, reject) =>"
+        },
+        {
+          "line": 563,
+          "text": "\t\t\t\tsignal.addEventListener(\"abort\", () => reject(signal.reason), { once: true }),"
+        },
+        {
+          "line": 564,
+          "text": "\t\t\t);"
+        },
+        {
+          "line": 565,
+          "text": "\t\t},"
+        },
+        {
+          "line": 566,
+          "text": "\t});"
+        },
+        {
+          "line": 567,
+          "text": "\tconst ui = interactiveLoginHost(h.session);"
+        },
+        {
+          "line": 568,
+          "text": "\tawait withPiAuthCompletion(async () => {"
+        },
+        {
+          "line": 569,
+          "text": "\t\tconst login = ui.login();"
+        },
+        {
+          "line": 570,
+          "text": "\t\tawait entered.promise;"
+        },
+        {
+          "line": 571,
+          "text": "\t\tui.focused.handleInput(\"\\u001b\");"
+        },
+        {
+          "line": 572,
+          "text": "\t\tawait login;"
+        },
+        {
+          "line": 573,
+          "text": "\t\tawait settled.promise;"
+        },
+        {
+          "line": 574,
+          "text": "\t});"
+        },
+        {
+          "line": 575,
+          "text": "\tassert.ok(readShisaLoginToken(h.paths));"
+        },
+        {
+          "line": 576,
+          "text": "\tassert.equal(h.session.model?.id, \"unknown\");"
+        },
+        {
+          "line": 577,
+          "text": "\tassert.deepEqual(ui.errors, []);"
+        },
+        {
+          "line": 578,
+          "text": "\tassert.deepEqual(ui.statuses, [\"Signed in to Shisa; catalog refresh cancelled. Run /reload to load Shisa models.\"]);"
+        },
+        {
+          "line": 579,
+          "text": "\tassert.equal(ui.refreshes.length, 0, \"completion must not restart the cancelled refresh\");"
+        },
+        {
+          "line": 580,
+          "text": "});"
+        },
+        {
+          "line": 581,
+          "text": ""
+        },
+        {
+          "line": 582,
+          "text": "test(\"interactive cancellation before approval does not report signed in\", async (t) => {"
+        },
+        {
+          "line": 583,
+          "text": "\tconst h = await harness(t, { token: \"pending\", pickerOptions: firstUseOptions });"
+        },
+        {
+          "line": 584,
+          "text": "\tconst ui = interactiveLoginHost(h.session);"
+        },
+        {
+          "line": 585,
+          "text": "\tawait withPiAuthCompletion(async () => {"
+        },
+        {
+          "line": 586,
+          "text": "\t\tconst login = ui.login();"
+        },
+        {
+          "line": 587,
+          "text": "\t\tawait waitFor(() => h.requests.some((request) => request.url === \"/device/token\"));"
+        },
+        {
+          "line": 588,
+          "text": "\t\tui.focused.handleInput(\"\\u001b\");"
+        },
+        {
+          "line": 589,
+          "text": "\t\tawait login;"
+        },
+        {
+          "line": 590,
+          "text": "\t});"
+        },
+        {
+          "line": 591,
+          "text": "\tassert.equal(readShisaLoginToken(h.paths), undefined);"
+        },
+        {
+          "line": 592,
+          "text": "\tassert.deepEqual(ui.statuses, []);"
+        },
+        {
+          "line": 593,
+          "text": "\tassert.equal(ui.refreshes.length, 0);"
+        }
+      ]
+    }
+  ],
+  "prior_full_crosslinks": [
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "inventory": "main-update-test-support.csv",
+      "scope": "main-update-test-support-scope.csv",
+      "qualification": "Prior TARGET full body; only bounded caller evidence reused here."
+    }
+  ],
+  "top_level_title_sites": 12,
+  "finite_template_titles": {
+    "scripts/pi-provider-receipts.test.mjs:20": {
+      "variable": "api",
+      "values": [
+        "openai-completions",
+        "openai-responses",
+        "anthropic-messages",
+        "google-generative-ai",
+        "bedrock-converse-stream",
+        "mistral-conversations"
+      ],
+      "source": "12-20",
+      "count": 6
+    },
+    "scripts/pi-provider-receipts.test.mjs:176": {
+      "variable": "signatureTiming",
+      "values": [
+        "first",
+        "last"
+      ],
+      "source": "175-176",
+      "count": 2
+    }
+  },
+  "nested_case_title_values": 6,
+  "concrete_test_names_if_all_scenarios_reach_their_loops": 24,
+  "fixture_error_occurrences": 6,
+  "authored_assertion_message_occurrences": 3,
+  "dynamic_boundaries": 10,
+  "lexical_occurrences": 408,
+  "excluded_occurrences": 388,
+  "embedded_source_containers": 10,
+  "nested_source_lexical_occurrences": 7,
+  "partition": [
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 1,
+      "column": 44,
+      "start": 43,
+      "end": 76,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:1:44"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 5,
+      "column": 12,
+      "start": 254,
+      "end": 260,
+      "expression": "\"dark\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:5:12"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 29,
+      "column": 49,
+      "start": 896,
+      "end": 912,
+      "expression": "\"fixture-device\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:29:49"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 47,
+      "column": 24,
+      "start": 1455,
+      "end": 1470,
+      "expression": "\"loginProvider\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:47:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 47,
+      "column": 41,
+      "start": 1472,
+      "end": 1488,
+      "expression": "\"showAuthPrompt\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:47:41"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 47,
+      "column": 59,
+      "start": 1490,
+      "end": 1508,
+      "expression": "\"notifyAuthDialog\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:47:59"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 47,
+      "column": 79,
+      "start": 1510,
+      "end": 1542,
+      "expression": "\"completeProviderAuthentication\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:47:79"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 49,
+      "column": 33,
+      "start": 1660,
+      "end": 1667,
+      "expression": "\"shisa\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:49:33"
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "line": 49,
+      "column": 49,
+      "start": 1676,
+      "end": 1683,
+      "expression": "\"Shisa\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/interactive-login.mjs:49:49"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 3,
+      "column": 20,
+      "start": 172,
+      "end": 192,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:3:20"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 4,
+      "column": 68,
+      "start": 261,
+      "end": 270,
+      "expression": "\"node:fs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:4:68"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 5,
+      "column": 31,
+      "start": 302,
+      "end": 315,
+      "expression": "\"node:module\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:5:31"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 6,
+      "column": 22,
+      "start": 338,
+      "end": 349,
+      "expression": "\"node:path\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:6:22"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 11,
+      "column": 32,
+      "start": 540,
+      "end": 560,
+      "expression": "`../../dist/${file}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:11:32"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 16,
+      "column": 21,
+      "start": 681,
+      "end": 775,
+      "expression": "`data:text/javascript,${encodeURIComponent(`export * from ${JSON.stringify(url)};\\n${body}`)}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:16:21"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 16,
+      "column": 64,
+      "start": 724,
+      "end": 772,
+      "expression": "`export * from ${JSON.stringify(url)};\\n${body}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:16:64",
+      "embedded": {
+        "masked_interpolations": [
+          [
+            14,
+            36
+          ],
+          [
+            39,
+            46
+          ]
+        ],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 20,
+      "column": 2,
+      "start": 788,
+      "end": 808,
+      "expression": "\"language-choice.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:20:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 21,
+      "column": 2,
+      "start": 811,
+      "end": 961,
+      "expression": "`\nexport async function promptForLanguageChoice() {\n\tglobalThis.__languageWiring.observed.prompts += 1;\n\treturn globalThis.__languageWiring.choice;\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:21:2",
+      "embedded": {
+        "masked_interpolations": [],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 28,
+      "column": 2,
+      "start": 973,
+      "end": 987,
+      "expression": "\"pi-import.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:28:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 29,
+      "column": 2,
+      "start": 990,
+      "end": 1144,
+      "expression": "`\nexport async function offerPiConfigurationImport(_paths, options) {\n\tglobalThis.__languageWiring.observed.catalogs.piImport = options.catalog.locale;\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:29:2",
+      "embedded": {
+        "masked_interpolations": [],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 35,
+      "column": 2,
+      "start": 1156,
+      "end": 1182,
+      "expression": "\"shisa-link/onboarding.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:35:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 36,
+      "column": 2,
+      "start": 1185,
+      "end": 1327,
+      "expression": "`\nexport async function offerShisaOnboarding(options) {\n\tglobalThis.__languageWiring.observed.catalogs.onboarding = options.catalog.locale;\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:36:2",
+      "embedded": {
+        "masked_interpolations": [],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 42,
+      "column": 2,
+      "start": 1339,
+      "end": 1361,
+      "expression": "\"language-contract.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:42:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 43,
+      "column": 2,
+      "start": 1364,
+      "end": 1647,
+      "expression": "`\nimport { createLanguageContractExtension as original } from ${JSON.stringify(dist(\"language-contract.js\"))};\nexport function createLanguageContractExtension(options) {\n\tconst contract = original(options);\n\tglobalThis.__languageWiring.captureContract(contract);\n\treturn contract;\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:43:2",
+      "embedded": {
+        "masked_interpolations": [
+          [
+            61,
+            108
+          ]
+        ],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 44,
+      "column": 83,
+      "start": 1448,
+      "end": 1470,
+      "expression": "\"language-contract.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:44:83"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 52,
+      "column": 2,
+      "start": 1659,
+      "end": 1676,
+      "expression": "\"model-picker.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:52:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 53,
+      "column": 2,
+      "start": 1679,
+      "end": 2126,
+      "expression": "`\nimport { createJouzuModelPicker as original } from ${JSON.stringify(dist(\"model-picker.js\"))};\nexport function createJouzuModelPicker(paths, options) {\n\tglobalThis.__languageWiring.observed.catalogs.picker = options.catalog.locale;\n\treturn original(paths, { ...options,\n\t\tonLanguageChanged: options.onLanguageChanged && ((language) => {\n\t\t\tglobalThis.__languageWiring.languageSaved(language);\n\t\t\toptions.onLanguageChanged(language);\n\t\t})\n\t});\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:53:2",
+      "embedded": {
+        "masked_interpolations": [
+          [
+            52,
+            94
+          ]
+        ],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 54,
+      "column": 74,
+      "start": 1754,
+      "end": 1771,
+      "expression": "\"model-picker.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:54:74"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 66,
+      "column": 2,
+      "start": 2138,
+      "end": 2155,
+      "expression": "\"presentation.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:66:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 67,
+      "column": 2,
+      "start": 2158,
+      "end": 2538,
+      "expression": "`\nimport { createJouzuPresentationExtension as original } from ${JSON.stringify(dist(\"presentation.js\"))};\nexport function createJouzuPresentationExtension(metadata, profile, options) {\n\tglobalThis.__languageWiring.observed.catalogs.presentation = options.catalog.locale;\n\tglobalThis.__languageWiring.observed.profile = profile.id;\n\treturn original(metadata, profile, options);\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:67:2",
+      "embedded": {
+        "masked_interpolations": [
+          [
+            62,
+            104
+          ]
+        ],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 68,
+      "column": 84,
+      "start": 2243,
+      "end": 2260,
+      "expression": "\"presentation.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:68:84"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 76,
+      "column": 2,
+      "start": 2550,
+      "end": 2571,
+      "expression": "\"session-ui/index.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:76:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 77,
+      "column": 2,
+      "start": 2574,
+      "end": 2897,
+      "expression": "`\nimport { createSessionUiExtension as original } from ${JSON.stringify(dist(\"session-ui/index.js\"))};\nexport function createSessionUiExtension(options) {\n\tglobalThis.__languageWiring.observed.catalogs.sessionUi = options.catalog.locale;\n\tglobalThis.__languageWiring.captureSessionUi(options);\n\treturn original(options);\n}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:77:2",
+      "embedded": {
+        "masked_interpolations": [
+          [
+            54,
+            100
+          ]
+        ],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 78,
+      "column": 76,
+      "start": 2651,
+      "end": 2672,
+      "expression": "\"session-ui/index.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:78:76"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 89,
+      "column": 21,
+      "start": 3035,
+      "end": 3068,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:89:21"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 89,
+      "column": 85,
+      "start": 3099,
+      "end": 3112,
+      "expression": "\"main-cli.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:89:85"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 92,
+      "column": 10,
+      "start": 3162,
+      "end": 3447,
+      "expression": "`data:text/javascript,${encodeURIComponent(`\nexport * from ${JSON.stringify(resolved.url)};\nexport function keyText(action) { return globalThis.__languageWiring.keyText(action); }\nexport async function main(args, options) { return globalThis.__languageWiring.run(args, options); }\n`)}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:92:10"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 92,
+      "column": 53,
+      "start": 3205,
+      "end": 3444,
+      "expression": "`\nexport * from ${JSON.stringify(resolved.url)};\nexport function keyText(action) { return globalThis.__languageWiring.keyText(action); }\nexport async function main(args, options) { return globalThis.__languageWiring.run(args, options); }\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:92:53",
+      "embedded": {
+        "masked_interpolations": [
+          [
+            15,
+            46
+          ]
+        ],
+        "tokens": []
+      }
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 104,
+      "column": 38,
+      "start": 3650,
+      "end": 3657,
+      "expression": "\"isTTY\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:104:38"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 105,
+      "column": 39,
+      "start": 3715,
+      "end": 3722,
+      "expression": "\"isTTY\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:105:39"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 108,
+      "column": 18,
+      "start": 3824,
+      "end": 3876,
+      "expression": "\"network access is not part of this regression test\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-001"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 111,
+      "column": 49,
+      "start": 3931,
+      "end": 3941,
+      "expression": "\"paths.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:111:49"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 112,
+      "column": 80,
+      "start": 4024,
+      "end": 4038,
+      "expression": "\"ui-locale.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:112:80"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 113,
+      "column": 95,
+      "start": 4136,
+      "end": 4157,
+      "expression": "\"localization-ops.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:113:95"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 117,
+      "column": 19,
+      "start": 4387,
+      "end": 4412,
+      "expression": "\"language-wiring-session\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:117:19"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 121,
+      "column": 30,
+      "start": 4611,
+      "end": 4687,
+      "expression": "`${JSON.stringify({ schemaVersion: 2, localization: scenario.settings })}\\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:121:30"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 122,
+      "column": 75,
+      "start": 4764,
+      "end": 4770,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:122:75"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 126,
+      "column": 2,
+      "start": 4906,
+      "end": 4923,
+      "expression": "\"tui.select.down\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:126:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 126,
+      "column": 22,
+      "start": 4926,
+      "end": 4932,
+      "expression": "\"down\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:126:22"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 127,
+      "column": 2,
+      "start": 4936,
+      "end": 4951,
+      "expression": "\"tui.select.up\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:127:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 127,
+      "column": 20,
+      "start": 4954,
+      "end": 4958,
+      "expression": "\"up\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:127:20"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 128,
+      "column": 2,
+      "start": 4962,
+      "end": 4982,
+      "expression": "\"tui.select.confirm\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:128:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 128,
+      "column": 25,
+      "start": 4985,
+      "end": 4992,
+      "expression": "\"enter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:128:25"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 129,
+      "column": 2,
+      "start": 4996,
+      "end": 5015,
+      "expression": "\"tui.select.cancel\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:129:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 129,
+      "column": 24,
+      "start": 5018,
+      "end": 5026,
+      "expression": "\"escape\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:129:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 129,
+      "column": 34,
+      "start": 5028,
+      "end": 5036,
+      "expression": "\"ctrl+c\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:129:34"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 130,
+      "column": 2,
+      "start": 5040,
+      "end": 5059,
+      "expression": "\"tui.select.pageUp\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:130:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 130,
+      "column": 24,
+      "start": 5062,
+      "end": 5070,
+      "expression": "\"pageUp\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:130:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 131,
+      "column": 2,
+      "start": 5074,
+      "end": 5095,
+      "expression": "\"tui.select.pageDown\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:131:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 131,
+      "column": 26,
+      "start": 5098,
+      "end": 5108,
+      "expression": "\"pageDown\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:131:26"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 139,
+      "column": 3,
+      "start": 5293,
+      "end": 5512,
+      "expression": "\"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.\\n\\nAvailable tools:\\n- read: Read file contents\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:139:3"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 140,
+      "column": 66,
+      "start": 5579,
+      "end": 5585,
+      "expression": "\"read\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:140:66"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 156,
+      "column": 27,
+      "start": 5894,
+      "end": 5896,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:156:27"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 157,
+      "column": 46,
+      "start": 5943,
+      "end": 5967,
+      "expression": "\"app.model.cycleForward\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:157:46"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 157,
+      "column": 79,
+      "start": 5976,
+      "end": 5978,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:157:79"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 158,
+      "column": 18,
+      "start": 5997,
+      "end": 6015,
+      "expression": "\"app.model.select\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:158:18"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 158,
+      "column": 45,
+      "start": 6024,
+      "end": 6032,
+      "expression": "\"ctrl+l\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:158:45"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 159,
+      "column": 18,
+      "start": 6051,
+      "end": 6075,
+      "expression": "\"app.model.cycleForward\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:159:18"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 159,
+      "column": 51,
+      "start": 6084,
+      "end": 6092,
+      "expression": "\"ctrl+p\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:159:51"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 160,
+      "column": 10,
+      "start": 6103,
+      "end": 6105,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:160:10"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 181,
+      "column": 60,
+      "start": 6862,
+      "end": 6870,
+      "expression": "\"custom\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:181:60"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 192,
+      "column": 9,
+      "start": 7118,
+      "end": 7143,
+      "expression": "\"jouzu-language-contract\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:192:9"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 192,
+      "column": 36,
+      "start": 7145,
+      "end": 7152,
+      "expression": "\"jouzu\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:192:36"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 192,
+      "column": 45,
+      "start": 7154,
+      "end": 7174,
+      "expression": "\"jouzu-model-picker\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:192:45"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 197,
+      "column": 29,
+      "start": 7305,
+      "end": 7310,
+      "expression": "\"rpc\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:197:29"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 197,
+      "column": 37,
+      "start": 7313,
+      "end": 7318,
+      "expression": "\"tui\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:197:37"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 225,
+      "column": 15,
+      "start": 8350,
+      "end": 8370,
+      "expression": "\"before_agent_start\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:225:15"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 233,
+      "column": 14,
+      "start": 8627,
+      "end": 8642,
+      "expression": "\"session_start\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:233:14"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 233,
+      "column": 41,
+      "start": 8654,
+      "end": 8663,
+      "expression": "\"startup\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:233:41"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 237,
+      "column": 33,
+      "start": 8811,
+      "end": 8821,
+      "expression": "\"catalogs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:237:33"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 237,
+      "column": 53,
+      "start": 8831,
+      "end": 8833,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:237:53"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 238,
+      "column": 21,
+      "start": 8861,
+      "end": 8908,
+      "expression": "\"the production Settings caller opened a panel\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-002"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 239,
+      "column": 24,
+      "start": 8934,
+      "end": 8944,
+      "expression": "\"settings\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:239:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 239,
+      "column": 43,
+      "start": 8953,
+      "end": 8963,
+      "expression": "\"language\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:239:43"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 240,
+      "column": 28,
+      "start": 8995,
+      "end": 9004,
+      "expression": "\"ui-only\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:240:28"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 240,
+      "column": 61,
+      "start": 9028,
+      "end": 9040,
+      "expression": "\"ui-english\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:240:61"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 241,
+      "column": 43,
+      "start": 9086,
+      "end": 9098,
+      "expression": "\"ui-english\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:241:43"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 241,
+      "column": 58,
+      "start": 9101,
+      "end": 9111,
+      "expression": "\"\\u001b[D\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:241:58"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 241,
+      "column": 71,
+      "start": 9114,
+      "end": 9124,
+      "expression": "\"\\u001b[C\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:241:71"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 243,
+      "column": 23,
+      "start": 9161,
+      "end": 9167,
+      "expression": "\"down\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:243:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 244,
+      "column": 29,
+      "start": 9198,
+      "end": 9213,
+      "expression": "\"artifact-only\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:244:29"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 244,
+      "column": 64,
+      "start": 9233,
+      "end": 9243,
+      "expression": "\"\\u001b[C\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:244:64"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 245,
+      "column": 23,
+      "start": 9268,
+      "end": 9274,
+      "expression": "\"down\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:245:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 246,
+      "column": 23,
+      "start": 9299,
+      "end": 9309,
+      "expression": "\"\\u001b[C\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:246:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 249,
+      "column": 22,
+      "start": 9372,
+      "end": 9379,
+      "expression": "\"enter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:249:22"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 250,
+      "column": 50,
+      "start": 9431,
+      "end": 9435,
+      "expression": "\"\\n\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:250:50"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 251,
+      "column": 28,
+      "start": 9465,
+      "end": 9473,
+      "expression": "\"cancel\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:251:28"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 252,
+      "column": 23,
+      "start": 9499,
+      "end": 9507,
+      "expression": "\"escape\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:252:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 253,
+      "column": 23,
+      "start": 9532,
+      "end": 9540,
+      "expression": "\"escape\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:253:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 255,
+      "column": 29,
+      "start": 9583,
+      "end": 9592,
+      "expression": "\"failure\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:255:29"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 255,
+      "column": 67,
+      "start": 9621,
+      "end": 9633,
+      "expression": "\"{invalid\\n\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:255:67"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 256,
+      "column": 36,
+      "start": 9671,
+      "end": 9679,
+      "expression": "\"defer-\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:256:36"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 257,
+      "column": 39,
+      "start": 9722,
+      "end": 9734,
+      "expression": "\"defer-tool\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:257:39"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 258,
+      "column": 24,
+      "start": 9759,
+      "end": 9781,
+      "expression": "\"tool_execution_start\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:258:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 258,
+      "column": 49,
+      "start": 9784,
+      "end": 9797,
+      "expression": "\"agent_start\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:258:49"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 259,
+      "column": 24,
+      "start": 9823,
+      "end": 9830,
+      "expression": "\"enter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:259:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 264,
+      "column": 39,
+      "start": 10013,
+      "end": 10017,
+      "expression": "\"\\n\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:264:39"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 266,
+      "column": 24,
+      "start": 10051,
+      "end": 10071,
+      "expression": "\"tool_execution_end\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:266:24"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 266,
+      "column": 47,
+      "start": 10074,
+      "end": 10085,
+      "expression": "\"agent_end\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:266:47"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 268,
+      "column": 23,
+      "start": 10116,
+      "end": 10123,
+      "expression": "\"enter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:268:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 273,
+      "column": 46,
+      "start": 10356,
+      "end": 10360,
+      "expression": "\"\\n\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:273:46"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 276,
+      "column": 28,
+      "start": 10472,
+      "end": 10479,
+      "expression": "\"reset\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:276:28"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 277,
+      "column": 25,
+      "start": 10507,
+      "end": 10517,
+      "expression": "\"settings\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:277:25"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 277,
+      "column": 44,
+      "start": 10526,
+      "end": 10536,
+      "expression": "\"language\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:277:44"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 278,
+      "column": 23,
+      "start": 10563,
+      "end": 10566,
+      "expression": "\"r\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:278:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 279,
+      "column": 23,
+      "start": 10591,
+      "end": 10598,
+      "expression": "\"enter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:279:23"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 281,
+      "column": 52,
+      "start": 10691,
+      "end": 10695,
+      "expression": "\"\\n\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:281:52"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 288,
+      "column": 14,
+      "start": 10841,
+      "end": 10859,
+      "expression": "\"session_shutdown\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:288:14"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 292,
+      "column": 42,
+      "start": 10911,
+      "end": 10924,
+      "expression": "\"main-cli.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:292:42"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 294,
+      "column": 2,
+      "start": 10948,
+      "end": 10962,
+      "expression": "\"--jouzu-home\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:294:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 296,
+      "column": 28,
+      "start": 11007,
+      "end": 11026,
+      "expression": "\"--jouzu-ui-locale\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:296:28"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 297,
+      "column": 29,
+      "start": 11083,
+      "end": 11100,
+      "expression": "\"--jouzu-profile\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:297:29"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 298,
+      "column": 2,
+      "start": 11131,
+      "end": 11148,
+      "expression": "\"--no-extensions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:298:2"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 299,
+      "column": 26,
+      "start": 11175,
+      "end": 11183,
+      "expression": "\"--mode\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:299:26"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 299,
+      "column": 36,
+      "start": 11185,
+      "end": 11190,
+      "expression": "\"rpc\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:299:36"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 302,
+      "column": 80,
+      "start": 11321,
+      "end": 11327,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:302:80"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 303,
+      "column": 76,
+      "start": 11417,
+      "end": 11423,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:303:76"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 304,
+      "column": 64,
+      "start": 11501,
+      "end": 11522,
+      "expression": "\"profile-choice.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:304:64"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 305,
+      "column": 41,
+      "start": 11566,
+      "end": 11584,
+      "expression": "\"APPEND_SYSTEM.md\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:305:41"
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "line": 306,
+      "column": 84,
+      "start": 11670,
+      "end": 11676,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/fixtures/language-runtime-wiring.mjs:306:84"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 1,
+      "column": 20,
+      "start": 19,
+      "end": 39,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:1:20"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 2,
+      "column": 37,
+      "start": 77,
+      "end": 86,
+      "expression": "\"node:fs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:2:37"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 3,
+      "column": 24,
+      "start": 111,
+      "end": 120,
+      "expression": "\"node:os\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:3:24"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 4,
+      "column": 22,
+      "start": 143,
+      "end": 154,
+      "expression": "\"node:path\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:4:22"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 5,
+      "column": 18,
+      "start": 173,
+      "end": 184,
+      "expression": "\"node:test\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:5:18"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 6,
+      "column": 32,
+      "start": 217,
+      "end": 250,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:6:32"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 7,
+      "column": 44,
+      "start": 295,
+      "end": 342,
+      "expression": "\"../../../scripts/fixtures/pi-flow-session.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:7:44"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 8,
+      "column": 42,
+      "start": 385,
+      "end": 423,
+      "expression": "\"../dist/flow-control/flow-runtime.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:8:42"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 9,
+      "column": 43,
+      "start": 467,
+      "end": 503,
+      "expression": "\"../dist/model-selection-ingress.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:9:43"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 13,
+      "column": 6,
+      "start": 616,
+      "end": 698,
+      "expression": "\"selection ingress preserves delegate receivers, arguments and dispatch ownership\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-003"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 19,
+      "column": 16,
+      "start": 841,
+      "end": 849,
+      "expression": "\"attach\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:19:16"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 23,
+      "column": 16,
+      "start": 935,
+      "end": 944,
+      "expression": "\"dispose\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:23:16"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 27,
+      "column": 16,
+      "start": 1037,
+      "end": 1045,
+      "expression": "\"before\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:27:16"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 31,
+      "column": 16,
+      "start": 1140,
+      "end": 1147,
+      "expression": "\"after\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:31:16"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 35,
+      "column": 16,
+      "start": 1235,
+      "end": 1243,
+      "expression": "\"submit\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:35:16"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 39,
+      "column": 16,
+      "start": 1340,
+      "end": 1349,
+      "expression": "\"command\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:39:16"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 54,
+      "column": 35,
+      "start": 1762,
+      "end": 1767,
+      "expression": "\"old\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:54:35"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 55,
+      "column": 30,
+      "start": 1799,
+      "end": 1804,
+      "expression": "\"new\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:55:30"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 56,
+      "column": 23,
+      "start": 1829,
+      "end": 1836,
+      "expression": "\"input\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:56:23"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 56,
+      "column": 50,
+      "start": 1856,
+      "end": 1880,
+      "expression": "\"delegate owns dispatch\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-004"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 57,
+      "column": 27,
+      "start": 1910,
+      "end": 1919,
+      "expression": "\"command\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:57:27"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 57,
+      "column": 62,
+      "start": 1945,
+      "end": 1950,
+      "expression": "\"ran\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:57:62"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 58,
+      "column": 48,
+      "start": 2002,
+      "end": 2011,
+      "expression": "\"adapter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:58:48"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 58,
+      "column": 60,
+      "start": 2014,
+      "end": 2023,
+      "expression": "\"adapter\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:58:60"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 59,
+      "column": 41,
+      "start": 2066,
+      "end": 2081,
+      "expression": "\"authorization\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:59:41"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 59,
+      "column": 59,
+      "start": 2084,
+      "end": 2099,
+      "expression": "\"authorization\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:59:59"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 62,
+      "column": 4,
+      "start": 2158,
+      "end": 2166,
+      "expression": "\"attach\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:62:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 63,
+      "column": 4,
+      "start": 2178,
+      "end": 2186,
+      "expression": "\"before\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:63:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 63,
+      "column": 14,
+      "start": 2188,
+      "end": 2193,
+      "expression": "\"old\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:63:14"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 64,
+      "column": 4,
+      "start": 2199,
+      "end": 2206,
+      "expression": "\"after\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:64:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 64,
+      "column": 13,
+      "start": 2208,
+      "end": 2213,
+      "expression": "\"new\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:64:13"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 65,
+      "column": 4,
+      "start": 2219,
+      "end": 2227,
+      "expression": "\"submit\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:65:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 65,
+      "column": 14,
+      "start": 2229,
+      "end": 2236,
+      "expression": "\"input\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:65:14"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 66,
+      "column": 4,
+      "start": 2242,
+      "end": 2251,
+      "expression": "\"command\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:66:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 66,
+      "column": 15,
+      "start": 2253,
+      "end": 2262,
+      "expression": "\"command\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:66:15"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 67,
+      "column": 4,
+      "start": 2268,
+      "end": 2273,
+      "expression": "\"ran\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:67:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 68,
+      "column": 4,
+      "start": 2279,
+      "end": 2288,
+      "expression": "\"dispose\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:68:4"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 72,
+      "column": 6,
+      "start": 2306,
+      "end": 2384,
+      "expression": "\"selection ingress works without flow control and restores only its own hooks\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-005"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 83,
+      "column": 22,
+      "start": 2752,
+      "end": 2759,
+      "expression": "\"model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:83:22"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 84,
+      "column": 24,
+      "start": 2804,
+      "end": 2814,
+      "expression": "\"backward\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:84:24"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 86,
+      "column": 28,
+      "start": 2870,
+      "end": 2877,
+      "expression": "\"model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:86:28"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 86,
+      "column": 58,
+      "start": 2900,
+      "end": 2910,
+      "expression": "\"backward\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:86:58"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 102,
+      "column": 6,
+      "start": 3276,
+      "end": 3340,
+      "expression": "\"selection hooks survive real flow-controlled branch navigation\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-006"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 103,
+      "column": 42,
+      "start": 3398,
+      "end": 3427,
+      "expression": "\"jouzu-model-selection-flow-\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:103:42"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 107,
+      "column": 54,
+      "start": 3640,
+      "end": 3646,
+      "expression": "\"user\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:107:54"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 107,
+      "column": 71,
+      "start": 3657,
+      "end": 3664,
+      "expression": "\"first\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:107:71"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 108,
+      "column": 39,
+      "start": 3721,
+      "end": 3727,
+      "expression": "\"user\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:108:39"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 108,
+      "column": 56,
+      "start": 3738,
+      "end": 3746,
+      "expression": "\"second\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:108:56"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 123,
+      "column": 42,
+      "start": 4410,
+      "end": 4419,
+      "expression": "\"forward\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:123:42"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 127,
+      "column": 6,
+      "start": 4495,
+      "end": 4557,
+      "expression": "\"failed attachment and disposal restore owned selection hooks\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-007"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 128,
+      "column": 25,
+      "start": 4597,
+      "end": 4605,
+      "expression": "\"attach\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:128:25"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 128,
+      "column": 35,
+      "start": 4607,
+      "end": 4616,
+      "expression": "\"dispose\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:128:35"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 135,
+      "column": 21,
+      "start": 4806,
+      "end": 4823,
+      "expression": "\"fixture failure\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-008"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 139,
+      "column": 19,
+      "start": 4923,
+      "end": 4931,
+      "expression": "\"attach\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:139:19"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 139,
+      "column": 72,
+      "start": 4976,
+      "end": 4993,
+      "expression": "/fixture failure/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:139:72"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 142,
+      "column": 44,
+      "start": 5079,
+      "end": 5096,
+      "expression": "/fixture failure/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:142:44"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 149,
+      "column": 6,
+      "start": 5200,
+      "end": 5247,
+      "expression": "\"only automatic selection bypasses the barrier\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-009"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 168,
+      "column": 22,
+      "start": 5705,
+      "end": 5716,
+      "expression": "\"automatic\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:168:22"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 170,
+      "column": 31,
+      "start": 5768,
+      "end": 5776,
+      "expression": "\"manual\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:170:31"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 171,
+      "column": 27,
+      "start": 5805,
+      "end": 5816,
+      "expression": "\"automatic\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:171:27"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 174,
+      "column": 27,
+      "start": 5881,
+      "end": 5892,
+      "expression": "\"automatic\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:174:27"
+    },
+    {
+      "path": "packages/cli/test/model-selection-ingress.test.mjs",
+      "line": 174,
+      "column": 40,
+      "start": 5894,
+      "end": 5902,
+      "expression": "\"manual\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-selection-ingress.test.mjs:174:40"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 1,
+      "column": 20,
+      "start": 19,
+      "end": 39,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:1:20"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 2,
+      "column": 27,
+      "start": 67,
+      "end": 87,
+      "expression": "\"node:child_process\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:2:27"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 3,
+      "column": 52,
+      "start": 140,
+      "end": 149,
+      "expression": "\"node:fs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:3:52"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 4,
+      "column": 24,
+      "start": 174,
+      "end": 183,
+      "expression": "\"node:os\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:4:24"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 5,
+      "column": 31,
+      "start": 215,
+      "end": 226,
+      "expression": "\"node:path\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:5:31"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 6,
+      "column": 22,
+      "start": 249,
+      "end": 260,
+      "expression": "\"node:test\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:6:22"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 7,
+      "column": 34,
+      "start": 295,
+      "end": 326,
+      "expression": "\"../dist/model-picker-state.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:7:34"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 8,
+      "column": 41,
+      "start": 368,
+      "end": 403,
+      "expression": "\"../dist/model-thinking-startup.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:8:41"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 9,
+      "column": 35,
+      "start": 439,
+      "end": 457,
+      "expression": "\"../dist/paths.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:9:35"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 11,
+      "column": 6,
+      "start": 465,
+      "end": 556,
+      "expression": "\"first-use thinking preserves valid explicit arguments including max and the last override\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-010"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 23,
+      "start": 588,
+      "end": 593,
+      "expression": "\"off\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:23"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 30,
+      "start": 595,
+      "end": 604,
+      "expression": "\"minimal\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:30"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 41,
+      "start": 606,
+      "end": 611,
+      "expression": "\"low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:41"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 48,
+      "start": 613,
+      "end": 621,
+      "expression": "\"medium\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:48"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 58,
+      "start": 623,
+      "end": 629,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:58"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 66,
+      "start": 631,
+      "end": 638,
+      "expression": "\"xhigh\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:66"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 12,
+      "column": 75,
+      "start": 640,
+      "end": 645,
+      "expression": "\"max\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:12:75"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 13,
+      "column": 41,
+      "start": 690,
+      "end": 702,
+      "expression": "\"--thinking\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:13:41"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 14,
+      "column": 41,
+      "start": 761,
+      "end": 782,
+      "expression": "`--thinking=${level}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:14:41"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 16,
+      "column": 40,
+      "start": 836,
+      "end": 848,
+      "expression": "\"--thinking\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:16:40"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 16,
+      "column": 54,
+      "start": 850,
+      "end": 856,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:16:54"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 16,
+      "column": 62,
+      "start": 858,
+      "end": 870,
+      "expression": "\"--thinking\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:16:62"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 16,
+      "column": 76,
+      "start": 872,
+      "end": 877,
+      "expression": "\"low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:16:76"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 16,
+      "column": 85,
+      "start": 881,
+      "end": 886,
+      "expression": "\"low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:16:85"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 17,
+      "column": 40,
+      "start": 928,
+      "end": 940,
+      "expression": "\"--thinking\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:17:40"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 17,
+      "column": 54,
+      "start": 942,
+      "end": 951,
+      "expression": "\"invalid\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:17:54"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 21,
+      "column": 6,
+      "start": 1032,
+      "end": 1111,
+      "expression": "\"CLI preserves explicit reasoning suffixes and distinguishes literal colon IDs\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-011"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 22,
+      "column": 42,
+      "start": 1183,
+      "end": 1204,
+      "expression": "\"jouzu-thinking-cli-\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:22:42"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 24,
+      "column": 27,
+      "start": 1241,
+      "end": 1247,
+      "expression": "\"home\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:24:27"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 25,
+      "column": 32,
+      "start": 1281,
+      "end": 1295,
+      "expression": "\"provider.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:25:32"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 28,
+      "column": 4,
+      "start": 1332,
+      "end": 1694,
+      "expression": "`export default function(pi) {\n\t\t\tpi.registerProvider('thinking-fixture', {\n\t\t\t\tbaseUrl: 'http://127.0.0.1:1', apiKey: 'fixture-only', api: 'openai-completions',\n\t\t\t\tmodels: ['fixture', 'literal:low'].map(id => ({id, name:id, reasoning:true,\n\t\t\t\t\tinput:['text'], cost:{input:0,output:0,cacheRead:0,cacheWrite:0}, contextWindow:32000,maxTokens:1000}))\n\t\t\t});\n\t\t}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:28:4",
+      "embedded": {
+        "masked_interpolations": [],
+        "tokens": [
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1386,
+            "end": 1404,
+            "line": 29,
+            "column": 24,
+            "kind": "StringLiteral",
+            "expression": "'thinking-fixture'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:29:24"
+          },
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1421,
+            "end": 1441,
+            "line": 30,
+            "column": 14,
+            "kind": "StringLiteral",
+            "expression": "'http://127.0.0.1:1'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:30:14"
+          },
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1451,
+            "end": 1465,
+            "line": 30,
+            "column": 44,
+            "kind": "StringLiteral",
+            "expression": "'fixture-only'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:30:44"
+          },
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1472,
+            "end": 1492,
+            "line": 30,
+            "column": 65,
+            "kind": "StringLiteral",
+            "expression": "'openai-completions'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:30:65"
+          },
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1507,
+            "end": 1516,
+            "line": 31,
+            "column": 14,
+            "kind": "StringLiteral",
+            "expression": "'fixture'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:31:14"
+          },
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1518,
+            "end": 1531,
+            "line": 31,
+            "column": 25,
+            "kind": "StringLiteral",
+            "expression": "'literal:low'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:31:25"
+          },
+          {
+            "path": "packages/cli/test/model-thinking-startup.test.mjs",
+            "outer_start": 1332,
+            "outer_end": 1694,
+            "start": 1586,
+            "end": 1592,
+            "line": 32,
+            "column": 13,
+            "kind": "StringLiteral",
+            "expression": "'text'",
+            "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:32:13"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 37,
+      "column": 26,
+      "start": 1807,
+      "end": 1816,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:37:26"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 37,
+      "column": 37,
+      "start": 1818,
+      "end": 1831,
+      "expression": "\"literal:low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:37:37"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 38,
+      "column": 44,
+      "start": 1877,
+      "end": 1895,
+      "expression": "\"thinking-fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:38:44"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 38,
+      "column": 75,
+      "start": 1908,
+      "end": 1914,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:38:75"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 40,
+      "column": 51,
+      "start": 2001,
+      "end": 2044,
+      "expression": "/^(JOUZU_|PI_|SHISA_|AI_AGENT|TEXTGUARD_)/u",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:40:51"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 42,
+      "column": 36,
+      "start": 2097,
+      "end": 2100,
+      "expression": "\"1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:42:36"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 42,
+      "column": 58,
+      "start": 2119,
+      "end": 2122,
+      "expression": "\"1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:42:58"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 44,
+      "column": 6,
+      "start": 2167,
+      "end": 2176,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:44:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 44,
+      "column": 17,
+      "start": 2178,
+      "end": 2208,
+      "expression": "\"thinking-fixture/fixture:low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:44:17"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 44,
+      "column": 50,
+      "start": 2211,
+      "end": 2216,
+      "expression": "\"low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:44:50"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 45,
+      "column": 6,
+      "start": 2224,
+      "end": 2236,
+      "expression": "\"--provider\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:45:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 45,
+      "column": 20,
+      "start": 2238,
+      "end": 2256,
+      "expression": "\"thinking-fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:45:20"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 45,
+      "column": 40,
+      "start": 2258,
+      "end": 2267,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:45:40"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 45,
+      "column": 51,
+      "start": 2269,
+      "end": 2282,
+      "expression": "\"fixture:off\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:45:51"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 45,
+      "column": 67,
+      "start": 2285,
+      "end": 2290,
+      "expression": "\"off\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:45:67"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 46,
+      "column": 6,
+      "start": 2298,
+      "end": 2307,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:46:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 46,
+      "column": 17,
+      "start": 2309,
+      "end": 2339,
+      "expression": "\"thinking-fixture/fixture:low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:46:17"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 46,
+      "column": 49,
+      "start": 2341,
+      "end": 2353,
+      "expression": "\"--thinking\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:46:49"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 46,
+      "column": 63,
+      "start": 2355,
+      "end": 2363,
+      "expression": "\"medium\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:46:63"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 46,
+      "column": 74,
+      "start": 2366,
+      "end": 2374,
+      "expression": "\"medium\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:46:74"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 47,
+      "column": 6,
+      "start": 2382,
+      "end": 2391,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:47:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 47,
+      "column": 17,
+      "start": 2393,
+      "end": 2419,
+      "expression": "\"thinking-fixture/fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:47:17"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 47,
+      "column": 45,
+      "start": 2421,
+      "end": 2433,
+      "expression": "\"--thinking\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:47:45"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 47,
+      "column": 59,
+      "start": 2435,
+      "end": 2440,
+      "expression": "\"low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:47:59"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 47,
+      "column": 67,
+      "start": 2443,
+      "end": 2448,
+      "expression": "\"low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:47:67"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 48,
+      "column": 6,
+      "start": 2456,
+      "end": 2465,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:48:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 48,
+      "column": 17,
+      "start": 2467,
+      "end": 2493,
+      "expression": "\"thinking-fixture/fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:48:17"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 48,
+      "column": 46,
+      "start": 2496,
+      "end": 2502,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:48:46"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 49,
+      "column": 6,
+      "start": 2510,
+      "end": 2519,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:49:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 49,
+      "column": 17,
+      "start": 2521,
+      "end": 2551,
+      "expression": "\"thinking-fixture/literal:low\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:49:17"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 49,
+      "column": 50,
+      "start": 2554,
+      "end": 2560,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:49:50"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 50,
+      "column": 6,
+      "start": 2568,
+      "end": 2577,
+      "expression": "\"--model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:50:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 50,
+      "column": 17,
+      "start": 2579,
+      "end": 2613,
+      "expression": "\"thinking-fixture/literal:low:off\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:50:17"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 50,
+      "column": 54,
+      "start": 2616,
+      "end": 2621,
+      "expression": "\"off\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:50:54"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 55,
+      "column": 35,
+      "start": 2722,
+      "end": 2738,
+      "expression": "\"../dist/cli.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:55:35"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 56,
+      "column": 6,
+      "start": 2746,
+      "end": 2760,
+      "expression": "\"--jouzu-home\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:56:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 58,
+      "column": 6,
+      "start": 2778,
+      "end": 2786,
+      "expression": "\"--mode\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:58:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 59,
+      "column": 6,
+      "start": 2793,
+      "end": 2798,
+      "expression": "\"rpc\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:59:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 60,
+      "column": 6,
+      "start": 2805,
+      "end": 2819,
+      "expression": "\"--no-session\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:60:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 61,
+      "column": 6,
+      "start": 2826,
+      "end": 2846,
+      "expression": "\"--no-context-files\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:61:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 62,
+      "column": 6,
+      "start": 2853,
+      "end": 2870,
+      "expression": "\"--no-extensions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:62:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 63,
+      "column": 6,
+      "start": 2877,
+      "end": 2890,
+      "expression": "\"--no-skills\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:63:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 64,
+      "column": 6,
+      "start": 2897,
+      "end": 2910,
+      "expression": "\"--extension\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:64:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 71,
+      "column": 16,
+      "start": 2996,
+      "end": 3002,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:71:16"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 73,
+      "column": 13,
+      "start": 3037,
+      "end": 3074,
+      "expression": "'{\"id\":\"state\",\"type\":\"get_state\"}\\n'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:73:13"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 78,
+      "column": 12,
+      "start": 3184,
+      "end": 3188,
+      "expression": "\"\\n\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:78:12"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 79,
+      "column": 39,
+      "start": 3228,
+      "end": 3231,
+      "expression": "\"{\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:79:39"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 81,
+      "column": 35,
+      "start": 3305,
+      "end": 3312,
+      "expression": "\"state\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:81:35"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 89,
+      "column": 6,
+      "start": 3564,
+      "end": 3570,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:89:6"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "line": 89,
+      "column": 14,
+      "start": 3572,
+      "end": 3578,
+      "expression": "\"high\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:89:14"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 1,
+      "column": 20,
+      "start": 19,
+      "end": 39,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:1:20"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 2,
+      "column": 28,
+      "start": 68,
+      "end": 81,
+      "expression": "\"node:crypto\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:2:28"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 3,
+      "column": 57,
+      "start": 139,
+      "end": 157,
+      "expression": "\"node:fs/promises\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:3:57"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 4,
+      "column": 30,
+      "start": 188,
+      "end": 199,
+      "expression": "\"node:http\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:4:30"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 5,
+      "column": 24,
+      "start": 224,
+      "end": 233,
+      "expression": "\"node:os\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:5:24"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 6,
+      "column": 31,
+      "start": 265,
+      "end": 276,
+      "expression": "\"node:path\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:6:31"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 7,
+      "column": 22,
+      "start": 299,
+      "end": 310,
+      "expression": "\"node:test\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:7:22"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 8,
+      "column": 39,
+      "start": 350,
+      "end": 384,
+      "expression": "\"./apply-pi-provider-receipts.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:8:39"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 9,
+      "column": 27,
+      "start": 412,
+      "end": 444,
+      "expression": "\"./fixtures/pi-flow-session.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:9:27"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 10,
+      "column": 8,
+      "start": 453,
+      "end": 483,
+      "expression": "\"./pi-oauth-branding.test.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:10:8"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 13,
+      "column": 2,
+      "start": 507,
+      "end": 527,
+      "expression": "\"openai-completions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:13:2"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 14,
+      "column": 2,
+      "start": 530,
+      "end": 548,
+      "expression": "\"openai-responses\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:14:2"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 15,
+      "column": 2,
+      "start": 551,
+      "end": 571,
+      "expression": "\"anthropic-messages\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:15:2"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 16,
+      "column": 2,
+      "start": 574,
+      "end": 596,
+      "expression": "\"google-generative-ai\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:16:2"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 17,
+      "column": 2,
+      "start": 599,
+      "end": 624,
+      "expression": "\"bedrock-converse-stream\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:17:2"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 18,
+      "column": 2,
+      "start": 627,
+      "end": 650,
+      "expression": "\"mistral-conversations\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:18:2"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 20,
+      "column": 7,
+      "start": 663,
+      "end": 746,
+      "expression": "`normalized transcript keeps exact user and tool-result receipt identities: ${api}`",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-012"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 21,
+      "column": 35,
+      "start": 796,
+      "end": 830,
+      "expression": "`@earendil-works/pi-ai/api/${api}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:21:35"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 23,
+      "column": 8,
+      "start": 858,
+      "end": 867,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:23:8"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 24,
+      "column": 10,
+      "start": 878,
+      "end": 887,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:24:10"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 26,
+      "column": 14,
+      "start": 910,
+      "end": 919,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:26:14"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 27,
+      "column": 13,
+      "start": 933,
+      "end": 961,
+      "expression": "\"https://fixture.invalid/v1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:27:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 29,
+      "column": 12,
+      "start": 995,
+      "end": 1001,
+      "expression": "\"text\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:29:12"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 34,
+      "column": 43,
+      "start": 1156,
+      "end": 1162,
+      "expression": "\"user\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:34:43"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 34,
+      "column": 69,
+      "start": 1182,
+      "end": 1188,
+      "expression": "\"text\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:34:69"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 34,
+      "column": 83,
+      "start": 1196,
+      "end": 1208,
+      "expression": "\"same input\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:34:83"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 35,
+      "column": 20,
+      "start": 1250,
+      "end": 1258,
+      "expression": "\"call_a\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:35:20"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 35,
+      "column": 30,
+      "start": 1260,
+      "end": 1268,
+      "expression": "\"call_b\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:35:30"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 36,
+      "column": 10,
+      "start": 1302,
+      "end": 1314,
+      "expression": "\"toolResult\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:36:10"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 38,
+      "column": 14,
+      "start": 1344,
+      "end": 1351,
+      "expression": "\"probe\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:38:14"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 39,
+      "column": 22,
+      "start": 1374,
+      "end": 1380,
+      "expression": "\"text\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:39:22"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 39,
+      "column": 36,
+      "start": 1388,
+      "end": 1401,
+      "expression": "\"same result\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:39:36"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 44,
+      "column": 12,
+      "start": 1481,
+      "end": 1489,
+      "expression": "\"system\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:44:12"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 44,
+      "column": 31,
+      "start": 1500,
+      "end": 1522,
+      "expression": "\"Follow instructions.\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:44:31"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 44,
+      "column": 76,
+      "start": 1545,
+      "end": 1563,
+      "expression": "\"Project context.\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:44:76"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 51,
+      "column": 17,
+      "start": 1697,
+      "end": 1706,
+      "expression": "\"toolUse\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:51:17"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 52,
+      "column": 55,
+      "start": 1762,
+      "end": 1772,
+      "expression": "\"toolCall\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:52:55"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 52,
+      "column": 89,
+      "start": 1796,
+      "end": 1803,
+      "expression": "\"probe\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:52:89"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 63,
+      "column": 13,
+      "start": 2011,
+      "end": 2024,
+      "expression": "\"fixture-key\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:63:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 64,
+      "column": 13,
+      "start": 2038,
+      "end": 2049,
+      "expression": "\"us-east-1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:64:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 71,
+      "column": 22,
+      "start": 2224,
+      "end": 2248,
+      "expression": "\"fixture-before-network\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-013"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 76,
+      "column": 39,
+      "start": 2361,
+      "end": 2385,
+      "expression": "/fixture-before-network/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:76:39"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 80,
+      "column": 40,
+      "start": 2528,
+      "end": 2536,
+      "expression": "\"object\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:80:40"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 83,
+      "column": 36,
+      "start": 2764,
+      "end": 2822,
+      "expression": "`one receipt for source index ${messages.indexOf(source)}`",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-014"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 84,
+      "column": 52,
+      "start": 2876,
+      "end": 2915,
+      "expression": "\"receipt points into the final payload\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-015"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 89,
+      "column": 6,
+      "start": 2935,
+      "end": 3012,
+      "expression": "\"provider receipt patch is pinned and idempotent in both package resolutions\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-016"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 90,
+      "column": 15,
+      "start": 3042,
+      "end": 3089,
+      "expression": "\"upstream/pi-provider-receipts/patch.lock.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:90:15"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 92,
+      "column": 40,
+      "start": 3167,
+      "end": 3190,
+      "expression": "\"upstream/pi.lock.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:92:40"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 92,
+      "column": 65,
+      "start": 3192,
+      "end": 3198,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:92:65"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 95,
+      "column": 31,
+      "start": 3310,
+      "end": 3318,
+      "expression": "\"sha256\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:95:31"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 95,
+      "column": 62,
+      "start": 3341,
+      "end": 3346,
+      "expression": "\"hex\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:95:62"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 97,
+      "column": 30,
+      "start": 3385,
+      "end": 3388,
+      "expression": "\".\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:97:30"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 97,
+      "column": 44,
+      "start": 3399,
+      "end": 3413,
+      "expression": "\"packages/cli\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:97:44"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 103,
+      "column": 6,
+      "start": 3546,
+      "end": 3610,
+      "expression": "\"provider receipt patch preserves unrecognized installed source\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-017"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 104,
+      "column": 44,
+      "start": 3670,
+      "end": 3693,
+      "expression": "\"jouzu-provider-patch-\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:104:44"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 106,
+      "column": 25,
+      "start": 3781,
+      "end": 3817,
+      "expression": "\"node_modules/@earendil-works/pi-ai\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:106:25"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 107,
+      "column": 24,
+      "start": 3843,
+      "end": 3853,
+      "expression": "\"dist/api\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:107:24"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 109,
+      "column": 13,
+      "start": 3908,
+      "end": 3922,
+      "expression": "\"package.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:109:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 111,
+      "column": 10,
+      "start": 3953,
+      "end": 3976,
+      "expression": "\"@earendil-works/pi-ai\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:111:10"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 112,
+      "column": 47,
+      "start": 4024,
+      "end": 4074,
+      "expression": "\"../upstream/pi-provider-receipts/patch.lock.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:112:47"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 116,
+      "column": 25,
+      "start": 4143,
+      "end": 4175,
+      "expression": "\"dist/api/transform-messages.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:116:25"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 117,
+      "column": 24,
+      "start": 4201,
+      "end": 4215,
+      "expression": "\"unrecognized\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:117:24"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 118,
+      "column": 52,
+      "start": 4269,
+      "end": 4284,
+      "expression": "/hash mismatch/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:118:52"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 119,
+      "column": 36,
+      "start": 4322,
+      "end": 4328,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:119:36"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 119,
+      "column": 45,
+      "start": 4331,
+      "end": 4345,
+      "expression": "\"unrecognized\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:119:45"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 122,
+      "column": 6,
+      "start": 4358,
+      "end": 4435,
+      "expression": "\"OpenAI-compatible usage preserves top-level reasoning and nested precedence\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-018"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 123,
+      "column": 34,
+      "start": 4485,
+      "end": 4531,
+      "expression": "\"@earendil-works/pi-ai/api/openai-completions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:123:34"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 125,
+      "column": 4,
+      "start": 4578,
+      "end": 4596,
+      "expression": "\"SGLang top-level\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-019"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 126,
+      "column": 4,
+      "start": 4632,
+      "end": 4640,
+      "expression": "\"nested\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-020"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 127,
+      "column": 4,
+      "start": 4707,
+      "end": 4720,
+      "expression": "\"nested wins\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-021"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 128,
+      "column": 4,
+      "start": 4809,
+      "end": 4831,
+      "expression": "\"explicit nested zero\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-022"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 129,
+      "column": 4,
+      "start": 4918,
+      "end": 4940,
+      "expression": "\"null nested fallback\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-023"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 130,
+      "column": 4,
+      "start": 5009,
+      "end": 5018,
+      "expression": "\"missing\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-024"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 141,
+      "column": 26,
+      "start": 5306,
+      "end": 5320,
+      "expression": "\"content-type\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:141:26"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 141,
+      "column": 42,
+      "start": 5322,
+      "end": 5341,
+      "expression": "\"text/event-stream\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:141:42"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 143,
+      "column": 6,
+      "start": 5364,
+      "end": 5494,
+      "expression": "`data: ${JSON.stringify({ choices: [{ index: 0, delta: { content: \"ok\" }, finish_reason: \"stop\" }], usage })}\\n\\ndata: [DONE]\\n\\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:143:6"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 143,
+      "column": 72,
+      "start": 5430,
+      "end": 5434,
+      "expression": "\"ok\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:143:72"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 143,
+      "column": 95,
+      "start": 5453,
+      "end": 5459,
+      "expression": "\"stop\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:143:95"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 146,
+      "column": 52,
+      "start": 5561,
+      "end": 5572,
+      "expression": "\"127.0.0.1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:146:52"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 149,
+      "column": 9,
+      "start": 5679,
+      "end": 5688,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:149:9"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 150,
+      "column": 11,
+      "start": 5700,
+      "end": 5709,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:150:11"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 151,
+      "column": 10,
+      "start": 5720,
+      "end": 5740,
+      "expression": "\"openai-completions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:151:10"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 152,
+      "column": 15,
+      "start": 5756,
+      "end": 5765,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:152:15"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 153,
+      "column": 14,
+      "start": 5780,
+      "end": 5826,
+      "expression": "`http://127.0.0.1:${server.address().port}/v1`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:153:14"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 155,
+      "column": 13,
+      "start": 5861,
+      "end": 5867,
+      "expression": "\"text\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:155:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 162,
+      "column": 26,
+      "start": 6052,
+      "end": 6058,
+      "expression": "\"user\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:162:26"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 162,
+      "column": 43,
+      "start": 6069,
+      "end": 6076,
+      "expression": "\"hello\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:162:43"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 163,
+      "column": 15,
+      "start": 6111,
+      "end": 6120,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:163:15"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 165,
+      "column": 39,
+      "start": 6192,
+      "end": 6199,
+      "expression": "\"error\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:165:39"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 175,
+      "column": 32,
+      "start": 6495,
+      "end": 6502,
+      "expression": "\"first\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:175:32"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 175,
+      "column": 41,
+      "start": 6504,
+      "end": 6510,
+      "expression": "\"last\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:175:41"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 176,
+      "column": 7,
+      "start": 6519,
+      "end": 6615,
+      "expression": "`OpenAI-compatible Gemini tool calls replay signatures received in the ${signatureTiming} delta`",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-025"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 177,
+      "column": 35,
+      "start": 6665,
+      "end": 6711,
+      "expression": "\"@earendil-works/pi-ai/api/openai-completions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:177:35"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 179,
+      "column": 8,
+      "start": 6739,
+      "end": 6755,
+      "expression": "\"gemini-4-argon\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:179:8"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 180,
+      "column": 10,
+      "start": 6766,
+      "end": 6782,
+      "expression": "\"Gemini 4 Argon\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:180:10"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 181,
+      "column": 9,
+      "start": 6792,
+      "end": 6812,
+      "expression": "\"openai-completions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:181:9"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 182,
+      "column": 14,
+      "start": 6827,
+      "end": 6844,
+      "expression": "\"fixture-gateway\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:182:14"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 183,
+      "column": 13,
+      "start": 6858,
+      "end": 6886,
+      "expression": "\"https://fixture.invalid/v1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:183:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 185,
+      "column": 12,
+      "start": 6919,
+      "end": 6925,
+      "expression": "\"text\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:185:12"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 190,
+      "column": 21,
+      "start": 7058,
+      "end": 7088,
+      "expression": "\"Z2VtaW5pLXRvb2wtc2lnbmF0dXJl\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:190:21"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 197,
+      "column": 11,
+      "start": 7235,
+      "end": 7246,
+      "expression": "\"call_read\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:197:11"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 198,
+      "column": 13,
+      "start": 7260,
+      "end": 7270,
+      "expression": "\"function\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:198:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 199,
+      "column": 25,
+      "start": 7296,
+      "end": 7302,
+      "expression": "\"read\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:199:25"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 199,
+      "column": 44,
+      "start": 7315,
+      "end": 7319,
+      "expression": "\"{}\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:199:44"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 200,
+      "column": 31,
+      "start": 7353,
+      "end": 7360,
+      "expression": "\"first\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:200:31"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 204,
+      "column": 35,
+      "start": 7443,
+      "end": 7455,
+      "expression": "\"call_other\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:204:35"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 204,
+      "column": 55,
+      "start": 7463,
+      "end": 7473,
+      "expression": "\"function\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:204:55"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 204,
+      "column": 85,
+      "start": 7493,
+      "end": 7499,
+      "expression": "\"read\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:204:85"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 204,
+      "column": 104,
+      "start": 7512,
+      "end": 7516,
+      "expression": "\"{}\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:204:104"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 205,
+      "column": 55,
+      "start": 7579,
+      "end": 7585,
+      "expression": "\"last\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:205:55"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 206,
+      "column": 77,
+      "start": 7694,
+      "end": 7696,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:206:77"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 210,
+      "column": 25,
+      "start": 7777,
+      "end": 7783,
+      "expression": "\"user\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:210:25"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 210,
+      "column": 42,
+      "start": 7794,
+      "end": 7806,
+      "expression": "\"Read files\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:210:42"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 212,
+      "column": 13,
+      "start": 7844,
+      "end": 7853,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:212:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 215,
+      "column": 7,
+      "start": 7903,
+      "end": 8138,
+      "expression": "`${deltas.map((delta) => `data: ${JSON.stringify({ choices: [{ index: 0, delta, finish_reason: null }] })}\\n\\n`).join(\"\")}data: ${JSON.stringify({ choices: [{ index: 0, delta: {}, finish_reason: \"tool_calls\" }] })}\\n\\ndata: [DONE]\\n\\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:215:7"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 215,
+      "column": 32,
+      "start": 7928,
+      "end": 8014,
+      "expression": "`data: ${JSON.stringify({ choices: [{ index: 0, delta, finish_reason: null }] })}\\n\\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:215:32"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 215,
+      "column": 125,
+      "start": 8021,
+      "end": 8023,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:215:125"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 215,
+      "column": 202,
+      "start": 8098,
+      "end": 8110,
+      "expression": "\"tool_calls\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:215:202"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 216,
+      "column": 20,
+      "start": 8159,
+      "end": 8173,
+      "expression": "\"Content-Type\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:216:20"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 216,
+      "column": 36,
+      "start": 8175,
+      "end": 8194,
+      "expression": "\"text/event-stream\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:216:36"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 220,
+      "column": 35,
+      "start": 8262,
+      "end": 8271,
+      "expression": "\"toolUse\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:220:35"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 228,
+      "column": 11,
+      "start": 8635,
+      "end": 8647,
+      "expression": "\"toolResult\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:228:11"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 231,
+      "column": 23,
+      "start": 8721,
+      "end": 8727,
+      "expression": "\"text\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:231:23"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 231,
+      "column": 37,
+      "start": 8735,
+      "end": 8750,
+      "expression": "\"File contents\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:231:37"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 236,
+      "column": 50,
+      "start": 8855,
+      "end": 8870,
+      "expression": "\"another-model\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:236:50"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 236,
+      "column": 91,
+      "start": 8896,
+      "end": 8914,
+      "expression": "\"another-provider\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:236:91"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 242,
+      "column": 14,
+      "start": 9005,
+      "end": 9014,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:242:14"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 245,
+      "column": 23,
+      "start": 9085,
+      "end": 9109,
+      "expression": "\"fixture-before-network\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-026"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 249,
+      "column": 70,
+      "start": 9211,
+      "end": 9222,
+      "expression": "\"assistant\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:249:70"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 253,
+      "column": 29,
+      "start": 9413,
+      "end": 9434,
+      "expression": "\"reasoning.encrypted\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:253:29"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 253,
+      "column": 56,
+      "start": 9440,
+      "end": 9451,
+      "expression": "\"call_read\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:253:56"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 253,
+      "column": 75,
+      "start": 9459,
+      "end": 9482,
+      "expression": "\"opaque-provider-state\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:253:75"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 260,
+      "column": 13,
+      "start": 9626,
+      "end": 9635,
+      "expression": "\"fixture\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:260:13"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 263,
+      "column": 22,
+      "start": 9703,
+      "end": 9727,
+      "expression": "\"fixture-before-network\"",
+      "id": "MAIN-UPDATE-TEST-FIXTURES-027"
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "line": 267,
+      "column": 72,
+      "start": 9828,
+      "end": 9839,
+      "expression": "\"assistant\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:scripts/pi-provider-receipts.test.mjs:267:72"
+    }
+  ],
+  "nested_source_partition": [
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1386,
+      "end": 1404,
+      "line": 29,
+      "column": 24,
+      "kind": "StringLiteral",
+      "expression": "'thinking-fixture'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:29:24"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1421,
+      "end": 1441,
+      "line": 30,
+      "column": 14,
+      "kind": "StringLiteral",
+      "expression": "'http://127.0.0.1:1'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:30:14"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1451,
+      "end": 1465,
+      "line": 30,
+      "column": 44,
+      "kind": "StringLiteral",
+      "expression": "'fixture-only'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:30:44"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1472,
+      "end": 1492,
+      "line": 30,
+      "column": 65,
+      "kind": "StringLiteral",
+      "expression": "'openai-completions'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:30:65"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1507,
+      "end": 1516,
+      "line": 31,
+      "column": 14,
+      "kind": "StringLiteral",
+      "expression": "'fixture'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:31:14"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1518,
+      "end": 1531,
+      "line": 31,
+      "column": 25,
+      "kind": "StringLiteral",
+      "expression": "'literal:low'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:31:25"
+    },
+    {
+      "path": "packages/cli/test/model-thinking-startup.test.mjs",
+      "outer_start": 1332,
+      "outer_end": 1694,
+      "start": 1586,
+      "end": 1592,
+      "line": 32,
+      "column": 13,
+      "kind": "StringLiteral",
+      "expression": "'text'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-thinking-startup.test.mjs:32:13"
+    }
+  ],
+  "comments": [
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "start": 79,
+      "end": 180,
+      "line": 3,
+      "column": 1,
+      "expression": "// Real Pi dialog/login/completion methods; only terminal drawing and background refresh are stubbed.",
+      "disposition": "Source comment only, not independently emitted. Embedded-template scanner boundaries are lexical evidence, not execution."
+    },
+    {
+      "path": "packages/cli/test/fixtures/interactive-login.mjs",
+      "start": 1770,
+      "end": 1843,
+      "line": 51,
+      "column": 3,
+      "expression": "// Drain the resolved refresh's completion/finally chain before teardown.",
+      "disposition": "Source comment only, not independently emitted. Embedded-template scanner boundaries are lexical evidence, not execution."
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "start": 0,
+      "end": 76,
+      "line": 1,
+      "column": 1,
+      "expression": "// Exercise the real launcher, picker, Settings, contract, and presentation.",
+      "disposition": "Source comment only, not independently emitted. Embedded-template scanner boundaries are lexical evidence, not execution."
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "start": 77,
+      "end": 152,
+      "line": 2,
+      "column": 1,
+      "expression": "// Only line-input/onboarding and Pi's outer terminal loop are substituted.",
+      "disposition": "Source comment only, not independently emitted. Embedded-template scanner boundaries are lexical evidence, not execution."
+    },
+    {
+      "path": "packages/cli/test/fixtures/language-runtime-wiring.mjs",
+      "start": 8099,
+      "end": 8182,
+      "line": 222,
+      "column": 3,
+      "expression": "// Pi hands each run fresh options; presentation sets the preamble section on them.",
+      "disposition": "Source comment only, not independently emitted. Embedded-template scanner boundaries are lexical evidence, not execution."
+    },
+    {
+      "path": "scripts/pi-provider-receipts.test.mjs",
+      "start": 8423,
+      "end": 8504,
+      "line": 223,
+      "column": 3,
+      "expression": "// Session persistence must retain metadata without requiring live adapter state.",
+      "disposition": "Source comment only, not independently emitted. Embedded-template scanner boundaries are lexical evidence, not execution."
+    }
+  ],
+  "artifact_sha256_utf8_lf": {
+    "main-update-test-fixtures.csv": "4b197d9d7066efd39aa3653d6fda2d780271807649648d4f6fac998ef9f02694",
+    "main-update-test-fixtures-exclusions.csv": "b7a798b6a1b3b85e3747f6b001e0b70f203b45e5c68c22e75557abb221e7878e",
+    "main-update-test-fixtures-scope.csv": "1622de8e49d2633776a0b5cd51fe00d512cbf75a7f99443d5f0c75452ddc277a"
+  },
+  "interpretation": "Five full TARGET1fda test/fixture bodies only, plus three bounded callers. Titles/assertion diagnostics distinct from protected expected data/fixture code and arbitrary child/native/product payloads. No tests, audited imports, generated code, hooks, filesystem scenarios, local server, network, providers or UI executed. Current product behavior/prose remains with its separate source owner; imported side-effect suite not closed."
+}
