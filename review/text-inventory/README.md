@@ -17,9 +17,9 @@ it can appear.
 
 [catalog-links.csv](catalog-links.csv) joins every catalog ID to its primary
 context count and matching occurrence-table row IDs, so the detailed trigger
-records can be found without searching every file. Currently 712 IDs have at
-least one primary context or occurrence record; 1,092 have neither. The linked
-records include guarded, inactive, API-only and canonical adapter occurrences.
+records can be found without searching every file. The snapshot counts IDs with
+at least one primary context or occurrence record separately from those with
+neither. Linked records include guarded, inactive, API-only and canonical adapter occurrences.
 Presence in this index does not certify complete caller coverage or visibility.
 [catalog-links-snapshot.json](catalog-links-snapshot.json) pins the inputs and
 records the overlap counts; these are navigation counts, not unique fixes.
@@ -110,6 +110,15 @@ ordinary startup failures report codes rather than their underlying messages.
 The relaunch failure's inner sentence uses the default English catalog because
 its caller omits the catalog argument. Child-process output and native/dependency
 error producers remain explicit boundaries. No update operation was executed.
+
+[profiles.csv](profiles.csv) adds 176 profile records: 49 catalog occurrences,
+95 fixed or protected machine occurrences and 32 payload boundaries. Its
+[scope table](profiles-scope.csv) covers the manifest loader, saved choice and
+profile manager, with actual plan/apply, JSON, doctor and startup consumers.
+Rows distinguish conflict previews from successful apply output, and raw saved
+target/root-escape diagnostics from catalog errors. Three prompt patterns are
+explicitly API-only because their helper has no production caller. Migration
+and copied asset bodies retain separate producer boundaries.
 
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
@@ -242,6 +251,7 @@ python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
+python -B review/text-inventory/verify-profiles.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py

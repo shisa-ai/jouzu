@@ -13,7 +13,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PARTITIONS = [
-    'acp.csv', 'startup-language.csv', 'cli-entry.csv', 'doctor.csv', 'updater.csv',
+    'acp.csv', 'startup-language.csv', 'cli-entry.csv', 'doctor.csv', 'updater.csv', 'profiles.csv',
     'flow-display.csv', 'flow-report.csv', 'flow-storage.csv', 'pi.csv',
     'launcher.csv', 'launcher-helpers.csv', 'launcher-support.csv', 'installer-dependencies.csv', 'python-console.csv',
 ]

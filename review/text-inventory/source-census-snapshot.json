@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 234,
-  "paths_without_scope_references": 972,
+  "paths_with_scope_references": 241,
+  "paths_without_scope_references": 965,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -19,6 +19,7 @@
     "cli-entry-scope.csv": "57552b89d44273a3f1ad9a49b9ce66d72d5fd8ec04ba6ac5c733b4ce08d05ce5",
     "doctor-scope.csv": "83c51d8d37ac12a738a58f9b2e43078b066e434c54e13793c2072a62dc41d24d",
     "updater-scope.csv": "ed02a5bbdcc0b577c944126c5e8890f1543cd31975c1bb6c91a71ed8a299827c",
+    "profiles-scope.csv": "f9b337bea6663bf83438cea7b9b1b123d986f1bc7e2838ff4fae2dbe084cf214",
     "flow-display-scope.csv": "c796f103bdae2dfc628a4a2522f09ecd1d9303b2f813496372021bbc63a277b4",
     "flow-report-scope.csv": "71a0b3952ddf31780c4bbbb6ceaa3255d08aad9b8886642e320e9db57ad71196",
     "flow-storage-scope.csv": "a0069bc0317ffc0360b6541490d8f48b3b851d872982d8c1e0dc55c18bd4fc30",

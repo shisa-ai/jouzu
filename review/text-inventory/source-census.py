@@ -17,7 +17,7 @@ ROOT = HERE.parents[1]
 PIN = '346d1e481757a55eb62fc066e43bbc7999b8e6dd'
 SCOPES = [
     'acp-scope.csv', 'startup-language-scope.csv', 'cli-entry-scope.csv',
-    'doctor-scope.csv', 'updater-scope.csv', 'flow-display-scope.csv',
+    'doctor-scope.csv', 'updater-scope.csv', 'profiles-scope.csv', 'flow-display-scope.csv',
     'flow-report-scope.csv', 'flow-storage-scope.csv',
     'launcher-scope.csv', 'launcher-helpers-scope.csv', 'launcher-support-scope.csv',
     'installer-dependencies-scope.csv', 'python-console-scope.csv',
