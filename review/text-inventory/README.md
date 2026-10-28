@@ -505,6 +505,21 @@ and validated-snapshot preconditions exclude two internal errors. Serialized wai
 decisions are model input; arbitrary stored reasons and imported producer errors
 remain separately qualified.
 
+[flow-model-input.csv](flow-model-input.csv) adds 46 composition/request-helper
+records: 29 fixed error definitions, two protected JSON frame templates, five
+diagnostic replacement/suffix formats, one retained reason and nine boundaries.
+Six complete bodies cover 702 lines. The
+[scope](flow-model-input-scope.csv) pins 16 sources, with all 209
+string/template/regex nodes partitioned against 172
+[exclusions](flow-model-input-exclusions.csv); 29 Error constructors and six
+catches have exact dispositions. Controller held/deferred reasons are inspection
+state, with no direct ordinary display established. Native request failures have
+separate retention/report conditions. Queued visible custom messages retain raw
+frames; terminal summaries hide them until expanded or unrecognized. Redaction
+markers/capture syntax and JSON grammar stay protected. Ledger preparation and
+withholding can replace earlier failures; optional/native callbacks remain
+qualified. Four corruption controls pass without product/state/parser execution.
+
 [session-primitives.csv](session-primitives.csv) adds 26 formatting/boundary
 records: 18 protected frame/spacing/ANSI compositions and eight caller, native,
 callback or forwarding boundaries. The
@@ -808,6 +823,7 @@ node review/text-inventory/verify-flow-waits.cjs
 node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
+node review/text-inventory/verify-flow-model-input.cjs
 python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
