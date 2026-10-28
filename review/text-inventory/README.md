@@ -937,6 +937,23 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-ai-provider-definitions.csv](pi-ai-provider-definitions.csv) records 130
+qualified provider-name, prompt, auth-source, API and error definitions across
+87 complete registry/catalog-loader bodies (1,792 lines). The 878
+[exclusions](pi-ai-provider-definitions-exclusions.csv) complete the 1,008-occurrence
+string/template partition. Eleven
+[boundaries](pi-ai-provider-definitions-boundaries.csv) retain native registry
+activation, configuration overrides, credential filters, auth-menu preemption,
+refresh, catalog grouping and optional API conditions. Available-model methods
+apply credential filters; synchronous model getters retain raw catalog data.
+Stored-credential status can become a localized configured marker, while ambient
+sources retain separate routes. The [scope](pi-ai-provider-definitions-scope.csv)
+grants full local review only to the 87 JavaScript bodies; 43 JSON data assets
+and nine provider support modules remain separately pending. Three canonical
+archives, both installed trees and thirty corruption controls pass, including the
+public nested AI manifest transform. No model, authentication or native operation
+runs, and an English catalog-text coincidence does not certify a native mapping.
+
 [pi-ai-lexical.csv](pi-ai-lexical.csv) retains every parsed string/template
 occurrence across all 200 Pi AI runtime files: 5,319 nodes, including empty values,
 single words and glyphs. Separate [regex](pi-ai-lexical-regex.csv),
@@ -958,8 +975,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. Thirteen
-files have explicit complete local review owners; 187 files (854,705 bytes)
+authority, public patch manifest and nested package-list transform. One hundred
+files have explicit complete local review owners; 100 files (760,113 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -2200,6 +2217,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+node review/text-inventory/verify-pi-ai-provider-definitions.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
