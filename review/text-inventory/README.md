@@ -609,6 +609,22 @@ and validated-snapshot preconditions exclude two internal errors. Serialized wai
 decisions are model input; arbitrary stored reasons and imported producer errors
 remain separately qualified.
 
+[flow-orchestration.csv](flow-orchestration.csv) adds 76 orchestration records:
+four catalog occurrences, 58 fixed/protected occurrences and fourteen payload
+boundaries. The [scope](flow-orchestration-scope.csv) covers twelve complete
+first-party bodies, 1,864 lines, plus the complete 25-line native event bus.
+It pins 44 sources and accounts for 49 first-party Error constructors, fourteen
+catches and 529 lexical tokens, plus the native bus's catch and four tokens.
+Controller-held reasons have no current UI consumer identified; retention/API
+failures and prevalidated consumption guards keep separate conditions. Accepted
+work continuation can become saved raw JSON/rendered/exported text, while task
+cancellation context has no default saved-body claim. Read-observation stale/scope
+failures are swallowed. The native event bus logs its own English prefix and raw
+error object to stderr, separately from localized root notices. Twenty-two prior
+full-body crosslinks preserve ownership; core controller, admission, result and
+session/wait producers remain bounded follow-ups. No runtime, event, callback,
+model, native or user-state producer was executed.
+
 [flow-model-input.csv](flow-model-input.csv) adds 46 composition/request-helper
 records: 29 fixed error definitions, two protected JSON frame templates, five
 diagnostic replacement/suffix formats, one retained reason and nine boundaries.
@@ -1078,6 +1094,7 @@ node review/text-inventory/verify-flow-waits.cjs
 node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
+python -B review/text-inventory/verify-flow-orchestration.py
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
 node review/text-inventory/verify-flow-request-policy.cjs
