@@ -77,7 +77,15 @@ and input-guide overlaps. Four reviewed generic source examples remain verbatim;
 the bounded source screen found no sensitive line requiring redaction. This is
 complete mechanical document text extraction, with no new runtime, caller or
 behavior proof. Product delivery conditions remain in their own units. Follow-on
-target documentation changes are part of the separate main-update review.
+target documentation is exported in
+[main-update-documentation.csv](main-update-documentation.csv): 955 nonblank
+lines across all seven changed documents at `1fda3eb`, with 387 blank lines
+omitted. Its [scope](main-update-documentation-scope.csv) pins the full 1,342
+lines. Exact source-line links carry 877 entries forward from the base export;
+78 entries are new or changed. The [snapshot](main-update-documentation-snapshot.json)
+records both revisions and normalized artifact hashes. Four corruption/omission
+controls pass. This is document source extraction; runtime and delivery-condition
+changes remain separate work.
 
 [source-census.csv](source-census.csv) lists all 1,206 tracked blobs at the source
 pin, their immutable Git object IDs and references into the reviewed scope
@@ -1397,6 +1405,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
+python -B review/text-inventory/verify-main-update-documentation.py
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py

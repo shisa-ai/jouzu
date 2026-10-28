@@ -1,0 +1,24 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "changed_document_paths": [
+    "CHANGELOG.md",
+    "README.md",
+    "docs/catalogs.md",
+    "docs/configuration.md",
+    "docs/models.md",
+    "docs/releases/v0.2.4.md",
+    "packages/cli/README.md"
+  ],
+  "target_lines": 1342,
+  "nonblank_rows": 955,
+  "blank_lines_omitted": 387,
+  "exact_base_line_links": 877,
+  "new_or_changed_lines": 78,
+  "base_documentation_csv_sha256_utf8_lf": "81f289ebf6d2fc980fb0c6c086336344160e229af40a499b0be9421dae8cb412",
+  "artifact_sha256_utf8_lf": {
+    "main-update-documentation.csv": "3584bff61e1beab6cd3571cb37835f16ede951182bd485e461642059d0803092",
+    "main-update-documentation-scope.csv": "989847673763c6447a9de8bc56f778372bc08df4df47e0304913afff3982704e"
+  },
+  "interpretation": "These seven changed documents are the follow-on text delta. The base87-document extraction remains pinned346. Source-line correspondence is not a runtime/translation approval. No product/document command executed."
+}
