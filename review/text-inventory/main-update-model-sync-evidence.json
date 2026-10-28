@@ -24196,6 +24196,14 @@
         },
         {
           "kind": "?",
+          "start": 13382,
+          "end": 13383,
+          "context_start": 13322,
+          "context_end": 13443,
+          "context": "\t\tschemaVersion: 1,\n\t\t\tstatus: account?.active ? (lastError ? \"stale\" : \"active\") : \"empty\",\n\t\t\tconfigured: true,\n\t\t\tsour"
+        },
+        {
+          "kind": "?",
           "start": 13579,
           "end": 13580,
           "context_start": 13519,
@@ -24353,6 +24361,22 @@
           "context_start": 15671,
           "context_end": 15793,
           "context": "(status) => status.status === \"stale\" || (status.configured && status.lastError));\n\treturn {\n\t\tschemaVersion: 1,\n\t\tstatus:"
+        },
+        {
+          "kind": "?",
+          "start": 15803,
+          "end": 15804,
+          "context_start": 15743,
+          "context_end": 15864,
+          "context": "stError));\n\treturn {\n\t\tschemaVersion: 1,\n\t\tstatus: degraded ? \"degraded\" : active > 0 ? \"active\" : \"empty\",\n\t\tconfigured:"
+        },
+        {
+          "kind": "?",
+          "start": 15829,
+          "end": 15830,
+          "context_start": 15769,
+          "context_end": 15890,
+          "context": "emaVersion: 1,\n\t\tstatus: degraded ? \"degraded\" : active > 0 ? \"active\" : \"empty\",\n\t\tconfigured: sources.length,\n\t\tactive,"
         },
         {
           "kind": "||",
@@ -24539,6 +24563,14 @@
           "context": "\t}\n\t\treturn {\n\t\t\tstatus: error instanceof ModelCatalogError || error instanceof CatalogSyncError ? \"rejected\" : \"error\",\n\t"
         },
         {
+          "kind": "?",
+          "start": 23949,
+          "end": 23950,
+          "context_start": 23889,
+          "context_end": 24010,
+          "context": "ceof ModelCatalogError || error instanceof CatalogSyncError ? \"rejected\" : \"error\",\n\t\t\tcatalogStatus: catalogStatus(),\n\t\t"
+        },
+        {
           "kind": "&&",
           "start": 25452,
           "end": 25454,
@@ -24593,6 +24625,14 @@
           "context_start": 27100,
           "context_end": 27221,
           "context": "atus: catalogStatus() };\n\t}\n\n\tconst previous = state.active ? loadDocument(directory, state.active) : undefined;\n\tconst r"
+        },
+        {
+          "kind": "?",
+          "start": 27332,
+          "end": 27333,
+          "context_start": 27272,
+          "context_end": 27393,
+          "context": ";\n\tconst candidatePath = join(directory, reasons.length > 0 ? \"quarantine\" : \"documents\", `${digest}.json`);\n\twriteFilePr"
         },
         {
           "kind": "??",
@@ -24681,6 +24721,22 @@
           "context_start": 33180,
           "context_end": 33302,
           "context": "lts.filter(\n\t\t({ result }) => result.status === \"activated\" || result.status === \"not-modified\",\n\t).length;\n\treturn {\n\t\tst"
+        },
+        {
+          "kind": "?",
+          "start": 33338,
+          "end": 33339,
+          "context_start": 33278,
+          "context_end": 33399,
+          "context": ").length;\n\treturn {\n\t\tstatus: successful === results.length ? \"complete\" : successful === 0 ? \"failed\" : \"partial\",\n\t\tres"
+        },
+        {
+          "kind": "?",
+          "start": 33370,
+          "end": 33371,
+          "context_start": 33310,
+          "context_end": 33431,
+          "context": "ccessful === results.length ? \"complete\" : successful === 0 ? \"failed\" : \"partial\",\n\t\tresults,\n\t};\n}\n\nexport function loa"
         },
         {
           "kind": "?",

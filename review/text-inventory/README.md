@@ -75,7 +75,7 @@ only its environment. Caller-aborted checkpoints bypass classification and
 persistence. Unused lock-description labels remain excluded, and the current
 release helper catches its filesystem failures. The
 [scope](main-update-model-sync-scope.csv) pins two full target bodies and bounded
-consumers; base owners remain separate. Twenty-six corruption controls pass.
+consumers; base owners remain separate. Twenty-seven corruption controls pass.
 Declared transform after-hashes do not establish execution or target installed-byte
 qualification, and no catalog, transform or native operation runs.
 

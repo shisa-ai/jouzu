@@ -142,7 +142,7 @@ def primitive_data(ss):
         a=code.index('{',m.start());b=matching(code,a);finalizers.append({'start':m.start(),'end':b+1,'raw_source':ss[m.start():b+1]})
     for m in re.finditer(r'\.catch\s*\(',code):
         a=code.index('(',m.start());b=matching(code,a);promise_catches.append({'start':m.start(),'end':b+1,'raw_source':ss[m.start():b+1]})
-    optional_type_question_starts={m.start() for m in re.finditer(r'\?(?=\s*:)',code)}
+    optional_type_question_starts={m.start() for m in re.finditer(r'\?(?=\s*:)',ss)}
     operators=[{'kind':m.group(),'start':m.start(),'end':m.end(),'context_start':max(0,m.start()-60),'context_end':min(len(ss),m.end()+60),'context':ss[max(0,m.start()-60):min(len(ss),m.end()+60)]} for m in re.finditer(r'&&|\|\||\?\?|(?<![?])\?(?![?.])',code) if m.start() not in optional_type_question_starts]
     return {'controls':controls,'catches':catches,'error_calls':errors,'promise_catches':promise_catches,'finalizers':finalizers,'shortcircuit_ternary_operators':operators,'qualification':'Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants.'}
 
@@ -389,6 +389,14 @@ def validate(actual,expected):
         assert value==expected[key],(key,'exact source reconstruction/data mismatch')
     return True
 
+def operator_probe():
+    ss='const x = flag ? "yes" : "no"; const y = flag ? `yes` : ""; type P = { x?: string };'
+    actual=primitive_data(ss)['shortcircuit_ternary_operators']
+    starts=[m.start() for m in re.finditer(r'flag \?',ss)]
+    wanted=[a+5 for a in starts]
+    assert [x['start'] for x in actual]==wanted,'string/template true branches must retain ternary operators; optional property excluded'
+    return ss,actual,wanted
+
 def controls(expected):
     mutations=[]
     def changed(k,fn):
@@ -426,7 +434,14 @@ def controls(expected):
         try:source_contract(*args)
         except (AssertionError,ValueError):pass
         else:raise AssertionError('source guard corruption accepted')
-    return len(mutations)+len(source_mutations)
+    probe,operators,wanted=operator_probe()
+    # Reproduce the former masked-string omission in memory; this proof must reject it.
+    masked_optional={m.start() for m in re.finditer(r'\?(?=\s*:)',mask(probe))}
+    omitted=[x for x in operators if x['start'] not in masked_optional]
+    try:assert [x['start'] for x in omitted]==wanted
+    except AssertionError:pass
+    else:raise AssertionError('string/template ternary omission accepted')
+    return len(mutations)+len(source_mutations)+1
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.parse_args()
