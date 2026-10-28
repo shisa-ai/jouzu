@@ -1,0 +1,3804 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "eee4657edcad848018b6e9df1185b11eaaa5c221",
+  "inventory_file": "pi-distribution-support.csv",
+  "scope_file": "pi-distribution-support-scope.csv",
+  "boundary_file": "pi-distribution-support-boundaries.csv",
+  "exclusion_file": "pi-distribution-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/runtime.ts",
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd"
+    },
+    {
+      "source": "packages/cli/src/startup-settings.ts",
+      "sha256": "57c087aacfe1167b464acf129506df51a9ba0d78bf4e8561716fd7b7b0878fcd"
+    },
+    {
+      "source": "packages/cli/src/args.ts",
+      "sha256": "ba6b4a474a3fb7ddd859efdefc6217335283e11fbc298487db9c4bbfd11d8cce"
+    },
+    {
+      "source": "packages/cli/src/cli.ts",
+      "sha256": "2588ef3f3f7fc17a37af509068b9714d34b8794d14b70d37617fdbb72998ded7"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/mcp.ts",
+      "sha256": "486cc72a172378788d453b2f2a30d1ff51e2ec72ec0a07457424ee626773850c"
+    },
+    {
+      "source": "scripts/configure-release-packlists.mjs",
+      "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab"
+    },
+    {
+      "source": "packages/cli/package.json",
+      "sha256": "1daf569a9347a861af4a9bbd2cf682b2f8dd81ab321c80c425c54169efc9fd82"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          603,
+          627
+        ],
+        [
+          698,
+          704
+        ],
+        [
+          870,
+          885
+        ],
+        [
+          1030,
+          1050
+        ],
+        [
+          1585,
+          1592
+        ],
+        [
+          5683,
+          5698
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          450,
+          477
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js",
+      "sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          585,
+          624
+        ],
+        [
+          650,
+          657
+        ],
+        [
+          913,
+          977
+        ],
+        [
+          990,
+          1001
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+      "cli_nested_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          192,
+          215
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/bug-report.js",
+      "sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+      "cli_nested_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          18
+        ],
+        [
+          57,
+          115
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js",
+      "sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+      "cli_nested_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          12
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          246,
+          258
+        ],
+        [
+          530,
+          549
+        ]
+      ],
+      "purpose": "Bounded actual caller/catch/replacement/diagnostic route, no new whole-body closure."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.d.ts",
+      "sha256": "56edd56f92b87882017c53e599f500e2bfc984f4fda326b9e049bdb4fa1bcdf9",
+      "cli_nested_sha256": "56edd56f92b87882017c53e599f500e2bfc984f4fda326b9e049bdb4fa1bcdf9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.d.ts.map",
+      "sha256": "604575ca83411e60e3dec8aa000e4cf8f70911e700fac1aae45fb6f831483e98",
+      "cli_nested_sha256": "604575ca83411e60e3dec8aa000e4cf8f70911e700fac1aae45fb6f831483e98",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.js.map",
+      "sha256": "de6bf691308b6c1651aa783b97d70ccd8fb31d72be9c89b9791ec0204024895e",
+      "cli_nested_sha256": "de6bf691308b6c1651aa783b97d70ccd8fb31d72be9c89b9791ec0204024895e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.d.ts",
+      "sha256": "0aab919cba1d9564c241a70856f86f40dc3c7258abb5f04d0b38131c700231f5",
+      "cli_nested_sha256": "0aab919cba1d9564c241a70856f86f40dc3c7258abb5f04d0b38131c700231f5",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.d.ts.map",
+      "sha256": "b77a359f7264b62d04eab38c8eab86499c838d590cbd38b7fbf7c896f0a8790b",
+      "cli_nested_sha256": "b77a359f7264b62d04eab38c8eab86499c838d590cbd38b7fbf7c896f0a8790b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.js.map",
+      "sha256": "28cb9748e59aca795e777c741460b057ae6aa179fcbbdd5c94e649fd4fb80e15",
+      "cli_nested_sha256": "28cb9748e59aca795e777c741460b057ae6aa179fcbbdd5c94e649fd4fb80e15",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.d.ts",
+      "sha256": "3a0d28765f823b5caa7d59dd7f98a77824c2b9eee4111ee56a45f5d927f13a6c",
+      "cli_nested_sha256": "3a0d28765f823b5caa7d59dd7f98a77824c2b9eee4111ee56a45f5d927f13a6c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.d.ts.map",
+      "sha256": "251503c6f52f70a7a9348398f8fb60b43d4e9afe5ad4201ef0465cacba783d7d",
+      "cli_nested_sha256": "251503c6f52f70a7a9348398f8fb60b43d4e9afe5ad4201ef0465cacba783d7d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.js.map",
+      "sha256": "5c0d92fb5d078af8d8b7962374b9d2553a4109f56983d033cdf721412174b57a",
+      "cli_nested_sha256": "5c0d92fb5d078af8d8b7962374b9d2553a4109f56983d033cdf721412174b57a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.d.ts",
+      "sha256": "9d2c6520ec0bb05428dd3b2ed13a64b690c54a8edf9ba67fa1c85075495e9b87",
+      "cli_nested_sha256": "9d2c6520ec0bb05428dd3b2ed13a64b690c54a8edf9ba67fa1c85075495e9b87",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.d.ts.map",
+      "sha256": "f33c391f86a844d5301416e897e7c0098f0e9ea3172f93be71c8fb6c7cfcc0ab",
+      "cli_nested_sha256": "f33c391f86a844d5301416e897e7c0098f0e9ea3172f93be71c8fb6c7cfcc0ab",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.js.map",
+      "sha256": "d514381f584135b46b9852c1d5204bad82199af7610be9942c51e26dc1c46c2a",
+      "cli_nested_sha256": "d514381f584135b46b9852c1d5204bad82199af7610be9942c51e26dc1c46c2a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.d.ts",
+      "sha256": "fec10e85367a08343829e6672359ea7bd02877535aa1624c18a42103798ea1e0",
+      "cli_nested_sha256": "fec10e85367a08343829e6672359ea7bd02877535aa1624c18a42103798ea1e0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.d.ts.map",
+      "sha256": "a8cced86b6b2f1d75a64b29d3ef5d3cba75ad82ecb0d5a445f9e6b443e049eb2",
+      "cli_nested_sha256": "a8cced86b6b2f1d75a64b29d3ef5d3cba75ad82ecb0d5a445f9e6b443e049eb2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.js.map",
+      "sha256": "4eb383ccd8719f3ef8c77d1dc80a168160b2aacb441579fee5e9a5204243d0c2",
+      "cli_nested_sha256": "4eb383ccd8719f3ef8c77d1dc80a168160b2aacb441579fee5e9a5204243d0c2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.d.ts",
+      "sha256": "f951bb4417b6bf5e1a405089508ecf011d11de655902b928666243365813ed1c",
+      "cli_nested_sha256": "f951bb4417b6bf5e1a405089508ecf011d11de655902b928666243365813ed1c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.d.ts.map",
+      "sha256": "dcdffd7a35ff7f3296d93a03a984b416fac68ce55e9d5a023c13242789770518",
+      "cli_nested_sha256": "dcdffd7a35ff7f3296d93a03a984b416fac68ce55e9d5a023c13242789770518",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.js.map",
+      "sha256": "2ea5910b89896df5cc200c675b9d130f0f48f6f6379918035e275405d24782b3",
+      "cli_nested_sha256": "2ea5910b89896df5cc200c675b9d130f0f48f6f6379918035e275405d24782b3",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.d.ts",
+      "sha256": "9f3b7c1405d592dcf28b76009f16ccbf352e837f3a4663b584bfb846118e5985",
+      "cli_nested_sha256": "9f3b7c1405d592dcf28b76009f16ccbf352e837f3a4663b584bfb846118e5985",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.d.ts.map",
+      "sha256": "3c9188f9b5186b435a1b44710922eeb5cea85e03b1ca6dc4a387953f4732a504",
+      "cli_nested_sha256": "3c9188f9b5186b435a1b44710922eeb5cea85e03b1ca6dc4a387953f4732a504",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.js.map",
+      "sha256": "cd23faf3b2c8a702f4b17b78bc34243e88f89b1172d3fd851e97162c8fac0a85",
+      "cli_nested_sha256": "cd23faf3b2c8a702f4b17b78bc34243e88f89b1172d3fd851e97162c8fac0a85",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.d.ts",
+      "sha256": "e3e54b8e709e711e0f78170d36847402c8a7adfabfb8b03a4298cce7715837fe",
+      "cli_nested_sha256": "e3e54b8e709e711e0f78170d36847402c8a7adfabfb8b03a4298cce7715837fe",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.d.ts.map",
+      "sha256": "4dec73eed10ef683af75921917cf8b72e43a09864a13a4bb90065535e9b7fcaf",
+      "cli_nested_sha256": "4dec73eed10ef683af75921917cf8b72e43a09864a13a4bb90065535e9b7fcaf",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.js.map",
+      "sha256": "504bd36733be4191cbd61bafb0b5d7c0633c3be5d8659c863e2ead43906135ea",
+      "cli_nested_sha256": "504bd36733be4191cbd61bafb0b5d7c0633c3be5d8659c863e2ead43906135ea",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.d.ts",
+      "sha256": "24031cfccd184dbb6a79aa3023eb998ac6a3d8597ca2dd366df3eb48e6becc22",
+      "cli_nested_sha256": "24031cfccd184dbb6a79aa3023eb998ac6a3d8597ca2dd366df3eb48e6becc22",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.d.ts.map",
+      "sha256": "5d8a29d1090832d0cac88042df437601369cdbfbc62129eef29bfc306e785f08",
+      "cli_nested_sha256": "5d8a29d1090832d0cac88042df437601369cdbfbc62129eef29bfc306e785f08",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.js.map",
+      "sha256": "41a2de9742f8f056cab790dc8f606800b128dcf256be8b850c313266e31d9082",
+      "cli_nested_sha256": "41a2de9742f8f056cab790dc8f606800b128dcf256be8b850c313266e31d9082",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.d.ts",
+      "sha256": "6f77e82bfb5dd3b1015dd92c63e427d505f9bbbdaa041cad6c704f41c553a536",
+      "cli_nested_sha256": "6f77e82bfb5dd3b1015dd92c63e427d505f9bbbdaa041cad6c704f41c553a536",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.d.ts.map",
+      "sha256": "07e1bab322fbea936a00ec149ad924a0d46aa4c8de79147e59c11d25bd0ca9e6",
+      "cli_nested_sha256": "07e1bab322fbea936a00ec149ad924a0d46aa4c8de79147e59c11d25bd0ca9e6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js.map",
+      "sha256": "30854625f54faa8950ee61cdd5d7fd6f5198fb93bb97dee8b070ce042167c65c",
+      "cli_nested_sha256": "30854625f54faa8950ee61cdd5d7fd6f5198fb93bb97dee8b070ce042167c65c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.d.ts",
+      "sha256": "35817d22d692b15b0ba1da7b644c30247c68b7ed26db176612cceb24a31ad1fc",
+      "cli_nested_sha256": "35817d22d692b15b0ba1da7b644c30247c68b7ed26db176612cceb24a31ad1fc",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.d.ts.map",
+      "sha256": "74f3c80b7c373105989a3493dec33b00d49aee099c9ba8cf656e1a5c6665f7a7",
+      "cli_nested_sha256": "74f3c80b7c373105989a3493dec33b00d49aee099c9ba8cf656e1a5c6665f7a7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.js.map",
+      "sha256": "226dc041b7241fbe232276c128bcbd7c56426b8fecddeb0eaafdc07b65e18aac",
+      "cli_nested_sha256": "226dc041b7241fbe232276c128bcbd7c56426b8fecddeb0eaafdc07b65e18aac",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.d.ts",
+      "sha256": "2f2c87d877a6502a11bcdbaf3be62c12a154ab87d795e954d44c50833d0efbcd",
+      "cli_nested_sha256": "2f2c87d877a6502a11bcdbaf3be62c12a154ab87d795e954d44c50833d0efbcd",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.d.ts.map",
+      "sha256": "05a3cb2bca2c6162714fabb071d3c6abc932f379b43b4de47cd7169f9c56673a",
+      "cli_nested_sha256": "05a3cb2bca2c6162714fabb071d3c6abc932f379b43b4de47cd7169f9c56673a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js.map",
+      "sha256": "9c4a7cf33c20c2351bb129bce0500a47843e14639f1aa18a44a6d27f50b7ac50",
+      "cli_nested_sha256": "9c4a7cf33c20c2351bb129bce0500a47843e14639f1aa18a44a6d27f50b7ac50",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.d.ts",
+      "sha256": "d1190c509d7f6efab70c6a0d3d79dc59ecdd0920bf9e73eb4ddb35b5eecb76e6",
+      "cli_nested_sha256": "d1190c509d7f6efab70c6a0d3d79dc59ecdd0920bf9e73eb4ddb35b5eecb76e6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.d.ts.map",
+      "sha256": "ecf58716472dc2abd0f39c054f18987b38dc18df7fcc4927ffcbe2dd56d66ff6",
+      "cli_nested_sha256": "ecf58716472dc2abd0f39c054f18987b38dc18df7fcc4927ffcbe2dd56d66ff6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.js.map",
+      "sha256": "8730e8fd6cfac1ed04a3ea04509e791b4c8b0ac5693c27c63d48db8e54ad9ef3",
+      "cli_nested_sha256": "8730e8fd6cfac1ed04a3ea04509e791b4c8b0ac5693c27c63d48db8e54ad9ef3",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.d.ts",
+      "sha256": "8655bbe07e10bbb9fbab88a0ac705f647f0d49a637a1d190b3afd8e862102b00",
+      "cli_nested_sha256": "8655bbe07e10bbb9fbab88a0ac705f647f0d49a637a1d190b3afd8e862102b00",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.d.ts.map",
+      "sha256": "9da6ec7cae9a4e53676c1d95ecce7cb87b50f14d3be5a39b6ef47d5a48f66643",
+      "cli_nested_sha256": "9da6ec7cae9a4e53676c1d95ecce7cb87b50f14d3be5a39b6ef47d5a48f66643",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js.map",
+      "sha256": "84a56d8c3b02bba0f53cb31c5083129f1c40b3faa73b9b3ba7a00b835685191d",
+      "cli_nested_sha256": "84a56d8c3b02bba0f53cb31c5083129f1c40b3faa73b9b3ba7a00b835685191d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.d.ts",
+      "sha256": "27e93e0bd3ef68ad652811f57539af73f9a278c9fbb79eb96e22d04f974317a5",
+      "cli_nested_sha256": "27e93e0bd3ef68ad652811f57539af73f9a278c9fbb79eb96e22d04f974317a5",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.d.ts.map",
+      "sha256": "890631570e8a4c268493f3f84e9dc2610247aaa7ef8cab5ea590fa0808987c3b",
+      "cli_nested_sha256": "890631570e8a4c268493f3f84e9dc2610247aaa7ef8cab5ea590fa0808987c3b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js.map",
+      "sha256": "dbe890144b10d87e344688911023edca4a545f13089a141edc8bc659773b26c8",
+      "cli_nested_sha256": "dbe890144b10d87e344688911023edca4a545f13089a141edc8bc659773b26c8",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/bug-report.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 3,
+    "proofs": 3,
+    "scopes": 15,
+    "external_boundaries": 8,
+    "excluded_occurrences": 149,
+    "dispositioned_source_files": 15,
+    "string_template_occurrences": 152,
+    "protected_regex_literals": 5,
+    "error_constructors": 0,
+    "catch_clauses": 4,
+    "throw_statements": 0,
+    "all_new_expressions": 4,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 556,
+    "runtime_source_bytes": 25366,
+    "nonruntime_assets": 45,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 15
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.distribution-support.utils.changelog.135.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.js",
+      "line": 135,
+      "column": 23,
+      "kind": "template-expression",
+      "english": "Warning: Could not parse changelog: ${error}",
+      "evidence": "`Warning: Could not parse changelog: ${error}`"
+    },
+    {
+      "item_id": "pi.distribution-support.utils.deprecation.7.31",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.js",
+      "line": 7,
+      "column": 31,
+      "kind": "template-expression",
+      "english": "Deprecation warning: ${message}",
+      "evidence": "`Deprecation warning: ${message}`"
+    },
+    {
+      "item_id": "pi.distribution-support.utils.version_check.19.27",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.js",
+      "line": 19,
+      "column": 27,
+      "kind": "template-expression",
+      "english": "${rootMessage} (cause: ${causeMessage})",
+      "evidence": "`${rootMessage} (cause: ${causeMessage})`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.js",
+        "read_lines": [
+          1,
+          165
+        ],
+        "string_template_occurrences": 44,
+        "fixed_rows": 1,
+        "excluded_occurrences": 43,
+        "protected_regex_literals": 5,
+        "regex_census_sha256": "d41e26fa3e714ed350cf97e78bb84775aa897ad8f36f18bb86c70ee5b0c61243",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 134,
+            "column": 5,
+            "source": "catch (error) {\n        console.error(`Warning: Could not parse changelog: ${error}`);\n        return [];\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "fs"
+          }
+        ],
+        "re_exports": [
+          {
+            "line": 164,
+            "column": 1,
+            "specifier": "../config.js",
+            "source": "export { getChangelogPath } from \"../config.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 12,
+            "column": 67,
+            "callee": "entryVersion",
+            "arguments": [
+              "version"
+            ]
+          },
+          {
+            "line": 13,
+            "column": 12,
+            "callee": "versionString.startsWith",
+            "arguments": [
+              "\"v\""
+            ]
+          },
+          {
+            "line": 16,
+            "column": 23,
+            "callee": "target.indexOf",
+            "arguments": [
+              "\"#\""
+            ]
+          },
+          {
+            "line": 17,
+            "column": 52,
+            "callee": "target.slice",
+            "arguments": [
+              "0",
+              "hashIndex"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 46,
+            "callee": "target.slice",
+            "arguments": [
+              "hashIndex"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 24,
+            "callee": "beforeHash.indexOf",
+            "arguments": [
+              "\"?\""
+            ]
+          },
+          {
+            "line": 25,
+            "column": 19,
+            "callee": "beforeHash.slice",
+            "arguments": [
+              "0",
+              "queryIndex"
+            ]
+          },
+          {
+            "line": 26,
+            "column": 16,
+            "callee": "beforeHash.slice",
+            "arguments": [
+              "queryIndex"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 12,
+            "callee": "value.replaceAll",
+            "arguments": [
+              "\"\\\\\"",
+              "\"/\""
+            ]
+          },
+          {
+            "line": 33,
+            "column": 30,
+            "callee": "normalizePathPart",
+            "arguments": [
+              "targetPath"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 20,
+            "callee": "normalizedTarget.startsWith",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 35,
+            "column": 11,
+            "callee": "path.posix.normalize",
+            "arguments": [
+              "normalizedTarget.replace(/^\\/+/, \"\")"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 32,
+            "callee": "normalizedTarget.replace",
+            "arguments": [
+              "/^\\/+/",
+              "\"\""
+            ]
+          },
+          {
+            "line": 36,
+            "column": 11,
+            "callee": "path.posix.normalize",
+            "arguments": [
+              "path.posix.join(CHANGELOG_LINK_BASE_PATH, normalizedTarget)"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 32,
+            "callee": "path.posix.join",
+            "arguments": [
+              "CHANGELOG_LINK_BASE_PATH",
+              "normalizedTarget"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 27,
+            "callee": "joined.startsWith",
+            "arguments": [
+              "\"../\""
+            ]
+          },
+          {
+            "line": 43,
+            "column": 9,
+            "callee": "originalPath.endsWith",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 46,
+            "column": 22,
+            "callee": "path.posix.basename",
+            "arguments": [
+              "repositoryPath"
+            ]
+          },
+          {
+            "line": 47,
+            "column": 13,
+            "callee": "basename.includes",
+            "arguments": [
+              "\".\""
+            ]
+          },
+          {
+            "line": 50,
+            "column": 27,
+            "callee": "target.replace",
+            "arguments": [
+              "LEGACY_REPO_RE",
+              "`https://github.com/${GITHUB_REPO}`"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 17,
+            "callee": "canonicalTarget.startsWith",
+            "arguments": [
+              "floatingRefPrefix"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 65,
+            "callee": "canonicalTarget.slice",
+            "arguments": [
+              "floatingRefPrefix.length"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 9,
+            "callee": "canonicalTarget.startsWith",
+            "arguments": [
+              "\"#\""
+            ]
+          },
+          {
+            "line": 60,
+            "column": 44,
+            "callee": "canonicalTarget.startsWith",
+            "arguments": [
+              "\"//\""
+            ]
+          },
+          {
+            "line": 60,
+            "column": 80,
+            "callee": "URL_SCHEME_RE.test",
+            "arguments": [
+              "canonicalTarget"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 43,
+            "callee": "splitLocalTarget",
+            "arguments": [
+              "canonicalTarget"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 28,
+            "callee": "resolveRepositoryPath",
+            "arguments": [
+              "pathPart"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 19,
+            "callee": "isDirectoryTarget",
+            "arguments": [
+              "pathPart",
+              "repositoryPath"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 65,
+            "callee": "encodeURI",
+            "arguments": [
+              "repositoryPath"
+            ]
+          },
+          {
+            "line": 75,
+            "column": 17,
+            "callee": "normalizeTag",
+            "arguments": [
+              "version"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 12,
+            "callee": "markdown.replace",
+            "arguments": [
+              "INLINE_MARKDOWN_LINK_RE",
+              "(_match, prefix, target, suffix) => {\n        return `${prefix}${normalizeChangelogLinkTarget(target, tag)}${suffix}`;\n    }"
+            ]
+          },
+          {
+            "line": 77,
+            "column": 28,
+            "callee": "normalizeChangelogLinkTarget",
+            "arguments": [
+              "target",
+              "tag"
+            ]
+          },
+          {
+            "line": 85,
+            "column": 10,
+            "callee": "existsSync",
+            "arguments": [
+              "changelogPath"
+            ]
+          },
+          {
+            "line": 89,
+            "column": 25,
+            "callee": "readFileSync",
+            "arguments": [
+              "changelogPath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 90,
+            "column": 23,
+            "callee": "content.split",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 96,
+            "column": 17,
+            "callee": "line.startsWith",
+            "arguments": [
+              "\"## \""
+            ]
+          },
+          {
+            "line": 99,
+            "column": 21,
+            "callee": "entries.push",
+            "arguments": [
+              "{\n                        ...currentVersion,\n                        content: currentLines.join(\"\\n\").trim(),\n                    }"
+            ]
+          },
+          {
+            "line": 101,
+            "column": 34,
+            "callee": "currentLines.join(\"\\n\").trim",
+            "arguments": []
+          },
+          {
+            "line": 101,
+            "column": 34,
+            "callee": "currentLines.join",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 105,
+            "column": 38,
+            "callee": "line.match",
+            "arguments": [
+              "/##\\s+\\[?(\\d+)\\.(\\d+)\\.(\\d+)\\]?/"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 32,
+            "callee": "Number.parseInt",
+            "arguments": [
+              "versionMatch[1]",
+              "10"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 32,
+            "callee": "Number.parseInt",
+            "arguments": [
+              "versionMatch[2]",
+              "10"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 32,
+            "callee": "Number.parseInt",
+            "arguments": [
+              "versionMatch[3]",
+              "10"
+            ]
+          },
+          {
+            "line": 122,
+            "column": 17,
+            "callee": "currentLines.push",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 127,
+            "column": 13,
+            "callee": "entries.push",
+            "arguments": [
+              "{\n                ...currentVersion,\n                content: currentLines.join(\"\\n\").trim(),\n            }"
+            ]
+          },
+          {
+            "line": 129,
+            "column": 26,
+            "callee": "currentLines.join(\"\\n\").trim",
+            "arguments": []
+          },
+          {
+            "line": 129,
+            "column": 26,
+            "callee": "currentLines.join",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 135,
+            "column": 9,
+            "callee": "console.error",
+            "arguments": [
+              "`Warning: Could not parse changelog: ${error}`"
+            ]
+          },
+          {
+            "line": 154,
+            "column": 19,
+            "callee": "lastVersion.split(\".\").map",
+            "arguments": [
+              "Number"
+            ]
+          },
+          {
+            "line": 154,
+            "column": 19,
+            "callee": "lastVersion.split",
+            "arguments": [
+              "\".\""
+            ]
+          },
+          {
+            "line": 161,
+            "column": 12,
+            "callee": "entries.filter",
+            "arguments": [
+              "(entry) => compareVersions(entry, last) > 0"
+            ]
+          },
+          {
+            "line": 161,
+            "column": 38,
+            "callee": "compareVersions",
+            "arguments": [
+              "entry",
+              "last"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full165 lines. One catch stderr warning positive; missing file quiet. Markdown link canonicalization/protocol/path/version/ref/header syntax protected, changelog bodies external payload. Startup parser runs before seen-version check; body suppression distinct. No read/changelog rendering executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.js",
+        "read_lines": [
+          1,
+          13
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 1,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 2,
+            "column": 36,
+            "callee": "Set",
+            "source": "new Set()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "chalk"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 4,
+            "column": 9,
+            "callee": "emittedDeprecationWarnings.has",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 6,
+            "column": 5,
+            "callee": "emittedDeprecationWarnings.add",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 7,
+            "column": 5,
+            "callee": "console.warn",
+            "arguments": [
+              "chalk.yellow(`Deprecation warning: ${message}`)"
+            ]
+          },
+          {
+            "line": 7,
+            "column": 18,
+            "callee": "chalk.yellow",
+            "arguments": [
+              "`Deprecation warning: ${message}`"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 5,
+            "callee": "emittedDeprecationWarnings.clear",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full13 lines. One console.warn prefix template positive conditional direct API, no native unbundled import found. Set dedup and test clear exact. No Error/catch; chalk/console exceptions external and message recorded before call."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.js",
+        "read_lines": [
+          1,
+          79
+        ],
+        "string_template_occurrences": 15,
+        "fixed_rows": 1,
+        "excluded_occurrences": 14,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 17,
+            "column": 39,
+            "callee": "Set",
+            "source": "new Set(codes)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 75,
+            "column": 5,
+            "source": "catch {\n        return undefined;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "semver"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./management-http.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./pi-user-agent.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 8,
+            "column": 83,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 19,
+            "callee": "causes\n        .map((value) => typeof value === \"object\" && value !== null && \"code\" in value && typeof value.code === \"string\"\n        ? value.code\n        : undefined)\n        .filter",
+            "arguments": [
+              "(code) => code !== undefined"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 19,
+            "callee": "causes\n        .map",
+            "arguments": [
+              "(value) => typeof value === \"object\" && value !== null && \"code\" in value && typeof value.code === \"string\"\n        ? value.code\n        : undefined"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 35,
+            "callee": "[...new Set(codes)].join",
+            "arguments": [
+              "\", \""
+            ]
+          },
+          {
+            "line": 18,
+            "column": 26,
+            "callee": "causes.find",
+            "arguments": [
+              "(value) => value instanceof Error && Boolean(value.message)"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 75,
+            "callee": "Boolean",
+            "arguments": [
+              "value.message"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 18,
+            "callee": "valid",
+            "arguments": [
+              "leftVersion.trim()"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 24,
+            "callee": "leftVersion.trim",
+            "arguments": []
+          },
+          {
+            "line": 23,
+            "column": 19,
+            "callee": "valid",
+            "arguments": [
+              "rightVersion.trim()"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 25,
+            "callee": "rightVersion.trim",
+            "arguments": []
+          },
+          {
+            "line": 27,
+            "column": 12,
+            "callee": "compare",
+            "arguments": [
+              "left",
+              "right"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 24,
+            "callee": "comparePackageVersions",
+            "arguments": [
+              "candidateVersion",
+              "currentVersion"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 12,
+            "callee": "candidateVersion.trim",
+            "arguments": []
+          },
+          {
+            "line": 34,
+            "column": 40,
+            "callee": "currentVersion.trim",
+            "arguments": []
+          },
+          {
+            "line": 39,
+            "column": 28,
+            "callee": "fetchWithRetry",
+            "arguments": [
+              "LATEST_VERSION_URL",
+              "{\n        headers: {\n            \"User-Agent\": getPiUserAgent(currentVersion),\n            accept: \"application/json\",\n        },\n    }",
+              "{\n        maxRetries: options.retry ? 2 : 0,\n        timeoutMs: options.timeoutMs ?? DEFAULT_VERSION_CHECK_TIMEOUT_MS,\n    }"
+            ]
+          },
+          {
+            "line": 41,
+            "column": 27,
+            "callee": "getPiUserAgent",
+            "arguments": [
+              "currentVersion"
+            ]
+          },
+          {
+            "line": 50,
+            "column": 25,
+            "callee": "response.json",
+            "arguments": []
+          },
+          {
+            "line": 51,
+            "column": 46,
+            "callee": "data.version.trim",
+            "arguments": []
+          },
+          {
+            "line": 54,
+            "column": 65,
+            "callee": "data.packageName.trim",
+            "arguments": []
+          },
+          {
+            "line": 54,
+            "column": 91,
+            "callee": "data.packageName.trim",
+            "arguments": []
+          },
+          {
+            "line": 55,
+            "column": 51,
+            "callee": "data.note.trim",
+            "arguments": []
+          },
+          {
+            "line": 55,
+            "column": 70,
+            "callee": "data.note.trim",
+            "arguments": []
+          },
+          {
+            "line": 57,
+            "column": 18,
+            "callee": "data.version.trim",
+            "arguments": []
+          },
+          {
+            "line": 63,
+            "column": 19,
+            "callee": "getLatestPiRelease",
+            "arguments": [
+              "currentVersion",
+              "options"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 37,
+            "callee": "getLatestPiRelease",
+            "arguments": [
+              "currentVersion"
+            ]
+          },
+          {
+            "line": 70,
+            "column": 30,
+            "callee": "isNewerPackageVersion",
+            "arguments": [
+              "latestRelease.version",
+              "currentVersion"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full79 lines. One cause-label diagnostic formatter positive; code-list branch is payload composition. PI_OFFLINE short-circuits latest API; check wrapper additionally PI_SKIP_VERSION_CHECK, catches all fetch/parse/semver failures to undefined. Direct getLatest APIs may reject. Semver valid/compare and HTTP/provider response dependency implementations remain pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.js",
+        "read_lines": [
+          1,
+          77
+        ],
+        "string_template_occurrences": 8,
+        "fixed_rows": 0,
+        "excluded_occurrences": 8,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 28,
+            "column": 18,
+            "callee": "Set",
+            "source": "new Set()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 52,
+            "column": 5,
+            "source": "catch {\n        // A previous pi process may still be exiting and holding a native addon.\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:crypto"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:fs"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./paths.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 7,
+            "column": 12,
+            "callee": "toNamespacedPath",
+            "arguments": [
+              "resolve(path)"
+            ]
+          },
+          {
+            "line": 7,
+            "column": 29,
+            "callee": "resolve",
+            "arguments": [
+              "path"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 19,
+            "callee": "resolve",
+            "arguments": [
+              "packageDir"
+            ]
+          },
+          {
+            "line": 12,
+            "column": 13,
+            "callee": "basename(current).toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 12,
+            "column": 13,
+            "callee": "basename",
+            "arguments": [
+              "current"
+            ]
+          },
+          {
+            "line": 13,
+            "column": 20,
+            "callee": "join",
+            "arguments": [
+              "current",
+              "QUARANTINE_DIR_NAME"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 24,
+            "callee": "dirname",
+            "arguments": [
+              "current"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 27,
+            "callee": "process.report.getReport",
+            "arguments": []
+          },
+          {
+            "line": 24,
+            "column": 10,
+            "callee": "Array.isArray",
+            "arguments": [
+              "sharedObjects"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 18,
+            "callee": "normalizePath(packageDir).toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 27,
+            "column": 18,
+            "callee": "normalizePath",
+            "arguments": [
+              "packageDir"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 26,
+            "callee": "normalizePath",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 32,
+            "callee": "filePath.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 36,
+            "column": 13,
+            "callee": "getCwdRelativePath",
+            "arguments": [
+              "comparisonPath",
+              "root"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 71,
+            "callee": "seen.has",
+            "arguments": [
+              "comparisonPath"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 9,
+            "callee": "seen.add",
+            "arguments": [
+              "comparisonPath"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 9,
+            "callee": "loadedFiles.push",
+            "arguments": [
+              "filePath"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 28,
+            "callee": "getQuarantineRoot",
+            "arguments": [
+              "packageDir"
+            ]
+          },
+          {
+            "line": 50,
+            "column": 9,
+            "callee": "rmSync",
+            "arguments": [
+              "quarantineRoot",
+              "{ recursive: true, force: true }"
+            ]
+          },
+          {
+            "line": 57,
+            "column": 32,
+            "callee": "normalizePath",
+            "arguments": [
+              "packageDir"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 28,
+            "callee": "getQuarantineRoot",
+            "arguments": [
+              "resolvedPackageDir"
+            ]
+          },
+          {
+            "line": 62,
+            "column": 25,
+            "callee": "getLoadedSharedObjectsInPackageDir",
+            "arguments": [
+              "resolvedPackageDir"
+            ]
+          },
+          {
+            "line": 66,
+            "column": 30,
+            "callee": "join",
+            "arguments": [
+              "quarantineRoot",
+              "`${Date.now()}-${process.pid}-${randomUUID()}`"
+            ]
+          },
+          {
+            "line": 66,
+            "column": 54,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 66,
+            "column": 83,
+            "callee": "randomUUID",
+            "arguments": []
+          },
+          {
+            "line": 68,
+            "column": 14,
+            "callee": "existsSync",
+            "arguments": [
+              "loadedFile"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 32,
+            "callee": "join",
+            "arguments": [
+              "quarantineRunDir",
+              "relative(resolvedPackageDir, loadedFile)"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 55,
+            "callee": "relative",
+            "arguments": [
+              "resolvedPackageDir",
+              "loadedFile"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 9,
+            "callee": "mkdirSync",
+            "arguments": [
+              "dirname(quarantinePath)",
+              "{ recursive: true }"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 19,
+            "callee": "dirname",
+            "arguments": [
+              "quarantinePath"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 9,
+            "callee": "renameSync",
+            "arguments": [
+              "loadedFile",
+              "quarantinePath"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 9,
+            "callee": "copyFileSync",
+            "arguments": [
+              "quarantinePath",
+              "loadedFile"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full77 lines. No own prose/Error. Quarantine directory basename/native shared-object file names/path composition protected, possible user-inspectable FS paths. cleanup catches rm errors only; root traversal/getReport/normalize operations outside catch. Quarantine rename/copy loop has no catch. Main Windows cleanup remains despite Jouzu native self-update block."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.js",
+        "read_lines": [
+          1,
+          60
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 13,
+            "column": 39,
+            "callee": "Date",
+            "source": "new Date()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:fs/promises"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:zlib"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 5,
+            "column": 16,
+            "callee": "date.getHours",
+            "arguments": []
+          },
+          {
+            "line": 5,
+            "column": 42,
+            "callee": "date.getMinutes",
+            "arguments": []
+          },
+          {
+            "line": 5,
+            "column": 69,
+            "callee": "date.getSeconds",
+            "arguments": []
+          },
+          {
+            "line": 6,
+            "column": 16,
+            "callee": "Math.max",
+            "arguments": [
+              "1980",
+              "date.getFullYear()"
+            ]
+          },
+          {
+            "line": 6,
+            "column": 31,
+            "callee": "date.getFullYear",
+            "arguments": []
+          },
+          {
+            "line": 6,
+            "column": 69,
+            "callee": "date.getMonth",
+            "arguments": []
+          },
+          {
+            "line": 6,
+            "column": 98,
+            "callee": "date.getDate",
+            "arguments": []
+          },
+          {
+            "line": 13,
+            "column": 27,
+            "callee": "dosDateTime",
+            "arguments": [
+              "new Date()"
+            ]
+          },
+          {
+            "line": 16,
+            "column": 22,
+            "callee": "Buffer.from",
+            "arguments": [
+              "entry.name"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 55,
+            "callee": "Buffer.from",
+            "arguments": [
+              "entry.data"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 81,
+            "callee": "Buffer.from",
+            "arguments": [
+              "entry.data"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 28,
+            "callee": "deflateRawSync",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 26,
+            "callee": "crc32",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 23,
+            "callee": "Buffer.alloc",
+            "arguments": [
+              "30"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 9,
+            "callee": "local.writeUInt32LE",
+            "arguments": [
+              "0x04034b50",
+              "0"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 9,
+            "callee": "local.writeUInt16LE",
+            "arguments": [
+              "20",
+              "4"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 9,
+            "callee": "local.writeUInt16LE",
+            "arguments": [
+              "0x0800",
+              "6"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 9,
+            "callee": "local.writeUInt16LE",
+            "arguments": [
+              "8",
+              "8"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 9,
+            "callee": "local.writeUInt16LE",
+            "arguments": [
+              "time",
+              "10"
+            ]
+          },
+          {
+            "line": 26,
+            "column": 9,
+            "callee": "local.writeUInt16LE",
+            "arguments": [
+              "day",
+              "12"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 9,
+            "callee": "local.writeUInt32LE",
+            "arguments": [
+              "checksum",
+              "14"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 9,
+            "callee": "local.writeUInt32LE",
+            "arguments": [
+              "compressed.length",
+              "18"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 9,
+            "callee": "local.writeUInt32LE",
+            "arguments": [
+              "data.length",
+              "22"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 9,
+            "callee": "local.writeUInt16LE",
+            "arguments": [
+              "name.length",
+              "26"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 25,
+            "callee": "Buffer.alloc",
+            "arguments": [
+              "46"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 9,
+            "callee": "central.writeUInt32LE",
+            "arguments": [
+              "0x02014b50",
+              "0"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "20",
+              "4"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "20",
+              "6"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "0x0800",
+              "8"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "8",
+              "10"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "time",
+              "12"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "day",
+              "14"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 9,
+            "callee": "central.writeUInt32LE",
+            "arguments": [
+              "checksum",
+              "16"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 9,
+            "callee": "central.writeUInt32LE",
+            "arguments": [
+              "compressed.length",
+              "20"
+            ]
+          },
+          {
+            "line": 41,
+            "column": 9,
+            "callee": "central.writeUInt32LE",
+            "arguments": [
+              "data.length",
+              "24"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 9,
+            "callee": "central.writeUInt16LE",
+            "arguments": [
+              "name.length",
+              "28"
+            ]
+          },
+          {
+            "line": 43,
+            "column": 9,
+            "callee": "central.writeUInt32LE",
+            "arguments": [
+              "offset",
+              "42"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 9,
+            "callee": "files.push",
+            "arguments": [
+              "local",
+              "name",
+              "compressed"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 9,
+            "callee": "directory.push",
+            "arguments": [
+              "central",
+              "name"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 30,
+            "callee": "Buffer.concat",
+            "arguments": [
+              "directory"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 17,
+            "callee": "Buffer.alloc",
+            "arguments": [
+              "22"
+            ]
+          },
+          {
+            "line": 50,
+            "column": 5,
+            "callee": "end.writeUInt32LE",
+            "arguments": [
+              "0x06054b50",
+              "0"
+            ]
+          },
+          {
+            "line": 51,
+            "column": 5,
+            "callee": "end.writeUInt16LE",
+            "arguments": [
+              "entries.length",
+              "8"
+            ]
+          },
+          {
+            "line": 52,
+            "column": 5,
+            "callee": "end.writeUInt16LE",
+            "arguments": [
+              "entries.length",
+              "10"
+            ]
+          },
+          {
+            "line": 53,
+            "column": 5,
+            "callee": "end.writeUInt32LE",
+            "arguments": [
+              "centralDirectory.length",
+              "12"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 5,
+            "callee": "end.writeUInt32LE",
+            "arguments": [
+              "offset",
+              "16"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 12,
+            "callee": "Buffer.concat",
+            "arguments": [
+              "[...files, centralDirectory, end]"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 12,
+            "callee": "writeFile",
+            "arguments": [
+              "filePath",
+              "createZipArchive(entries)"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 32,
+            "callee": "createZipArchive",
+            "arguments": [
+              "entries"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full60 lines. No own prose/Error/throw/catch. Classic ZIP header numbers, buffers and entry payloads protected. Caller-selected file output valid user-inspection sink; native zlib/crc32/Buffer/writeFile errors external. No archive/compression/file operation executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.js",
+        "read_lines": [
+          1,
+          5
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./sandbox-env-setup.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./runtime-setup.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "../cli.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full5 lines. Imports sandbox setup then Bun runtime setup then unbundled CLI; only import strings, no prose. Compiler/bundled binary route distinct source build input, not evidence shipped bundle byte closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.js",
+        "read_lines": [
+          1,
+          36
+        ],
+        "string_template_occurrences": 5,
+        "fixed_rows": 0,
+        "excluded_occurrences": 5,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 32,
+            "column": 5,
+            "source": "catch {\n        // /proc/self/environ may not be readable; ignore.\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 12,
+            "column": 1,
+            "specifier": "node:fs"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 21,
+            "column": 9,
+            "callee": "Object.keys",
+            "arguments": [
+              "process.env"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 22,
+            "callee": "readFileSync",
+            "arguments": [
+              "\"/proc/self/environ\"",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 25,
+            "column": 29,
+            "callee": "data.split",
+            "arguments": [
+              "\"\\0\""
+            ]
+          },
+          {
+            "line": 26,
+            "column": 25,
+            "callee": "entry.indexOf",
+            "arguments": [
+              "\"=\""
+            ]
+          },
+          {
+            "line": 28,
+            "column": 29,
+            "callee": "entry.slice",
+            "arguments": [
+              "0",
+              "idx"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 52,
+            "callee": "entry.slice",
+            "arguments": [
+              "idx + 1"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full36 lines. Returns absent Bun or nonempty process.env; otherwise proc environment read/split/assign inside catch ignored. No prose/Error; proc bytes/env values data, native fs/getter errors outside catch not blanket suppressed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.js",
+        "read_lines": [
+          1,
+          12
+        ],
+        "string_template_occurrences": 5,
+        "fixed_rows": 0,
+        "excluded_occurrences": 5,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai/bedrock-provider"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai/bun-oauth"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai/compat"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "quickjs-wasi/quickjs.wasm"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "../config.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 9,
+            "column": 1,
+            "callee": "registerBunOAuthFlows",
+            "arguments": []
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "callee": "setBedrockProviderModule",
+            "arguments": [
+              "bedrockProviderModule"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "callee": "setEmbeddedQuickJSWasmPath",
+            "arguments": [
+              "quickjsWasmPath"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full12 lines. Static dependencies evaluate before body; sets process.title APP_NAME and emitWarning no-op then registers OAuth/Bedrock/WASM. No own prose/Error. Imported package/native/module failures/logging not closed or suppressed by future emitWarning override."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.js",
+        "read_lines": [
+          1,
+          4
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./restore-sandbox-env.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 1,
+            "callee": "restoreSandboxEnv",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full4 lines. Single restoreSandboxEnv call, no local prose/Error. Imported restoration implementation fully read separately here; environment data protected."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js",
+        "read_lines": [
+          1,
+          6
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 0,
+        "excluded_occurrences": 2,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./cli/setup.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./main.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 4,
+            "column": 1,
+            "callee": "setupCli",
+            "arguments": []
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "callee": "main",
+            "arguments": [
+              "process.argv.slice(2)"
+            ]
+          },
+          {
+            "line": 5,
+            "column": 6,
+            "callee": "process.argv.slice",
+            "arguments": [
+              "2"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full6 lines. Unbundled source entry imports setupCli/main, calls setup then main argv without awaiting/catch. Import and downstream rejected diagnostics external/prior producer owners. Manifest pi bin is dist/bundle/cli.js, not this body."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.js",
+        "read_lines": [
+          1,
+          11
+        ],
+        "string_template_occurrences": 8,
+        "fixed_rows": 0,
+        "excluded_occurrences": 8,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./config.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./core/http-dispatcher.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./main.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 9,
+            "column": 1,
+            "callee": "configureHttpDispatcher",
+            "arguments": []
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "callee": "main",
+            "arguments": [
+              "[\"--mode\", \"rpc\", ...process.argv.slice(2)]"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 27,
+            "callee": "process.argv.slice",
+            "arguments": [
+              "2"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full11 lines. Static imports then title APP_NAME-rpc/env IDs/emitWarning no-op, configure dispatcher and main(--mode,rpc,...argv). Title/flags/protocol IDs protected. Main rejection not awaited/caught; imported providers/native errors external. Manifest rpc-entry export points bundled copy, distinct bytes pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+        "read_lines": [
+          1,
+          54
+        ],
+        "string_template_occurrences": 36,
+        "fixed_rows": 0,
+        "excluded_occurrences": 36,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./cli/args.js",
+            "source": "export { parseArgs } from \"./cli/args.js\";"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./config.js",
+            "source": "export { CONFIG_DIR_NAME, getAgentDir, getDocsPath, getExamplesPath, getPackageDir, getReadmePath, VERSION, } from \"./config.js\";"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./core/agent-session.js",
+            "source": "export { AgentSession, parseSkillBlock, } from \"./core/agent-session.js\";"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./core/auth-storage.js",
+            "source": "export { readStoredCredential } from \"./core/auth-storage.js\";"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./core/compaction/index.js",
+            "source": "export { calculateContextTokens, collectEntriesForBranchSummary, compact, DEFAULT_COMPACTION_SETTINGS, estimateTokens, findCutPoint, findTurnStartIndex, generateBranchSummary, generateSummary, generateSummaryWithUsage, getLastAssistantUsage, prepareBranchEntries, serializeConversation, shouldCompact, } from \"./core/compaction/index.js\";"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./core/event-bus.js",
+            "source": "export { createEventBus } from \"./core/event-bus.js\";"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "./core/extensions/index.js",
+            "source": "export { createExtensionRuntime, defineTool, discoverAndLoadExtensions, ExtensionRunner, isBashToolResult, isEditToolResult, isFindToolResult, isGrepToolResult, isLsToolResult, isPowerShellToolResult, isReadToolResult, isToolCallEventType, isWriteToolResult, wrapRegisteredTool, wrapRegisteredTools, } from \"./core/extensions/index.js\";"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./core/messages.js",
+            "source": "export { convertToLlm } from \"./core/messages.js\";"
+          },
+          {
+            "line": 12,
+            "column": 1,
+            "specifier": "./core/model-registry.js",
+            "source": "export { ModelRegistry } from \"./core/model-registry.js\";"
+          },
+          {
+            "line": 13,
+            "column": 1,
+            "specifier": "./core/model-resolver.js",
+            "source": "export { resolveCliModel, resolveModelScopeWithDiagnostics, } from \"./core/model-resolver.js\";"
+          },
+          {
+            "line": 14,
+            "column": 1,
+            "specifier": "./core/model-runtime.js",
+            "source": "export { CredentialSynchronizationError, ModelRuntime, } from \"./core/model-runtime.js\";"
+          },
+          {
+            "line": 15,
+            "column": 1,
+            "specifier": "./core/package-manager.js",
+            "source": "export { DefaultPackageManager } from \"./core/package-manager.js\";"
+          },
+          {
+            "line": 16,
+            "column": 1,
+            "specifier": "./core/resource-loader.js",
+            "source": "export { DefaultResourceLoader, loadProjectContextFiles } from \"./core/resource-loader.js\";"
+          },
+          {
+            "line": 18,
+            "column": 1,
+            "specifier": "./core/sdk.js",
+            "source": "export { AgentSessionRuntime, \n// Factory\ncreateAgentSession, createAgentSessionFromServices, createAgentSessionRuntime, createAgentSessionServices, createBashTool, \n// Tool factories (for custom cwd)\ncreateCodingTools, createEditTool, createFindTool, createGrepTool, createLsTool, createPowerShellTool, createReadOnlyTools, createReadTool, createWriteTool, } from \"./core/sdk.js\";"
+          },
+          {
+            "line": 23,
+            "column": 1,
+            "specifier": "./core/session-manager.js",
+            "source": "export { buildContextEntries, buildSessionContext, buildSessionProjection, CURRENT_SESSION_VERSION, getLatestCompactionEntry, migrateSessionEntries, parseSessionEntries, SessionManager, sessionEntryToContextMessages, } from \"./core/session-manager.js\";"
+          },
+          {
+            "line": 24,
+            "column": 1,
+            "specifier": "./core/settings-manager.js",
+            "source": "export { SettingsManager, } from \"./core/settings-manager.js\";"
+          },
+          {
+            "line": 26,
+            "column": 1,
+            "specifier": "./core/skills.js",
+            "source": "export { formatSkillsForPrompt, loadSkills, loadSkillsFromDir, } from \"./core/skills.js\";"
+          },
+          {
+            "line": 27,
+            "column": 1,
+            "specifier": "./core/source-info.js",
+            "source": "export { createSyntheticSourceInfo } from \"./core/source-info.js\";"
+          },
+          {
+            "line": 28,
+            "column": 1,
+            "specifier": "./core/tools/edit-diff.js",
+            "source": "export { generateDiffString, generateUnifiedPatch } from \"./core/tools/edit-diff.js\";"
+          },
+          {
+            "line": 30,
+            "column": 1,
+            "specifier": "./core/tools/index.js",
+            "source": "export { createBashToolDefinition, createEditToolDefinition, createFindToolDefinition, createGrepToolDefinition, createLocalBashOperations, createLocalPowerShellOperations, createLsToolDefinition, createPowerShellToolDefinition, createReadToolDefinition, createWriteToolDefinition, DEFAULT_MAX_BYTES, DEFAULT_MAX_LINES, formatSize, truncateHead, truncateLine, truncateTail, withFileMutationQueue, } from \"./core/tools/index.js\";"
+          },
+          {
+            "line": 31,
+            "column": 1,
+            "specifier": "./core/tools/render-utils.js",
+            "source": "export { formatReadLineRange } from \"./core/tools/render-utils.js\";"
+          },
+          {
+            "line": 32,
+            "column": 1,
+            "specifier": "./core/trust-manager.js",
+            "source": "export { hasTrustRequiringProjectResources, ProjectTrustStore, } from \"./core/trust-manager.js\";"
+          },
+          {
+            "line": 33,
+            "column": 1,
+            "specifier": "./core/virtual-models.js",
+            "source": "export { VIRTUAL_MODEL_STATE_ENTRY, } from \"./core/virtual-models.js\";"
+          },
+          {
+            "line": 35,
+            "column": 1,
+            "specifier": "./extensions/codemode/index.js",
+            "source": "export { createCodemodeExtension } from \"./extensions/codemode/index.js\";"
+          },
+          {
+            "line": 36,
+            "column": 1,
+            "specifier": "./extensions/mcp/index.js",
+            "source": "export { createMcpExtension } from \"./extensions/mcp/index.js\";"
+          },
+          {
+            "line": 37,
+            "column": 1,
+            "specifier": "./extensions/tool-search/index.js",
+            "source": "export { createToolSearchExtension } from \"./extensions/tool-search/index.js\";"
+          },
+          {
+            "line": 39,
+            "column": 1,
+            "specifier": "./main.js",
+            "source": "export { main } from \"./main.js\";"
+          },
+          {
+            "line": 41,
+            "column": 1,
+            "specifier": "./modes/index.js",
+            "source": "export { InteractiveMode, RpcClient, runPrintMode, runRpcMode, } from \"./modes/index.js\";"
+          },
+          {
+            "line": 43,
+            "column": 1,
+            "specifier": "./modes/interactive/components/index.js",
+            "source": "export { ArminComponent, AssistantMessageComponent, BashExecutionComponent, BorderedLoader, BranchSummaryMessageComponent, CompactionSummaryMessageComponent, CustomEditor, CustomMessageComponent, DynamicBorder, ExtensionEditorComponent, ExtensionInputComponent, ExtensionSelectorComponent, FooterComponent, keyHint, keyText, LoginDialogComponent, ModelSelectorComponent, OAuthSelectorComponent, rawKeyHint, renderDiff, SessionSelectorComponent, SettingsSelectorComponent, ShowImagesSelectorComponent, SkillInvocationMessageComponent, ThemeSelectorComponent, ThinkingSelectorComponent, ToolExecutionComponent, TreeSelectorComponent, truncateToVisualLines, UserMessageComponent, UserMessageSelectorComponent, } from \"./modes/interactive/components/index.js\";"
+          },
+          {
+            "line": 45,
+            "column": 1,
+            "specifier": "./modes/interactive/theme/theme.js",
+            "source": "export { getLanguageFromPath, getMarkdownTheme, getSelectListTheme, getSettingsListTheme, highlightCode, initTheme, Theme, } from \"./modes/interactive/theme/theme.js\";"
+          },
+          {
+            "line": 47,
+            "column": 1,
+            "specifier": "./utils/clipboard.js",
+            "source": "export { copyToClipboard } from \"./utils/clipboard.js\";"
+          },
+          {
+            "line": 48,
+            "column": 1,
+            "specifier": "./utils/frontmatter.js",
+            "source": "export { parseFrontmatter, stripFrontmatter } from \"./utils/frontmatter.js\";"
+          },
+          {
+            "line": 49,
+            "column": 1,
+            "specifier": "./utils/image-convert.js",
+            "source": "export { convertToPng } from \"./utils/image-convert.js\";"
+          },
+          {
+            "line": 50,
+            "column": 1,
+            "specifier": "./utils/image-resize.js",
+            "source": "export { formatDimensionNote, resizeImage } from \"./utils/image-resize.js\";"
+          },
+          {
+            "line": 51,
+            "column": 1,
+            "specifier": "./utils/mime.js",
+            "source": "export { detectSupportedImageMimeTypeFromFile } from \"./utils/mime.js\";"
+          },
+          {
+            "line": 53,
+            "column": 1,
+            "specifier": "./utils/shell.js",
+            "source": "export { getPowerShellConfig, getShellConfig } from \"./utils/shell.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full54 lines. Package root import/main manifest targets this barrel; reexports dispatch core/tools/session/resources/modes/UI/themes/clipboard/image/shell APIs. Import specifiers protected, no own prose/Error. ESM dependency evaluation and reexported definitions remain their own reviewed/open source owners; this barrel full read is not transitive closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.js",
+        "read_lines": [
+          1,
+          13
+        ],
+        "string_template_occurrences": 8,
+        "fixed_rows": 0,
+        "excluded_occurrences": 8,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./agent-session.js",
+            "source": "export { AgentSession, } from \"./agent-session.js\";"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./agent-session-runtime.js",
+            "source": "export { AgentSessionRuntime, createAgentSessionRuntime, } from \"./agent-session-runtime.js\";"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./agent-session-services.js",
+            "source": "export { createAgentSessionFromServices, createAgentSessionServices, } from \"./agent-session-services.js\";"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./bash-executor.js",
+            "source": "export { executeBashWithOperations } from \"./bash-executor.js\";"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./event-bus.js",
+            "source": "export { createEventBus } from \"./event-bus.js\";"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./experimental.js",
+            "source": "export { areExperimentalFeaturesEnabled } from \"./experimental.js\";"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./extensions/index.js",
+            "source": "export { defineTool, discoverAndLoadExtensions, ExtensionRunner, } from \"./extensions/index.js\";"
+          },
+          {
+            "line": 12,
+            "column": 1,
+            "specifier": "./source-info.js",
+            "source": "export { createSyntheticSourceInfo } from \"./source-info.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full13 lines. Reexport-only barrel, no prose/Error. Shared core APIs direct import reachability; imported producer implementation/errors separate pending/prior owners."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js",
+        "read_lines": [
+          1,
+          8
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./interactive/interactive-mode.js",
+            "source": "export { InteractiveMode } from \"./interactive/interactive-mode.js\";"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./print-mode.js",
+            "source": "export { runPrintMode } from \"./print-mode.js\";"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./rpc/rpc-client.js",
+            "source": "export { RpcClient } from \"./rpc/rpc-client.js\";"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./rpc/rpc-mode.js",
+            "source": "export { runRpcMode } from \"./rpc/rpc-mode.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full8 lines. Reexport-only run-mode barrel including RpcClient. No prose/Error, dependency implementations remain separate and RpcClient full body pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js",
+        "read_lines": [
+          1,
+          13
+        ],
+        "string_template_occurrences": 8,
+        "fixed_rows": 0,
+        "excluded_occurrences": 8,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./codemode/index.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./llama/index.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./mcp/index.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./tool-search/index.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full13 lines. Four builtInExtensions names/factories are technical registration metadata, not prose. Codemode/tool-search/MCP replaceable; llama.cpp not marked replaceable. Jouzu classicHostBuiltinOverrides no-op codemode and deferred MCP factory replace registered names; import/evaluation still precedes selection. Extension implementations pending unless separately owned."
+      }
+    ],
+    "method": "Full15 finite local bodies read manually, exact strings/templates partitioned. All Error/new/throw/catch/regex/import/export/control/call expressions censused. Source-only canonical/archive/both-tree/hash proof; no audited module/entry/Bun/provider/OS/HTTP/update/compression/fs/native execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/bun/cli.js",
+      "dist/bun/restore-sandbox-env.js",
+      "dist/bun/runtime-setup.js",
+      "dist/bun/sandbox-env-setup.js",
+      "dist/cli.js",
+      "dist/core/index.js",
+      "dist/extensions/index.js",
+      "dist/index.js",
+      "dist/modes/index.js",
+      "dist/rpc-entry.js",
+      "dist/utils/changelog.js",
+      "dist/utils/deprecation.js",
+      "dist/utils/version-check.js",
+      "dist/utils/windows-self-update.js",
+      "dist/utils/zip.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/bun/cli.d.ts",
+      "dist/bun/cli.d.ts.map",
+      "dist/bun/cli.js.map",
+      "dist/bun/restore-sandbox-env.d.ts",
+      "dist/bun/restore-sandbox-env.d.ts.map",
+      "dist/bun/restore-sandbox-env.js.map",
+      "dist/bun/runtime-setup.d.ts",
+      "dist/bun/runtime-setup.d.ts.map",
+      "dist/bun/runtime-setup.js.map",
+      "dist/bun/sandbox-env-setup.d.ts",
+      "dist/bun/sandbox-env-setup.d.ts.map",
+      "dist/bun/sandbox-env-setup.js.map",
+      "dist/cli.d.ts",
+      "dist/cli.d.ts.map",
+      "dist/cli.js.map",
+      "dist/core/index.d.ts",
+      "dist/core/index.d.ts.map",
+      "dist/core/index.js.map",
+      "dist/extensions/index.d.ts",
+      "dist/extensions/index.d.ts.map",
+      "dist/extensions/index.js.map",
+      "dist/index.d.ts",
+      "dist/index.d.ts.map",
+      "dist/index.js.map",
+      "dist/modes/index.d.ts",
+      "dist/modes/index.d.ts.map",
+      "dist/modes/index.js.map",
+      "dist/rpc-entry.d.ts",
+      "dist/rpc-entry.d.ts.map",
+      "dist/rpc-entry.js.map",
+      "dist/utils/changelog.d.ts",
+      "dist/utils/changelog.d.ts.map",
+      "dist/utils/changelog.js.map",
+      "dist/utils/deprecation.d.ts",
+      "dist/utils/deprecation.d.ts.map",
+      "dist/utils/deprecation.js.map",
+      "dist/utils/version-check.d.ts",
+      "dist/utils/version-check.d.ts.map",
+      "dist/utils/version-check.js.map",
+      "dist/utils/windows-self-update.d.ts",
+      "dist/utils/windows-self-update.d.ts.map",
+      "dist/utils/windows-self-update.js.map",
+      "dist/utils/zip.d.ts",
+      "dist/utils/zip.d.ts.map",
+      "dist/utils/zip.js.map"
+    ]
+  },
+  "prior_ownership": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0304",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0310",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0335",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0336",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0338",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0001",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0002",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0003",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0004",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0086",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0301",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0228",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0138",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0231",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0209",
+      "new_full_body_owner": "pi-distribution-support-scope.csv",
+      "prior_full_body_claim": false
+    }
+  ],
+  "historical_ownership_census": {
+    "source": "review/text-inventory/pi-runtime-census.csv",
+    "sha256": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225",
+    "status": "historical pending snapshot unchanged"
+  },
+  "package_entry_routes": {
+    "root_import": "dist/index.js",
+    "bin_pi": "dist/bundle/cli.js",
+    "rpc_entry_export": "dist/bundle/rpc-entry.js",
+    "bun_build_input": "dist/bun/cli.js",
+    "bundle_bodies_closed": false
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle",
+      "status": "all-compiled-bundle-bodies-pending-distinct-from-unbundled"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/CHANGELOG.md",
+      "status": "full-static-prose-resource-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "status": "full-producer-pending-bounded-archive-map-only"
+    },
+    {
+      "source": "external:semver-management-http-Chalk-Node-console-fs-zlib-URL-runtime",
+      "status": "dependency-and-diagnostic-implementations-pending"
+    },
+    {
+      "source": "external:Pi-ai-OAuth-Bedrock-Bun-QuickJS-WASM-native-extension-providers",
+      "status": "provider-runtime-import-graph-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js",
+      "status": "bounded-support-full-small-helper-pending"
+    }
+  ],
+  "limits": [
+    "15 finite full bodies/556 lines only; declarations/maps nonruntime census; imported reexport implementations/static CHANGELOG and compiled bundle bytes remain separately pending. Historical census and prior units unchanged.",
+    "Three local prose templates: changelog warning active at empty-session parser despite seen-marker suppression; quietStartup does not gate this parser, dedup deprecation API warning, diagnostic cause formatter qualified stock/direct API versus Jouzu blocked selfupdate.",
+    "Jouzu package root index import does not invoke native CLI/Bun/RPC setup; package manifest bin/subpath point bundle bytes, not newly read unbundled sources. Future emitWarning no-op does not suppress earlier static-import warnings or console.warn/error.",
+    "Windows main cleanup still active despite blocked native self-update; only rm caught. Quarantine API/report/rename/copy errors external, names/path data inspectable. ZIP file payload valid conditional API user-inspection sink but patched /bug does not call archive helper.",
+    "Exact normal strings TypeScript decoded; templates preserve source escapes/interpolation. Every node has one exact fixed/exclusion disposition, all catches/new/throw/calls/import/exports covered. No old/shared/product/census/git writes, audited entry/module/native/network/update/fs/compression executed.",
+    "Agent canonical/root package.json byte-identical; CLI-nested manifest differs only files via exact public release-packlist metadata exclusions/serialization. Entry/main/exports fields unchanged; standalone proof separate from root/nested-equal runtime arrays."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-distribution-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-distribution-support.csv": "bc93860eaec84920643aa736b151504cd6d2b844be7c7834f90fd1a2fb439b00",
+    "pi-distribution-support-boundaries.csv": "342412f70de54867787877f2f1453ff3150ba7945c7a99e09c7b9a3d7b677ac2",
+    "pi-distribution-support-scope.csv": "8c1ae6c972f833551770173aa4202d96a82b4131b87ac3833affbfa7ae2c13d2",
+    "pi-distribution-support-exclusions.csv": "b7691d693f48363c1639e1671dd4c39765d5e505215f9f75bbf648a6461189a3"
+  },
+  "package_manifest_provenance": {
+    "source": "npm:@earendil-works/pi-coding-agent@1.4.0/package.json",
+    "archive_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+    "root_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+    "cli_nested_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+    "root_disposition": "byte-identical-to-canonical-archive",
+    "cli_nested_disposition": "exact-public-release-packlist-transform",
+    "changed_json_keys": [
+      "files"
+    ],
+    "appended_files_exclusions": [
+      "!**/*.map",
+      "!**/*.d.ts",
+      "!**/*.d.mts",
+      "!**/*.d.cts"
+    ],
+    "source_script": "scripts/configure-release-packlists.mjs",
+    "source_script_sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "source_ranges": [
+      [
+        7,
+        18
+      ],
+      [
+        48,
+        58
+      ]
+    ],
+    "serialization": "JSON.stringify(manifest, null, 2) + newline",
+    "runtime_entry_fields_equal": true
+  },
+  "native_deprecation_import_search": {
+    "bodies": 257,
+    "source_census": "review/text-inventory/pi-runtime-census.csv",
+    "request_suffix": "/deprecation.js",
+    "matches": [],
+    "method": "Only AST literal import/reexport/import() requests scanned in historical native unbundled installed body membership; current root/nested source hashes rechecked. No whole-body text closure, bundled-code/runtime dynamic/extra API consumer closure inferred."
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/utils/changelog.js",
+            "archive_sha256": "0212307224fdf3a29a34f6cc25d911c90b231d66611335cee2123ab4627f5531",
+            "root_sha256": "0212307224fdf3a29a34f6cc25d911c90b231d66611335cee2123ab4627f5531",
+            "cli_nested_sha256": "0212307224fdf3a29a34f6cc25d911c90b231d66611335cee2123ab4627f5531",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/deprecation.js",
+            "archive_sha256": "087600cca685dc01660ac8254e503f137f69baf5941c5b2376f2b24b5f3e16d4",
+            "root_sha256": "087600cca685dc01660ac8254e503f137f69baf5941c5b2376f2b24b5f3e16d4",
+            "cli_nested_sha256": "087600cca685dc01660ac8254e503f137f69baf5941c5b2376f2b24b5f3e16d4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/version-check.js",
+            "archive_sha256": "0c1e8df5aea8f10869d2a1bd11b696498d35757e13427650754124d039422eb8",
+            "root_sha256": "0c1e8df5aea8f10869d2a1bd11b696498d35757e13427650754124d039422eb8",
+            "cli_nested_sha256": "0c1e8df5aea8f10869d2a1bd11b696498d35757e13427650754124d039422eb8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/windows-self-update.js",
+            "archive_sha256": "adf0360878e285988f8d74ceb2897ef8359b80a1c2fda4965aa2152de5382485",
+            "root_sha256": "adf0360878e285988f8d74ceb2897ef8359b80a1c2fda4965aa2152de5382485",
+            "cli_nested_sha256": "adf0360878e285988f8d74ceb2897ef8359b80a1c2fda4965aa2152de5382485",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/zip.js",
+            "archive_sha256": "1ce5cceedf15c981717527cef36a530b4ffc40bba700a317e5c96a1d483e8744",
+            "root_sha256": "1ce5cceedf15c981717527cef36a530b4ffc40bba700a317e5c96a1d483e8744",
+            "cli_nested_sha256": "1ce5cceedf15c981717527cef36a530b4ffc40bba700a317e5c96a1d483e8744",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/cli.js",
+            "archive_sha256": "a73f6318c5b972c3d7cf56da950a90a0920ae6b8677ad769a9b6e9fe2ec9d627",
+            "root_sha256": "a73f6318c5b972c3d7cf56da950a90a0920ae6b8677ad769a9b6e9fe2ec9d627",
+            "cli_nested_sha256": "a73f6318c5b972c3d7cf56da950a90a0920ae6b8677ad769a9b6e9fe2ec9d627",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/restore-sandbox-env.js",
+            "archive_sha256": "4da13c33a00990deb64dc840eb52dacbf551ff11bf6f0f0392b04ffd602be239",
+            "root_sha256": "4da13c33a00990deb64dc840eb52dacbf551ff11bf6f0f0392b04ffd602be239",
+            "cli_nested_sha256": "4da13c33a00990deb64dc840eb52dacbf551ff11bf6f0f0392b04ffd602be239",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/runtime-setup.js",
+            "archive_sha256": "f1f423fa8b2ea7951747cce308c32cf2b932df5aee9bb76b260272ae343eee5f",
+            "root_sha256": "f1f423fa8b2ea7951747cce308c32cf2b932df5aee9bb76b260272ae343eee5f",
+            "cli_nested_sha256": "f1f423fa8b2ea7951747cce308c32cf2b932df5aee9bb76b260272ae343eee5f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/sandbox-env-setup.js",
+            "archive_sha256": "8c975b87a65a2193fe32f4661d2f3a5b94da4a430865e30520906c2ae33f119d",
+            "root_sha256": "8c975b87a65a2193fe32f4661d2f3a5b94da4a430865e30520906c2ae33f119d",
+            "cli_nested_sha256": "8c975b87a65a2193fe32f4661d2f3a5b94da4a430865e30520906c2ae33f119d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli.js",
+            "archive_sha256": "8189b66abc4f9f431dbb70941dcba690d76d040de1fbfff212886be35a53639d",
+            "root_sha256": "8189b66abc4f9f431dbb70941dcba690d76d040de1fbfff212886be35a53639d",
+            "cli_nested_sha256": "8189b66abc4f9f431dbb70941dcba690d76d040de1fbfff212886be35a53639d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/rpc-entry.js",
+            "archive_sha256": "a515a6930662a74b4840fb220c3527545c169a84b17bdbae21d4a8ee6b8da30b",
+            "root_sha256": "a515a6930662a74b4840fb220c3527545c169a84b17bdbae21d4a8ee6b8da30b",
+            "cli_nested_sha256": "a515a6930662a74b4840fb220c3527545c169a84b17bdbae21d4a8ee6b8da30b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+            "root_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+            "cli_nested_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/index.js",
+            "archive_sha256": "4540f33f90b5f15f28ce4d7fb02c00d888fac192b04dc7ca6cff0313d6a058d0",
+            "root_sha256": "4540f33f90b5f15f28ce4d7fb02c00d888fac192b04dc7ca6cff0313d6a058d0",
+            "cli_nested_sha256": "4540f33f90b5f15f28ce4d7fb02c00d888fac192b04dc7ca6cff0313d6a058d0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/index.js",
+            "archive_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+            "root_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+            "cli_nested_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/index.js",
+            "archive_sha256": "ed7f805d46160c30db9be874b2350d0bd01f8b390f94a55ec1d8d4ed9474bf9b",
+            "root_sha256": "ed7f805d46160c30db9be874b2350d0bd01f8b390f94a55ec1d8d4ed9474bf9b",
+            "cli_nested_sha256": "ed7f805d46160c30db9be874b2350d0bd01f8b390f94a55ec1d8d4ed9474bf9b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/main.js",
+            "archive_sha256": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+            "root_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/package-manager-cli.js",
+            "archive_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "root_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/bug-report.js",
+            "archive_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+            "root_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+            "cli_nested_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/bug-report.js",
+            "archive_sha256": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+            "root_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+            "cli_nested_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/cli/setup.js",
+            "archive_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+            "root_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+            "cli_nested_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/resource-loader.js",
+            "archive_sha256": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+            "root_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+            "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/utils/changelog.d.ts",
+            "archive_sha256": "56edd56f92b87882017c53e599f500e2bfc984f4fda326b9e049bdb4fa1bcdf9",
+            "root_sha256": "56edd56f92b87882017c53e599f500e2bfc984f4fda326b9e049bdb4fa1bcdf9",
+            "cli_nested_sha256": "56edd56f92b87882017c53e599f500e2bfc984f4fda326b9e049bdb4fa1bcdf9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/changelog.d.ts.map",
+            "archive_sha256": "604575ca83411e60e3dec8aa000e4cf8f70911e700fac1aae45fb6f831483e98",
+            "root_sha256": "604575ca83411e60e3dec8aa000e4cf8f70911e700fac1aae45fb6f831483e98",
+            "cli_nested_sha256": "604575ca83411e60e3dec8aa000e4cf8f70911e700fac1aae45fb6f831483e98",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/changelog.js.map",
+            "archive_sha256": "de6bf691308b6c1651aa783b97d70ccd8fb31d72be9c89b9791ec0204024895e",
+            "root_sha256": "de6bf691308b6c1651aa783b97d70ccd8fb31d72be9c89b9791ec0204024895e",
+            "cli_nested_sha256": "de6bf691308b6c1651aa783b97d70ccd8fb31d72be9c89b9791ec0204024895e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/deprecation.d.ts",
+            "archive_sha256": "0aab919cba1d9564c241a70856f86f40dc3c7258abb5f04d0b38131c700231f5",
+            "root_sha256": "0aab919cba1d9564c241a70856f86f40dc3c7258abb5f04d0b38131c700231f5",
+            "cli_nested_sha256": "0aab919cba1d9564c241a70856f86f40dc3c7258abb5f04d0b38131c700231f5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/deprecation.d.ts.map",
+            "archive_sha256": "b77a359f7264b62d04eab38c8eab86499c838d590cbd38b7fbf7c896f0a8790b",
+            "root_sha256": "b77a359f7264b62d04eab38c8eab86499c838d590cbd38b7fbf7c896f0a8790b",
+            "cli_nested_sha256": "b77a359f7264b62d04eab38c8eab86499c838d590cbd38b7fbf7c896f0a8790b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/deprecation.js.map",
+            "archive_sha256": "28cb9748e59aca795e777c741460b057ae6aa179fcbbdd5c94e649fd4fb80e15",
+            "root_sha256": "28cb9748e59aca795e777c741460b057ae6aa179fcbbdd5c94e649fd4fb80e15",
+            "cli_nested_sha256": "28cb9748e59aca795e777c741460b057ae6aa179fcbbdd5c94e649fd4fb80e15",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/version-check.d.ts",
+            "archive_sha256": "3a0d28765f823b5caa7d59dd7f98a77824c2b9eee4111ee56a45f5d927f13a6c",
+            "root_sha256": "3a0d28765f823b5caa7d59dd7f98a77824c2b9eee4111ee56a45f5d927f13a6c",
+            "cli_nested_sha256": "3a0d28765f823b5caa7d59dd7f98a77824c2b9eee4111ee56a45f5d927f13a6c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/version-check.d.ts.map",
+            "archive_sha256": "251503c6f52f70a7a9348398f8fb60b43d4e9afe5ad4201ef0465cacba783d7d",
+            "root_sha256": "251503c6f52f70a7a9348398f8fb60b43d4e9afe5ad4201ef0465cacba783d7d",
+            "cli_nested_sha256": "251503c6f52f70a7a9348398f8fb60b43d4e9afe5ad4201ef0465cacba783d7d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/version-check.js.map",
+            "archive_sha256": "5c0d92fb5d078af8d8b7962374b9d2553a4109f56983d033cdf721412174b57a",
+            "root_sha256": "5c0d92fb5d078af8d8b7962374b9d2553a4109f56983d033cdf721412174b57a",
+            "cli_nested_sha256": "5c0d92fb5d078af8d8b7962374b9d2553a4109f56983d033cdf721412174b57a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/windows-self-update.d.ts",
+            "archive_sha256": "9d2c6520ec0bb05428dd3b2ed13a64b690c54a8edf9ba67fa1c85075495e9b87",
+            "root_sha256": "9d2c6520ec0bb05428dd3b2ed13a64b690c54a8edf9ba67fa1c85075495e9b87",
+            "cli_nested_sha256": "9d2c6520ec0bb05428dd3b2ed13a64b690c54a8edf9ba67fa1c85075495e9b87",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/windows-self-update.d.ts.map",
+            "archive_sha256": "f33c391f86a844d5301416e897e7c0098f0e9ea3172f93be71c8fb6c7cfcc0ab",
+            "root_sha256": "f33c391f86a844d5301416e897e7c0098f0e9ea3172f93be71c8fb6c7cfcc0ab",
+            "cli_nested_sha256": "f33c391f86a844d5301416e897e7c0098f0e9ea3172f93be71c8fb6c7cfcc0ab",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/windows-self-update.js.map",
+            "archive_sha256": "d514381f584135b46b9852c1d5204bad82199af7610be9942c51e26dc1c46c2a",
+            "root_sha256": "d514381f584135b46b9852c1d5204bad82199af7610be9942c51e26dc1c46c2a",
+            "cli_nested_sha256": "d514381f584135b46b9852c1d5204bad82199af7610be9942c51e26dc1c46c2a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/zip.d.ts",
+            "archive_sha256": "fec10e85367a08343829e6672359ea7bd02877535aa1624c18a42103798ea1e0",
+            "root_sha256": "fec10e85367a08343829e6672359ea7bd02877535aa1624c18a42103798ea1e0",
+            "cli_nested_sha256": "fec10e85367a08343829e6672359ea7bd02877535aa1624c18a42103798ea1e0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/zip.d.ts.map",
+            "archive_sha256": "a8cced86b6b2f1d75a64b29d3ef5d3cba75ad82ecb0d5a445f9e6b443e049eb2",
+            "root_sha256": "a8cced86b6b2f1d75a64b29d3ef5d3cba75ad82ecb0d5a445f9e6b443e049eb2",
+            "cli_nested_sha256": "a8cced86b6b2f1d75a64b29d3ef5d3cba75ad82ecb0d5a445f9e6b443e049eb2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/zip.js.map",
+            "archive_sha256": "4eb383ccd8719f3ef8c77d1dc80a168160b2aacb441579fee5e9a5204243d0c2",
+            "root_sha256": "4eb383ccd8719f3ef8c77d1dc80a168160b2aacb441579fee5e9a5204243d0c2",
+            "cli_nested_sha256": "4eb383ccd8719f3ef8c77d1dc80a168160b2aacb441579fee5e9a5204243d0c2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/cli.d.ts",
+            "archive_sha256": "f951bb4417b6bf5e1a405089508ecf011d11de655902b928666243365813ed1c",
+            "root_sha256": "f951bb4417b6bf5e1a405089508ecf011d11de655902b928666243365813ed1c",
+            "cli_nested_sha256": "f951bb4417b6bf5e1a405089508ecf011d11de655902b928666243365813ed1c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/cli.d.ts.map",
+            "archive_sha256": "dcdffd7a35ff7f3296d93a03a984b416fac68ce55e9d5a023c13242789770518",
+            "root_sha256": "dcdffd7a35ff7f3296d93a03a984b416fac68ce55e9d5a023c13242789770518",
+            "cli_nested_sha256": "dcdffd7a35ff7f3296d93a03a984b416fac68ce55e9d5a023c13242789770518",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/cli.js.map",
+            "archive_sha256": "2ea5910b89896df5cc200c675b9d130f0f48f6f6379918035e275405d24782b3",
+            "root_sha256": "2ea5910b89896df5cc200c675b9d130f0f48f6f6379918035e275405d24782b3",
+            "cli_nested_sha256": "2ea5910b89896df5cc200c675b9d130f0f48f6f6379918035e275405d24782b3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/restore-sandbox-env.d.ts",
+            "archive_sha256": "9f3b7c1405d592dcf28b76009f16ccbf352e837f3a4663b584bfb846118e5985",
+            "root_sha256": "9f3b7c1405d592dcf28b76009f16ccbf352e837f3a4663b584bfb846118e5985",
+            "cli_nested_sha256": "9f3b7c1405d592dcf28b76009f16ccbf352e837f3a4663b584bfb846118e5985",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/restore-sandbox-env.d.ts.map",
+            "archive_sha256": "3c9188f9b5186b435a1b44710922eeb5cea85e03b1ca6dc4a387953f4732a504",
+            "root_sha256": "3c9188f9b5186b435a1b44710922eeb5cea85e03b1ca6dc4a387953f4732a504",
+            "cli_nested_sha256": "3c9188f9b5186b435a1b44710922eeb5cea85e03b1ca6dc4a387953f4732a504",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/restore-sandbox-env.js.map",
+            "archive_sha256": "cd23faf3b2c8a702f4b17b78bc34243e88f89b1172d3fd851e97162c8fac0a85",
+            "root_sha256": "cd23faf3b2c8a702f4b17b78bc34243e88f89b1172d3fd851e97162c8fac0a85",
+            "cli_nested_sha256": "cd23faf3b2c8a702f4b17b78bc34243e88f89b1172d3fd851e97162c8fac0a85",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/runtime-setup.d.ts",
+            "archive_sha256": "e3e54b8e709e711e0f78170d36847402c8a7adfabfb8b03a4298cce7715837fe",
+            "root_sha256": "e3e54b8e709e711e0f78170d36847402c8a7adfabfb8b03a4298cce7715837fe",
+            "cli_nested_sha256": "e3e54b8e709e711e0f78170d36847402c8a7adfabfb8b03a4298cce7715837fe",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/runtime-setup.d.ts.map",
+            "archive_sha256": "4dec73eed10ef683af75921917cf8b72e43a09864a13a4bb90065535e9b7fcaf",
+            "root_sha256": "4dec73eed10ef683af75921917cf8b72e43a09864a13a4bb90065535e9b7fcaf",
+            "cli_nested_sha256": "4dec73eed10ef683af75921917cf8b72e43a09864a13a4bb90065535e9b7fcaf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/runtime-setup.js.map",
+            "archive_sha256": "504bd36733be4191cbd61bafb0b5d7c0633c3be5d8659c863e2ead43906135ea",
+            "root_sha256": "504bd36733be4191cbd61bafb0b5d7c0633c3be5d8659c863e2ead43906135ea",
+            "cli_nested_sha256": "504bd36733be4191cbd61bafb0b5d7c0633c3be5d8659c863e2ead43906135ea",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/sandbox-env-setup.d.ts",
+            "archive_sha256": "24031cfccd184dbb6a79aa3023eb998ac6a3d8597ca2dd366df3eb48e6becc22",
+            "root_sha256": "24031cfccd184dbb6a79aa3023eb998ac6a3d8597ca2dd366df3eb48e6becc22",
+            "cli_nested_sha256": "24031cfccd184dbb6a79aa3023eb998ac6a3d8597ca2dd366df3eb48e6becc22",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/sandbox-env-setup.d.ts.map",
+            "archive_sha256": "5d8a29d1090832d0cac88042df437601369cdbfbc62129eef29bfc306e785f08",
+            "root_sha256": "5d8a29d1090832d0cac88042df437601369cdbfbc62129eef29bfc306e785f08",
+            "cli_nested_sha256": "5d8a29d1090832d0cac88042df437601369cdbfbc62129eef29bfc306e785f08",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/bun/sandbox-env-setup.js.map",
+            "archive_sha256": "41a2de9742f8f056cab790dc8f606800b128dcf256be8b850c313266e31d9082",
+            "root_sha256": "41a2de9742f8f056cab790dc8f606800b128dcf256be8b850c313266e31d9082",
+            "cli_nested_sha256": "41a2de9742f8f056cab790dc8f606800b128dcf256be8b850c313266e31d9082",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli.d.ts",
+            "archive_sha256": "6f77e82bfb5dd3b1015dd92c63e427d505f9bbbdaa041cad6c704f41c553a536",
+            "root_sha256": "6f77e82bfb5dd3b1015dd92c63e427d505f9bbbdaa041cad6c704f41c553a536",
+            "cli_nested_sha256": "6f77e82bfb5dd3b1015dd92c63e427d505f9bbbdaa041cad6c704f41c553a536",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli.d.ts.map",
+            "archive_sha256": "07e1bab322fbea936a00ec149ad924a0d46aa4c8de79147e59c11d25bd0ca9e6",
+            "root_sha256": "07e1bab322fbea936a00ec149ad924a0d46aa4c8de79147e59c11d25bd0ca9e6",
+            "cli_nested_sha256": "07e1bab322fbea936a00ec149ad924a0d46aa4c8de79147e59c11d25bd0ca9e6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli.js.map",
+            "archive_sha256": "30854625f54faa8950ee61cdd5d7fd6f5198fb93bb97dee8b070ce042167c65c",
+            "root_sha256": "30854625f54faa8950ee61cdd5d7fd6f5198fb93bb97dee8b070ce042167c65c",
+            "cli_nested_sha256": "30854625f54faa8950ee61cdd5d7fd6f5198fb93bb97dee8b070ce042167c65c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/rpc-entry.d.ts",
+            "archive_sha256": "35817d22d692b15b0ba1da7b644c30247c68b7ed26db176612cceb24a31ad1fc",
+            "root_sha256": "35817d22d692b15b0ba1da7b644c30247c68b7ed26db176612cceb24a31ad1fc",
+            "cli_nested_sha256": "35817d22d692b15b0ba1da7b644c30247c68b7ed26db176612cceb24a31ad1fc",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/rpc-entry.d.ts.map",
+            "archive_sha256": "74f3c80b7c373105989a3493dec33b00d49aee099c9ba8cf656e1a5c6665f7a7",
+            "root_sha256": "74f3c80b7c373105989a3493dec33b00d49aee099c9ba8cf656e1a5c6665f7a7",
+            "cli_nested_sha256": "74f3c80b7c373105989a3493dec33b00d49aee099c9ba8cf656e1a5c6665f7a7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/rpc-entry.js.map",
+            "archive_sha256": "226dc041b7241fbe232276c128bcbd7c56426b8fecddeb0eaafdc07b65e18aac",
+            "root_sha256": "226dc041b7241fbe232276c128bcbd7c56426b8fecddeb0eaafdc07b65e18aac",
+            "cli_nested_sha256": "226dc041b7241fbe232276c128bcbd7c56426b8fecddeb0eaafdc07b65e18aac",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.d.ts",
+            "archive_sha256": "2f2c87d877a6502a11bcdbaf3be62c12a154ab87d795e954d44c50833d0efbcd",
+            "root_sha256": "2f2c87d877a6502a11bcdbaf3be62c12a154ab87d795e954d44c50833d0efbcd",
+            "cli_nested_sha256": "2f2c87d877a6502a11bcdbaf3be62c12a154ab87d795e954d44c50833d0efbcd",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.d.ts.map",
+            "archive_sha256": "05a3cb2bca2c6162714fabb071d3c6abc932f379b43b4de47cd7169f9c56673a",
+            "root_sha256": "05a3cb2bca2c6162714fabb071d3c6abc932f379b43b4de47cd7169f9c56673a",
+            "cli_nested_sha256": "05a3cb2bca2c6162714fabb071d3c6abc932f379b43b4de47cd7169f9c56673a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js.map",
+            "archive_sha256": "9c4a7cf33c20c2351bb129bce0500a47843e14639f1aa18a44a6d27f50b7ac50",
+            "root_sha256": "9c4a7cf33c20c2351bb129bce0500a47843e14639f1aa18a44a6d27f50b7ac50",
+            "cli_nested_sha256": "9c4a7cf33c20c2351bb129bce0500a47843e14639f1aa18a44a6d27f50b7ac50",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/index.d.ts",
+            "archive_sha256": "d1190c509d7f6efab70c6a0d3d79dc59ecdd0920bf9e73eb4ddb35b5eecb76e6",
+            "root_sha256": "d1190c509d7f6efab70c6a0d3d79dc59ecdd0920bf9e73eb4ddb35b5eecb76e6",
+            "cli_nested_sha256": "d1190c509d7f6efab70c6a0d3d79dc59ecdd0920bf9e73eb4ddb35b5eecb76e6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/index.d.ts.map",
+            "archive_sha256": "ecf58716472dc2abd0f39c054f18987b38dc18df7fcc4927ffcbe2dd56d66ff6",
+            "root_sha256": "ecf58716472dc2abd0f39c054f18987b38dc18df7fcc4927ffcbe2dd56d66ff6",
+            "cli_nested_sha256": "ecf58716472dc2abd0f39c054f18987b38dc18df7fcc4927ffcbe2dd56d66ff6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/index.js.map",
+            "archive_sha256": "8730e8fd6cfac1ed04a3ea04509e791b4c8b0ac5693c27c63d48db8e54ad9ef3",
+            "root_sha256": "8730e8fd6cfac1ed04a3ea04509e791b4c8b0ac5693c27c63d48db8e54ad9ef3",
+            "cli_nested_sha256": "8730e8fd6cfac1ed04a3ea04509e791b4c8b0ac5693c27c63d48db8e54ad9ef3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/index.d.ts",
+            "archive_sha256": "8655bbe07e10bbb9fbab88a0ac705f647f0d49a637a1d190b3afd8e862102b00",
+            "root_sha256": "8655bbe07e10bbb9fbab88a0ac705f647f0d49a637a1d190b3afd8e862102b00",
+            "cli_nested_sha256": "8655bbe07e10bbb9fbab88a0ac705f647f0d49a637a1d190b3afd8e862102b00",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/index.d.ts.map",
+            "archive_sha256": "9da6ec7cae9a4e53676c1d95ecce7cb87b50f14d3be5a39b6ef47d5a48f66643",
+            "root_sha256": "9da6ec7cae9a4e53676c1d95ecce7cb87b50f14d3be5a39b6ef47d5a48f66643",
+            "cli_nested_sha256": "9da6ec7cae9a4e53676c1d95ecce7cb87b50f14d3be5a39b6ef47d5a48f66643",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/index.js.map",
+            "archive_sha256": "84a56d8c3b02bba0f53cb31c5083129f1c40b3faa73b9b3ba7a00b835685191d",
+            "root_sha256": "84a56d8c3b02bba0f53cb31c5083129f1c40b3faa73b9b3ba7a00b835685191d",
+            "cli_nested_sha256": "84a56d8c3b02bba0f53cb31c5083129f1c40b3faa73b9b3ba7a00b835685191d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/index.d.ts",
+            "archive_sha256": "27e93e0bd3ef68ad652811f57539af73f9a278c9fbb79eb96e22d04f974317a5",
+            "root_sha256": "27e93e0bd3ef68ad652811f57539af73f9a278c9fbb79eb96e22d04f974317a5",
+            "cli_nested_sha256": "27e93e0bd3ef68ad652811f57539af73f9a278c9fbb79eb96e22d04f974317a5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/index.d.ts.map",
+            "archive_sha256": "890631570e8a4c268493f3f84e9dc2610247aaa7ef8cab5ea590fa0808987c3b",
+            "root_sha256": "890631570e8a4c268493f3f84e9dc2610247aaa7ef8cab5ea590fa0808987c3b",
+            "cli_nested_sha256": "890631570e8a4c268493f3f84e9dc2610247aaa7ef8cab5ea590fa0808987c3b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/index.js.map",
+            "archive_sha256": "dbe890144b10d87e344688911023edca4a545f13089a141edc8bc659773b26c8",
+            "root_sha256": "dbe890144b10d87e344688911023edca4a545f13089a141edc8bc659773b26c8",
+            "cli_nested_sha256": "dbe890144b10d87e344688911023edca4a545f13089a141edc8bc659773b26c8",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 67,
+    "byte_identical_scope_files": 63,
+    "pinned_patch_scope_files": 4,
+    "unresolved_scope_differences": 0
+  }
+}

@@ -523,6 +523,23 @@ two pinned support patches. Twelve corruption controls pass. Imported highlighte
 Git, Photon/WASM and broader native graphs remain open. No rendering, image, Git,
 module registration or native producer was executed.
 
+[pi-distribution-support.csv](pi-distribution-support.csv) adds three conditional
+prose templates and eight [boundaries](pi-distribution-support-boundaries.csv).
+Fifteen complete changelog/version/warning/ZIP/Windows/Bun/entry/barrel bodies
+cover 556 lines. All 152 string/template occurrences are partitioned against 149
+[exclusions](pi-distribution-support-exclusions.csv). The
+[scope](pi-distribution-support-scope.csv) accounts for five regexes and four
+catches, with no own Error constructor. Empty-session changelog parsing precedes
+the seen-version check, so its stderr warning can survive release-note suppression.
+Version querying is suppressed by Jouzu's runtime flag; direct API, warning,
+Windows cleanup and unbundled entry routes have distinct guards. Canonical checks
+cover 67 assets: 63 match archives and four pinned support patches. The nested
+manifest has a separately verified public packlist transformation. A bounded
+257-body import search supports the deprecation API qualification without claiming
+those bodies reviewed. Seventeen corruption controls pass. Compiled CLI/RPC
+bundles, imported resources and wider dependency producers remain pending. No
+update, ZIP write, entrypoint, process, network or native operation was executed.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -1391,6 +1408,7 @@ node review/text-inventory/verify-pi-interactive-support.cjs --node-modules <roo
 node review/text-inventory/verify-pi-theme-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-os-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-render-utilities.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-distribution-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
