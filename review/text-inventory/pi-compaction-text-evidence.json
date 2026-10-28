@@ -1,0 +1,1379 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "9d461eeab21835e0357e20cacdffa69cd94db9e2",
+  "inventory_file": "pi-compaction-text.csv",
+  "scope_file": "pi-compaction-text-scope.csv",
+  "boundary_file": "pi-compaction-text-boundaries.csv",
+  "exclusion_file": "pi-compaction-text-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          775,
+          805
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          1152,
+          1210
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/compaction-request.ts",
+      "sha256": "f62c742dc29a7db0bfe57f27d4d148e2e41df01c843772e7c6c1609eecfa674f",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          1,
+          12
+        ],
+        [
+          131,
+          146
+        ],
+        [
+          190,
+          242
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/native-context-projections.ts",
+      "sha256": "ec63859d00d9ce0f8f3fc2a097b95c03af80d63c166a0a06f1c1fa4a6845f866",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          1,
+          74
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/pi-native-requests.ts",
+      "sha256": "ba579fa8d5a6c1779f903da6d34e4f1107e1c34b29ba04afd1db709def2a8568",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          188,
+          201
+        ],
+        [
+          243,
+          303
+        ],
+        [
+          328,
+          368
+        ],
+        [
+          428,
+          440
+        ],
+        [
+          471,
+          551
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/native-request-store.ts",
+      "sha256": "d70deaa8e5df9921b7689c557d3d6fc8c2ddf02256116e5fac2b043c239201e9",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          25,
+          90
+        ],
+        [
+          813,
+          824
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/pi-session-ingress.ts",
+      "sha256": "216f115d8c9b94e0f40a283513c8a4fce1102f8dccb4a5e9100f06bfac96b805",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          253,
+          295
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/flow-status-context.ts",
+      "sha256": "310aea4e1ac9ff4b91ab9fa8227d6b5910454bee5be8e8706e27d86f81c2b73f",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          225,
+          287
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/native-submission-view.ts",
+      "sha256": "cebd9eeee286a184e26b21d2042ae09e88fa6a24f390b94ffc3301a600208d42",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          101,
+          115
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/flow-control/pi-compaction-receipts.ts",
+      "sha256": "7a7bdb607eed12b86bc50cdabb21c6a020d6b2f7f88ff5b8be7e8bfd7288e1d9",
+      "purpose": "Bounded active host/default Flow/localization route only; parent-owned whole producer inventories remain independent.",
+      "bounded_read_ranges": [
+        [
+          1,
+          71
+        ]
+      ]
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          2338,
+          2528
+        ],
+        [
+          2559,
+          2810
+        ],
+        [
+          3226,
+          3246
+        ],
+        [
+          3445,
+          3601
+        ],
+        [
+          3750,
+          3762
+        ],
+        [
+          3722,
+          3734
+        ],
+        [
+          2992,
+          3023
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          2595,
+          2608
+        ],
+        [
+          2972,
+          3084
+        ],
+        [
+          4688,
+          4742
+        ],
+        [
+          5607,
+          5678
+        ],
+        [
+          5949,
+          5956
+        ],
+        [
+          1768,
+          1799
+        ],
+        [
+          2092,
+          2103
+        ],
+        [
+          2318,
+          2329
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          251,
+          271
+        ],
+        [
+          503,
+          505
+        ],
+        [
+          782,
+          786
+        ],
+        [
+          101,
+          114
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          51,
+          88
+        ],
+        [
+          134,
+          136
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js",
+      "sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+      "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          190,
+          204
+        ],
+        [
+          923,
+          952
+        ],
+        [
+          1230,
+          1257
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/compaction-summary-message.js",
+      "sha256": "1f4c57f66126a0a8217273039dbe8fc60117064cd254e7f1fdd30477c3d5f88e",
+      "cli_nested_sha256": "1f4c57f66126a0a8217273039dbe8fc60117064cd254e7f1fdd30477c3d5f88e",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/branch-summary-message.js",
+      "sha256": "2485eb2d7d31590ab0055437cb1d661265fbf18d7690c0037ed0a3019ee71198",
+      "cli_nested_sha256": "2485eb2d7d31590ab0055437cb1d661265fbf18d7690c0037ed0a3019ee71198",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          54
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1315,
+          1335
+        ],
+        [
+          1432,
+          1476
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+      "cli_nested_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          249,
+          278
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js",
+      "sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+      "cli_nested_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          814,
+          840
+        ],
+        [
+          126,
+          145
+        ]
+      ],
+      "purpose": "Bounded actual consumer/caller/persistence/display route, not a new whole-source text closure. Prior full inventories are independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "cli_nested_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          54
+        ]
+      ],
+      "purpose": "Bounded imported helper proof only; full producer body and canonical pi-ai archive not covered by this unit."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "cli_nested_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "purpose": "Bounded imported helper proof only; full producer body and canonical pi-ai archive not covered by this unit."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js",
+      "sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+      "cli_nested_sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          198,
+          212
+        ]
+      ],
+      "purpose": "Bounded imported helper proof only; full producer body and canonical pi-ai archive not covered by this unit."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/retry.js",
+      "sha256": "b9b2e6914d6f99f921ddc1b680d24430ec608e26b29a9b1ab9683f8a889d4df0",
+      "cli_nested_sha256": "b9b2e6914d6f99f921ddc1b680d24430ec608e26b29a9b1ab9683f8a889d4df0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          149,
+          196
+        ]
+      ],
+      "purpose": "Bounded imported helper proof only; full producer body and canonical pi-ai archive not covered by this unit."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          165,
+          228
+        ]
+      ],
+      "purpose": "Bounded live AgentState versus file-export header data route; standalone summary request contexts are not stored as current systemPrompt."
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/compaction-summary-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/branch-summary-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js"
+    }
+  ],
+  "counts": {
+    "rows": 16,
+    "proofs": 16,
+    "scopes": 18,
+    "external_boundaries": 13,
+    "excluded_occurrences": 179,
+    "dispositioned_source_files": 6,
+    "string_template_occurrences": 195,
+    "error_constructors": 5,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 6,
+      "nonruntime-declaration-or-source-map": 12
+    },
+    "full_runtime_lines": 1359,
+    "runtime_source_bytes": 56558
+  },
+  "proofs": [
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.456.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 456,
+      "column": 16,
+      "kind": "template-expression",
+      "english": "${label} failed: ${response.errorMessage || \"Unknown error\"}",
+      "evidence": "`${label} failed: ${response.errorMessage || \"Unknown error\"}`"
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.456.61",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 456,
+      "column": 61,
+      "kind": "string-literal",
+      "english": "Unknown error",
+      "evidence": "\"Unknown error\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.459.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 459,
+      "column": 16,
+      "kind": "template-expression",
+      "english": "${label} failed: generation hit the token cap and the summary is incomplete",
+      "evidence": "`${label} failed: generation hit the token cap and the summary is incomplete`"
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.533.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 533,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Summarization",
+      "evidence": "\"Summarization\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.538.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 538,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "Summarization attempted to call a tool",
+      "evidence": "\"Summarization attempted to call a tool\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.737.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 737,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Turn prefix summarization",
+      "evidence": "\"Turn prefix summarization\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.742.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 742,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "Turn prefix summarization attempted to call a tool",
+      "evidence": "\"Turn prefix summarization attempted to call a tool\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.716.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 716,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "First kept entry has no UUID - session may need migration",
+      "evidence": "\"First kept entry has no UUID - session may need migration\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.694.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 694,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "No prior history.",
+      "evidence": "\"No prior history.\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.compaction.703.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "line": 703,
+      "column": 19,
+      "kind": "template-expression",
+      "english": "${historyText}\\n\\n---\\n\\n**Turn Context (split turn):**\\n\\n${turnPrefixResult.text}",
+      "evidence": "`${historyText}\\n\\n---\\n\\n**Turn Context (split turn):**\\n\\n${turnPrefixResult.text}`"
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.branch_summarization.149.33",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/branch-summarization.js",
+      "line": 149,
+      "column": 33,
+      "kind": "no-substitution-template",
+      "english": "The user explored a different conversation branch before returning here.\nSummary of that exploration:\n\n",
+      "evidence": "`The user explored a different conversation branch before returning here."
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.branch_summarization.196.27",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/branch-summarization.js",
+      "line": 196,
+      "column": 27,
+      "kind": "string-literal",
+      "english": "No content to summarize",
+      "evidence": "\"No content to summarize\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.branch_summarization.232.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/branch-summarization.js",
+      "line": 232,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Branch summarization",
+      "evidence": "\"Branch summarization\""
+    },
+    {
+      "item_id": "pi.compaction-text.compaction.branch_summarization.237.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/branch-summarization.js",
+      "line": 237,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "Branch summarization attempted to call a tool",
+      "evidence": "\"Branch summarization attempted to call a tool\""
+    },
+    {
+      "item_id": "pi.compaction-text.usage_totals.55.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/usage-totals.js",
+      "line": 55,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "Tools/summaries",
+      "evidence": "\"Tools/summaries\""
+    },
+    {
+      "item_id": "pi.compaction-text.usage_totals.59.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/usage-totals.js",
+      "line": 59,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "Tools/summaries",
+      "evidence": "\"Tools/summaries\""
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+        "read_lines": [
+          1,
+          749
+        ],
+        "string_template_occurrences": 84,
+        "fixed_rows": 10,
+        "excluded_occurrences": 74,
+        "review": "Full local source body read; every string/template occurrence individually partitioned. Native default/manual/automatic/branch gates, payload and model-request-only consumers traced; optional provider/extension/API producers remain bounded, not whole graph closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/branch-summarization.js",
+        "read_lines": [
+          1,
+          252
+        ],
+        "string_template_occurrences": 29,
+        "fixed_rows": 4,
+        "excluded_occurrences": 25,
+        "review": "Full local source body read; every string/template occurrence individually partitioned. Native default/manual/automatic/branch gates, payload and model-request-only consumers traced; optional provider/extension/API producers remain bounded, not whole graph closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/utils.js",
+        "read_lines": [
+          1,
+          148
+        ],
+        "string_template_occurrences": 38,
+        "fixed_rows": 0,
+        "excluded_occurrences": 38,
+        "review": "Full local source body read; every string/template occurrence individually partitioned. Native default/manual/automatic/branch gates, payload and model-request-only consumers traced; optional provider/extension/API producers remain bounded, not whole graph closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/index.js",
+        "read_lines": [
+          1,
+          7
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "review": "Full local source body read; every string/template occurrence individually partitioned. Native default/manual/automatic/branch gates, payload and model-request-only consumers traced; optional provider/extension/API producers remain bounded, not whole graph closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/messages.js",
+        "read_lines": [
+          1,
+          124
+        ],
+        "string_template_occurrences": 30,
+        "fixed_rows": 0,
+        "excluded_occurrences": 30,
+        "review": "Full local source body read; every string/template occurrence individually partitioned. Native default/manual/automatic/branch gates, payload and model-request-only consumers traced; optional provider/extension/API producers remain bounded, not whole graph closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/usage-totals.js",
+        "read_lines": [
+          1,
+          79
+        ],
+        "string_template_occurrences": 11,
+        "fixed_rows": 2,
+        "excluded_occurrences": 9,
+        "review": "Full local source body read; every string/template occurrence individually partitioned. Native default/manual/automatic/branch gates, payload and model-request-only consumers traced; optional provider/extension/API producers remain bounded, not whole graph closure."
+      }
+    ],
+    "error_constructor_census": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+        "constructors": [
+          {
+            "line": 535,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "failure",
+            "literal_refs": [],
+            "route": "getSummarizationFailure at compaction.js:454-462; exact label/failure template definitions separately inventoried"
+          },
+          {
+            "line": 538,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Summarization attempted to call a tool\"",
+            "literal_refs": [
+              {
+                "line": 538,
+                "column": 25,
+                "kind": "string-literal",
+                "text": "Summarization attempted to call a tool"
+              }
+            ],
+            "route": "Exact human headline is a fixed row; TUI event/branch/RPC/API route is conditional as recorded."
+          },
+          {
+            "line": 716,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"First kept entry has no UUID - session may need migration\"",
+            "literal_refs": [
+              {
+                "line": 716,
+                "column": 25,
+                "kind": "string-literal",
+                "text": "First kept entry has no UUID - session may need migration"
+              }
+            ],
+            "route": "Exact human headline is a fixed row; TUI event/branch/RPC/API route is conditional as recorded."
+          },
+          {
+            "line": 739,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "failure",
+            "literal_refs": [],
+            "route": "getSummarizationFailure at compaction.js:454-462; exact label/failure template definitions separately inventoried"
+          },
+          {
+            "line": 742,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Turn prefix summarization attempted to call a tool\"",
+            "literal_refs": [
+              {
+                "line": 742,
+                "column": 25,
+                "kind": "string-literal",
+                "text": "Turn prefix summarization attempted to call a tool"
+              }
+            ],
+            "route": "Exact human headline is a fixed row; TUI event/branch/RPC/API route is conditional as recorded."
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/branch-summarization.js",
+        "constructors": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/utils.js",
+        "constructors": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/index.js",
+        "constructors": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/messages.js",
+        "constructors": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/usage-totals.js",
+        "constructors": []
+      }
+    ],
+    "method": "Full six local bodies read as source only. All fixed strings/templates individually partitioned; constructor argument census supports Error and AggregateError/AggregateException message index1. Callers, default/custom policies, signal/response states, persistence and actual TUI/JSON/RPC/export sinks traced separately. No audited code evaluation."
+  },
+  "existing_sink_crosslinks": [
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.branch-summary-message.32.1",
+      "english": "\u001b[1m[branch]\u001b[22m",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/branch-summary-message.js:32"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.branch-summary-message.36.1",
+      "english": "**Branch Summary**\n\n",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/branch-summary-message.js:36"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.branch-summary-message.42.1",
+      "english": "Branch summary (",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/branch-summary-message.js:42"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.branch-summary-message.44.1",
+      "english": " to expand)",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/branch-summary-message.js:44"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.compaction-summary-message.33.1",
+      "english": "\u001b[1m[compaction]\u001b[22m",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/compaction-summary-message.js:33"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.compaction-summary-message.37.1",
+      "english": "**Compacted from ${tokenStr} tokens**\\n\\n",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/compaction-summary-message.js:37"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.compaction-summary-message.43.1",
+      "english": "Compacted from ${tokenStr} tokens (",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/compaction-summary-message.js:43"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.compaction-summary-message.45.1",
+      "english": " to expand)",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/compaction-summary-message.js:45"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.status-indicator.30.1",
+      "english": "Retrying (${attempt}/${maxAttempts}) in ${seconds}s... (${keyText(\"app.interrupt\")} to cancel)",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/status-indicator.js:30"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.status-indicator.46.1",
+      "english": "(${keyText(\"app.interrupt\")} to cancel)",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/status-indicator.js:46"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.status-indicator.48.1",
+      "english": "Compacting context... ${cancelHint}",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/status-indicator.js:48"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.status-indicator.49.1",
+      "english": "${reason === \"overflow\" ? \"Context overflow detected, \" : \"\"}Auto-compacting... ${cancelHint}",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/status-indicator.js:49"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.status-indicator.49.2",
+      "english": "Context overflow detected, ",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/status-indicator.js:49"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.status-indicator.55.1",
+      "english": "Summarizing branch... (${keyText(\"app.interrupt\")} to cancel)",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/status-indicator.js:55"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.interactive-mode.2999.1",
+      "english": "Compaction cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js:2999"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.interactive-mode.3002.1",
+      "english": "Auto-compaction cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js:3002"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.interactive-mode.4717.1",
+      "english": "Branch summarization cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js:4717"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.interactive-mode.4722.1",
+      "english": "Navigation cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js:4722"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.interactive-mode.4731.1",
+      "english": "Navigated to selected point",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js:4731"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2418.1",
+      "english": "Nothing to compact (session too small)",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2418"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2502.1",
+      "english": "Compaction failed: ${message}",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2502"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2363.1",
+      "english": "Compaction cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2363"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2363.2",
+      "english": "Branch summarization cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2363"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2364.1",
+      "english": "TextGuard could not check session history; ",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2364"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2364.2",
+      "english": " withheld.",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2364"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2410.1",
+      "english": "compaction",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2410"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2416.1",
+      "english": "Already compacted",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2416"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2433.1",
+      "english": "Compaction cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2433"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2463.1",
+      "english": "Compaction cancelled",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2463"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2615.1",
+      "english": "Context overflow recovery failed after one compact-and-retry attempt. Try reducing context or switching to a larger-context model.",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2615"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2616.1",
+      "english": "Truncated response recovery failed after one compact-and-retry attempt.",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2616"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2785.1",
+      "english": "compaction failed",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2785"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2791.1",
+      "english": "Context overflow recovery failed: ${message}",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2791"
+    },
+    {
+      "inventory": "pi.csv",
+      "item_id": "pi.agent.agent-session.2792.1",
+      "english": "Auto-compaction failed: ${message}",
+      "english_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2792"
+    }
+  ],
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "complete_directory": "dist/core/compaction",
+    "directory_files": [
+      "dist/core/compaction/branch-summarization.d.ts",
+      "dist/core/compaction/branch-summarization.d.ts.map",
+      "dist/core/compaction/branch-summarization.js",
+      "dist/core/compaction/branch-summarization.js.map",
+      "dist/core/compaction/compaction.d.ts",
+      "dist/core/compaction/compaction.d.ts.map",
+      "dist/core/compaction/compaction.js",
+      "dist/core/compaction/compaction.js.map",
+      "dist/core/compaction/index.d.ts",
+      "dist/core/compaction/index.d.ts.map",
+      "dist/core/compaction/index.js",
+      "dist/core/compaction/index.js.map",
+      "dist/core/compaction/utils.d.ts",
+      "dist/core/compaction/utils.d.ts.map",
+      "dist/core/compaction/utils.js",
+      "dist/core/compaction/utils.js.map"
+    ],
+    "additional_runtime_files": [
+      "dist/core/messages.js",
+      "dist/core/usage-totals.js"
+    ]
+  },
+  "limits": [
+    "Finite full six runtime bodies and twelve exact nonruntime directory assets only; broader Pi package graph remains open.",
+    "Direct standalone summarization prompts are not persisted main AgentState/systemPrompt export text; only accepted model summaries and local persisted wrappers enter summary entries. Forced request projection is not persisted prompt replay.",
+    "Flow default hashes/counts/status/projection route is bounded: raw projections accept custom/nonerror toolResult before conversion, not summary roles or generated conversion output. Optional callback/custom producer body publication remains pending.",
+    "Pi-ai imported helper bodies are bounded source traces, not full text/canonical archive closures. Native provider/parser/package/browser/optional extension-generated errors and arbitrary API publishers remain external.",
+    "Existing status/cancellation/error wrapper definitions crosslink pi.csv without duplication; this unit owns local producer definitions only. No exact catalog mapping found for the sixteen source occurrences.",
+    "String literals are TypeScript-decoded; template-expression body escapes remain exact raw source spelling. source_text_json preserves exclusions exactly.",
+    "No module/parser/model/browser/DOM/child/network/installer/state/export execution, dependency mutation, product source change or old/shared audit edits."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-compaction-text.cjs",
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/retry.js",
+      "status": "bounded-lines149-196-only",
+      "reason": "Retry fallback/provider error classification/delay/cancellation helpers and raw Error producers outside read range remain pending; bounded callback route may display dynamic event.errorMessage."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js",
+      "status": "bounded-lines198-212-only",
+      "reason": "completeSimple calls imported model stream/provider helpers; full provider/native/network diagnostic producers pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "status": "bounded-lines1-54-only",
+      "reason": "Fresh standalone normalizeContext construction established; other transcript/prompt replay functions not a new local closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "status": "bounded-lines1-18-only",
+      "reason": "Text extraction proof only; full imported text helper scope independent. No canonical pi-ai archive supplied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "status": "bounded-lines249-278-only",
+      "reason": "Additional serializeConversation consumer is standalone request input; complete bug report templates/CLI/export producers pending their own finite body pass."
+    },
+    {
+      "source": "optional:session_before_compact/session_before_tree_switch/streamFn/onConverted",
+      "status": "external-caller-or-hook-publication-pending",
+      "reason": "Optional hooks may mutate preparation, replace instructions/summary or publish request/conversion body. This unit establishes native default publishers only and does not close arbitrary consumer callbacks."
+    }
+  ],
+  "bounded_flow_route": [
+    {
+      "source": "repo:packages/cli/src/flow-control/native-context-projections.ts:7",
+      "condition": "Retained raw message is restricted to role custom or nonerror toolResult; summary/system source roles rejected.",
+      "source_anchor": "| { role: \"custom\"; customType: string; content: string; display: boolean; timestamp: number }"
+    },
+    {
+      "source": "repo:packages/cli/src/flow-control/pi-native-requests.ts:188",
+      "condition": "Projection capture precedes model conversion. Converted message result is hash/count/membership checked, then cleared rather than stored as body.",
+      "source_anchor": "let result = transform ? await transform(messages, signal) : messages;"
+    },
+    {
+      "source": "repo:packages/cli/src/flow-control/native-request-store.ts:813",
+      "condition": "Receipt begin copies source/transformed/model/system hash and capture metadata, not standalone converted request body.",
+      "source_anchor": "const captured = {"
+    },
+    {
+      "source": "repo:packages/cli/src/flow-control/pi-native-requests.ts:471",
+      "condition": "Maintenance summary beforeRequest records context/system/payload hashes and bytecount; raw stream callbacks remain optional external consumers.",
+      "source_anchor": "* Pi summarizes for compaction and branch summaries by calling the session stream function"
+    },
+    {
+      "source": "repo:packages/cli/src/flow-control/flow-status-context.ts:225",
+      "condition": "/flow detail projection carries stage/identity/hash/provider/model/failure metadata, not converted prompt body.",
+      "source_anchor": "export function captureFlowStatusContext("
+    },
+    {
+      "source": "repo:packages/cli/src/flow-control/native-submission-view.ts:101",
+      "condition": "Optional retained raw projection objects can be returned, but they are preconversion allowed roles, not summary conversion output.",
+      "source_anchor": "...(request.projectionCapture?.members.length"
+    }
+  ],
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/compaction/compaction.js",
+            "archive_sha256": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+            "root_sha256": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9",
+            "cli_nested_sha256": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/compaction/branch-summarization.js",
+            "archive_sha256": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+            "root_sha256": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b",
+            "cli_nested_sha256": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/compaction/utils.js",
+            "archive_sha256": "c7e234cf33528670658080b0c2f599f40a70459565c6c2a71d4a27cb0e4c5cfb",
+            "root_sha256": "c7e234cf33528670658080b0c2f599f40a70459565c6c2a71d4a27cb0e4c5cfb",
+            "cli_nested_sha256": "c7e234cf33528670658080b0c2f599f40a70459565c6c2a71d4a27cb0e4c5cfb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/index.js",
+            "archive_sha256": "2ab40284c2650bf3c3f195442be00497f0ee3cb726ac47c29bfa4b3ae209697e",
+            "root_sha256": "2ab40284c2650bf3c3f195442be00497f0ee3cb726ac47c29bfa4b3ae209697e",
+            "cli_nested_sha256": "2ab40284c2650bf3c3f195442be00497f0ee3cb726ac47c29bfa4b3ae209697e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/messages.js",
+            "archive_sha256": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+            "root_sha256": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29",
+            "cli_nested_sha256": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/usage-totals.js",
+            "archive_sha256": "aa324545a6bdc16293380b8b0d09dd960356b99c2f5d4870f1bc2046e590c465",
+            "root_sha256": "aa324545a6bdc16293380b8b0d09dd960356b99c2f5d4870f1bc2046e590c465",
+            "cli_nested_sha256": "aa324545a6bdc16293380b8b0d09dd960356b99c2f5d4870f1bc2046e590c465",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/branch-summarization.d.ts",
+            "archive_sha256": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+            "root_sha256": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f",
+            "cli_nested_sha256": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/compaction/branch-summarization.d.ts.map",
+            "archive_sha256": "829fb66773d391832f06caf7f8280d9fd64f694aa1bf102ede59516d8d381ba4",
+            "root_sha256": "829fb66773d391832f06caf7f8280d9fd64f694aa1bf102ede59516d8d381ba4",
+            "cli_nested_sha256": "829fb66773d391832f06caf7f8280d9fd64f694aa1bf102ede59516d8d381ba4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/branch-summarization.js.map",
+            "archive_sha256": "38dfae72939c2894b833b94fa73846438cb3d2b555e4c2e7441aebc8dc05cd3b",
+            "root_sha256": "38dfae72939c2894b833b94fa73846438cb3d2b555e4c2e7441aebc8dc05cd3b",
+            "cli_nested_sha256": "38dfae72939c2894b833b94fa73846438cb3d2b555e4c2e7441aebc8dc05cd3b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/compaction.d.ts",
+            "archive_sha256": "442c882b64a6ac23d3386865b7cfa3a5ac475a64333242f3068d4bc462c2e1c1",
+            "root_sha256": "442c882b64a6ac23d3386865b7cfa3a5ac475a64333242f3068d4bc462c2e1c1",
+            "cli_nested_sha256": "442c882b64a6ac23d3386865b7cfa3a5ac475a64333242f3068d4bc462c2e1c1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/compaction.d.ts.map",
+            "archive_sha256": "28c24ca28df072756304b8fcb68bf90985e4e485283becf1bd5e7dd9b957f942",
+            "root_sha256": "28c24ca28df072756304b8fcb68bf90985e4e485283becf1bd5e7dd9b957f942",
+            "cli_nested_sha256": "28c24ca28df072756304b8fcb68bf90985e4e485283becf1bd5e7dd9b957f942",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/compaction.js.map",
+            "archive_sha256": "7d6b73e9aa3f74db2c0152c87d76bee030beb32d6b649b73632687ea11cd98d7",
+            "root_sha256": "7d6b73e9aa3f74db2c0152c87d76bee030beb32d6b649b73632687ea11cd98d7",
+            "cli_nested_sha256": "7d6b73e9aa3f74db2c0152c87d76bee030beb32d6b649b73632687ea11cd98d7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/index.d.ts",
+            "archive_sha256": "04824d52dcd96d4a12be215a1fdca68dfcaa4790966e6a5822ea166d56592d39",
+            "root_sha256": "04824d52dcd96d4a12be215a1fdca68dfcaa4790966e6a5822ea166d56592d39",
+            "cli_nested_sha256": "04824d52dcd96d4a12be215a1fdca68dfcaa4790966e6a5822ea166d56592d39",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/index.d.ts.map",
+            "archive_sha256": "14de3a6ea93429a94465b439d72f41ae70b322a8fa40574c6450d0a659c4fd61",
+            "root_sha256": "14de3a6ea93429a94465b439d72f41ae70b322a8fa40574c6450d0a659c4fd61",
+            "cli_nested_sha256": "14de3a6ea93429a94465b439d72f41ae70b322a8fa40574c6450d0a659c4fd61",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/index.js.map",
+            "archive_sha256": "f3aecb95d1168f7de0be7a6b6a874309a50c3c44cfa763f98dc7ddcd047180bf",
+            "root_sha256": "f3aecb95d1168f7de0be7a6b6a874309a50c3c44cfa763f98dc7ddcd047180bf",
+            "cli_nested_sha256": "f3aecb95d1168f7de0be7a6b6a874309a50c3c44cfa763f98dc7ddcd047180bf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/utils.d.ts",
+            "archive_sha256": "9c32de7721e97d72f6720f67cc33fb51e57cab5d60eb606fd5b866be899397ab",
+            "root_sha256": "9c32de7721e97d72f6720f67cc33fb51e57cab5d60eb606fd5b866be899397ab",
+            "cli_nested_sha256": "9c32de7721e97d72f6720f67cc33fb51e57cab5d60eb606fd5b866be899397ab",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/utils.d.ts.map",
+            "archive_sha256": "e8b0649fda953d18e1eec77caf8994c62e5695e36a0d71efbc0e97cdd7bdfd8d",
+            "root_sha256": "e8b0649fda953d18e1eec77caf8994c62e5695e36a0d71efbc0e97cdd7bdfd8d",
+            "cli_nested_sha256": "e8b0649fda953d18e1eec77caf8994c62e5695e36a0d71efbc0e97cdd7bdfd8d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/compaction/utils.js.map",
+            "archive_sha256": "21f3fb2676343f972eb1e0e0f3215caa5585eefeb736509ababd8d1ccd15ea62",
+            "root_sha256": "21f3fb2676343f972eb1e0e0f3215caa5585eefeb736509ababd8d1ccd15ea62",
+            "cli_nested_sha256": "21f3fb2676343f972eb1e0e0f3215caa5585eefeb736509ababd8d1ccd15ea62",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/session-manager.js",
+            "archive_sha256": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+            "root_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+            "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/compaction-summary-message.js",
+            "archive_sha256": "1f4c57f66126a0a8217273039dbe8fc60117064cd254e7f1fdd30477c3d5f88e",
+            "root_sha256": "1f4c57f66126a0a8217273039dbe8fc60117064cd254e7f1fdd30477c3d5f88e",
+            "cli_nested_sha256": "1f4c57f66126a0a8217273039dbe8fc60117064cd254e7f1fdd30477c3d5f88e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/branch-summary-message.js",
+            "archive_sha256": "2485eb2d7d31590ab0055437cb1d661265fbf18d7690c0037ed0a3019ee71198",
+            "root_sha256": "2485eb2d7d31590ab0055437cb1d661265fbf18d7690c0037ed0a3019ee71198",
+            "cli_nested_sha256": "2485eb2d7d31590ab0055437cb1d661265fbf18d7690c0037ed0a3019ee71198",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/bug-report.js",
+            "archive_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+            "root_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+            "cli_nested_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/runner.js",
+            "archive_sha256": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+            "root_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+            "cli_nested_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 29,
+    "byte_identical_scope_files": 20,
+    "pinned_patch_scope_files": 9,
+    "unresolved_scope_differences": 0
+  },
+  "route_refinements": [
+    "Final source review adds owned compaction-request onError notification as independent original-error publisher. Nonaborted qualification applies specifically to compaction_end error painting, not callback/RPC publication. All sixteen IDs/English/source anchors unchanged."
+  ]
+}

@@ -298,6 +298,23 @@ InteractiveMode records include native help/session/debug-file prose, constructo
 and event dispatch, startup/version gates and host overrides. Manual compaction
 error, automatic status and migration-warning sinks have separate conditions.
 
+[pi-compaction-text.csv](pi-compaction-text.csv) adds 16 inherited compaction,
+branch-summary and usage-label definitions, with 13
+[boundaries](pi-compaction-text-boundaries.csv) and 179 exact
+[exclusions](pi-compaction-text-exclusions.csv). Six complete runtime bodies cover
+1,359 lines and 195 string/template occurrences; twelve directory declarations
+and maps have nonruntime dispositions in the
+[scope](pi-compaction-text-scope.csv). Canonical comparison checks 29 assets:
+20 match archive bytes and nine match pinned source patches, with no unexplained
+difference. Thirty-four prior sink records are crosslinked without duplication.
+Accepted summaries can persist branch preambles, split-turn headings and empty
+history/content text; standalone request instructions and conversion prefixes
+remain qualified by their separate request/observer routes. The nonempty branch
+preamble excludes the final empty-summary fallback. Error records distinguish
+compaction-end painting from independent callback notifications/RPC rejection.
+Seven in-memory corruption controls pass. No model, native, parser, export or
+state operation was executed; provider/retry/transitive helper bodies remain open.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -817,6 +834,7 @@ node review/text-inventory/verify-pi-resource-text.cjs --node-modules <root-node
 node review/text-inventory/verify-pi-export-metadata.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-export-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-export-vendor.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-compaction-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
