@@ -178,7 +178,20 @@ profile manager, with actual plan/apply, JSON, doctor and startup consumers.
 Rows distinguish conflict previews from successful apply output, and raw saved
 target/root-escape diagnostics from catalog errors. Three prompt patterns are
 explicitly API-only because their helper has no production caller. Migration
-and copied asset bodies retain separate producer boundaries.
+and copied asset bodies are distinguished in the resource unit below.
+
+[profile-resources.csv](profile-resources.csv) adds 1,310 packaged-resource
+records: 717 primary Markdown/manifest spans, 567 nested occurrences and 26
+delivery boundaries. The [scope](profile-resources-scope.csv) covers thirteen
+complete bodies, 917 lines, eleven manifest-matched assets and 36 source hashes.
+Public source-reading is distinct from conditional installed skill, reference,
+prompt, model and UI consumption. Five skill descriptions, examples and suggested
+status words keep their ownership; technical keys, commands and runtime enum
+values are protected. Six Japanese-only paragraphs have explicit blank-English
+dispositions, with English heading/technical tokens retained separately. Child
+resource loading, JA append exclusion and explicit migration confirmation have
+their own guards. Native Pi listing/prompt framing remains a dependency boundary.
+No asset, example, skill, model, scan, migration or build producer was executed.
 
 [profile-migration.csv](profile-migration.csv) adds 133 migration records:
 48 catalog occurrences across 32 IDs, 52 fixed or protected machine occurrences
@@ -1041,6 +1054,7 @@ node review/text-inventory/verify-scrollback.cjs
 python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-profiles.py
+python -B review/text-inventory/verify-profile-resources.py
 python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-model-picker.py
