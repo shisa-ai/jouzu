@@ -131,6 +131,21 @@ string chunk; protected titles are subsequently filtered on current main. Native
 resolver warning fields are discarded by the thinking-suffix helper. Five
 corruption controls pass; no startup, file, provider, UI or stdout producer ran.
 
+[file-state-support.csv](file-state-support.csv) adds 24 path/lock records:
+two catalog occurrences, thirteen fixed/protected fragments and nine boundaries.
+Four complete path, digest and lock bodies cover 443 lines. The
+[scope](file-state-support-scope.csv) pins 24 sources; all 112 AST
+string/template/regex nodes are partitioned against 97
+[exclusions](file-state-support-exclusions.csv), with eight Error constructors
+and ten catches. Process-lock cleanup can replace the acquisition cause;
+Flow wraps headlines, while subagent busy paths replace or suppress them and
+storage/release paths can retain detail. Two private state-lock reader headlines
+are caught into status or ignored. Doctor maps inspection states to catalog
+messages; age strings and selected raw state arguments retain their boundaries.
+Path/digest/SQL identities are protected data, and caller onBusy callbacks own
+their wording. Five corruption controls pass without locks, SQLite, process
+probes, native or user-state IO.
+
 [host-ui.csv](host-ui.csv) adds 30 help/host-policy records: 14 catalog
 occurrences, ten fixed or protected command/key/refusal occurrences and six
 payload boundaries. Three complete bodies and all 65 lexical occurrences are
@@ -1083,6 +1098,7 @@ python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 node review/text-inventory/verify-cli-startup-support.cjs
+node review/text-inventory/verify-file-state-support.cjs
 node review/text-inventory/verify-host-ui.cjs
 node review/text-inventory/verify-scrollback.cjs
 python -B review/text-inventory/verify-doctor.py

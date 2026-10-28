@@ -1,0 +1,1383 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "packages/cli/src/paths.ts": 126,
+    "packages/cli/src/path-digest.ts": 23,
+    "packages/cli/src/process-lock.ts": 118,
+    "packages/cli/src/state-lock.ts": 176
+  },
+  "anchors": [
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 1,
+      "column": 25,
+      "expression": "\"node:os\"",
+      "item_id": "FILE-STATE-SUPPORT-X-001",
+      "kind": "excluded",
+      "english": "node:os",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 2,
+      "column": 30,
+      "expression": "\"node:path\"",
+      "item_id": "FILE-STATE-SUPPORT-X-002",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 3,
+      "column": 52,
+      "expression": "\"./human-messages.js\"",
+      "item_id": "FILE-STATE-SUPPORT-X-003",
+      "kind": "excluded",
+      "english": "./human-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 43,
+      "column": 16,
+      "expression": "\"~\"",
+      "item_id": "FILE-STATE-SUPPORT-X-004",
+      "kind": "excluded",
+      "english": "~",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 44,
+      "column": 23,
+      "expression": "\"~/\"",
+      "item_id": "FILE-STATE-SUPPORT-X-005",
+      "kind": "excluded",
+      "english": "~/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 44,
+      "column": 49,
+      "expression": "\"~\\\\\"",
+      "item_id": "FILE-STATE-SUPPORT-X-006",
+      "kind": "excluded",
+      "english": "~\\",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 45,
+      "column": 32,
+      "expression": "\"win32\"",
+      "item_id": "FILE-STATE-SUPPORT-X-007",
+      "kind": "excluded",
+      "english": "win32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 52,
+      "column": 31,
+      "expression": "\"win32\"",
+      "item_id": "FILE-STATE-SUPPORT-X-008",
+      "kind": "excluded",
+      "english": "win32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 60,
+      "column": 31,
+      "expression": "\"win32\"",
+      "item_id": "FILE-STATE-SUPPORT-X-009",
+      "kind": "excluded",
+      "english": "win32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 71,
+      "column": 33,
+      "expression": "\"agent\"",
+      "item_id": "FILE-STATE-SUPPORT-X-010",
+      "kind": "excluded",
+      "english": "agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 72,
+      "column": 33,
+      "expression": "\"state\"",
+      "item_id": "FILE-STATE-SUPPORT-X-011",
+      "kind": "excluded",
+      "english": "state",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 73,
+      "column": 33,
+      "expression": "\"cache\"",
+      "item_id": "FILE-STATE-SUPPORT-X-012",
+      "kind": "excluded",
+      "english": "cache",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 74,
+      "column": 26,
+      "expression": "\"darwin\"",
+      "item_id": "FILE-STATE-SUPPORT-X-013",
+      "kind": "excluded",
+      "english": "darwin",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 75,
+      "column": 49,
+      "expression": "\"Library\"",
+      "item_id": "FILE-STATE-SUPPORT-X-014",
+      "kind": "excluded",
+      "english": "Library",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 75,
+      "column": 60,
+      "expression": "\"Application Support\"",
+      "item_id": "FILE-STATE-SUPPORT-X-015",
+      "kind": "excluded",
+      "english": "Application Support",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 75,
+      "column": 83,
+      "expression": "\"Jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-016",
+      "kind": "excluded",
+      "english": "Jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 77,
+      "column": 47,
+      "expression": "\"agent\"",
+      "item_id": "FILE-STATE-SUPPORT-X-017",
+      "kind": "excluded",
+      "english": "agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 78,
+      "column": 47,
+      "expression": "\"state\"",
+      "item_id": "FILE-STATE-SUPPORT-X-018",
+      "kind": "excluded",
+      "english": "state",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 79,
+      "column": 33,
+      "expression": "\"Library\"",
+      "item_id": "FILE-STATE-SUPPORT-X-019",
+      "kind": "excluded",
+      "english": "Library",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 79,
+      "column": 44,
+      "expression": "\"Caches\"",
+      "item_id": "FILE-STATE-SUPPORT-X-020",
+      "kind": "excluded",
+      "english": "Caches",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 79,
+      "column": 54,
+      "expression": "\"Jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-021",
+      "kind": "excluded",
+      "english": "Jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 80,
+      "column": 26,
+      "expression": "\"win32\"",
+      "item_id": "FILE-STATE-SUPPORT-X-022",
+      "kind": "excluded",
+      "english": "win32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 82,
+      "column": 48,
+      "expression": "\"AppData\"",
+      "item_id": "FILE-STATE-SUPPORT-X-023",
+      "kind": "excluded",
+      "english": "AppData",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 82,
+      "column": 59,
+      "expression": "\"Roaming\"",
+      "item_id": "FILE-STATE-SUPPORT-X-024",
+      "kind": "excluded",
+      "english": "Roaming",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 88,
+      "column": 53,
+      "expression": "\"AppData\"",
+      "item_id": "FILE-STATE-SUPPORT-X-025",
+      "kind": "excluded",
+      "english": "AppData",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 88,
+      "column": 64,
+      "expression": "\"Local\"",
+      "item_id": "FILE-STATE-SUPPORT-X-026",
+      "kind": "excluded",
+      "english": "Local",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 93,
+      "column": 37,
+      "expression": "\"Jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-027",
+      "kind": "excluded",
+      "english": "Jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 94,
+      "column": 38,
+      "expression": "\"agent\"",
+      "item_id": "FILE-STATE-SUPPORT-X-028",
+      "kind": "excluded",
+      "english": "agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 95,
+      "column": 34,
+      "expression": "\"Jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-029",
+      "kind": "excluded",
+      "english": "Jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 95,
+      "column": 43,
+      "expression": "\"state\"",
+      "item_id": "FILE-STATE-SUPPORT-X-030",
+      "kind": "excluded",
+      "english": "state",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 96,
+      "column": 34,
+      "expression": "\"Jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-031",
+      "kind": "excluded",
+      "english": "Jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 96,
+      "column": 43,
+      "expression": "\"cache\"",
+      "item_id": "FILE-STATE-SUPPORT-X-032",
+      "kind": "excluded",
+      "english": "cache",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 99,
+      "column": 56,
+      "expression": "\".config\"",
+      "item_id": "FILE-STATE-SUPPORT-X-033",
+      "kind": "excluded",
+      "english": ".config",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 105,
+      "column": 55,
+      "expression": "\".local\"",
+      "item_id": "FILE-STATE-SUPPORT-X-034",
+      "kind": "excluded",
+      "english": ".local",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 105,
+      "column": 65,
+      "expression": "\"state\"",
+      "item_id": "FILE-STATE-SUPPORT-X-035",
+      "kind": "excluded",
+      "english": "state",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 110,
+      "column": 85,
+      "expression": "\".cache\"",
+      "item_id": "FILE-STATE-SUPPORT-X-036",
+      "kind": "excluded",
+      "english": ".cache",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 111,
+      "column": 40,
+      "expression": "\"jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-037",
+      "kind": "excluded",
+      "english": "jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 112,
+      "column": 38,
+      "expression": "\"agent\"",
+      "item_id": "FILE-STATE-SUPPORT-X-038",
+      "kind": "excluded",
+      "english": "agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 113,
+      "column": 38,
+      "expression": "\"jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-039",
+      "kind": "excluded",
+      "english": "jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 114,
+      "column": 38,
+      "expression": "\"jouzu\"",
+      "item_id": "FILE-STATE-SUPPORT-X-040",
+      "kind": "excluded",
+      "english": "jouzu",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 122,
+      "column": 38,
+      "expression": "\"sessions\"",
+      "item_id": "FILE-STATE-SUPPORT-X-041",
+      "kind": "excluded",
+      "english": "sessions",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 123,
+      "column": 44,
+      "expression": "\"profile-state.json\"",
+      "item_id": "FILE-STATE-SUPPORT-X-042",
+      "kind": "excluded",
+      "english": "profile-state.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 124,
+      "column": 37,
+      "expression": "\"backups\"",
+      "item_id": "FILE-STATE-SUPPORT-X-043",
+      "kind": "excluded",
+      "english": "backups",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/path-digest.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "item_id": "FILE-STATE-SUPPORT-X-044",
+      "kind": "excluded",
+      "english": "node:crypto",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/path-digest.ts",
+      "line": 8,
+      "column": 20,
+      "expression": "\"sha256\"",
+      "item_id": "FILE-STATE-SUPPORT-X-045",
+      "kind": "excluded",
+      "english": "sha256",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/path-digest.ts",
+      "line": 8,
+      "column": 67,
+      "expression": "\"hex\"",
+      "item_id": "FILE-STATE-SUPPORT-X-046",
+      "kind": "excluded",
+      "english": "hex",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 1,
+      "column": 48,
+      "expression": "\"node:fs\"",
+      "item_id": "FILE-STATE-SUPPORT-X-047",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 2,
+      "column": 43,
+      "expression": "\"node:path\"",
+      "item_id": "FILE-STATE-SUPPORT-X-048",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 3,
+      "column": 30,
+      "expression": "\"node:sqlite\"",
+      "item_id": "FILE-STATE-SUPPORT-X-049",
+      "kind": "excluded",
+      "english": "node:sqlite",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 4,
+      "column": 45,
+      "expression": "\"./cli-messages.js\"",
+      "item_id": "FILE-STATE-SUPPORT-X-050",
+      "kind": "excluded",
+      "english": "./cli-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 5,
+      "column": 31,
+      "expression": "\"./human-messages.js\"",
+      "item_id": "FILE-STATE-SUPPORT-X-051",
+      "kind": "excluded",
+      "english": "./human-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 6,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "FILE-STATE-SUPPORT-X-052",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 7,
+      "column": 40,
+      "expression": "\"./private-fs.js\"",
+      "item_id": "FILE-STATE-SUPPORT-X-053",
+      "kind": "excluded",
+      "english": "./private-fs.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 16,
+      "column": 8,
+      "expression": "\"jouzu.cli.processLock.busy\"",
+      "item_id": "FILE-STATE-SUPPORT-001",
+      "kind": "catalog",
+      "english": "The process lock is held by another process: { $path }",
+      "catalog_id": "jouzu.cli.processLock.busy"
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 17,
+      "column": 15,
+      "expression": "\"jouzu.cli.processLock.unavailable\"",
+      "item_id": "FILE-STATE-SUPPORT-002",
+      "kind": "catalog",
+      "english": "The process lock could not be acquired: { $path }",
+      "catalog_id": "jouzu.cli.processLock.unavailable"
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 29,
+      "column": 20,
+      "expression": "\"busy\"",
+      "item_id": "FILE-STATE-SUPPORT-X-054",
+      "kind": "excluded",
+      "english": "busy",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 29,
+      "column": 29,
+      "expression": "\"storage\"",
+      "item_id": "FILE-STATE-SUPPORT-X-055",
+      "kind": "excluded",
+      "english": "storage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 34,
+      "column": 15,
+      "expression": "\"ProcessLockError\"",
+      "item_id": "FILE-STATE-SUPPORT-X-056",
+      "kind": "excluded",
+      "english": "ProcessLockError",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 62,
+      "column": 29,
+      "expression": "\"wx\"",
+      "item_id": "FILE-STATE-SUPPORT-X-057",
+      "kind": "excluded",
+      "english": "wx",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 64,
+      "column": 36,
+      "expression": "\"code\"",
+      "item_id": "FILE-STATE-SUPPORT-X-058",
+      "kind": "excluded",
+      "english": "code",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 64,
+      "column": 70,
+      "expression": "\"EEXIST\"",
+      "item_id": "FILE-STATE-SUPPORT-X-059",
+      "kind": "excluded",
+      "english": "EEXIST",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 68,
+      "column": 31,
+      "expression": "\"storage\"",
+      "item_id": "FILE-STATE-SUPPORT-X-060",
+      "kind": "excluded",
+      "english": "storage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 68,
+      "column": 42,
+      "expression": "`A process lock requires a regular file: ${path}`",
+      "item_id": "FILE-STATE-SUPPORT-003",
+      "kind": "fixed",
+      "english": "A process lock requires a regular file: ${path}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 74,
+      "column": 24,
+      "expression": "\"PRAGMA journal_mode=OFF\"",
+      "item_id": "FILE-STATE-SUPPORT-X-061",
+      "kind": "excluded",
+      "english": "PRAGMA journal_mode=OFF",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 74,
+      "column": 75,
+      "expression": "\"off\"",
+      "item_id": "FILE-STATE-SUPPORT-X-062",
+      "kind": "excluded",
+      "english": "off",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 75,
+      "column": 31,
+      "expression": "\"storage\"",
+      "item_id": "FILE-STATE-SUPPORT-X-063",
+      "kind": "excluded",
+      "english": "storage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 75,
+      "column": 42,
+      "expression": "`The process lock could not disable journaling: ${path}`",
+      "item_id": "FILE-STATE-SUPPORT-004",
+      "kind": "fixed",
+      "english": "The process lock could not disable journaling: ${path}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 78,
+      "column": 17,
+      "expression": "\"PRAGMA busy_timeout=0; BEGIN IMMEDIATE;\"",
+      "item_id": "FILE-STATE-SUPPORT-X-064",
+      "kind": "excluded",
+      "english": "PRAGMA busy_timeout=0; BEGIN IMMEDIATE;",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 85,
+      "column": 31,
+      "expression": "\"storage\"",
+      "item_id": "FILE-STATE-SUPPORT-X-065",
+      "kind": "excluded",
+      "english": "storage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 85,
+      "column": 42,
+      "expression": "`The process lock could not be closed after acquisition failed: ${path}`",
+      "item_id": "FILE-STATE-SUPPORT-005",
+      "kind": "fixed",
+      "english": "The process lock could not be closed after acquisition failed: ${path}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 90,
+      "column": 42,
+      "expression": "\"errcode\"",
+      "item_id": "FILE-STATE-SUPPORT-X-066",
+      "kind": "excluded",
+      "english": "errcode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 92,
+      "column": 11,
+      "expression": "\"busy\"",
+      "item_id": "FILE-STATE-SUPPORT-X-067",
+      "kind": "excluded",
+      "english": "busy",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 92,
+      "column": 20,
+      "expression": "\"storage\"",
+      "item_id": "FILE-STATE-SUPPORT-X-068",
+      "kind": "excluded",
+      "english": "storage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 111,
+      "column": 41,
+      "expression": "\"storage\"",
+      "item_id": "FILE-STATE-SUPPORT-X-069",
+      "kind": "excluded",
+      "english": "storage",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 111,
+      "column": 52,
+      "expression": "`The process lock did not close cleanly: ${path}`",
+      "item_id": "FILE-STATE-SUPPORT-006",
+      "kind": "fixed",
+      "english": "The process lock did not close cleanly: ${path}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "item_id": "FILE-STATE-SUPPORT-X-070",
+      "kind": "excluded",
+      "english": "node:crypto",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 12,
+      "column": 8,
+      "expression": "\"node:fs\"",
+      "item_id": "FILE-STATE-SUPPORT-X-071",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 13,
+      "column": 25,
+      "expression": "\"node:path\"",
+      "item_id": "FILE-STATE-SUPPORT-X-072",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 14,
+      "column": 66,
+      "expression": "\"./private-fs.js\"",
+      "item_id": "FILE-STATE-SUPPORT-X-073",
+      "kind": "excluded",
+      "english": "./private-fs.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 24,
+      "column": 83,
+      "expression": "\"Invalid lock record\"",
+      "item_id": "FILE-STATE-SUPPORT-X-074",
+      "kind": "excluded",
+      "english": "Invalid lock record",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 29,
+      "column": 62,
+      "expression": "\"utf8\"",
+      "item_id": "FILE-STATE-SUPPORT-X-075",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 32,
+      "column": 19,
+      "expression": "\"Lock record exceeds size limit\"",
+      "item_id": "FILE-STATE-SUPPORT-X-076",
+      "kind": "excluded",
+      "english": "Lock record exceeds size limit",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 44,
+      "column": 31,
+      "expression": "\"free\"",
+      "item_id": "FILE-STATE-SUPPORT-X-077",
+      "kind": "excluded",
+      "english": "free",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 44,
+      "column": 40,
+      "expression": "\"held-live\"",
+      "item_id": "FILE-STATE-SUPPORT-X-078",
+      "kind": "excluded",
+      "english": "held-live",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 44,
+      "column": 54,
+      "expression": "\"held-dead\"",
+      "item_id": "FILE-STATE-SUPPORT-X-079",
+      "kind": "excluded",
+      "english": "held-dead",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 44,
+      "column": 68,
+      "expression": "\"owner-unknown\"",
+      "item_id": "FILE-STATE-SUPPORT-X-080",
+      "kind": "excluded",
+      "english": "owner-unknown",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 44,
+      "column": 86,
+      "expression": "\"invalid\"",
+      "item_id": "FILE-STATE-SUPPORT-X-081",
+      "kind": "excluded",
+      "english": "invalid",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 44,
+      "column": 98,
+      "expression": "\"unreadable\"",
+      "item_id": "FILE-STATE-SUPPORT-X-082",
+      "kind": "excluded",
+      "english": "unreadable",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 66,
+      "column": 36,
+      "expression": "\"code\"",
+      "item_id": "FILE-STATE-SUPPORT-X-083",
+      "kind": "excluded",
+      "english": "code",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 66,
+      "column": 70,
+      "expression": "\"EPERM\"",
+      "item_id": "FILE-STATE-SUPPORT-X-084",
+      "kind": "excluded",
+      "english": "EPERM",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 79,
+      "column": 34,
+      "expression": "\"invalid\"",
+      "item_id": "FILE-STATE-SUPPORT-007",
+      "kind": "fixed",
+      "english": "invalid",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 84,
+      "column": 35,
+      "expression": "\"invalid\"",
+      "item_id": "FILE-STATE-SUPPORT-008",
+      "kind": "fixed",
+      "english": "invalid",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 91,
+      "column": 27,
+      "expression": "\"number\"",
+      "item_id": "FILE-STATE-SUPPORT-X-085",
+      "kind": "excluded",
+      "english": "number",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 92,
+      "column": 33,
+      "expression": "\"string\"",
+      "item_id": "FILE-STATE-SUPPORT-X-086",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 93,
+      "column": 29,
+      "expression": "\"string\"",
+      "item_id": "FILE-STATE-SUPPORT-X-087",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 100,
+      "column": 35,
+      "expression": "\"owner-unknown\"",
+      "item_id": "FILE-STATE-SUPPORT-009",
+      "kind": "fixed",
+      "english": "owner-unknown",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 105,
+      "column": 37,
+      "expression": "\"held-live\"",
+      "item_id": "FILE-STATE-SUPPORT-010",
+      "kind": "fixed",
+      "english": "held-live",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 105,
+      "column": 51,
+      "expression": "\"held-dead\"",
+      "item_id": "FILE-STATE-SUPPORT-011",
+      "kind": "fixed",
+      "english": "held-dead",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 109,
+      "column": 33,
+      "expression": "\"code\"",
+      "item_id": "FILE-STATE-SUPPORT-X-088",
+      "kind": "excluded",
+      "english": "code",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 109,
+      "column": 67,
+      "expression": "\"ENOENT\"",
+      "item_id": "FILE-STATE-SUPPORT-X-089",
+      "kind": "excluded",
+      "english": "ENOENT",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 110,
+      "column": 36,
+      "expression": "\"free\"",
+      "item_id": "FILE-STATE-SUPPORT-012",
+      "kind": "fixed",
+      "english": "free",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 112,
+      "column": 34,
+      "expression": "\"unreadable\"",
+      "item_id": "FILE-STATE-SUPPORT-013",
+      "kind": "fixed",
+      "english": "unreadable",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 141,
+      "column": 45,
+      "expression": "\"wx\"",
+      "item_id": "FILE-STATE-SUPPORT-X-090",
+      "kind": "excluded",
+      "english": "wx",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 142,
+      "column": 29,
+      "expression": "`${JSON.stringify(record)}\\n`",
+      "item_id": "FILE-STATE-SUPPORT-X-091",
+      "kind": "excluded",
+      "english": "${JSON.stringify(record)}\\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 149,
+      "column": 35,
+      "expression": "\"code\"",
+      "item_id": "FILE-STATE-SUPPORT-X-092",
+      "kind": "excluded",
+      "english": "code",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 149,
+      "column": 69,
+      "expression": "\"EEXIST\"",
+      "item_id": "FILE-STATE-SUPPORT-X-093",
+      "kind": "excluded",
+      "english": "EEXIST",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 151,
+      "column": 29,
+      "expression": "\"free\"",
+      "item_id": "FILE-STATE-SUPPORT-X-094",
+      "kind": "excluded",
+      "english": "free",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 155,
+      "column": 29,
+      "expression": "\"held-live\"",
+      "item_id": "FILE-STATE-SUPPORT-X-095",
+      "kind": "excluded",
+      "english": "held-live",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 155,
+      "column": 66,
+      "expression": "\"invalid\"",
+      "item_id": "FILE-STATE-SUPPORT-X-096",
+      "kind": "excluded",
+      "english": "invalid",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 155,
+      "column": 101,
+      "expression": "\"unreadable\"",
+      "item_id": "FILE-STATE-SUPPORT-X-097",
+      "kind": "excluded",
+      "english": "unreadable",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 175,
+      "column": 23,
+      "expression": "`${minutes}m ${seconds}s`",
+      "item_id": "FILE-STATE-SUPPORT-014",
+      "kind": "fixed",
+      "english": "${minutes}m ${seconds}s",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 175,
+      "column": 51,
+      "expression": "`${seconds}s`",
+      "item_id": "FILE-STATE-SUPPORT-015",
+      "kind": "fixed",
+      "english": "${seconds}s",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/paths.ts",
+      "line": 117,
+      "column": 2,
+      "expression": "return {",
+      "item_id": "FILE-STATE-SUPPORT-016",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/path-digest.ts",
+      "line": 8,
+      "column": 2,
+      "expression": "return createHash",
+      "item_id": "FILE-STATE-SUPPORT-017",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 33,
+      "column": 3,
+      "expression": "super(message, options)",
+      "item_id": "FILE-STATE-SUPPORT-018",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 91,
+      "column": 3,
+      "expression": "throw new ProcessLockError",
+      "item_id": "FILE-STATE-SUPPORT-019",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 104,
+      "column": 4,
+      "expression": "if (releaseError)",
+      "item_id": "FILE-STATE-SUPPORT-020",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 86,
+      "column": 3,
+      "expression": "const contents",
+      "item_id": "FILE-STATE-SUPPORT-021",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 121,
+      "column": 3,
+      "expression": "if (parsed.token",
+      "item_id": "FILE-STATE-SUPPORT-022",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 156,
+      "column": 4,
+      "expression": "throw options.onBusy",
+      "item_id": "FILE-STATE-SUPPORT-023",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 141,
+      "column": 3,
+      "expression": "const descriptor",
+      "item_id": "FILE-STATE-SUPPORT-024",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 63,
+      "column": 5,
+      "expression": "catch (error) {\n\t\t\tif (!(error instanceof Error && \"code\" in error && error.code === \"EEXIST\")) throw error;\n\t\t}",
+      "kind": "catch",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 68,
+      "column": 10,
+      "expression": "new ProcessLockError(\"storage\", `A process lock requires a regular file: ${path}`)",
+      "kind": "error",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 75,
+      "column": 10,
+      "expression": "new ProcessLockError(\"storage\", `The process lock could not disable journaling: ${path}`)",
+      "kind": "error",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 80,
+      "column": 4,
+      "expression": "catch (error) {\n\t\ttry {\n\t\t\tdatabase?.close();\n\t\t} catch (closeError) {\n\t\t\tif (database) retained.add(database);\n\t\t\tthrow new ProcessLockError(\"storage\", `The process lock could not be closed after acquisition failed: ${path}`, {\n\t\t\t\tcause: new AggregateError([error, closeError]),\n\t\t\t});\n\t\t}\n\t\tif (error instanceof ProcessLockError) throw error;\n\t\tconst busy = error instanceof Error && \"errcode\" in error && [5, 6].includes(Number(error.errcode));\n\t\tthrow new ProcessLockError(\n\t\t\tbusy ? \"busy\" : \"storage\",\n\t\t\tbusy\n\t\t\t\t? catalogText(catalog, PROCESS_LOCK_IDS.busy, { path: protectedPath(path) })\n\t\t\t\t: catalogText(catalog, PROCESS_LOCK_IDS.unavailable, { path: protectedPath(path) }),\n\t\t\t{ cause: error },\n\t\t);\n\t}",
+      "kind": "catch",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 83,
+      "column": 5,
+      "expression": "catch (closeError) {\n\t\t\tif (database) retained.add(database);\n\t\t\tthrow new ProcessLockError(\"storage\", `The process lock could not be closed after acquisition failed: ${path}`, {\n\t\t\t\tcause: new AggregateError([error, closeError]),\n\t\t\t});\n\t\t}",
+      "kind": "catch",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 85,
+      "column": 10,
+      "expression": "new ProcessLockError(\"storage\", `The process lock could not be closed after acquisition failed: ${path}`, {\n\t\t\t\tcause: new AggregateError([error, closeError]),\n\t\t\t})",
+      "kind": "error",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 86,
+      "column": 12,
+      "expression": "new AggregateError([error, closeError])",
+      "kind": "error",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 91,
+      "column": 9,
+      "expression": "new ProcessLockError(\n\t\t\tbusy ? \"busy\" : \"storage\",\n\t\t\tbusy\n\t\t\t\t? catalogText(catalog, PROCESS_LOCK_IDS.busy, { path: protectedPath(path) })\n\t\t\t\t: catalogText(catalog, PROCESS_LOCK_IDS.unavailable, { path: protectedPath(path) }),\n\t\t\t{ cause: error },\n\t\t)",
+      "kind": "error",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 110,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\treleaseError = new ProcessLockError(\"storage\", `The process lock did not close cleanly: ${path}`, {\n\t\t\t\t\tcause: error,\n\t\t\t\t});\n\t\t\t\tthrow releaseError;\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/process-lock.ts",
+      "line": 111,
+      "column": 20,
+      "expression": "new ProcessLockError(\"storage\", `The process lock did not close cleanly: ${path}`, {\n\t\t\t\t\tcause: error,\n\t\t\t\t})",
+      "kind": "error",
+      "disposition": "Process acquisition/release own error or cleanup/SQLite replacement; Error.cause/aggregate preserved separately from .message."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 24,
+      "column": 73,
+      "expression": "new Error(\"Invalid lock record\")",
+      "kind": "error",
+      "disposition": "Private guard headline discarded by inspect/release catch."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 32,
+      "column": 9,
+      "expression": "new Error(\"Lock record exceeds size limit\")",
+      "kind": "error",
+      "disposition": "Private guard headline discarded by inspect/release catch."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 65,
+      "column": 4,
+      "expression": "catch (error) {\n\t\treturn error instanceof Error && \"code\" in error && error.code === \"EPERM\";\n\t}",
+      "kind": "catch",
+      "disposition": "Native error becomes state or is ignored, except acquisition non-EEXIST rethrows; onBusy delegates to domain caller."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 78,
+      "column": 4,
+      "expression": "catch {\n\t\treturn { exists: true, status: \"invalid\", ageMs: null };\n\t}",
+      "kind": "catch",
+      "disposition": "Native error becomes state or is ignored, except acquisition non-EEXIST rethrows; onBusy delegates to domain caller."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 98,
+      "column": 5,
+      "expression": "catch {}",
+      "kind": "catch",
+      "disposition": "Native error becomes state or is ignored, except acquisition non-EEXIST rethrows; onBusy delegates to domain caller."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 108,
+      "column": 4,
+      "expression": "catch (error) {\n\t\tif (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") {\n\t\t\treturn { exists: false, status: \"free\", ageMs: null };\n\t\t}\n\t\treturn { exists: true, status: \"unreadable\", ageMs: null };\n\t}",
+      "kind": "catch",
+      "disposition": "Native error becomes state or is ignored, except acquisition non-EEXIST rethrows; onBusy delegates to domain caller."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 122,
+      "column": 4,
+      "expression": "catch {}",
+      "kind": "catch",
+      "disposition": "Native error becomes state or is ignored, except acquisition non-EEXIST rethrows; onBusy delegates to domain caller."
+    },
+    {
+      "path": "packages/cli/src/state-lock.ts",
+      "line": 148,
+      "column": 4,
+      "expression": "catch (error) {\n\t\tif (!(error instanceof Error && \"code\" in error && error.code === \"EEXIST\")) throw error;\n\t\tconst inspection = inspectStateLock(options.path, now);\n\t\tif (inspection.status === \"free\") {\n\t\t\twriteNew();\n\t\t\treturn () => releaseToken(options.path, token);\n\t\t}\n\t\tif (inspection.status === \"held-live\" || inspection.status === \"invalid\" || inspection.status === \"unreadable\") {\n\t\t\tthrow options.onBusy(inspection);\n\t\t}\n\t\t// held-dead or owner-unknown: refuse while younger than the threshold,\n\t\t// recover automatically once stale.\n\t\tif (inspection.ageMs === null || inspection.ageMs <= staleMs) {\n\t\t\tthrow options.onBusy(inspection);\n\t\t}\n\t\tunlinkSync(options.path);\n\t\twriteNew();\n\t\treturn () => releaseToken(options.path, token);\n\t}",
+      "kind": "catch",
+      "disposition": "Native error becomes state or is ignored, except acquisition non-EEXIST rethrows; onBusy delegates to domain caller."
+    }
+  ],
+  "counts": {
+    "primary": 24,
+    "catalog": 2,
+    "fixed": 13,
+    "boundaries": 9,
+    "excluded": 97,
+    "nodes": 112,
+    "errors": 8,
+    "catches": 10,
+    "scope": 24
+  },
+  "reviewed_data": {
+    "file-state-support.csv": "dea165bb7c2538008674cbe3a96f1ba56b0e7b65a8abee84d63e220b9459bbe6",
+    "file-state-support-exclusions.csv": "bfbe3054126c1910d021bd6e23e045a197d3cbab10cb7013bb0b265d4ef7e69c",
+    "file-state-support-scope.csv": "e27d528dc3fad07be954dddde396194025e766766b8029b4ccaa1d8855551600"
+  }
+}
