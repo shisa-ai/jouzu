@@ -534,6 +534,20 @@ custom/tool-result content. Stored hashes, status codes and retention IDs remain
 protected; forwarding alone does not establish a visual publisher. Four
 corruption controls pass without product/store/native execution.
 
+[flow-request-policy.csv](flow-request-policy.csv) adds 34 provider/payload/cache
+records: 25 fixed diagnostic definitions and nine API/native boundaries. Four
+complete bodies cover 317 lines, with seven pinned sources in the
+[scope](flow-request-policy-scope.csv). All 109 string/template/regex nodes are
+partitioned against 84 [exclusions](flow-request-policy-exclusions.csv); 26 Error
+constructors and three catches are accounted for. The Google signal sentinel is
+replaced, while cache capture and native refresh suppress their failure headlines
+in the ordinary route. Provider-route and payload-copy errors have separate
+preparation/admission publishers. Generic JSON callbacks, Bedrock binary/data
+rules, cancellation handling and hook restoration keep their conditions. One
+bounded native consumer matches the exact public patch after hash and both
+installed Pi1.4.0 trees; its full body remains pending. Four corruption controls
+pass without product/provider/payload/cache/state execution.
+
 [session-primitives.csv](session-primitives.csv) adds 26 formatting/boundary
 records: 18 protected frame/spacing/ANSI compositions and eight caller, native,
 callback or forwarding boundaries. The
@@ -839,6 +853,7 @@ node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
+node review/text-inventory/verify-flow-request-policy.cjs
 python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
