@@ -236,6 +236,21 @@ excluded or pending; its presence is not a completed file review. Path categorie
 are navigation aids and do not exclude wording from review. Installed dependencies
 and generated outputs need their separate provenance and consumer traces.
 
+[test-source-sites.csv](test-source-sites.csv) indexes 23,377 lexical call and
+expression sites across 423 BASE JavaScript/TypeScript test/fixture sources:
+4,069 imported-framework/callback call candidates, 18,467 assertion sites,
+439 Error/Exception constructor spellings and 402 throws. Source expressions and
+values are JSON-escaped with exact UTF-16 ranges; up to three ancestor if/ternary
+conditions are excerpts, not evaluated paths. A framework argument can be a
+control value or parameter table; an assertion's last argument can be expected
+data. Neither is automatically an emitted title/message. The
+[evidence](test-source-sites-evidence.json) records import/callback spellings,
+and [scope](test-source-sites-scope.csv) pins all source bodies as lexical-only.
+Aliases, shadowing, generated programs, non-JS/TS tests and exact runtime
+publication remain separate review work. No whole-body semantic review or test
+execution is added; the [snapshot](test-source-sites-snapshot.json) records this
+finite selector pass.
+
 [pi-runtime-census.csv](pi-runtime-census.csv) accounts for the exact two-package
 Pi 1.4.0 installed JavaScript runtime universe: 382 canonical bodies and two
 pinned additions. Of the canonical bodies, 358 match npm archive bytes and 24
@@ -1834,6 +1849,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/verify-catalog-disposition-links.py
 python -B review/text-inventory/source-census.py
+node review/text-inventory/verify-test-source-sites.cjs
 python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-main-update-review-links.py
 node review/text-inventory/verify-main-update-catalogs.cjs

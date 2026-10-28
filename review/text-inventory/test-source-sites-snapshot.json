@@ -1,0 +1,19 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "JS_TS_source_files": 423,
+  "source_bytes": 4763549,
+  "site_rows": 23377,
+  "counts": {
+    "framework_calls": 4069,
+    "assertion_calls": 18467,
+    "error_constructors": 439,
+    "throw_sites": 402
+  },
+  "parse_diagnostics": 0,
+  "whole_body_semantic_claims_added": 0,
+  "artifact_sha256_utf8_lf": {
+    "test-source-sites.csv": "7481abc10bd1e7067f692829bd0d18f28f5a1881c9d40ef3b0f3f0ddcf9a85df",
+    "test-source-sites-scope.csv": "9e5c0991245c42c4a8620148514b75e3b0c54448cb5089fd3589ba7af3fa0417",
+    "test-source-sites-evidence.json": "4b009b2f156af9ac541f3c6e1a601859d4801f7ef5b6223ab93629caa7b38e29"
+  }
+}
