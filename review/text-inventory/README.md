@@ -116,6 +116,20 @@ report/error producers. A catalog value used only in a proved unreachable
 guard remains in the English catalog rather than being counted as a normal
 invalid-argument response.
 
+[cli-command-support.csv](cli-command-support.csv) adds 480 parser/report/status
+records: 320 literal/template/regex occurrences, 103 catalog references,
+33 bounded legacy English producers and 24 boundaries. Three complete bodies
+cover 1,133 lines. The [scope](cli-command-support-scope.csv) pins seventeen
+source hashes and crosslinks 99 existing catalog IDs and 59 prior contexts.
+Legacy descriptor placeholders and Fluent patterns retain their distinct syntax.
+UsageError constructor defaults differ from active-catalog rerendering; private
+parser guards, raw JavaScript API strings, validation messageRef/JSON omission,
+mapped field labels and retained conflict/error payloads remain separate.
+Unreadable locale status returns plural empty-list, single unsupported or
+reviewed empty-list according API. Single unconfigured catalog text can preserve
+default English where plural rendering resolves active text. No parser, report,
+UI, state or native producer was executed.
+
 [cli-startup-support.csv](cli-startup-support.csv) adds 52 helper records:
 twelve catalog occurrences, 28 fixed/protected fragments and twelve boundaries.
 Thirteen complete startup, policy, metadata, provider-adapter, output and shim
@@ -1112,6 +1126,7 @@ python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
+python -B review/text-inventory/verify-cli-command-support.py
 node review/text-inventory/verify-cli-startup-support.cjs
 node review/text-inventory/verify-file-state-support.cjs
 node review/text-inventory/verify-release-surface-text.cjs
