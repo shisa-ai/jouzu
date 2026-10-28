@@ -74,6 +74,16 @@ report/error producers. A catalog value used only in a proved unreachable
 guard remains in the English catalog rather than being counted as a normal
 invalid-argument response.
 
+[doctor.csv](doctor.csv) supplies 548 report records: 287 catalog occurrences
+across 185 IDs, 149 fixed or protected machine occurrences and 112 computed or
+payload boundaries. It traces all 77 field labels, diagnoses, six lock contexts
+and the shared report renderer. The [scope table](doctor-scope.csv) distinguishes
+default-English JSON data from human output that resolves catalog descriptors
+again in the active locale. Human formatting runs even when `--json` selects the
+JSON result. Raw diagnostic producers remain explicit boundaries; caught errors
+that are replaced or suppressed have separate dispositions. This pass reads
+source without running doctor filesystem probes.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -174,6 +184,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
+python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
