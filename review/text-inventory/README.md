@@ -727,7 +727,7 @@ view data is distinct from persisted native admission reasons. Result review-not
 English can survive in saved/raw/expanded/exported content while compact summary
 uses a catalog label. Manifest input limits, cursor errors, retention/attachment
 routes and complete-member byte budgets retain their precise guards. Wider
-ingress, service, host, submission and schedule bodies remain pending; user-input
+ingress, service, host and schedule bodies remain pending; submission, user-input
 and work helpers follow below.
 No controller, queue, tool, model, native or user-state producer was executed.
 
@@ -742,8 +742,21 @@ receipt view. Consumption, cancellation evidence, admission holds and unknown
 states retain exact precedence. Queue/context-only cancellation can evaluate a
 catalog lookup whose text is discarded. Submitted user text has its own guarded
 native/model/saved/export route, separate from receipt text. Wider native,
-ingress, service, submission and schedule producers remain open. No grants,
+ingress, service and schedule producers remain open; submission follows below. No grants,
 input, private state, model, native or tool producer was executed.
+
+[flow-submission-text.csv](flow-submission-text.csv) adds 117 durable-submission
+records: 104 fixed occurrences, four catalog consumers and nine boundaries. Two
+complete bodies cover 1,838 lines. The [scope](flow-submission-text-scope.csv)
+pins 25 sources and accounts for 108 Error constructors, four private-invariant
+exclusions, 33 shared helper calls, four catches and 545 lexical tokens, with ten
+prior full-body links. Retained holds, context/queue cancellation and unknown
+states keep exact projection precedence. Report sentinel recognition compares the
+same localized sentence; the exported English default constant has no production
+consumer. Validation-only placeholders are not saved. Ingress can suppress
+transition/stale failures, while other errors reach qualified API, tool or current
+notification paths. No native queue/archive command sink is inferred from the
+management API. No journal, queue, private state, native or UI producer executed.
 
 [input-example-text.csv](input-example-text.csv) adds 127 example/guide records:
 eight conditional English occurrences, six boundaries, 75 nonblank guide lines
@@ -1295,6 +1308,7 @@ node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
+python -B review/text-inventory/verify-flow-submission-text.py
 node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-pi-import-message-api.py
 python -B review/text-inventory/verify-localization-ops-text.py

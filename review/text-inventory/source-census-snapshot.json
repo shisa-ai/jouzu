@@ -78,6 +78,7 @@
     "flow-orchestration-scope.csv": "d0ac1120db81047ef5c018798bc186d3ea53c594105dcf3e34c10f134b803f52",
     "flow-controller-core-scope.csv": "d1a72ec4b9761fef240c719ac73487d4e167cd2bbb70de00efe2848239dd61a3",
     "flow-user-work-scope.csv": "7e7ff507d7272737f19538c92c0cf1ccc1eddb27d5b3857e4b86cc34b8f155e2",
+    "flow-submission-text-scope.csv": "495ce2b890fed0dd57d34c113ff5be284ca2aa7cec44d77038bbec456c7de350",
     "input-example-text-scope.csv": "19e79b5ba6dbc5ab65b88fe23f3b751f1bf0902a44ee94d970869ff46db7bbc7",
     "context-adjunct-text-scope.csv": "0c84a529730447971bcb26c2508e2495dbe17c488428dc3c623a58ba23c7ae75",
     "prose-wrapping-text-scope.csv": "571cd418fe22fac9fe1824d8454ede7554b207746c091894415652e9d7db8e0a",
