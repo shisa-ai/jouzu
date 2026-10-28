@@ -1,0 +1,1140 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "inventory_file": "pi-tools.csv",
+  "scope_file": "pi-tools-scope.csv",
+  "boundary_file": "pi-tools-boundaries.csv",
+  "exclusion_file": "pi-tools-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/mcp.ts",
+      "sha256": "486cc72a172378788d453b2f2a30d1ff51e2ec72ec0a07457424ee626773850c"
+    },
+    {
+      "source": "packages/cli/src/tool-arguments.ts",
+      "sha256": "603ce396c315d639f6746fa48f3aa6efbb94e2021821c350162b1e36d823796a"
+    },
+    {
+      "source": "packages/cli/src/textguard-policy.ts",
+      "sha256": "16322c507662368353a312b0ce0c777ee7325e7e438aab107ef3a37b8fabdbac"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/runtime-output.ts",
+      "sha256": "b7c16e4afb28b45a3293d630fe48880a3c23d20d34bbc3fb8d3b5cf8092f0ae6"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent-loop.js",
+      "sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+      "cli_nested_sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          576,
+          677
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          350,
+          422
+        ],
+        [
+          1176,
+          1200
+        ],
+        [
+          3044,
+          3169
+        ],
+        [
+          3721,
+          3740
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/sdk.js",
+      "sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "cli_nested_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          17,
+          29
+        ],
+        [
+          145,
+          161
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/wrapper.js",
+      "sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "cli_nested_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          22
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js",
+      "sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+      "cli_nested_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          542,
+          548
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js",
+      "sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "cli_nested_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          45,
+          109
+        ],
+        [
+          215,
+          324
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1747,
+          1753
+        ],
+        [
+          2945,
+          2952
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          84,
+          95
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          281,
+          294
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          121,
+          154
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/tool-renderer.js",
+      "sha256": "8d3bd1f1b068996fe8f7d003bdb6623284043e1393a2db92ff45aeb9d6c33b9a",
+      "cli_nested_sha256": "8d3bd1f1b068996fe8f7d003bdb6623284043e1393a2db92ff45aeb9d6c33b9a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          110
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/tools.js",
+      "sha256": "93d4aae2090400c1565ba536f38cf373f022de2c6519e37c02493fbe420842f5",
+      "cli_nested_sha256": "93d4aae2090400c1565ba536f38cf373f022de2c6519e37c02493fbe420842f5",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          132,
+          154
+        ],
+        [
+          191,
+          218
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js",
+      "sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+      "cli_nested_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          592,
+          607
+        ]
+      ],
+      "purpose": "Partial actual consumer/producer-route read only, outside full37 source inventory; no whole-module English closure implied."
+    }
+  ],
+  "counts": {
+    "rows": 172,
+    "scopes": 37,
+    "proofs": 172,
+    "statusCounts": {
+      "source-read-conditional-tools": 23,
+      "source-read-no-local-ui-prose": 12,
+      "source-read-conditional-and-api-errors": 2
+    },
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "external_boundaries": 27,
+    "excluded_occurrences": 1083,
+    "dispositioned_source_files": 37
+  },
+  "remaining_partial_sources": [],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js",
+        "sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+        "read_lines": [
+          1,
+          333
+        ],
+        "string_template_occurrences": 64,
+        "fixed_rows": 13,
+        "excluded_occurrences": 51,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 333-line body manually read; every 64 string/template occurrence dispositioned as 13 fixed and 51 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit-diff.js",
+        "sha256": "fadc87523d52babf246967a1f1b921e621eb4437e50c50f8426c46cec3f05071",
+        "read_lines": [
+          1,
+          421
+        ],
+        "string_template_occurrences": 69,
+        "fixed_rows": 13,
+        "excluded_occurrences": 56,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 421-line body manually read; every 69 string/template occurrence dispositioned as 13 fixed and 56 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js",
+        "sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+        "read_lines": [
+          1,
+          147
+        ],
+        "string_template_occurrences": 40,
+        "fixed_rows": 5,
+        "excluded_occurrences": 35,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 147-line body manually read; every 40 string/template occurrence dispositioned as 5 fixed and 35 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/file-mutation-queue.js",
+        "sha256": "cd300f1ecae2b8d45a7c69011221f4f2e4e289865bf879df537c859889f26e5b",
+        "read_lines": [
+          1,
+          52
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 52-line body manually read; every 6 string/template occurrence dispositioned as 0 fixed and 6 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js",
+        "sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+        "read_lines": [
+          1,
+          251
+        ],
+        "string_template_occurrences": 80,
+        "fixed_rows": 17,
+        "excluded_occurrences": 63,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 251-line body manually read; every 80 string/template occurrence dispositioned as 17 fixed and 63 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js",
+        "sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+        "read_lines": [
+          1,
+          254
+        ],
+        "string_template_occurrences": 74,
+        "fixed_rows": 11,
+        "excluded_occurrences": 63,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 254-line body manually read; every 74 string/template occurrence dispositioned as 11 fixed and 63 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/index.js",
+        "sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+        "read_lines": [
+          1,
+          129
+        ],
+        "string_template_occurrences": 44,
+        "fixed_rows": 0,
+        "excluded_occurrences": 44,
+        "disposition": "source-read-conditional-and-api-errors",
+        "source_review": "Full 129-line body manually read; every 44 string/template occurrence dispositioned as 0 fixed and 44 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/ls.js",
+        "sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+        "read_lines": [
+          1,
+          126
+        ],
+        "string_template_occurrences": 32,
+        "fixed_rows": 8,
+        "excluded_occurrences": 24,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 126-line body manually read; every 32 string/template occurrence dispositioned as 8 fixed and 24 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/output-accumulator.js",
+        "sha256": "5416cd0ef5a8edc984093ed67053ae27ebfc7ed42699c452daddf94dd6217858",
+        "read_lines": [
+          1,
+          214
+        ],
+        "string_template_occurrences": 21,
+        "fixed_rows": 1,
+        "excluded_occurrences": 20,
+        "disposition": "source-read-conditional-and-api-errors",
+        "source_review": "Full 214-line body manually read; every 21 string/template occurrence dispositioned as 1 fixed and 20 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/path-utils.js",
+        "sha256": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f",
+        "read_lines": [
+          1,
+          109
+        ],
+        "string_template_occurrences": 7,
+        "fixed_rows": 0,
+        "excluded_occurrences": 7,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 109-line body manually read; every 7 string/template occurrence dispositioned as 0 fixed and 7 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/powershell.js",
+        "sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+        "read_lines": [
+          1,
+          39
+        ],
+        "string_template_occurrences": 13,
+        "fixed_rows": 2,
+        "excluded_occurrences": 11,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 39-line body manually read; every 13 string/template occurrence dispositioned as 2 fixed and 11 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js",
+        "sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+        "read_lines": [
+          1,
+          186
+        ],
+        "string_template_occurrences": 52,
+        "fixed_rows": 10,
+        "excluded_occurrences": 42,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 186-line body manually read; every 52 string/template occurrence dispositioned as 10 fixed and 42 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js",
+        "sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+        "read_lines": [
+          1,
+          158
+        ],
+        "string_template_occurrences": 60,
+        "fixed_rows": 8,
+        "excluded_occurrences": 52,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 158-line body manually read; every 60 string/template occurrence dispositioned as 8 fixed and 52 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/bash.js",
+        "sha256": "88d00a44f2958f57982d40712153bbf997b9122216f471866ef33a06799a4db8",
+        "read_lines": [
+          1,
+          89
+        ],
+        "string_template_occurrences": 38,
+        "fixed_rows": 6,
+        "excluded_occurrences": 32,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 89-line body manually read; every 38 string/template occurrence dispositioned as 6 fixed and 32 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/edit.js",
+        "sha256": "90ca50520751322cbfb72c43e2fd728ca01205858d6444d6abf4601ba31e51ba",
+        "read_lines": [
+          1,
+          168
+        ],
+        "string_template_occurrences": 33,
+        "fixed_rows": 1,
+        "excluded_occurrences": 32,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 168-line body manually read; every 33 string/template occurrence dispositioned as 1 fixed and 32 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/find.js",
+        "sha256": "19287d358bae49a8f1c72eab080c43668a83d808050bff36aa57af5d6b4f6497",
+        "read_lines": [
+          1,
+          64
+        ],
+        "string_template_occurrences": 34,
+        "fixed_rows": 8,
+        "excluded_occurrences": 26,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 64-line body manually read; every 34 string/template occurrence dispositioned as 8 fixed and 26 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/grep.js",
+        "sha256": "aa76091451d7643727ae633741f9b1b6cbac648c244ac8f14ec0b2dc8fa1ffd3",
+        "read_lines": [
+          1,
+          69
+        ],
+        "string_template_occurrences": 38,
+        "fixed_rows": 9,
+        "excluded_occurrences": 29,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 69-line body manually read; every 38 string/template occurrence dispositioned as 9 fixed and 29 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/index.js",
+        "sha256": "e2f49f1778458397218f18227856e334457dd2a4c21ead9a892ce9349264efca",
+        "read_lines": [
+          1,
+          47
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 2,
+        "excluded_occurrences": 7,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 47-line body manually read; every 9 string/template occurrence dispositioned as 2 fixed and 7 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/ls.js",
+        "sha256": "581ec2783a2bf806ee84e983f54451c162a580767b8fd8a30ac3cf7f9b41dcca",
+        "read_lines": [
+          1,
+          58
+        ],
+        "string_template_occurrences": 30,
+        "fixed_rows": 7,
+        "excluded_occurrences": 23,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 58-line body manually read; every 30 string/template occurrence dispositioned as 7 fixed and 23 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/read.js",
+        "sha256": "b095fbe531d597a313bc94d69d1e6fd390681714bd26e0a39de33ba12f0890b7",
+        "read_lines": [
+          1,
+          126
+        ],
+        "string_template_occurrences": 66,
+        "fixed_rows": 11,
+        "excluded_occurrences": 55,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 126-line body manually read; every 66 string/template occurrence dispositioned as 11 fixed and 55 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/renderers/write.js",
+        "sha256": "7837ea886d1661a558596be6a6809baddd4c97b64ea28cccc0aae30d671ba2fd",
+        "read_lines": [
+          1,
+          153
+        ],
+        "string_template_occurrences": 36,
+        "fixed_rows": 4,
+        "excluded_occurrences": 32,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 153-line body manually read; every 36 string/template occurrence dispositioned as 4 fixed and 32 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/tool-definition-wrapper.js",
+        "sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+        "read_lines": [
+          1,
+          38
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 38-line body manually read; every 0 string/template occurrence dispositioned as 0 fixed and 0 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/truncate.js",
+        "sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+        "read_lines": [
+          1,
+          244
+        ],
+        "string_template_occurrences": 31,
+        "fixed_rows": 5,
+        "excluded_occurrences": 26,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 244-line body manually read; every 31 string/template occurrence dispositioned as 5 fixed and 26 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js",
+        "sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+        "read_lines": [
+          1,
+          61
+        ],
+        "string_template_occurrences": 20,
+        "fixed_rows": 2,
+        "excluded_occurrences": 18,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 61-line body manually read; every 20 string/template occurrence dispositioned as 2 fixed and 18 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-process.js",
+        "sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+        "read_lines": [
+          1,
+          83
+        ],
+        "string_template_occurrences": 17,
+        "fixed_rows": 3,
+        "excluded_occurrences": 14,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 83-line body manually read; every 17 string/template occurrence dispositioned as 3 fixed and 14 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/output-files.js",
+        "sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+        "read_lines": [
+          1,
+          30
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 30-line body manually read; every 9 string/template occurrence dispositioned as 0 fixed and 9 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/shell.js",
+        "sha256": "f1e61708c725a337882bb08abac995bafc7a42883558ea1c46cc1917aff5d778",
+        "read_lines": [
+          1,
+          221
+        ],
+        "string_template_occurrences": 65,
+        "fixed_rows": 8,
+        "excluded_occurrences": 57,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 221-line body manually read; every 65 string/template occurrence dispositioned as 8 fixed and 57 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/child-process.js",
+        "sha256": "cfc7b3361e42b61ee75aecc2b436ff7462f7e4431b4b646da7166f3c5706c9b8",
+        "read_lines": [
+          1,
+          106
+        ],
+        "string_template_occurrences": 18,
+        "fixed_rows": 0,
+        "excluded_occurrences": 18,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 106-line body manually read; every 18 string/template occurrence dispositioned as 0 fixed and 18 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/paths.js",
+        "sha256": "d5d48c2b2b2442c7e72aee6e98a79d828a52dce9526b152288186834c1dcf4a5",
+        "read_lines": [
+          1,
+          115
+        ],
+        "string_template_occurrences": 49,
+        "fixed_rows": 0,
+        "excluded_occurrences": 49,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 115-line body manually read; every 49 string/template occurrence dispositioned as 0 fixed and 49 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-resize.js",
+        "sha256": "1d1dcff9bfad5dad4bb0ec207674823ee5ba1cec0850fa7aa249ca9f6206ce55",
+        "read_lines": [
+          1,
+          96
+        ],
+        "string_template_occurrences": 15,
+        "fixed_rows": 1,
+        "excluded_occurrences": 14,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 96-line body manually read; every 15 string/template occurrence dispositioned as 1 fixed and 14 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-convert.js",
+        "sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+        "read_lines": [
+          1,
+          84
+        ],
+        "string_template_occurrences": 10,
+        "fixed_rows": 0,
+        "excluded_occurrences": 10,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 84-line body manually read; every 10 string/template occurrence dispositioned as 0 fixed and 10 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/mime.js",
+        "sha256": "36bdb72fc40d809ab5f69e80ecd54651d4131661e92cf7dcec7b719f139badcf",
+        "read_lines": [
+          1,
+          110
+        ],
+        "string_template_occurrences": 15,
+        "fixed_rows": 0,
+        "excluded_occurrences": 15,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 110-line body manually read; every 15 string/template occurrence dispositioned as 0 fixed and 15 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tools-manager.js",
+        "sha256": "4a8c8fc56b88dc306d10f476f6dfed2469dbd8d812251f40cc20f3e97b6928ec",
+        "read_lines": [
+          1,
+          344
+        ],
+        "string_template_occurrences": 130,
+        "fixed_rows": 17,
+        "excluded_occurrences": 113,
+        "disposition": "source-read-conditional-tools",
+        "source_review": "Full 344-line body manually read; every 130 string/template occurrence dispositioned as 17 fixed and 113 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-resize-core.js",
+        "sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+        "read_lines": [
+          1,
+          129
+        ],
+        "string_template_occurrences": 11,
+        "fixed_rows": 0,
+        "excluded_occurrences": 11,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 129-line body manually read; every 11 string/template occurrence dispositioned as 0 fixed and 11 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-resize-worker.js",
+        "sha256": "7c1ba9a50b0631bfc382ae3a705bba112350aedfbcf0a7e6becc4d57ca2e0768",
+        "read_lines": [
+          1,
+          32
+        ],
+        "string_template_occurrences": 7,
+        "fixed_rows": 0,
+        "excluded_occurrences": 7,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 32-line body manually read; every 7 string/template occurrence dispositioned as 0 fixed and 7 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/photon.js",
+        "sha256": "37ec7989cc2a54a8498099c6b20c10c29c5455129b92222f492472c42e612406",
+        "read_lines": [
+          1,
+          121
+        ],
+        "string_template_occurrences": 11,
+        "fixed_rows": 0,
+        "excluded_occurrences": 11,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 121-line body manually read; every 11 string/template occurrence dispositioned as 0 fixed and 11 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/management-http.js",
+        "sha256": "7c25b3d8d0f6069cfa9324bc9937a43849821dc4ab45e97c2988d85118832726",
+        "read_lines": [
+          1,
+          54
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-no-local-ui-prose",
+        "source_review": "Full 54-line body manually read; every 1 string/template occurrence dispositioned as 0 fixed and 1 exclusions. Tool/model/SDK/native/renderer/control distinctions traced; imported payload producers and graph beyond this finite set remain open."
+      }
+    ],
+    "scope": "All24 JavaScript files under dist/core/tools (16 root plus8 renderer files), plus13 selected directly shared utility bodies. Full local lexical partition; broader Pi graph remains explicitly open."
+  },
+  "verification_script": "review/text-inventory/verify-pi-tools.cjs",
+  "checks": [
+    "All finite scoped bodies manually read before extraction; every exact string/template occurrence partitioned as fixed text or reasoned exclusion.",
+    "Package versions/root-nested bytes/lock integrity/pinned before-after source differences verified read-only; no runtime/install/patch execution.",
+    "Exact per-occurrence branch plus registered-definition, admission, renderer and native/protocol/export routing distinguish display from model/control/API data.",
+    "Directory census verifies all24 tools subtree files in both installed trees;13 additional shared files individually enumerated. Durable --negative-controls1 rejects source omission, fixed-text corruption, consumer hash drift and canonical proof corruption in memory."
+  ],
+  "limits": [
+    "Finite37 full local bodies only. Remaining core/extension/MCP/RPC/SDK/viewer/assets/prompt/provider/tool graph remains open; these records are not whole-Pi completion.",
+    "Default builtin activation read,bash,edit,write can be changed by merged settings/CLI/SDK tools modifiers/noTools/exclusions and same-name custom tools; model prompt metadata is separate from UI.",
+    "Native TUI and raw JSON/RPC differ. Read/write/edit successful content can be hidden by native renderers; output remains protocol-visible. Renderer captions are not raw event fields.",
+    "HTML export uses viewer templates for bash,read,write,edit,ls; only other tool names use custom TUI prerendering here. Viewer template prose remains pending.",
+    "Jouzu codemode override disables script tools and MCP configs map codemode exposure to deferred. Optional SDK APIs/callbacks/operation overrides remain conditional or error-consumer pending.",
+    "TextGuard/extension tool hooks can replace or suppress builtin result; arbitrary model/shell/filesystem/network/WASM/extension payload remains data, not locally translated English.",
+    "Source-defined public fallback Windows path token C:\\Windows is retained exactly in exclusions/evidence. No private local workspace paths are metadata.",
+    "English strings are TypeScript-decoded; template expressions retain exact source body without backticks, including escape spellings. Exclusion values JSON-encode source bytes/whitespace.",
+    "No online git tag verification, full installed-package comparison, runtime screenshots, locale rendering or cross-platform execution is claimed."
+  ],
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/tools/bash.js",
+            "archive_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+            "root_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+            "cli_nested_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/edit-diff.js",
+            "archive_sha256": "fadc87523d52babf246967a1f1b921e621eb4437e50c50f8426c46cec3f05071",
+            "root_sha256": "fadc87523d52babf246967a1f1b921e621eb4437e50c50f8426c46cec3f05071",
+            "cli_nested_sha256": "fadc87523d52babf246967a1f1b921e621eb4437e50c50f8426c46cec3f05071",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/edit.js",
+            "archive_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+            "root_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+            "cli_nested_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/file-mutation-queue.js",
+            "archive_sha256": "cd300f1ecae2b8d45a7c69011221f4f2e4e289865bf879df537c859889f26e5b",
+            "root_sha256": "cd300f1ecae2b8d45a7c69011221f4f2e4e289865bf879df537c859889f26e5b",
+            "cli_nested_sha256": "cd300f1ecae2b8d45a7c69011221f4f2e4e289865bf879df537c859889f26e5b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/find.js",
+            "archive_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+            "root_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+            "cli_nested_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/grep.js",
+            "archive_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+            "root_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+            "cli_nested_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/index.js",
+            "archive_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+            "root_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+            "cli_nested_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/ls.js",
+            "archive_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+            "root_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+            "cli_nested_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/output-accumulator.js",
+            "archive_sha256": "5416cd0ef5a8edc984093ed67053ae27ebfc7ed42699c452daddf94dd6217858",
+            "root_sha256": "5416cd0ef5a8edc984093ed67053ae27ebfc7ed42699c452daddf94dd6217858",
+            "cli_nested_sha256": "5416cd0ef5a8edc984093ed67053ae27ebfc7ed42699c452daddf94dd6217858",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/path-utils.js",
+            "archive_sha256": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+            "root_sha256": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f",
+            "cli_nested_sha256": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-path-utils/patch.lock.json"
+          },
+          {
+            "source": "dist/core/tools/powershell.js",
+            "archive_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+            "root_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+            "cli_nested_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/read.js",
+            "archive_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+            "root_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+            "cli_nested_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/render-utils.js",
+            "archive_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "root_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "cli_nested_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/bash.js",
+            "archive_sha256": "88d00a44f2958f57982d40712153bbf997b9122216f471866ef33a06799a4db8",
+            "root_sha256": "88d00a44f2958f57982d40712153bbf997b9122216f471866ef33a06799a4db8",
+            "cli_nested_sha256": "88d00a44f2958f57982d40712153bbf997b9122216f471866ef33a06799a4db8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/edit.js",
+            "archive_sha256": "90ca50520751322cbfb72c43e2fd728ca01205858d6444d6abf4601ba31e51ba",
+            "root_sha256": "90ca50520751322cbfb72c43e2fd728ca01205858d6444d6abf4601ba31e51ba",
+            "cli_nested_sha256": "90ca50520751322cbfb72c43e2fd728ca01205858d6444d6abf4601ba31e51ba",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/find.js",
+            "archive_sha256": "19287d358bae49a8f1c72eab080c43668a83d808050bff36aa57af5d6b4f6497",
+            "root_sha256": "19287d358bae49a8f1c72eab080c43668a83d808050bff36aa57af5d6b4f6497",
+            "cli_nested_sha256": "19287d358bae49a8f1c72eab080c43668a83d808050bff36aa57af5d6b4f6497",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/grep.js",
+            "archive_sha256": "aa76091451d7643727ae633741f9b1b6cbac648c244ac8f14ec0b2dc8fa1ffd3",
+            "root_sha256": "aa76091451d7643727ae633741f9b1b6cbac648c244ac8f14ec0b2dc8fa1ffd3",
+            "cli_nested_sha256": "aa76091451d7643727ae633741f9b1b6cbac648c244ac8f14ec0b2dc8fa1ffd3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/index.js",
+            "archive_sha256": "e2f49f1778458397218f18227856e334457dd2a4c21ead9a892ce9349264efca",
+            "root_sha256": "e2f49f1778458397218f18227856e334457dd2a4c21ead9a892ce9349264efca",
+            "cli_nested_sha256": "e2f49f1778458397218f18227856e334457dd2a4c21ead9a892ce9349264efca",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/ls.js",
+            "archive_sha256": "581ec2783a2bf806ee84e983f54451c162a580767b8fd8a30ac3cf7f9b41dcca",
+            "root_sha256": "581ec2783a2bf806ee84e983f54451c162a580767b8fd8a30ac3cf7f9b41dcca",
+            "cli_nested_sha256": "581ec2783a2bf806ee84e983f54451c162a580767b8fd8a30ac3cf7f9b41dcca",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/read.js",
+            "archive_sha256": "b095fbe531d597a313bc94d69d1e6fd390681714bd26e0a39de33ba12f0890b7",
+            "root_sha256": "b095fbe531d597a313bc94d69d1e6fd390681714bd26e0a39de33ba12f0890b7",
+            "cli_nested_sha256": "b095fbe531d597a313bc94d69d1e6fd390681714bd26e0a39de33ba12f0890b7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/renderers/write.js",
+            "archive_sha256": "7837ea886d1661a558596be6a6809baddd4c97b64ea28cccc0aae30d671ba2fd",
+            "root_sha256": "7837ea886d1661a558596be6a6809baddd4c97b64ea28cccc0aae30d671ba2fd",
+            "cli_nested_sha256": "7837ea886d1661a558596be6a6809baddd4c97b64ea28cccc0aae30d671ba2fd",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/tool-definition-wrapper.js",
+            "archive_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "root_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "cli_nested_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/truncate.js",
+            "archive_sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+            "root_sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+            "cli_nested_sha256": "24c5350761b487c154f950acf56a995dc1acdeac0c5d0f096efdaac71c8c231e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/write.js",
+            "archive_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+            "root_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+            "cli_nested_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-process.js",
+            "archive_sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+            "root_sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+            "cli_nested_sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/output-files.js",
+            "archive_sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+            "root_sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+            "cli_nested_sha256": "a0a93a0d0a64565da7218bcc72e5a468434d9625112820586c4b97f54075775c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/shell.js",
+            "archive_sha256": "f1e61708c725a337882bb08abac995bafc7a42883558ea1c46cc1917aff5d778",
+            "root_sha256": "f1e61708c725a337882bb08abac995bafc7a42883558ea1c46cc1917aff5d778",
+            "cli_nested_sha256": "f1e61708c725a337882bb08abac995bafc7a42883558ea1c46cc1917aff5d778",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/child-process.js",
+            "archive_sha256": "cfc7b3361e42b61ee75aecc2b436ff7462f7e4431b4b646da7166f3c5706c9b8",
+            "root_sha256": "cfc7b3361e42b61ee75aecc2b436ff7462f7e4431b4b646da7166f3c5706c9b8",
+            "cli_nested_sha256": "cfc7b3361e42b61ee75aecc2b436ff7462f7e4431b4b646da7166f3c5706c9b8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/paths.js",
+            "archive_sha256": "d5d48c2b2b2442c7e72aee6e98a79d828a52dce9526b152288186834c1dcf4a5",
+            "root_sha256": "d5d48c2b2b2442c7e72aee6e98a79d828a52dce9526b152288186834c1dcf4a5",
+            "cli_nested_sha256": "d5d48c2b2b2442c7e72aee6e98a79d828a52dce9526b152288186834c1dcf4a5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-resize.js",
+            "archive_sha256": "1d1dcff9bfad5dad4bb0ec207674823ee5ba1cec0850fa7aa249ca9f6206ce55",
+            "root_sha256": "1d1dcff9bfad5dad4bb0ec207674823ee5ba1cec0850fa7aa249ca9f6206ce55",
+            "cli_nested_sha256": "1d1dcff9bfad5dad4bb0ec207674823ee5ba1cec0850fa7aa249ca9f6206ce55",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-convert.js",
+            "archive_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+            "root_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+            "cli_nested_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/mime.js",
+            "archive_sha256": "36bdb72fc40d809ab5f69e80ecd54651d4131661e92cf7dcec7b719f139badcf",
+            "root_sha256": "36bdb72fc40d809ab5f69e80ecd54651d4131661e92cf7dcec7b719f139badcf",
+            "cli_nested_sha256": "36bdb72fc40d809ab5f69e80ecd54651d4131661e92cf7dcec7b719f139badcf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/tools-manager.js",
+            "archive_sha256": "4a8c8fc56b88dc306d10f476f6dfed2469dbd8d812251f40cc20f3e97b6928ec",
+            "root_sha256": "4a8c8fc56b88dc306d10f476f6dfed2469dbd8d812251f40cc20f3e97b6928ec",
+            "cli_nested_sha256": "4a8c8fc56b88dc306d10f476f6dfed2469dbd8d812251f40cc20f3e97b6928ec",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-resize-core.js",
+            "archive_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+            "root_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+            "cli_nested_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-resize-worker.js",
+            "archive_sha256": "7c1ba9a50b0631bfc382ae3a705bba112350aedfbcf0a7e6becc4d57ca2e0768",
+            "root_sha256": "7c1ba9a50b0631bfc382ae3a705bba112350aedfbcf0a7e6becc4d57ca2e0768",
+            "cli_nested_sha256": "7c1ba9a50b0631bfc382ae3a705bba112350aedfbcf0a7e6becc4d57ca2e0768",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/photon.js",
+            "archive_sha256": "37ec7989cc2a54a8498099c6b20c10c29c5455129b92222f492472c42e612406",
+            "root_sha256": "37ec7989cc2a54a8498099c6b20c10c29c5455129b92222f492472c42e612406",
+            "cli_nested_sha256": "37ec7989cc2a54a8498099c6b20c10c29c5455129b92222f492472c42e612406",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/management-http.js",
+            "archive_sha256": "7c25b3d8d0f6069cfa9324bc9937a43849821dc4ab45e97c2988d85118832726",
+            "root_sha256": "7c25b3d8d0f6069cfa9324bc9937a43849821dc4ab45e97c2988d85118832726",
+            "cli_nested_sha256": "7c25b3d8d0f6069cfa9324bc9937a43849821dc4ab45e97c2988d85118832726",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 37,
+    "byte_identical_scope_files": 36,
+    "pinned_patch_scope_files": 1,
+    "unresolved_scope_differences": 0
+  },
+  "archive_artifacts": [
+    {
+      "flag": "agent-archive",
+      "artifact": "test-results/earendil-works-pi-coding-agent-1.4.0.tgz",
+      "sha512": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+    },
+    {
+      "flag": "tui-archive",
+      "artifact": "test-results/earendil-works-pi-tui-1.4.0.tgz",
+      "sha512": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg=="
+    }
+  ],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "complete_directory": "dist/core/tools",
+    "extension": ".js",
+    "directory_files": [
+      "dist/core/tools/bash.js",
+      "dist/core/tools/edit-diff.js",
+      "dist/core/tools/edit.js",
+      "dist/core/tools/file-mutation-queue.js",
+      "dist/core/tools/find.js",
+      "dist/core/tools/grep.js",
+      "dist/core/tools/index.js",
+      "dist/core/tools/ls.js",
+      "dist/core/tools/output-accumulator.js",
+      "dist/core/tools/path-utils.js",
+      "dist/core/tools/powershell.js",
+      "dist/core/tools/read.js",
+      "dist/core/tools/render-utils.js",
+      "dist/core/tools/renderers/bash.js",
+      "dist/core/tools/renderers/edit.js",
+      "dist/core/tools/renderers/find.js",
+      "dist/core/tools/renderers/grep.js",
+      "dist/core/tools/renderers/index.js",
+      "dist/core/tools/renderers/ls.js",
+      "dist/core/tools/renderers/read.js",
+      "dist/core/tools/renderers/write.js",
+      "dist/core/tools/tool-definition-wrapper.js",
+      "dist/core/tools/truncate.js",
+      "dist/core/tools/write.js"
+    ],
+    "selected_shared_files": [
+      "dist/utils/child-process.js",
+      "dist/utils/image-convert.js",
+      "dist/utils/image-process.js",
+      "dist/utils/image-resize-core.js",
+      "dist/utils/image-resize-worker.js",
+      "dist/utils/image-resize.js",
+      "dist/utils/management-http.js",
+      "dist/utils/mime.js",
+      "dist/utils/output-files.js",
+      "dist/utils/paths.js",
+      "dist/utils/photon.js",
+      "dist/utils/shell.js",
+      "dist/utils/tools-manager.js"
+    ]
+  },
+  "unit_source_commit": "11104030a461163a2f2ee547ea3080f0a9cd1709"
+}

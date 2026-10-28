@@ -234,6 +234,18 @@ InteractiveMode records include native help/session/debug-file prose, constructo
 and event dispatch, startup/version gates and host overrides. Manual compaction
 error, automatic status and migration-warning sinks have separate conditions.
 
+[pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
+with 27 [payload boundaries](pi-tools-boundaries.csv). Its
+[scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
+renderer modules plus 13 shared process, image, path, download and output helpers.
+[Exclusions](pi-tools-exclusions.csv) account for the other 1,083 lexical
+occurrences. Native rendering suppresses several success messages that remain in
+JSON/RPC or exported results; shell footer replacement and edit-preview errors
+have separate conditions. Model-only descriptions, guarded API errors and disabled
+tool modes are explicitly qualified. The [evidence](pi-tools-evidence.json) ties
+36 files to exact archive bytes and one to the pinned path patch. Imported native,
+HTTP and WASM error text remains a boundary; the wider Pi producer graph is open.
+
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
 occurrences and eight dynamic boundaries. It includes notices, invalid-command
@@ -343,6 +355,7 @@ python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
+node review/text-inventory/verify-pi-tools.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
