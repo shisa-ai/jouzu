@@ -298,6 +298,18 @@ have no current plain-state producer. A serialized second-header-read guard is
 also excluded with its storage precondition. Stored caller reasons and imported
 admission/request/tool failures still require their own producer traces.
 
+[flow-waits.csv](flow-waits.csv) adds 81 wait-storage/reducer/result records:
+72 fixed occurrences and nine payload boundaries. Five complete bodies are
+covered in the [scope table](flow-waits-scope.csv); all 310 lexical occurrences
+are partitioned between those records and 238
+[exclusions](flow-waits-exclusions.csv). Rows distinguish stored cancellation and
+lifecycle reasons, tool summary formats, receipt checks, retirement failures and
+deadline callbacks. Two initialization guards are excluded by the successful
+attachment lifecycle. Other defensive APIs retain their precise conditions.
+Tool results, cleaned `/flow` warnings, raw runtime stderr and direct API data
+have separate consumers. Authority, health and producer helper wording remains
+separate; this unit does not close the full wait graph.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -361,6 +373,7 @@ python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
 node review/text-inventory/verify-flow-storage.cjs
 node review/text-inventory/verify-flow-receipts.cjs
+node review/text-inventory/verify-flow-waits.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py

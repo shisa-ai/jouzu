@@ -18,7 +18,7 @@ PIN = '346d1e481757a55eb62fc066e43bbc7999b8e6dd'
 SCOPES = [
     'acp-scope.csv', 'acp-dependencies-scope.csv', 'startup-language-scope.csv', 'cli-entry-scope.csv',
     'doctor-scope.csv', 'updater-scope.csv', 'profiles-scope.csv', 'profile-migration-scope.csv', 'catalog-settings-scope.csv', 'flow-display-scope.csv',
-    'model-picker-scope.csv', 'pi-tools-scope.csv', 'pi-runtime-scope.csv', 'flow-report-scope.csv', 'flow-storage-scope.csv', 'flow-receipts-scope.csv',
+    'model-picker-scope.csv', 'pi-tools-scope.csv', 'pi-runtime-scope.csv', 'flow-report-scope.csv', 'flow-storage-scope.csv', 'flow-receipts-scope.csv', 'flow-waits-scope.csv',
     'launcher-scope.csv', 'launcher-helpers-scope.csv', 'launcher-support-scope.csv',
     'installer-dependencies-scope.csv', 'python-console-scope.csv', 'textguard-native-scope.csv', 'textguard-dependencies-scope.csv',
 ]

@@ -1,0 +1,2557 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-WAITS-EX-001",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 1,
+      "column": 49,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-002",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 9,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-003",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 21,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-004",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 35,
+      "expression": "\"failed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-005",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 46,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-006",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 60,
+      "expression": "\"missing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-007",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 72,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-008",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 24,
+      "column": 86,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-009",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 32,
+      "column": 8,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-010",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 32,
+      "column": 16,
+      "expression": "\"any\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-011",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 9,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-012",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 21,
+      "expression": "\"resolved\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-013",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 34,
+      "expression": "\"failed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-014",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 45,
+      "expression": "\"expired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-015",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 57,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-016",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 71,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-017",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 38,
+      "column": 85,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-018",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 47,
+      "column": 19,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-019",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 49,
+      "column": 51,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-020",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 49,
+      "column": 62,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-021",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 50,
+      "column": 69,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-022",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 55,
+      "column": 29,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-001",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 55,
+      "column": 41,
+      "expression": "\"Wait reconciliation requires every exact dependency.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-023",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 6,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-024",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 17,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-025",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 30,
+      "expression": "\"failed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-026",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 40,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-027",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 53,
+      "expression": "\"missing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-028",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 64,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-029",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 64,
+      "column": 77,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-030",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 68,
+      "column": 6,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-031",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 68,
+      "column": 19,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-032",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 71,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-002",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 71,
+      "column": 42,
+      "expression": "\"Wait observation has foreign or unsupported dependency identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-033",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 83,
+      "column": 47,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-003",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 83,
+      "column": 57,
+      "expression": "\"Invalid wait reconciliation time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-034",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 87,
+      "column": 21,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-035",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 92,
+      "column": 56,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-036",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 96,
+      "column": 30,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-037",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 96,
+      "column": 102,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-038",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 97,
+      "column": 55,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-039",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 98,
+      "column": 56,
+      "expression": "\"expired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-040",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 99,
+      "column": 25,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-041",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 99,
+      "column": 97,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-042",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 100,
+      "column": 16,
+      "expression": "\"resolved\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-043",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 101,
+      "column": 71,
+      "expression": "\"state\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-044",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 101,
+      "column": 83,
+      "expression": "\"failed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-045",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 102,
+      "column": 21,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-046",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 3,
+      "expression": "\"version\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-047",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 15,
+      "expression": "\"createdAt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-048",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 29,
+      "expression": "\"state\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-049",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 39,
+      "expression": "\"unmet\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-050",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 49,
+      "expression": "\"observations\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-051",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 66,
+      "expression": "\"endedAt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-052",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 109,
+      "column": 78,
+      "expression": "\"cancellationReason\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-053",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 117,
+      "column": 29,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-054",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 120,
+      "column": 5,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-055",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 120,
+      "column": 12,
+      "expression": "\"any\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-056",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 133,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-004",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 133,
+      "column": 39,
+      "expression": "\"Invalid wait identity, dependencies, or deadline.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-057",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 140,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-005",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 140,
+      "column": 39,
+      "expression": "\"Wait check time must fall between now and the effective deadline.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-058",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 147,
+      "column": 11,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-059",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 158,
+      "column": 71,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-006",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 158,
+      "column": 81,
+      "expression": "\"Invalid wait expiry time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-060",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 159,
+      "column": 21,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-061",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 160,
+      "column": 44,
+      "expression": "\"expired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-062",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 165,
+      "column": 65,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-063",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 166,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-007",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 166,
+      "column": 39,
+      "expression": "\"Invalid wait cancellation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-064",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 167,
+      "column": 21,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-065",
+      "path": "packages/cli/src/flow-control/wait-state.ts",
+      "line": 168,
+      "column": 44,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-066",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-067",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 2,
+      "column": 35,
+      "expression": "\"node:util\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-068",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 3,
+      "column": 33,
+      "expression": "\"./automatic-work.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-069",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 4,
+      "column": 36,
+      "expression": "\"./ownership.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-070",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 5,
+      "column": 49,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-071",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 6,
+      "column": 92,
+      "expression": "\"./retired-identities.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-072",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 7,
+      "column": 87,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-073",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 27,
+      "column": 8,
+      "expression": "\"./wait-authority.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-074",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 28,
+      "column": 72,
+      "expression": "\"./wait-deadlines.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-075",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 29,
+      "column": 67,
+      "expression": "\"./wait-health.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-076",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 35,
+      "column": 8,
+      "expression": "\"./wait-retirement-index.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-077",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 44,
+      "column": 8,
+      "expression": "\"./wait-state.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-078",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 50,
+      "column": 8,
+      "expression": "\"./wait-tool-response.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-079",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 78,
+      "column": 30,
+      "expression": "\"jouzu.flow.waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-080",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 78,
+      "column": 50,
+      "expression": "\"v1\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-081",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 83,
+      "column": 10,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-082",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 88,
+      "column": 10,
+      "expression": "\"executions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-083",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 93,
+      "column": 10,
+      "expression": "\"waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-084",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 104,
+      "column": 69,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-085",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 112,
+      "column": 21,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-086",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 114,
+      "column": 66,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-087",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 119,
+      "column": 19,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-088",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 122,
+      "column": 68,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-008",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 122,
+      "column": 78,
+      "expression": "\"Invalid retained wait state.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-089",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 125,
+      "column": 55,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-090",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 125,
+      "column": 80,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-091",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 131,
+      "column": 32,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-092",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 191,
+      "column": 52,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-093",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 191,
+      "column": 60,
+      "expression": "\"Work attribution is not initialized.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-094",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 192,
+      "column": 73,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-095",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 192,
+      "column": 87,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-096",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 197,
+      "column": 44,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-009",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 197,
+      "column": 58,
+      "expression": "\"Inactive work cannot start another execution.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-097",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 198,
+      "column": 29,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-010",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 198,
+      "column": 41,
+      "expression": "\"Work identity is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-098",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 207,
+      "column": 56,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-011",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 207,
+      "column": 70,
+      "expression": "\"Wait deadline scheduling is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-099",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 208,
+      "column": 49,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-012",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 208,
+      "column": 63,
+      "expression": "\"Wait deadlines are already scheduled.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-100",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 247,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-013",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 247,
+      "column": 40,
+      "expression": "\"Invalid wait storage scope or capacity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-101",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 250,
+      "column": 39,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-102",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 251,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-014",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 251,
+      "column": 41,
+      "expression": "\"Invalid retired identity index.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-103",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 262,
+      "column": 31,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-015",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 262,
+      "column": 43,
+      "expression": "\"Invalid retired identity index or capacity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-104",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 270,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-016",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 270,
+      "column": 43,
+      "expression": "\"Retired identity is still registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-105",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 274,
+      "column": 31,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-017",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 274,
+      "column": 43,
+      "expression": "\"Invalid wait tool receipt count.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-106",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 282,
+      "column": 7,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-107",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 282,
+      "column": 18,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-108",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 283,
+      "column": 36,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-109",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 286,
+      "column": 8,
+      "expression": "\"agent_wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-110",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 286,
+      "column": 22,
+      "expression": "\"agent_wait_cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-111",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 297,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-018",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 297,
+      "column": 44,
+      "expression": "\"Invalid wait tool response receipt.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-112",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 311,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-019",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 311,
+      "column": 43,
+      "expression": "\"Owned wait has no registered work.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-113",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 317,
+      "column": 23,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-114",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 322,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-020",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 322,
+      "column": 44,
+      "expression": "\"Live wait does not match registered execution evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-115",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 327,
+      "column": 21,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-116",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 329,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-021",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 329,
+      "column": 43,
+      "expression": "\"Wait storage contains duplicate or foreign ownership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-117",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 331,
+      "column": 23,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-118",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 336,
+      "column": 61,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-022",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 336,
+      "column": 71,
+      "expression": "\"Wait storage is missing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-119",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 366,
+      "column": 34,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-023",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 366,
+      "column": 43,
+      "expression": "\"Wait history identity has been retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-120",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 372,
+      "column": 27,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-121",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 372,
+      "column": 35,
+      "expression": "\"executions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-122",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 372,
+      "column": 49,
+      "expression": "\"waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-123",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 375,
+      "column": 76,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-124",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 391,
+      "column": 51,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-125",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 391,
+      "column": 65,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-126",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 393,
+      "column": 72,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-127",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 421,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-024",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 421,
+      "column": 43,
+      "expression": "\"Registered work requires an owned wait declaration.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-128",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 438,
+      "column": 30,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-025",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 438,
+      "column": 39,
+      "expression": "\"Work identity has been retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-129",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 440,
+      "column": 30,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-026",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 440,
+      "column": 39,
+      "expression": "\"Wait token has been retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-130",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 443,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-027",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 443,
+      "column": 42,
+      "expression": "\"Wait token is already registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-131",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 444,
+      "column": 91,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-132",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 447,
+      "column": 5,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-028",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 448,
+      "column": 5,
+      "expression": "`Wait replacement requires the active token ${active.token}. Omit replaceToken for a new wait; to replace the live wait, copy that token. Do not supply a placeholder.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-133",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 454,
+      "column": 77,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-134",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 456,
+      "column": 5,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-029",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 457,
+      "column": 5,
+      "expression": "\"That token belongs to a finished wait. To declare a new wait, omit replaceToken or pass null or 'none'; do not reuse the finished token.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-135",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 461,
+      "column": 5,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-030",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 462,
+      "column": 5,
+      "expression": "\"Wait replacement requires an active wait. Omit replaceToken for a new wait; to replace a live wait, copy its returned token. Do not supply a placeholder.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-136",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 466,
+      "column": 5,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-031",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 467,
+      "column": 5,
+      "expression": "`Work already has a live wait. Its token is ${active.token}: keep that wait, or copy that token into replaceToken to change it; do not redeclare it to check status.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-032",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 472,
+      "column": 87,
+      "expression": "\"Replaced by a new wait.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-137",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 481,
+      "column": 46,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-033",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 481,
+      "column": 56,
+      "expression": "\"Invalid ownership update time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-138",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 488,
+      "column": 20,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-139",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 495,
+      "column": 86,
+      "expression": "\"userInputs\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-140",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 499,
+      "column": 31,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-034",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 499,
+      "column": 40,
+      "expression": "\"Work identity has been retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-141",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 502,
+      "column": 6,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-035",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 503,
+      "column": 6,
+      "expression": "\"Existing waits require ownership reconciliation before registering work.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-142",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 511,
+      "column": 19,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-143",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 511,
+      "column": 43,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-144",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 513,
+      "column": 43,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-145",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 525,
+      "column": 45,
+      "expression": "`${captured.producer}-work:${randomUUID()}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-146",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 530,
+      "column": 35,
+      "expression": "\"paused\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-147",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 531,
+      "column": 80,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-036",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 531,
+      "column": 90,
+      "expression": "\"Binding resumed\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-148",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 556,
+      "column": 5,
+      "expression": "`${captured.producer}-work:${randomUUID()}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-037",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 575,
+      "column": 81,
+      "expression": "\"Producer state changed\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-149",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 580,
+      "column": 9,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-150",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 580,
+      "column": 20,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-151",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 582,
+      "column": 48,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-038",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 582,
+      "column": 81,
+      "expression": "\"Task ended\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-152",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 590,
+      "column": 52,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-153",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 590,
+      "column": 60,
+      "expression": "\"Work ownership is not initialized.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-154",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 598,
+      "column": 56,
+      "expression": "\"observedAt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-155",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 606,
+      "column": 59,
+      "expression": "\"observedAt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-156",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 616,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-039",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 616,
+      "column": 43,
+      "expression": "\"Execution snapshot changed registered ownership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-157",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 622,
+      "column": 40,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-158",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 625,
+      "column": 32,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-040",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 625,
+      "column": 46,
+      "expression": "\"Execution repair changed producer terminal evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-159",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 637,
+      "column": 28,
+      "expression": "\"on\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-160",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 637,
+      "column": 43,
+      "expression": "\"until\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-161",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 639,
+      "column": 38,
+      "expression": "\"predicates\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-162",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 663,
+      "column": 46,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-041",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 663,
+      "column": 58,
+      "expression": "\"Producer execution is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-163",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 675,
+      "column": 12,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-164",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 675,
+      "column": 26,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-165",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 681,
+      "column": 24,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-166",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 688,
+      "column": 38,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-167",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 703,
+      "column": 44,
+      "expression": "\"toolCallId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-168",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 703,
+      "column": 59,
+      "expression": "\"toolName\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-169",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 715,
+      "column": 9,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-170",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 715,
+      "column": 20,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-171",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 715,
+      "column": 72,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-172",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 725,
+      "column": 7,
+      "expression": "\"waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-173",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 731,
+      "column": 6,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-042",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 732,
+      "column": 6,
+      "expression": "\"That token belongs to a retired wait. To declare a new wait, omit replaceToken or pass null or 'none'.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-174",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 758,
+      "column": 44,
+      "expression": "\"toolCallId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-175",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 758,
+      "column": 59,
+      "expression": "\"toolName\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-176",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 765,
+      "column": 45,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-043",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 765,
+      "column": 57,
+      "expression": "\"Owned wait token is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-177",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 775,
+      "column": 38,
+      "expression": "\"toolCallId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-178",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 775,
+      "column": 53,
+      "expression": "\"toolName\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-179",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 778,
+      "column": 19,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-180",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 778,
+      "column": 30,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-181",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 822,
+      "column": 42,
+      "expression": "\"executions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-182",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 824,
+      "column": 30,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-044",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 824,
+      "column": 39,
+      "expression": "\"Execution identity has been retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-183",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 846,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-045",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 846,
+      "column": 41,
+      "expression": "\"Invalid wait retirement selection.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-184",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 859,
+      "column": 50,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-046",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 859,
+      "column": 62,
+      "expression": "\"Retirement repeats an identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-185",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 869,
+      "column": 33,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-047",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 869,
+      "column": 42,
+      "expression": "\"Retirement snapshot changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-186",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 874,
+      "column": 60,
+      "expression": "\"waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-187",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 875,
+      "column": 44,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-188",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 876,
+      "column": 31,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-048",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 876,
+      "column": 39,
+      "expression": "\"Live waits cannot be retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-189",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 879,
+      "column": 86,
+      "expression": "\"executions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-190",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 885,
+      "column": 68,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-191",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 893,
+      "column": 31,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-049",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 893,
+      "column": 39,
+      "expression": "\"Referenced or pending executions cannot be retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-192",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 898,
+      "column": 32,
+      "expression": "\"host-user\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-193",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 898,
+      "column": 101,
+      "expression": "\"paused\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-194",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 902,
+      "column": 6,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-050",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 903,
+      "column": 6,
+      "expression": "\"Finished user work requires source membership and an unpaused lifecycle.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-195",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 905,
+      "column": 86,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-196",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 912,
+      "column": 39,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-197",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 912,
+      "column": 50,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-198",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 912,
+      "column": 97,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-199",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 917,
+      "column": 31,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-051",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 917,
+      "column": 39,
+      "expression": "\"Active or referenced work cannot be retired.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-200",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 942,
+      "column": 46,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-052",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 942,
+      "column": 56,
+      "expression": "\"Invalid wait expiry time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-201",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 946,
+      "column": 24,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-202",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 965,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-053",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 965,
+      "column": 43,
+      "expression": "\"Owned waits require registered evidence or owner cancellation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-203",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 967,
+      "column": 45,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-054",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 967,
+      "column": 54,
+      "expression": "\"Wait token is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-204",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 1,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-205",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 2,
+      "column": 42,
+      "expression": "\"./retired-identities.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-206",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 3,
+      "column": 85,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-207",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 5,
+      "column": 31,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-208",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 5,
+      "column": 40,
+      "expression": "\"executions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-209",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 5,
+      "column": 55,
+      "expression": "\"waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-210",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 13,
+      "column": 26,
+      "expression": "`jouzu.flow.wait-history-${kind}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-211",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 24,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-055",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 24,
+      "column": 39,
+      "expression": "\"Invalid retired wait identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-212",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 32,
+      "column": 27,
+      "expression": "\"jouzu.flow.wait-history-work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-213",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 39,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-056",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 39,
+      "column": 40,
+      "expression": "\"Invalid retired wait identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-214",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 47,
+      "column": 27,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-215",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 50,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-057",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 50,
+      "column": 40,
+      "expression": "\"Invalid retired wait identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-216",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 71,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-058",
+      "path": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "line": 71,
+      "column": 43,
+      "expression": "\"Retired wait history cannot be overwritten.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-217",
+      "path": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "line": 1,
+      "column": 36,
+      "expression": "\"./wait-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-218",
+      "path": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "line": 26,
+      "column": 47,
+      "expression": "\"expireDue\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-219",
+      "path": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "line": 26,
+      "column": 61,
+      "expression": "\"snapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-059",
+      "path": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "line": 60,
+      "column": 63,
+      "expression": "\"Invalid wait clock time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-220",
+      "path": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "line": 65,
+      "column": 67,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-221",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-222",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 2,
+      "column": 35,
+      "expression": "\"@earendil-works/pi-agent-core\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-223",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 3,
+      "column": 36,
+      "expression": "\"./wait-state.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-060",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 6,
+      "column": 2,
+      "expression": "\"checkAfter ignored: no dependency has a health policy; this wait is deadline-only.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-061",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 7,
+      "column": 2,
+      "expression": "\"Unmatched replaceToken ignored: a new wait was declared; no live wait was replaced.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-224",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 13,
+      "column": 12,
+      "expression": "\"agent_wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-225",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 13,
+      "column": 27,
+      "expression": "\"agent_wait_cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-062",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 19,
+      "column": 77,
+      "expression": "`${value}ms since epoch`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-063",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 33,
+      "column": 31,
+      "expression": "\"deadline-only\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-064",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 35,
+      "column": 6,
+      "expression": "\"deadline-only\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-226",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 40,
+      "column": 22,
+      "expression": "\"text\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-065",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 47,
+      "column": 16,
+      "expression": "`${handle.handle} (${handle.producer}/${handle.until}${handle.health ? ` · ${handle.health}` : \"\"})`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-066",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 47,
+      "column": 87,
+      "expression": "` · ${handle.health}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-227",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 47,
+      "column": 111,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-228",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 49,
+      "column": 9,
+      "expression": "\", \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-229",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 50,
+      "column": 45,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-067",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 50,
+      "column": 50,
+      "expression": "` · check ${formatInstant(wait.checkAt)}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-068",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 52,
+      "column": 3,
+      "expression": "`agent_wait ${wait.state} [${wait.token}] — ${handles}${check} · deadline ${formatInstant(wait.expiresAt)}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-069",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 53,
+      "column": 23,
+      "expression": "`${wait.unmet.length} unmet`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-230",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 57,
+      "column": 9,
+      "expression": "\" — \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-231",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 58,
+      "column": 47,
+      "expression": "\"text\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-070",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 60,
+      "column": 13,
+      "expression": "`${item.handle} (${item.producer}/${item.until}): ${item.state}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-071",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 62,
+      "column": 25,
+      "expression": "`mode ${wait.mode}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-232",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 62,
+      "column": 64,
+      "expression": "\", \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-233",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 64,
+      "column": 9,
+      "expression": "\" — \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-234",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 66,
+      "column": 21,
+      "expression": "\"text\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-072",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 66,
+      "column": 61,
+      "expression": "`${summary}\\n${notices.join(\"\\n\")}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-235",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 66,
+      "column": 89,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-236",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 71,
+      "column": 13,
+      "expression": "\"sha256\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-237",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 71,
+      "column": 62,
+      "expression": "\"hex\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-EX-238",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 76,
+      "column": 23,
+      "expression": "\"toolResult\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAITS-073",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 129,
+      "column": 9,
+      "expression": "authorityObservations(authority, wait.scope, wait.workId, wait.on)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-074",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 175,
+      "column": 3,
+      "expression": "this.ownership.assertActive()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-075",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 356,
+      "column": 21,
+      "expression": "await change(state, mutation)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-076",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 380,
+      "column": 6,
+      "expression": "assertCurrent?.()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-077",
+      "path": "packages/cli/src/flow-control/wait-store.ts",
+      "line": 163,
+      "column": 6,
+      "expression": "listener.onError(error)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-078",
+      "path": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "line": 53,
+      "column": 8,
+      "expression": "this.refresh().catch(this.onError)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-079",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 54,
+      "column": 3,
+      "expression": "wait.reason || undefined",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-080",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 62,
+      "column": 71,
+      "expression": "wait.cancellationReason",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAITS-081",
+      "path": "packages/cli/src/flow-control/wait-tool-response.ts",
+      "line": 40,
+      "column": 45,
+      "expression": "JSON.stringify(details)",
+      "kind": "boundary"
+    }
+  ]
+}
