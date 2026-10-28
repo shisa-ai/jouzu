@@ -175,7 +175,7 @@ def main():
                     multiword += 1
                     assert (file, number) in fixed_locations | exceptions, (file, number, literal)
     assert errors == [("packages/cli/src/main-cli.ts", 107)]
-    assert any(r["status"] == "excluded-model-facing-body" and
+    assert any(r["status"] == "follow-up-prompt-export-routes" and
                r["path"] == "packages/cli/src/presentation.ts:154-368" for r in scope)
     assert any(r["status"] == "pending-producer-inventory" for r in scope)
     assert (len(rows), catalog, fixed, dynamic, pinned) == (225, 122, 35, 68, 33)

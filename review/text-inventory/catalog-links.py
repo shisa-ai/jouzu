@@ -14,7 +14,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PARTITIONS = [
     'acp.csv', 'acp-dependencies.csv', 'startup-language.csv', 'cli-entry.csv', 'host-ui.csv', 'scrollback.csv', 'doctor.csv', 'updater.csv', 'profiles.csv', 'profile-migration.csv', 'catalog-settings.csv', 'auth-account.csv',
-    'model-picker.csv', 'palette.csv', 'workflow.csv', 'keybindings.csv', 'model-catalog.csv', 'flow-display.csv', 'flow-report.csv', 'flow-storage.csv', 'flow-receipts.csv', 'flow-waits.csv', 'flow-wait-authority.csv', 'flow-wait-producers.csv', 'flow-tools.csv', 'flow-metadata.csv', 'pi.csv', 'pi-tools.csv', 'pi-runtime.csv', 'pi-auth-model.csv', 'pi-session-config.csv', 'pi-packages.csv', 'pi-resource-text.csv',
+    'model-picker.csv', 'palette.csv', 'workflow.csv', 'keybindings.csv', 'model-catalog.csv', 'flow-display.csv', 'flow-report.csv', 'flow-storage.csv', 'flow-receipts.csv', 'flow-waits.csv', 'flow-wait-authority.csv', 'flow-wait-producers.csv', 'flow-tools.csv', 'flow-metadata.csv', 'prompt-text.csv', 'pi.csv', 'pi-tools.csv', 'pi-runtime.csv', 'pi-auth-model.csv', 'pi-session-config.csv', 'pi-packages.csv', 'pi-resource-text.csv',
     'launcher.csv', 'launcher-helpers.csv', 'launcher-support.csv', 'installer-dependencies.csv', 'python-console.csv', 'operator-scripts.csv', 'build-scripts.csv', 'copied-runtime.csv', 'textguard-native.csv', 'textguard-dependencies.csv',
 ]
 COLUMNS = ['message_id', 'english_location', 'primary_trigger_status',

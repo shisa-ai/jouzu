@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 572,
-  "paths_without_scope_references": 634,
+  "paths_with_scope_references": 574,
+  "paths_without_scope_references": 632,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -17,7 +17,7 @@
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
-    "cli-entry-scope.csv": "57552b89d44273a3f1ad9a49b9ce66d72d5fd8ec04ba6ac5c733b4ce08d05ce5",
+    "cli-entry-scope.csv": "ec53cf0282b8b5779f907f09173aaff4e6e10966820a6d140a22118407595929",
     "host-ui-scope.csv": "34930cf4b241583cb2bb486a6d662c3167c2fcfd1d561b8135de382e33f6cf7d",
     "scrollback-scope.csv": "d13cf7bfb3f090d39cba8bf76c123cb2c5777d676807c87b6823f1c67c60804a",
     "auth-account-scope.csv": "ff00b7e09fcb1c0f2ac279151c6990b3d003986ca8810168a0870ddf99cd4edb",
@@ -46,6 +46,7 @@
     "flow-wait-producers-scope.csv": "0857d1708a68c3acd32a50ed43d73ba4684e181bba2fe993db044625bb6266fb",
     "flow-tools-scope.csv": "bdc7e82494a4dbcab8b8ca0ce2a99668efd32d9aa916684068ef1ebc43ed514e",
     "flow-metadata-scope.csv": "89b5d378721d94275bc71b97b77ba46c3c1e128cf28225642bacf73cbba037f1",
+    "prompt-text-scope.csv": "8b6d269124021bee10a96f7d3d4be4fab39d28dc2d3eaa9f1c12d4e541f0ac56",
     "launcher-scope.csv": "fb455a291626a6e037f891b012f1e7d06425cdda7e4ea16c63ac2f0ada0f6e7d",
     "launcher-helpers-scope.csv": "8199e90f089627e9671adc53aa6055407e4290c4982fd33f6619d9d5668dc3f0",
     "launcher-support-scope.csv": "bbc05ce3aa8842966efeb0b2dda5796e0cce70cfc05ce99c631b8b9d3c051f40",

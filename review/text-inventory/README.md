@@ -475,6 +475,20 @@ can differ. The [scope](flow-metadata-scope.csv) pins 14 bounded producer/consum
 sources. It does not close the full HTML template, standalone export or optional
 client rendering. No product or browser code was executed.
 
+[prompt-text.csv](prompt-text.csv) records 78 fixed prompt definitions or format
+fragments and five payload boundaries. All 121 lexical occurrences in
+`presentation.ts` lines 154-368 and the complete model-guidance/prompt-sections
+helpers are partitioned with 43 [exclusions](prompt-text-exclusions.csv). This
+supersedes the earlier CLI-entry prompt-body exclusion. The
+[scope](prompt-text-scope.csv) pins 15 producer/consumer sources. Export conditions
+cover Jouzu identity and guidance, capability table rows, tool rules, documentation
+paths, local date and model-specific instructions. Each route retains its selected
+tool, available skill or model predicate. Custom/forced prompt guards and later
+section replacements can suppress or change the recorded text. Child addendum
+use is qualified by its separate consumer; caller-authored language sections,
+Intl output and imported validation remain distinct producer boundaries. No
+prompt, browser, model or native code was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -584,6 +598,7 @@ node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-metadata.py
+node review/text-inventory/verify-prompt-text.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
