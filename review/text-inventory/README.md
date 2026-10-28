@@ -331,6 +331,17 @@ reason templates have no owned display consumer: the monitor retains only their
 verdict state and schedules the next check. Original producer detail, lifecycle
 reasons, callback errors and native failures retain separate transport boundaries.
 
+[flow-wait-producers.csv](flow-wait-producers.csv) adds 47 fixed errors and nine
+payload boundaries for the producer registry, execution subscriptions and wait
+decisions. Two complete bodies and all 176 lexical occurrences are covered in the
+[scope](flow-wait-producers-scope.csv) and
+[exclusions](flow-wait-producers-exclusions.csv). Restored-source warnings retain
+the original error as a cause; subscription cleanup can replace startup failure.
+Observation reporting can retain an aggregate headline and both causes. Readiness
+and validated-snapshot preconditions exclude two internal errors. Serialized wait
+decisions are model input; arbitrary stored reasons and imported producer errors
+remain separately qualified.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -408,6 +419,7 @@ node review/text-inventory/verify-flow-storage.cjs
 node review/text-inventory/verify-flow-receipts.cjs
 node review/text-inventory/verify-flow-waits.cjs
 node review/text-inventory/verify-flow-wait-authority.cjs
+node review/text-inventory/verify-flow-wait-producers.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-textguard-native.py

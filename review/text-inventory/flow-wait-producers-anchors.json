@@ -1,0 +1,1485 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-001",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 1,
+      "column": 35,
+      "expression": "\"node:util\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-002",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 2,
+      "column": 49,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-003",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 3,
+      "column": 68,
+      "expression": "\"./wait-authority.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-004",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 4,
+      "column": 53,
+      "expression": "\"./wait-deadlines.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-005",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 10,
+      "column": 8,
+      "expression": "\"./wait-health.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-006",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 11,
+      "column": 36,
+      "expression": "\"./wait-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-007",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 21,
+      "column": 37,
+      "expression": "\"predicates\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-008",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 51,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-009",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 63,
+      "column": 52,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-010",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 63,
+      "column": 63,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-011",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 63,
+      "column": 76,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-012",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 73,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-001",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 73,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-013",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 101,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-002",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 101,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-014",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 105,
+      "column": 32,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-015",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 106,
+      "column": 31,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-016",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 107,
+      "column": 103,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-017",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 108,
+      "column": 85,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-018",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 109,
+      "column": 77,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-019",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 110,
+      "column": 59,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-020",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 111,
+      "column": 23,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-021",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 113,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-003",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 113,
+      "column": 40,
+      "expression": "\"Unsupported wait producer registration.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-022",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 114,
+      "column": 60,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-004",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 114,
+      "column": 72,
+      "expression": "\"Wait producer registry is full.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-023",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 116,
+      "column": 64,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-005",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 116,
+      "column": 76,
+      "expression": "\"Wait producer is already registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-024",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 130,
+      "column": 61,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-006",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 130,
+      "column": 71,
+      "expression": "\"Health policies must be a list.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-025",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 132,
+      "column": 32,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-007",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 132,
+      "column": 44,
+      "expression": "\"An execution declares too many health policies.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-026",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 135,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-008",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 135,
+      "column": 44,
+      "expression": "\"Health policy names must be unique for an execution.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-027",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 159,
+      "column": 55,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-028",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 160,
+      "column": 58,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-009",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 160,
+      "column": 67,
+      "expression": "\"Wait producer registration is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-029",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 169,
+      "column": 35,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-030",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 172,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-010",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 172,
+      "column": 44,
+      "expression": "\"Invalid producer execution identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-031",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 173,
+      "column": 58,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-011",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 173,
+      "column": 70,
+      "expression": "\"Producer execution subscriptions are full.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-032",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 175,
+      "column": 54,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-012",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 175,
+      "column": 66,
+      "expression": "\"Producer execution already has a subscription.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-033",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 230,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-034",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 242,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-035",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 245,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-013",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 245,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-036",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 246,
+      "column": 65,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-014",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 246,
+      "column": 77,
+      "expression": "\"Wait producer is not attached.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-037",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 250,
+      "column": 5,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-015",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 251,
+      "column": 5,
+      "expression": "`Health policy ${name} is not registered for this execution; declare a deadline-only wait instead. Omit on[].health and checkAfter or pass null. The until predicate is not a health policy.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-038",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 281,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-039",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 284,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-040",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 285,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-016",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 285,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-041",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 289,
+      "column": 33,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-042",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 292,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-017",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 292,
+      "column": 42,
+      "expression": "\"Invalid producer execution identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-043",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 299,
+      "column": 5,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-018",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 300,
+      "column": 5,
+      "expression": "\"This producer requires a registered launch receipt. Use the dependency returned when the execution was started; do not invent an execution or its owner.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-044",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 304,
+      "column": 5,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-019",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 305,
+      "column": 5,
+      "expression": "\"Wait execution has a different handle. Copy the producer's dependency unchanged, including its exact handle and execution. Do not infer execution ownership from a child/job ID or session metadata.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-045",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 319,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-046",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 323,
+      "column": 48,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-020",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 323,
+      "column": 56,
+      "expression": "\"Producer subscriptions are changing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-047",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 329,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-021",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 329,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-048",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 332,
+      "column": 44,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-022",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 332,
+      "column": 56,
+      "expression": "\"Wait producer is not attached.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-049",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 334,
+      "column": 41,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-023",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 334,
+      "column": 53,
+      "expression": "\"Execution owner is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-050",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 344,
+      "column": 41,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-051",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 370,
+      "column": 38,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-024",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 370,
+      "column": 47,
+      "expression": "\"Producer snapshot timed out.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-052",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 385,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-025",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 385,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-053",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 386,
+      "column": 48,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-026",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 386,
+      "column": 56,
+      "expression": "\"Producer subscriptions are changing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-054",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 392,
+      "column": 48,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-027",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 392,
+      "column": 57,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-055",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 407,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-028",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 407,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-056",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 408,
+      "column": 48,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-029",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 408,
+      "column": 56,
+      "expression": "\"Producer subscriptions are changing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-057",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 434,
+      "column": 32,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-030",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 434,
+      "column": 41,
+      "expression": "\"Producer output retirement eligibility changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-058",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 441,
+      "column": 46,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-031",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 441,
+      "column": 55,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-059",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 442,
+      "column": 48,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-032",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 442,
+      "column": 56,
+      "expression": "\"Producer subscriptions are changing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-060",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 456,
+      "column": 48,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-033",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 456,
+      "column": 57,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-061",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 460,
+      "column": 42,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-062",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 460,
+      "column": 54,
+      "expression": "\"Retained execution has no owning work.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-034",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 472,
+      "column": 8,
+      "expression": "`Cannot restore wait source ${execution.producer} for execution ${execution.execution}. Inspect its stored state; automatic work remains held. Use /flow to inspect recovery options.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-063",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 478,
+      "column": 47,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-035",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 478,
+      "column": 56,
+      "expression": "\"Wait producer registry is closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-064",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 515,
+      "column": 55,
+      "expression": "\"subscribe\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-065",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 516,
+      "column": 54,
+      "expression": "\"snapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-066",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 536,
+      "column": 33,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-067",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 539,
+      "column": 8,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-068",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 539,
+      "column": 19,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-069",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 539,
+      "column": 32,
+      "expression": "\"failed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-070",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 539,
+      "column": 42,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-071",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 539,
+      "column": 55,
+      "expression": "\"missing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-072",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 543,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-036",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 543,
+      "column": 42,
+      "expression": "\"Execution observation has foreign or invalid evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-037",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 582,
+      "column": 60,
+      "expression": "\"Producer observation and error reporting failed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-073",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 610,
+      "column": 7,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-038",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 611,
+      "column": 7,
+      "expression": "`Execution observation buffer is full for ${this.namespace}/${this.identity.handle} (${this.identity.execution}).`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-074",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 618,
+      "column": 43,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-075",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 618,
+      "column": 52,
+      "expression": "\"Execution subscription has no initial evidence.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-076",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 620,
+      "column": 32,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-039",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 620,
+      "column": 41,
+      "expression": "\"Execution observation is older than retained evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-077",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 623,
+      "column": 33,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-040",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 623,
+      "column": 45,
+      "expression": "\"Execution revision has conflicting evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-078",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 628,
+      "column": 44,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-079",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 631,
+      "column": 32,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-041",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 631,
+      "column": 46,
+      "expression": "\"Execution update changed predicates or terminal evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-080",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 641,
+      "column": 7,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-042",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 642,
+      "column": 7,
+      "expression": "`Execution observation queue is full for ${this.namespace}/${this.identity.handle} (${this.identity.execution}).`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-081",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 678,
+      "column": 35,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-082",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 679,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-043",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 679,
+      "column": 40,
+      "expression": "\"Producer subscription must return cleanup.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-083",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 684,
+      "column": 39,
+      "expression": "\"abort\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-084",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 687,
+      "column": 41,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-044",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 687,
+      "column": 50,
+      "expression": "\"Producer snapshot timed out.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-085",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 696,
+      "column": 42,
+      "expression": "\"abort\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-086",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 710,
+      "column": 49,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-087",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 713,
+      "column": 32,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-045",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 713,
+      "column": 46,
+      "expression": "\"Buffered execution evidence conflicts with its snapshot.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-088",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 775,
+      "column": 41,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-046",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 775,
+      "column": 50,
+      "expression": "\"Producer execution subscription closed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-089",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-090",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 2,
+      "column": 35,
+      "expression": "\"node:util\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-091",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 3,
+      "column": 33,
+      "expression": "\"./admission.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-092",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 4,
+      "column": 35,
+      "expression": "\"./controller.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-093",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 5,
+      "column": 32,
+      "expression": "\"./model-input.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-094",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 6,
+      "column": 66,
+      "expression": "\"./native-inclusion.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-095",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 7,
+      "column": 45,
+      "expression": "\"./native-request-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-096",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 8,
+      "column": 55,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-097",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 9,
+      "column": 36,
+      "expression": "\"./request-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-098",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 10,
+      "column": 42,
+      "expression": "\"./submission-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-099",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 11,
+      "column": 36,
+      "expression": "\"./wait-state.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-100",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 12,
+      "column": 36,
+      "expression": "\"./wait-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-101",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 13,
+      "column": 67,
+      "expression": "\"./wait-tool-response.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-102",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 15,
+      "column": 19,
+      "expression": "\"jouzu-wait-decisions\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-103",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 18,
+      "column": 21,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-104",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 18,
+      "column": 49,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-105",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 19,
+      "column": 24,
+      "expression": "\"sha256\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-106",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 21,
+      "column": 11,
+      "expression": "\"hex\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-107",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 23,
+      "column": 7,
+      "expression": "`wait-${id}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-108",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 24,
+      "column": 13,
+      "expression": "\"1\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-109",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 64,
+      "column": 41,
+      "expression": "\"snapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-110",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 64,
+      "column": 54,
+      "expression": "\"forOperations\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-111",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 65,
+      "column": 41,
+      "expression": "\"snapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-112",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 86,
+      "column": 25,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-113",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 96,
+      "column": 31,
+      "expression": "\"jouzu-wait-context\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-114",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 96,
+      "column": 82,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-115",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 106,
+      "column": 20,
+      "expression": "\"wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-116",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 107,
+      "column": 23,
+      "expression": "\"1\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-117",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 108,
+      "column": 24,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-118",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 109,
+      "column": 26,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-119",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 116,
+      "column": 27,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-120",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 119,
+      "column": 37,
+      "expression": "\"toolResult\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-121",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 131,
+      "column": 24,
+      "expression": "\"context\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-122",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 148,
+      "column": 25,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-123",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 148,
+      "column": 58,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-124",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 156,
+      "column": 13,
+      "expression": "\"wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-125",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 179,
+      "column": 22,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-126",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 188,
+      "column": 29,
+      "expression": "\"snapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-127",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 188,
+      "column": 71,
+      "expression": "\"toolReceipts\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-128",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 213,
+      "column": 41,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-047",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 213,
+      "column": 50,
+      "expression": "\"Wait decision no longer matches retained state.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-EX-129",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 217,
+      "column": 11,
+      "expression": "\"wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-048",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 87,
+      "column": 6,
+      "expression": "listener.onError(error)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-049",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 198,
+      "column": 6,
+      "expression": "await binding.close()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-050",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 210,
+      "column": 6,
+      "expression": "await closeSource?.()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-051",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 468,
+      "column": 6,
+      "expression": "if (this.closed) throw error",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-052",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 571,
+      "column": 4,
+      "expression": "this.cleanupFailure = error",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-053",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 580,
+      "column": 4,
+      "expression": "this.onError(error)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-054",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 664,
+      "column": 3,
+      "expression": "await this.store.observeExecution(handle, evidence.revision, evidence.predicates, this.clock.now())",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-055",
+      "path": "packages/cli/src/flow-control/wait-producers.ts",
+      "line": 692,
+      "column": 5,
+      "expression": "await Promise.race",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-PRODUCERS-056",
+      "path": "packages/cli/src/flow-control/wait-decisions.ts",
+      "line": 45,
+      "column": 2,
+      "expression": "return JSON.stringify",
+      "kind": "boundary"
+    }
+  ]
+}
