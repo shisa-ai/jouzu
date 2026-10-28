@@ -685,9 +685,20 @@ occurrences and 36 delivery boundaries. The
 String.raw regex fragments, copied data, operator failures and diagnostics
 replaced by runtime catches. Thirty-five policy targets and exact deviation,
 after/copy hashes are checked. No default Node assertion producer occurs in these
-bodies. The root partition now has 64 covered scripts and 17 pending; six upstream
+bodies. That root partition snapshot has 64 covered scripts and 17 pending, continued below; six upstream
 copied/delegated bodies retain explicit separate boundaries. No transform,
 installation, runtime, native or network operation was executed.
+
+[validation-scripts.csv](validation-scripts.csv) adds 715 validation/review-script
+records: 658 primary literal/regex occurrences, six protected hashbangs, 14 nested
+literals, 13 assertion boundaries and 24 other delivery boundaries. The
+[scope](validation-scripts-scope.csv) covers six complete bodies, 1,899 lines and
+136 pinned source hashes. Records distinguish source-matching text, generated
+API probes and review samples from operator diagnostics and returned audit
+results. Native assertion messages and child/process/filesystem failures retain
+qualified delivery boundaries. Its root census has 70 covered scripts and 11
+pending; copied inputs and dependency producers remain separate. No validation
+producer, review sample, child, native or network operation was executed.
 
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
@@ -766,6 +777,7 @@ python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-copied-runtime.py
 python -B review/text-inventory/verify-release-scripts.py
 python -B review/text-inventory/verify-build-integration.py
+python -B review/text-inventory/verify-validation-scripts.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>

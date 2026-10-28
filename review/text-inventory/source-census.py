@@ -20,7 +20,7 @@ SCOPES = [
     'doctor-scope.csv', 'updater-scope.csv', 'profiles-scope.csv', 'profile-migration-scope.csv', 'catalog-settings-scope.csv', 'flow-display-scope.csv',
     'model-picker-scope.csv', 'palette-scope.csv', 'workflow-scope.csv', 'subagent-runtime-scope.csv', 'subagent-output-scope.csv', 'keybindings-scope.csv', 'model-catalog-scope.csv', 'pi-tools-scope.csv', 'pi-runtime-scope.csv', 'pi-auth-model-scope.csv', 'pi-session-config-scope.csv', 'pi-packages-scope.csv', 'pi-resource-text-scope.csv', 'pi-export-metadata-scope.csv', 'pi-export-text-scope.csv', 'pi-export-vendor-scope.csv', 'flow-report-scope.csv', 'flow-storage-scope.csv', 'flow-receipts-scope.csv', 'flow-waits-scope.csv', 'flow-wait-authority-scope.csv', 'flow-wait-producers-scope.csv', 'flow-tools-scope.csv', 'flow-metadata-scope.csv', 'prompt-text-scope.csv', 'language-contract-text-scope.csv', 'pi-ui-adapter-scope.csv', 'session-label-text-scope.csv', 'human-fallback-scope.csv',
     'launcher-scope.csv', 'launcher-helpers-scope.csv', 'launcher-support-scope.csv',
-    'installer-dependencies-scope.csv', 'python-console-scope.csv', 'operator-scripts-scope.csv', 'build-scripts-scope.csv', 'copied-runtime-scope.csv', 'release-scripts-scope.csv', 'build-integration-scope.csv', 'textguard-native-scope.csv', 'textguard-dependencies-scope.csv',
+    'installer-dependencies-scope.csv', 'python-console-scope.csv', 'operator-scripts-scope.csv', 'build-scripts-scope.csv', 'copied-runtime-scope.csv', 'release-scripts-scope.csv', 'build-integration-scope.csv', 'validation-scripts-scope.csv', 'textguard-native-scope.csv', 'textguard-dependencies-scope.csv',
 ]
 FIELDS = ['path', 'git_mode', 'git_blob', 'path_category', 'scope_reference_status', 'scope_records_json']
 

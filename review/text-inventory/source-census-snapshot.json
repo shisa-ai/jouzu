@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 601,
-  "paths_without_scope_references": 605,
+  "paths_with_scope_references": 608,
+  "paths_without_scope_references": 598,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -66,6 +66,7 @@
     "copied-runtime-scope.csv": "b85c992efdfc737d2d4a62ce691ddceb59f282bc41a90b34c9b75005147e7004",
     "release-scripts-scope.csv": "93357210b475ed10841a54760628a7594fce06ed438d9c665a159bed36a2872f",
     "build-integration-scope.csv": "83caed6ae103f3f3bd8ca392ebc211a801cd469197a38ee594c62cc9f2ac54c8",
+    "validation-scripts-scope.csv": "b20b35b944eab2d6547f2009ccb2b13b77cc546f35f89ddd4203489ccc9890c8",
     "textguard-native-scope.csv": "6391a10548dcfbd36c11ebeb9fe5e1b8e43dd85afa2a1c804392a918803d0c6a",
     "textguard-dependencies-scope.csv": "34233fa2246a5ce90a43203dc608f05d92833f8296f293f7af9d92f3d7851770",
     "catalog-snapshot.json": "2ead66b940219e429137498a54fa692d914079b558c376ce34e38bbddae0dd79"
