@@ -550,6 +550,21 @@ including 17 native snapshots linked to prior canonical archive evidence. This
 adapter does not localize arbitrary extension output or HTML exports. No terminal,
 product or browser code was executed.
 
+[session-label-text.csv](session-label-text.csv) records 29 catalog definitions,
+nine fixed or qualified API occurrences and 13 payload boundaries across the
+session-label, label-policy and tmux helpers. Three full bodies contain 828 lines
+and 264 string/template nodes, partitioned with 226
+[exclusions](session-label-text-exclusions.csv). All 30 catalog-alias uses, seven
+Error sites and eight catches are accounted for. Conditions distinguish `/labels`
+status/help, policy save failures, model/ownership gates and default pane labels.
+Automatic naming suppresses its raw model/parse errors; direct helper API errors
+retain their qualified conditions. A separate model request does not itself add
+its naming prompt to the main transcript. Native print/json notifications are
+no-ops; RPC notifications remain client requests. Default tmux failures return
+failure or are suppressed, with a conditional user warning. The
+[scope](session-label-text-scope.csv) pins 11 sources. No model, git, tmux, session
+or native operation was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -675,6 +690,7 @@ python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
 node review/text-inventory/verify-pi-ui-adapter.cjs
+node review/text-inventory/verify-session-label-text.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py

@@ -1198,35 +1198,35 @@ jouzu.cli.session.slash.trust,packages/cli/locales/en/slash-commands.ftl:19,sour
 jouzu.cli.session.status.contextUnknown,packages/cli/locales/en/cli.ftl:1409,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.session.status.detached,packages/cli/locales/en/cli.ftl:1410,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.session.status.health,packages/cli/locales/en/cli.ftl:1408,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.auto,packages/cli/locales/en/cli.ftl:1710,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.description,packages/cli/locales/en/cli.ftl:1713,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.global,packages/cli/locales/en/cli.ftl:1706,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.off,packages/cli/locales/en/cli.ftl:1708,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.on,packages/cli/locales/en/cli.ftl:1707,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.paneAuto,packages/cli/locales/en/cli.ftl:1712,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.panePin,packages/cli/locales/en/cli.ftl:1711,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.pin,packages/cli/locales/en/cli.ftl:1709,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.command.show,packages/cli/locales/en/cli.ftl:1705,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.notify.enableBeforePane,packages/cli/locales/en/cli.ftl:1717,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.notify.globalUnavailable,packages/cli/locales/en/cli.ftl:1715,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.notify.paneUnavailable,packages/cli/locales/en/cli.ftl:1718,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.notify.requiresInteractive,packages/cli/locales/en/cli.ftl:1714,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.notify.selectModel,packages/cli/locales/en/cli.ftl:1716,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.notify.useCommand,packages/cli/locales/en/cli.ftl:1719,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.automaticNaming,packages/cli/locales/en/cli.ftl:1698,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.globalInvalid,packages/cli/locales/en/cli.ftl:1702,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.namingModel,packages/cli/locales/en/cli.ftl:1699,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.namingRequests,packages/cli/locales/en/cli.ftl:1701,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.revisit,packages/cli/locales/en/cli.ftl:1703,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.runsAfterTurn,packages/cli/locales/en/cli.ftl:1704,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.status.sessionNamePane,packages/cli/locales/en/cli.ftl:1700,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.automatic,packages/cli/locales/en/cli.ftl:1723,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.guarded,packages/cli/locales/en/cli.ftl:1724,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.none,packages/cli/locales/en/cli.ftl:1726,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.off,packages/cli/locales/en/cli.ftl:1721,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.on,packages/cli/locales/en/cli.ftl:1720,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.pinned,packages/cli/locales/en/cli.ftl:1722,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.sessionLabels.value.selectedModel,packages/cli/locales/en/cli.ftl:1725,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.sessionLabels.command.auto,packages/cli/locales/en/cli.ftl:1710,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-024""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.description,packages/cli/locales/en/cli.ftl:1713,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-027""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.global,packages/cli/locales/en/cli.ftl:1706,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-020""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.off,packages/cli/locales/en/cli.ftl:1708,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-022""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.on,packages/cli/locales/en/cli.ftl:1707,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-021""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.paneAuto,packages/cli/locales/en/cli.ftl:1712,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-026""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.panePin,packages/cli/locales/en/cli.ftl:1711,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-025""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.pin,packages/cli/locales/en/cli.ftl:1709,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-023""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.command.show,packages/cli/locales/en/cli.ftl:1705,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-019""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.notify.enableBeforePane,packages/cli/locales/en/cli.ftl:1717,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-031""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.notify.globalUnavailable,packages/cli/locales/en/cli.ftl:1715,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-029""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.notify.paneUnavailable,packages/cli/locales/en/cli.ftl:1718,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-032""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.notify.requiresInteractive,packages/cli/locales/en/cli.ftl:1714,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-028""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.notify.selectModel,packages/cli/locales/en/cli.ftl:1716,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-030""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.notify.useCommand,packages/cli/locales/en/cli.ftl:1719,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-033""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.automaticNaming,packages/cli/locales/en/cli.ftl:1698,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-012""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.globalInvalid,packages/cli/locales/en/cli.ftl:1702,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-016""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.namingModel,packages/cli/locales/en/cli.ftl:1699,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-013""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.namingRequests,packages/cli/locales/en/cli.ftl:1701,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-015""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.revisit,packages/cli/locales/en/cli.ftl:1703,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-017""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.runsAfterTurn,packages/cli/locales/en/cli.ftl:1704,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-018""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.status.sessionNamePane,packages/cli/locales/en/cli.ftl:1700,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-014""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.automatic,packages/cli/locales/en/cli.ftl:1723,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-037""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.guarded,packages/cli/locales/en/cli.ftl:1724,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-038""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.none,packages/cli/locales/en/cli.ftl:1726,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-040""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.off,packages/cli/locales/en/cli.ftl:1721,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-035""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.on,packages/cli/locales/en/cli.ftl:1720,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-034""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.pinned,packages/cli/locales/en/cli.ftl:1722,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-036""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.sessionLabels.value.selectedModel,packages/cli/locales/en/cli.ftl:1725,caller-trace-required,0,1,"[{""table"":""session-label-text.csv"",""item_id"":""SESSION-LABEL-TEXT-039""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.account.connected,packages/cli/locales/en/cli.ftl:1160,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-130""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.account.connectedDetail,packages/cli/locales/en/cli.ftl:1159,caller-trace-required,0,2,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-128""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-129""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.account.connectMeta,packages/cli/locales/en/cli.ftl:1161,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-132""}]",occurrence-records-present; exhaustive-caller-review-open
