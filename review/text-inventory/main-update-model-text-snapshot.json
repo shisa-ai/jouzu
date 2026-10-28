@@ -1,0 +1,24 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "occurrences": 25,
+  "catalog_occurrences": 15,
+  "glyph_occurrences": 4,
+  "boundaries": 6,
+  "changed_line_rows": 358,
+  "full_helpers": {
+    "packages/cli/src/model-catalog-default.ts": 39,
+    "packages/cli/src/model-picker-ranking.ts": 178,
+    "packages/cli/src/model-selection-ingress.ts": 86
+  },
+  "bounded_bodies": {
+    "packages/cli/src/model-picker.ts": 2221,
+    "packages/cli/src/model-catalog-sync.ts": 1005
+  },
+  "interpretation": "Bounded main-update model text/condition delta, not a full target caller closure. Base source rows stay pinned346. No audited product operation runs.",
+  "artifact_sha256_utf8_lf": {
+    "main-update-model-text.csv": "7256093ba05c9774681e0b8f87c1bf32b7bfe796d95810fb1f2e77984894b883",
+    "main-update-model-text-scope.csv": "5bc986f8a428b46b1607da943802645528922a9d879df70caadf455ea9786658",
+    "main-update-model-source-delta.csv": "a5c494ee926f95e9f16f5813bf3167db78768db4f13e8da41e05cd71937b53e7"
+  }
+}

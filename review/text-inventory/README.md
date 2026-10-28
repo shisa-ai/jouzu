@@ -13,6 +13,20 @@ and checks retain their base source authority; equal source blobs establish
 identity, while changed callers, configuration and upstream patches need separate
 review. No checkout or product operation is performed by this census.
 
+[main-update-model-text.csv](main-update-model-text.csv) records 25 fetched-main
+Models delta occurrences: fifteen catalog consumers (three new headings), four
+rating-glyph occurrences and six payload/condition boundaries. The
+[source delta](main-update-model-source-delta.csv) retains all 358 added/replaced
+lines in five paths, including control/data/comment lines; those are not all
+translation targets. The [scope](main-update-model-text-scope.csv) distinguishes
+three full helper bodies (303 lines) from bounded picker/sync review, and the
+[snapshot](main-update-model-text-snapshot.json) pins target bytes. Rating columns
+share a width predicate and the header can be removed at low height. Abort
+reasons bypass ordinary catalog-result warnings; independent choices suppress a
+rejected automatic attempt. Five corruption/omission controls pass. Existing
+base wording is linked by catalog ID without retargeting its earlier evidence.
+Target caller coverage remains open beyond these bounded conditions.
+
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
 The current snapshot is **incomplete**; catalog membership, source references and
@@ -1419,6 +1433,7 @@ python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-main-update-documentation.py
+python -B review/text-inventory/verify-main-update-model-text.py
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
