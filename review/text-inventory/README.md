@@ -469,6 +469,18 @@ their exact escaped locations without evaluating interpolations or transforms.
 This leaves 50 root candidates pending; the copied runtime bodies and delegated
 branding/error producers retain separate wording boundaries.
 
+[copied-runtime.csv](copied-runtime.csv) adds 686 copied-runtime records: 507
+primary literal/template/regex occurrences, 157 nested JSON-code occurrences and
+22 delivery boundaries. The [scope](copied-runtime-scope.csv) covers all 13
+copied bodies, 42 individual before/after pairs, five manifest pins and 13 copied
+source hashes. Records distinguish retained result titles, warnings and lifecycle
+reasons, log-loss markers, canonical validation failures and suppressed probe or
+matcher errors. Partial generated-template tails are classified only after their
+complete recipes are checked. Declaration-only types contain no runtime output.
+The target diagnostics helper remains an unresolved consumer; these records do
+not assert a stderr route or close uncopied target dependencies. No runtime,
+transform, probe or state operation was executed. Fifty root scripts remain open.
+
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
 protocol values, ignored rule metadata, build diagnostics and two JavaScript API
@@ -534,6 +546,7 @@ node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
+python -B review/text-inventory/verify-copied-runtime.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
