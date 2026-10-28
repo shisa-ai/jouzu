@@ -186,6 +186,9 @@ FIX.update({
 137:'Generic poll abort/abortableSleep cancellation; postForm also has distinct cancellation replacements recorded separately.',171:'Poll deadline reached and slowDownResponses===0; parseDeviceCode requires finite positive expires_in.',221:'Poll deadline reached and slowDownResponses>0; exact source clock advice, not new platform acceptance claim.',2298:'requiredString field not string OR length===0; used device_code/user_code/verification_uri/access_token/refresh_token; whitespace accepted.',2492:'positiveNumber field not number/nonfinite/<=0; expires_in required device flow and when provided token response.',2640:'validateVerificationUri new URL(raw) throws; catch replaces parser exception with fixed untrusted message.',2735:'Parsed URL protocol not exact https:; hostname not checked. Same wording separate occurrence.',3076:'postForm fetch catch with signal.aborted true replaces original fetch/native failure; else original rethrown.',3255:'postForm response.json catch with signal.aborted true; replaces JSON/native failure.',3284:'postForm response.json catch with signal.aborted false; replaces parser details with HTTP-status invalid-JSON message.',3682:'requestFailure called for failed device authorization/failed polling/default error/failed refresh; joins string remote error and description if truthy; Error message composed.',4980:'requestDeviceCode !response.ok passes fixed human action fragment device authorization to requestFailure.',5830:'Polling HTTP non-ok JSON error access_denied OR authorization_denied; returns failed, poll helper throws message.',5918:'Polling HTTP non-ok error expired_token; returns failed, poll helper throws message.',5985:'Polling non-ok unknown error passes fixed device token polling action to requestFailure().message.',6606:'refreshXaiToken !response.ok passes token refresh action to requestFailure; thrown to caller.',6715:'Exported OAuth name API metadata; compiled lazyOAuth uses outer provider definition, not loaded object fields.',6772:'Exported loginLabel API metadata only on loaded module; compiled wrapper retains outer label.'},
 })
 UNPUBLISHED={'kimi-coding.js':{a:FIX['kimi-coding.js'].pop(a) for a in (326,351,8528,8762)}}
+UNPUBLISHED['google-generative-ai-VPNFZDHO.js']={5849:FIX['google-generative-ai-VPNFZDHO.js'].pop(5849)+' Under ordinary stable local assignments, the same truthy candidate.finishReason sets rawStopReason before mapStopReason sets error; abort throws earlier and catch state does not reenter this fallback. No supported ordinary publication route established. Arbitrary shared-event/getter mutation remains external/unestablished.'}
+UNPUBLISHED['azure-openai-responses-KLTRI2FU.js']={3084:FIX['azure-openai-responses-KLTRI2FU.js'].pop(3084)+' Under ordinary stable local assignments, processResponsesStream throws without a terminal event; normal finalization always maps state to stop/length/error or throws, never pending. No supported ordinary publication route established; arbitrary shared-event/getter mutation external/unestablished.'}
+PRIMARY_IDS=[i for i in range(1,95) if i not in (4,19)]
 CATCH_NOTES={
 'azure-openai-responses-KLTRI2FU.js':['Stream try errors: delete per-block index/partialJson/customInput; set aborted iff options.signal.aborted else error; normalize/format and push error/end; content retained. Pre-try transcript/deployment errors escape local packet catcher.'],
 'google-generative-ai-VPNFZDHO.js':['Stream try errors: delete index fields; retain partial content, set stopReason by caller signal, normalize/format into error packet/end. Pre-try collapseSystemMessages and direct streamSimple validation can throw to caller.'],
@@ -199,6 +202,7 @@ CATCH_NOTES={
 
 REPO_SUPPORT={'packages/cli/src/main-cli.ts':[[101,103],[757,765]],'package-lock.json':None,'upstream/pi.lock.json':None}
 READ_FUNCTIONS={
+'dist/bundle/chunks/chunk-QSDU2SDK.js':['mapStopReason'],
 'dist/bundle/chunks/chunk-4GGCU36O.js':['createSetupErrorMessage','lazyStream','lazyApi'],
 'dist/bundle/chunks/chunk-TRERZKRC.js':['classifySystemOne'],
 'dist/bundle/chunks/chunk-Z6I32PHA.js':['isRecord','requiredNumber','postClassifierRequest'],
@@ -300,9 +304,11 @@ def build(sources):
             loc=PREFIX+rel+':'+str(ev['line'])
             if a in FIX[name]:
                 assert kind in ('string','template');seen.add(a);consumer,display=owner_context(name)
-                row=dict(zip(FIELDS,['pi.bundle-provider-adapters.fixed.'+str(len(fixed)+1),'',value,loc,display,FIX[name][a]+' '+ROUTE,consumer,'Exact native English/raw unexpanded template or API-published diagnostic definition; no Jouzu catalog ID. Preserve technical provider/model/API/property/status/credential/URL/command values; dynamic external text is separate. Definitions marked API-only are not promoted to active UI/translation needs.',json.dumps(ev,ensure_ascii=True,separators=(',',':'))]))
+                row=dict(zip(FIELDS,['pi.bundle-provider-adapters.fixed.'+str(PRIMARY_IDS[len(fixed)]),'',value,loc,display,FIX[name][a]+' '+ROUTE,consumer,'Exact native English/raw unexpanded template or API-published diagnostic definition; no Jouzu catalog ID. Preserve technical provider/model/API/property/status/credential/URL/command values; dynamic external text is separate. Definitions marked API-only are not promoted to active UI/translation needs.',json.dumps(ev,ensure_ascii=True,separators=(',',':'))]))
                 fixed.append(row);proofs.append({'item_id':row['item_id'],**ev});positive+=1
-            else:excluded.append(dict(zip(XFIELDS,['pi.bundle-provider-adapters.excluded.'+str(len(excluded)+1),loc,str(ev['column']),kind,json.dumps(value,ensure_ascii=True),'unpublished-internal-error-wording' if a in UNPUBLISHED.get(name,{}) else 'protected-control-protocol-or-dynamic-payload',UNPUBLISHED[name][a]+' No concrete supported source publication route established; not a translation target.' if a in UNPUBLISHED.get(name,{}) else exclusion_reason(value,kind),json.dumps(ev,ensure_ascii=True,separators=(',',':'))])))
+            else:
+                exid=418 if name=='azure-openai-responses-KLTRI2FU.js' and a==3084 else 417 if name=='google-generative-ai-VPNFZDHO.js' and a==5849 else len(excluded)+1-sum(r['item_id'] in ('pi.bundle-provider-adapters.excluded.417','pi.bundle-provider-adapters.excluded.418') for r in excluded)
+                excluded.append(dict(zip(XFIELDS,['pi.bundle-provider-adapters.excluded.'+str(exid),loc,str(ev['column']),kind,json.dumps(value,ensure_ascii=True),'unpublished-internal-error-wording' if a in UNPUBLISHED.get(name,{}) else 'protected-control-protocol-or-dynamic-payload',UNPUBLISHED[name][a]+' No concrete supported source publication route established; not a translation target.' if a in UNPUBLISHED.get(name,{}) else exclusion_reason(value,kind),json.dumps(ev,ensure_ascii=True,separators=(',',':'))])))
         assert seen==set(FIX[name]),(name,'fixed anchors not present')
         for index,c in enumerate(primitives['catches']):
             ev={'path':rel,**c,'line':ss.count('\n',0,c['start'])+1,'column':c['start']-ss.rfind('\n',0,c['start'])}
@@ -318,6 +324,8 @@ def build(sources):
         boundaries.append(dict(zip(BFIELDS,['pi.bundle-provider-adapters.boundary.'+str(len(boundaries)+1),payload,PREFIX+rel+':'+str(ev['line']),payload,condition+' '+ROUTE,owner_context(name)[0],'Dynamic request/credential/protocol/model/service/native payload separate from finite local English. Source-only: no real data inspected; optional downstream sinks remain qualified.',json.dumps(ev,ensure_ascii=True,separators=(',',':'))])))
     for rel,names in READ_FUNCTIONS.items():
         for name in names:support.append(support_function(sources,rel,name))
+    for raw in ['if(!sawTerminalResponseEvent)throw new Error("OpenAI Responses stream ended before a terminal response event")','output.stopReason=mappedStop.stopReason,mappedStop.errorMessage===void 0?delete output.errorMessage:output.errorMessage=mappedStop.errorMessage','event.type==="response.completed"||event.type==="response.incomplete")finalizeResponse(event.response)']:
+        rel='dist/bundle/chunks/chunk-QSDU2SDK.js';support.append({'source':PREFIX+rel,**anchor(sources.text(rel),raw),'claim':'Bounded terminal/map control route: no stable normal pending return; failed/cancelled mapped error without message remains concrete fallback path.'})
     main='dist/bundle/chunks/chunk-MM3LKT73.js'
     for raw,claim in CALLER_SNIPPETS:support.append({'source':PREFIX+main,**anchor(sources.text(main),raw),'claim':claim,'status':'bounded-source-excerpt-only; no full shared chunk ownership'})
     # Exact packet-to-protocol routes retain partial-event projection as a boundary.
@@ -438,11 +446,13 @@ def verify(sources,do_negative=True):
             reader=csv.DictReader(h);assert reader.fieldnames==fields;loaded.append(list(reader))
     loaded.append(json.loads(PATHS['evidence'].read_bytes().decode('utf-8')));validate_tables(tuple(loaded),expected)
     fixed,excluded,boundaries,scopes,evidence=loaded
-    assert (len(fixed),len(excluded),len(boundaries),len(scopes))==(94,416,31,32)
+    assert (len(fixed),len(excluded),len(boundaries),len(scopes))==(92,418,31,32)
+    assert {r['item_id'] for r in fixed}=={'pi.bundle-provider-adapters.fixed.'+str(i) for i in range(1,95) if i not in (4,19)}
+    assert {r['item_id'] for r in excluded}=={'pi.bundle-provider-adapters.excluded.'+str(i) for i in range(1,419)}
     assert len(FILES)==9 and sum(FILES.values())==21 and sum(v[0] for v in NAMES.values())==50659
-    assert evidence['counts']=={'rows':94,'excluded_occurrences':416,'external_boundaries':31,'scopes':32,'whole_local_bodies':9,'whole_local_bytes':50659,'whole_local_lines':21,'literal_template_nodes':505,'regexes':5,'catches':15,'promise_catches':2,'error_calls':69,'new_error_constructors':68,'control_headers':109,'shortcircuit_ternary_operators':242,'support_excerpts':36,'module_edges':68,'catalog_linked_rows':0}
-    assert collections.Counter(r['status'] for r in scopes)=={'source-read-local-producers':9,'bundle-dependency-hash-only':15,'partial':5,'repo-bounded-consumer-or-pin':3}
-    assert sum(r['disposition']=='unpublished-internal-error-wording' for r in excluded)==4
+    assert evidence['counts']=={'rows':92,'excluded_occurrences':418,'external_boundaries':31,'scopes':32,'whole_local_bodies':9,'whole_local_bytes':50659,'whole_local_lines':21,'literal_template_nodes':505,'regexes':5,'catches':15,'promise_catches':2,'error_calls':69,'new_error_constructors':68,'control_headers':109,'shortcircuit_ternary_operators':242,'support_excerpts':40,'module_edges':68,'catalog_linked_rows':0}
+    assert collections.Counter(r['status'] for r in scopes)=={'source-read-local-producers':9,'bundle-dependency-hash-only':14,'partial':6,'repo-bounded-consumer-or-pin':3}
+    assert sum(r['disposition']=='unpublished-internal-error-wording' for r in excluded)==6
     assert sum(r['source_kind']=='regex' for r in excluded)==5
     covered=collections.Counter();identities=set()
     for rows in (fixed,excluded):
@@ -475,6 +485,6 @@ def verify(sources,do_negative=True):
         b=path.read_bytes();b.decode('utf-8');assert b'\r' not in b and not b.startswith(b'\xef\xbb\xbf') and b.endswith(b'\n')
     assert not any(l.rstrip()!=l for l in Path(__file__).read_text('utf-8').splitlines())
     print('ARTIFACT_SHA256 '+json.dumps({p.name:sha(p.read_bytes()) for p in [*PATHS.values(),Path(__file__)]},sort_keys=True))
-    print('PASS pi-bundle-provider-adapters:94 fixed/API definitions+416 exclusions=510 occurrences (505string/template+5regex);9full bodies50659B/21LOC;31boundaries/15catches+2Promise catches;68new Error+1bare fallback;109control headers/242operator contexts;32scope/36bounded excerpts/68edges;two trees+locked archive;'+str(negatives)+' negative checks. No audited JS/import/OAuth/config/env/network/native/model/UI/runtime execution.')
+    print('PASS pi-bundle-provider-adapters:92 fixed/API definitions+418 exclusions=510 occurrences (505string/template+5regex);9full bodies50659B/21LOC;31boundaries/15catches+2Promise catches;68new Error+1bare fallback;109control headers/242operator contexts;32scope/40bounded excerpts/68edges;two trees+locked archive;'+str(negatives)+' negative checks. No audited JS/import/OAuth/config/env/network/native/model/UI/runtime execution.')
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--node-modules');parser.add_argument('--cli-node-modules');parser.add_argument('--agent-archive');parser.add_argument('--negative-controls',choices=['0','1'],default='1');args=parser.parse_args();verify(Sources(args.node_modules,args.cli_node_modules,args.agent_archive),args.negative_controls=='1')

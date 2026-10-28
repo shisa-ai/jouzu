@@ -878,9 +878,9 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
-[pi-bundle-provider-adapters.csv](pi-bundle-provider-adapters.csv) records 94
+[pi-bundle-provider-adapters.csv](pi-bundle-provider-adapters.csv) records 92
 qualified error, prompt and exported-API definitions across nine complete compiled
-provider/OAuth adapters (50,659 bytes). The 416
+provider/OAuth adapters (50,659 bytes). The 418
 [exclusions](pi-bundle-provider-adapters-exclusions.csv) retain protected syntax
 and internal retry/fallback wording with no publication route. Thirty-one
 [boundaries](pi-bundle-provider-adapters-boundaries.csv) distinguish fifteen catches,

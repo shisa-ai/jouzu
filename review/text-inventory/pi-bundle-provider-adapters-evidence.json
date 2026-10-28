@@ -381,8 +381,8 @@
       "literal_template_nodes": 44,
       "regexes": 0,
       "literal_occurrences": 44,
-      "fixed_definitions": 6,
-      "excluded_occurrences": 38,
+      "fixed_definitions": 5,
+      "excluded_occurrences": 39,
       "comments": [],
       "guard_primitives": {
         "controls": [
@@ -865,8 +865,8 @@
       "literal_template_nodes": 67,
       "regexes": 0,
       "literal_occurrences": 67,
-      "fixed_definitions": 8,
-      "excluded_occurrences": 59,
+      "fixed_definitions": 7,
+      "excluded_occurrences": 60,
       "comments": [],
       "guard_primitives": {
         "controls": [
@@ -3713,27 +3713,6 @@
       "catch_regions": []
     },
     {
-      "item_id": "pi.bundle-provider-adapters.fixed.4",
-      "path": "dist/bundle/chunks/azure-openai-responses-KLTRI2FU.js",
-      "start": 3084,
-      "end": 3143,
-      "token_kind": "string",
-      "raw_source": "\"Azure OpenAI Responses stream ended without a stop reason\"",
-      "line": 2,
-      "column": 2967,
-      "if_for_body_guards": [
-        {
-          "kind": "if",
-          "line": 2,
-          "start": 3038,
-          "end": 3067,
-          "raw": "output.stopReason===\"pending\"",
-          "polarity": "true/body"
-        }
-      ],
-      "catch_regions": []
-    },
-    {
       "item_id": "pi.bundle-provider-adapters.fixed.5",
       "path": "dist/bundle/chunks/azure-openai-responses-KLTRI2FU.js",
       "start": 3244,
@@ -4054,27 +4033,6 @@
       "raw_source": "`Provider stopped with: ${output.rawStopReason}`",
       "line": 2,
       "column": 5683,
-      "if_for_body_guards": [
-        {
-          "kind": "if",
-          "line": 2,
-          "start": 5702,
-          "end": 5760,
-          "raw": "output.stopReason===\"aborted\"||output.stopReason===\"error\"",
-          "polarity": "true/body"
-        }
-      ],
-      "catch_regions": []
-    },
-    {
-      "item_id": "pi.bundle-provider-adapters.fixed.19",
-      "path": "dist/bundle/chunks/google-generative-ai-VPNFZDHO.js",
-      "start": 5849,
-      "end": 5876,
-      "token_kind": "string",
-      "raw_source": "\"An unknown error occurred\"",
-      "line": 2,
-      "column": 5732,
       "if_for_body_guards": [
         {
           "kind": "if",
@@ -5475,6 +5433,15 @@
   ],
   "bounded_support_excerpts": [
     {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-QSDU2SDK.js",
+      "start": 19664,
+      "end": 20237,
+      "raw_source": "function mapStopReason(status,incompleteReason){if(!status)return{stopReason:\"stop\"};switch(status){case\"completed\":return{stopReason:\"stop\"};case\"incomplete\":return incompleteReason===\"max_output_tokens\"?{stopReason:\"length\"}:{stopReason:\"error\",errorMessage:incompleteReason?`Response incomplete: ${incompleteReason}`:\"Response incomplete without a provider reason\"};case\"failed\":case\"cancelled\":return{stopReason:\"error\"};case\"in_progress\":case\"queued\":return{stopReason:\"stop\"};default:{let _exhaustive=status;throw new Error(`Unhandled stop reason: ${_exhaustive}`)}}}",
+      "line": 16,
+      "column": 2511,
+      "claim": "Bounded helper function mapStopReason only; helper body family/other wording remains pending, not new full ownership."
+    },
+    {
       "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
       "start": 5964,
       "end": 6327,
@@ -5572,6 +5539,33 @@
       "line": 2,
       "column": 1969,
       "claim": "Bounded helper function safeJsonStringify only; helper body family/other wording remains pending, not new full ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-QSDU2SDK.js",
+      "start": 19250,
+      "end": 19360,
+      "raw_source": "if(!sawTerminalResponseEvent)throw new Error(\"OpenAI Responses stream ended before a terminal response event\")",
+      "line": 16,
+      "column": 2097,
+      "claim": "Bounded terminal/map control route: no stable normal pending return; failed/cancelled mapped error without message remains concrete fallback path."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-QSDU2SDK.js",
+      "start": 13840,
+      "end": 13983,
+      "raw_source": "output.stopReason=mappedStop.stopReason,mappedStop.errorMessage===void 0?delete output.errorMessage:output.errorMessage=mappedStop.errorMessage",
+      "line": 8,
+      "column": 8270,
+      "claim": "Bounded terminal/map control route: no stable normal pending return; failed/cancelled mapped error without message remains concrete fallback path."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-QSDU2SDK.js",
+      "start": 18671,
+      "end": 18773,
+      "raw_source": "event.type===\"response.completed\"||event.type===\"response.incomplete\")finalizeResponse(event.response)",
+      "line": 16,
+      "column": 1518,
+      "claim": "Bounded terminal/map control route: no stable normal pending return; failed/cancelled mapped error without message remains concrete fallback path."
     },
     {
       "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
@@ -6469,8 +6463,8 @@
     }
   ],
   "counts": {
-    "rows": 94,
-    "excluded_occurrences": 416,
+    "rows": 92,
+    "excluded_occurrences": 418,
     "external_boundaries": 31,
     "scopes": 32,
     "whole_local_bodies": 9,
@@ -6484,7 +6478,7 @@
     "new_error_constructors": 68,
     "control_headers": 109,
     "shortcircuit_ternary_operators": 242,
-    "support_excerpts": 36,
+    "support_excerpts": 40,
     "module_edges": 68,
     "catalog_linked_rows": 0
   },
@@ -6508,6 +6502,16 @@
       "path": "kimi-coding.js",
       "start": 8762,
       "reason": "After refresh loop, lastError nullish fallback; normal fixed four-iteration loop sets lastError on every continuing path, so no established ordinary fallback trigger."
+    },
+    {
+      "path": "google-generative-ai-VPNFZDHO.js",
+      "start": 5849,
+      "reason": "stopReason aborted/error AND rawStopReason falsy; fallback unknown error. Under ordinary stable local assignments, the same truthy candidate.finishReason sets rawStopReason before mapStopReason sets error; abort throws earlier and catch state does not reenter this fallback. No supported ordinary publication route established. Arbitrary shared-event/getter mutation remains external/unestablished."
+    },
+    {
+      "path": "azure-openai-responses-KLTRI2FU.js",
+      "start": 3084,
+      "reason": "After processing, output.stopReason still pending; caught error packet. Under ordinary stable local assignments, processResponsesStream throws without a terminal event; normal finalization always maps state to stop/length/error or throws, never pending. No supported ordinary publication route established; arbitrary shared-event/getter mutation external/unestablished."
     }
   ],
   "sink_limits": {
