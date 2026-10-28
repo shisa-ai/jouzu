@@ -489,6 +489,20 @@ use is qualified by its separate consumer; caller-authored language sections,
 Intl output and imported validation remain distinct producer boundaries. No
 prompt, browser, model or native code was executed.
 
+[language-contract-text.csv](language-contract-text.csv) records 17 fixed language
+contract occurrences and five payload boundaries. The complete 462-line body and
+all 81 lexical occurrences are partitioned with 64
+[exclusions](language-contract-text-exclusions.csv). Four language names and
+conversational/artifact instructions have conditional persisted-prompt export
+routes. Artifact policy still adds instructions with response language `auto`;
+legacy resumed state may omit that policy. Resume, staged input changes,
+compaction and tree navigation have separate timing conditions. The unused
+private preserve-language name is guarded; the sole local Error is qualified by
+a direct API call before session start, with no production caller found.
+[Scope](language-contract-text-scope.csv) records 14 source pins and distinguishes
+native append/hash/clock failures and protected epoch data. No session, clock,
+crypto or native operation was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -599,6 +613,7 @@ node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
+node review/text-inventory/verify-language-contract-text.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py

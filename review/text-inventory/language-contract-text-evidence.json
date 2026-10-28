@@ -1,0 +1,702 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": [
+    "packages/cli/src/language-contract.ts"
+  ],
+  "reviewed_ranges": {},
+  "anchors": [
+    {
+      "item_id": "LANGUAGE-CONTRACT-001",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 31,
+      "column": 40,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-002",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 32,
+      "column": 70,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-003",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 38,
+      "column": 8,
+      "expression": "\"./language-settings.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-004",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 41,
+      "column": 50,
+      "expression": "\"preserve\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-005",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 41,
+      "column": 62,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-006",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 41,
+      "column": 68,
+      "expression": "\"ja\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-007",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 41,
+      "column": 74,
+      "expression": "\"zh-Hans\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-008",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 41,
+      "column": 85,
+      "expression": "\"zh-Hant\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-009",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 45,
+      "column": 54,
+      "expression": "\"preserve\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-010",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 45,
+      "column": 66,
+      "expression": "\"project\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-011",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 45,
+      "column": 77,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-012",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 45,
+      "column": 83,
+      "expression": "\"ja\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-013",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 45,
+      "column": 89,
+      "expression": "\"zh-Hans\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-014",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 45,
+      "column": 100,
+      "expression": "\"zh-Hant\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-015",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 50,
+      "column": 2,
+      "expression": "\"structured\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-016",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 51,
+      "column": 2,
+      "expression": "\"parent-response-language\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-017",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 52,
+      "column": 2,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-018",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 53,
+      "column": 2,
+      "expression": "\"ja\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-019",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 54,
+      "column": 2,
+      "expression": "\"zh-Hans\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-020",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 55,
+      "column": 2,
+      "expression": "\"zh-Hant\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-021",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 61,
+      "column": 2,
+      "expression": "\"commands\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-022",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 62,
+      "column": 2,
+      "expression": "\"identifiers\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-023",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 63,
+      "column": 2,
+      "expression": "\"paths\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-024",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 64,
+      "column": 2,
+      "expression": "\"source-errors\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-025",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 65,
+      "column": 2,
+      "expression": "\"quoted-text\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-026",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 89,
+      "column": 38,
+      "expression": "\"cli\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-027",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 89,
+      "column": 45,
+      "expression": "\"session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-028",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 89,
+      "column": 56,
+      "expression": "\"config\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-029",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 89,
+      "column": 66,
+      "expression": "\"builtin\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-030",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 108,
+      "column": 45,
+      "expression": "\"jouzu-language-contract-v1\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-031",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 122,
+      "column": 12,
+      "expression": "\"the task's language\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-032",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 123,
+      "column": 6,
+      "expression": "\"English\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-033",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 124,
+      "column": 6,
+      "expression": "\"Japanese\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-034",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 125,
+      "column": 2,
+      "expression": "\"zh-Hans\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-035",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 125,
+      "column": 13,
+      "expression": "\"Simplified Chinese\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-036",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 126,
+      "column": 2,
+      "expression": "\"zh-Hant\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-037",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 126,
+      "column": 13,
+      "expression": "\"Traditional Chinese\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-038",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 133,
+      "column": 68,
+      "expression": "\"contractId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-039",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 134,
+      "column": 20,
+      "expression": "\"sha256\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-040",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 144,
+      "column": 11,
+      "expression": "\"hex\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-041",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 154,
+      "column": 60,
+      "expression": "\"project\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-042",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 175,
+      "column": 67,
+      "expression": "\"auto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-043",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 175,
+      "column": 76,
+      "expression": "\"preserve\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-044",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 176,
+      "column": 74,
+      "expression": "\"preserve\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-045",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 176,
+      "column": 87,
+      "expression": "\"structured\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-046",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 190,
+      "column": 32,
+      "expression": "\"preserve\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-047",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 193,
+      "column": 4,
+      "expression": "`Response language: ${name} (${contract.taskLanguage}). Write user-facing explanations in ${name}.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-048",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 194,
+      "column": 4,
+      "expression": "\"- Preserve commands, identifiers, paths, code, quoted text, and source error text exactly as written.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-049",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 195,
+      "column": 4,
+      "expression": "\"- Follow the declared artifact policy and terminology.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-050",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 196,
+      "column": 4,
+      "expression": "\"- Do not translate files or comments unless asked.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-051",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 197,
+      "column": 4,
+      "expression": "\"- If you are unsure of a translation, report the uncertainty instead of inventing one.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-052",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 201,
+      "column": 14,
+      "expression": "\"Artifact language policy (independent of response language):\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-053",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 205,
+      "column": 18,
+      "expression": "\"preserve\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-054",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 206,
+      "column": 8,
+      "expression": "\"Preserve the existing language.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-055",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 207,
+      "column": 21,
+      "expression": "\"project\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-056",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 208,
+      "column": 9,
+      "expression": "\"Follow the project's existing language.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-057",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 209,
+      "column": 9,
+      "expression": "`Use ${RESPONSE_LANGUAGE_NAMES[language]} (${language}).`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-058",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 210,
+      "column": 15,
+      "expression": "`- ${field}: ${instruction}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-059",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 213,
+      "column": 4,
+      "expression": "\"Apply these choices to requested work, not as a request to translate existing files or comments.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-060",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 214,
+      "column": 4,
+      "expression": "\"Preserve commands, identifiers, paths, code, quoted text, and source error text exactly as written.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-061",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 217,
+      "column": 39,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-062",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 222,
+      "column": 20,
+      "expression": "\"sha256\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-063",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 223,
+      "column": 22,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-064",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 224,
+      "column": 11,
+      "expression": "\"hex\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-065",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 248,
+      "column": 26,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-066",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 272,
+      "column": 31,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-067",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 289,
+      "column": 23,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-068",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 290,
+      "column": 31,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-069",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 291,
+      "column": 30,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-070",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 293,
+      "column": 33,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-071",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 307,
+      "column": 34,
+      "expression": "\"sessionManager\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-072",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 311,
+      "column": 37,
+      "expression": "\"custom\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-073",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 313,
+      "column": 22,
+      "expression": "\"custom\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-074",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 406,
+      "column": 9,
+      "expression": "\"jouzu-language-contract\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-075",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 409,
+      "column": 11,
+      "expression": "\"session_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-076",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 413,
+      "column": 26,
+      "expression": "\"resume\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-077",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 432,
+      "column": 11,
+      "expression": "\"input\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-078",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 433,
+      "column": 11,
+      "expression": "\"before_agent_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-079",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 434,
+      "column": 11,
+      "expression": "\"session_compact\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-080",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 437,
+      "column": 11,
+      "expression": "\"session_tree\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-081",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 446,
+      "column": 33,
+      "expression": "\"the language contract extension has not started a session\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-BOUNDARY-01",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 394,
+      "column": 1,
+      "expression": "pi?.appendEntry",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-BOUNDARY-02",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 248,
+      "column": 1,
+      "expression": "!Array.isArray",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-BOUNDARY-03",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 241,
+      "column": 1,
+      "expression": "appliedAt: input.appliedAt.toISOString()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-BOUNDARY-04",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 136,
+      "column": 1,
+      "expression": "JSON.stringify",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "LANGUAGE-CONTRACT-BOUNDARY-05",
+      "path": "packages/cli/src/language-contract.ts",
+      "line": 418,
+      "column": 1,
+      "expression": "contract: saved.contract",
+      "kind": "boundary"
+    }
+  ],
+  "reviewed_data": {
+    "language-contract-text.csv": "ff3bf247ccc428a5eb1ee100b0e5871a893dacbf01e9ae6bb93821e3f42adb6a",
+    "language-contract-text-exclusions.csv": "c66019643eb325aa635a6845ed42acaf832ad9951b7416459a9d91b6eb0ad25d",
+    "language-contract-text-scope.csv": "70b86e2ad46953c3942a38fc19f84f5e142664cf6d05286b59495ff887cba11c"
+  }
+}
