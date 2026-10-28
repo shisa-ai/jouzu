@@ -905,6 +905,22 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-ai-lexical.csv](pi-ai-lexical.csv) retains every parsed string/template
+occurrence across all 200 Pi AI runtime files: 5,319 nodes, including empty values,
+single words and glyphs. Separate [regex](pi-ai-lexical-regex.csv),
+[constructor/catch](pi-ai-lexical-leads.csv) and
+[context](pi-ai-lexical-contexts.csv) tables retain 100 regexes, 577 constructor
+sites, 122 catches and 2,875 syntactic contexts. Raw syntax and parsed static
+text are JSON-escaped; template expressions remain unevaluated. Contexts retain
+at most one enclosing function and two nearest guards with 80-unit excerpts;
+these are containment records, not verified execution conditions. The
+[scope](pi-ai-lexical-scope.csv) marks every file lexical-only, and the
+[snapshot](pi-ai-lexical-snapshot.json) pins source and parser evidence. The
+separate runtime census checks locked canonical/public-patch provenance in both
+installed trees; its semantic owner fields are not promoted by this index.
+Ten corruption controls and independent source-span/context checks pass.
+No audited module runs, and this unit adds zero complete semantic reviews.
+
 [pi-ai-runtime-census.csv](pi-ai-runtime-census.csv) enumerates all 200 locked
 Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
@@ -2119,6 +2135,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

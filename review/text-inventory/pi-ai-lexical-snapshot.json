@@ -1,0 +1,1486 @@
+{
+  "package": "@earendil-works/pi-ai",
+  "version": "1.4.0",
+  "installations": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54"
+    }
+  ],
+  "source_census": "pi-ai-runtime-census.csv",
+  "source_proof_checker": "verify-pi-ai-runtime-census.py",
+  "source_proof_checker_sha256": "ee9278d6e9b8716a15fc5bee5c6d941092048df9a5f01b4b0ac1de6a1e36cfbc",
+  "source_projection": "Only source paths, bytes, physical lines, canonical/installed hashes and patch provenance are consumed; mutable semantic ownership fields are deliberately excluded.",
+  "source_files": [
+    {
+      "source_id": "AI001",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/anthropic-messages.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/anthropic-messages.js",
+      "sha256": "e0e305cb78b58b97a0d960aafc639147dcba3bf572ba8d14e2959fb51c9c96a1",
+      "bytes": 61450
+    },
+    {
+      "source_id": "AI002",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/anthropic-messages.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/anthropic-messages.lazy.js",
+      "sha256": "8915ff69b112469fa7bf48f59eeae87bb3d82ce49d3fbddbb2acb1da9675cb39",
+      "bytes": 180
+    },
+    {
+      "source_id": "AI003",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/azure-openai-config.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/azure-openai-config.js",
+      "sha256": "8a55ebc297d4def398a2e27c15d2a9f3f04ce52cd47f039f645f46e2eb74abc8",
+      "bytes": 3090
+    },
+    {
+      "source_id": "AI004",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/azure-openai-responses.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/azure-openai-responses.js",
+      "sha256": "b6977f84b0cbfd347ddc36084b2dfeec0aea7fa07bc41a2ee31cbad4476ff005",
+      "bytes": 9357
+    },
+    {
+      "source_id": "AI005",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/azure-openai-responses.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/azure-openai-responses.lazy.js",
+      "sha256": "7ed84bd0e2dcd46223cc741b4217051e88c4972c4482e2f12367e5e5e3361dd7",
+      "bytes": 191
+    },
+    {
+      "source_id": "AI006",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/bedrock-converse-stream.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/bedrock-converse-stream.js",
+      "sha256": "0207190a1bac7186c3adb5e9d59994d3f65748065233683fdfc02507a6e0b988",
+      "bytes": 53665
+    },
+    {
+      "source_id": "AI007",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/bedrock-converse-stream.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/bedrock-converse-stream.lazy.js",
+      "sha256": "fc0052380edeeb83d148d89030ed47762bebde39f25f71c6632a1a883c7ab8fd",
+      "bytes": 1521
+    },
+    {
+      "source_id": "AI008",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/classifier-shared.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/classifier-shared.js",
+      "sha256": "dfd09ec32e85be2ac1106a274e3eb57ec992617955dddf07d51e09ecfa4a04da",
+      "bytes": 4253
+    },
+    {
+      "source_id": "AI009",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare-ai-binding.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare-ai-binding.js",
+      "sha256": "4a0fba5a6cc07b1d8366cfb50a93e404a5157483a2250225477450843d2dc39d",
+      "bytes": 3927
+    },
+    {
+      "source_id": "AI010",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare-workers-ai-system-one.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare-workers-ai-system-one.js",
+      "sha256": "5716639fed706375c8dd9040feb964617edebae16aeae902387682c0da04eb87",
+      "bytes": 2804
+    },
+    {
+      "source_id": "AI011",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare-workers-ai-system-one.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare-workers-ai-system-one.lazy.js",
+      "sha256": "12339f3ef1ebf42d4148098734c6e1035d704a58656f95f4cd601b1bb8f7e96c",
+      "bytes": 265
+    },
+    {
+      "source_id": "AI012",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/cloudflare.js",
+      "sha256": "5227d5b29a437d7371690dae10e04d704622692385738977a6f1c32f74f74298",
+      "bytes": 1070
+    },
+    {
+      "source_id": "AI013",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/constrained-sampling.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/constrained-sampling.js",
+      "sha256": "3364d03ce8f7ef17ac336e35a134bf3b3b7582430a3841ac78bbf5ca216010d0",
+      "bytes": 9887
+    },
+    {
+      "source_id": "AI014",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/github-copilot-headers.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/github-copilot-headers.js",
+      "sha256": "cd09a447ea282f5df02aab057f372d48ab95d72adb1d9d74510a2b5e1c7d78b3",
+      "bytes": 1133
+    },
+    {
+      "source_id": "AI015",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-generative-ai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-generative-ai.js",
+      "sha256": "56e3a07431fe1c1a35e3b95431fab55c5553b0c5346bc0a645ce630430889e93",
+      "bytes": 17538
+    },
+    {
+      "source_id": "AI016",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-generative-ai.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-generative-ai.lazy.js",
+      "sha256": "5bd07bbf12fc55c73b0e2a26770f192026036aff6d9e4e39a9edda57b214d0a0",
+      "bytes": 185
+    },
+    {
+      "source_id": "AI017",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-shared.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-shared.js",
+      "sha256": "0c7cf0bba43bda017497275048689c20e15fb54958e7cd236a732d4ed4d5024b",
+      "bytes": 19621
+    },
+    {
+      "source_id": "AI018",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-vertex.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-vertex.js",
+      "sha256": "4f13c1fce136d4204f09f796dcb94d20533e5aaabcea122d02d10b22e2784fb7",
+      "bytes": 19835
+    },
+    {
+      "source_id": "AI019",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-vertex.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/google-vertex.lazy.js",
+      "sha256": "944686a19ce1563146a82464dc35532725c006ecff1b66a3e00e5cbce41fb170",
+      "bytes": 165
+    },
+    {
+      "source_id": "AI020",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "bytes": 3261
+    },
+    {
+      "source_id": "AI021",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/llama-cpp-classify.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/llama-cpp-classify.js",
+      "sha256": "980cb1cc9e98e28f83731ab542dd66fe8c691503869e90a26018cc416ec6ec84",
+      "bytes": 17418
+    },
+    {
+      "source_id": "AI022",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/llama-cpp-classify.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/llama-cpp-classify.lazy.js",
+      "sha256": "6c84b196abf0adbe46acea77acb89dbe4f027122c95eb6165bdf4b7d713253c2",
+      "bytes": 225
+    },
+    {
+      "source_id": "AI023",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/mistral-conversations.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/mistral-conversations.js",
+      "sha256": "e0f7e5049ef4a584ef6715106b08f3d7e3fa3fabed605278475de498b73b796d",
+      "bytes": 32134
+    },
+    {
+      "source_id": "AI024",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/mistral-conversations.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/mistral-conversations.lazy.js",
+      "sha256": "df0028011c26593830914429185f22bc60fa942e86ac871faa361abd2eaaf83e",
+      "bytes": 189
+    },
+    {
+      "source_id": "AI025",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-codex-responses.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-codex-responses.js",
+      "sha256": "d63b325d84360e3de6c889b88358fd5fc7afec6d142a21bcac674733182a89d8",
+      "bytes": 56061
+    },
+    {
+      "source_id": "AI026",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-codex-responses.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-codex-responses.lazy.js",
+      "sha256": "cc69ef7cb93175b8ae30e9b6f749cc5c978cd0c168d0bf379ed48a3d7e9c120a",
+      "bytes": 191
+    },
+    {
+      "source_id": "AI027",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js",
+      "sha256": "6d22aaa0f56fd33641a6cdf04e74564ebcccb65932df2ee0d7f5e461fee884ea",
+      "bytes": 65550
+    },
+    {
+      "source_id": "AI028",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.lazy.js",
+      "sha256": "a3d37d272ed600ddae2a9b05884e1c11c65487c1d8aa30d0b19ba571ffc7ea76",
+      "bytes": 180
+    },
+    {
+      "source_id": "AI029",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-decisions.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-decisions.js",
+      "sha256": "d901beabd6898c402ea88be7c03dd5a4397911d9cd3734caee0643ec802901f3",
+      "bytes": 6999
+    },
+    {
+      "source_id": "AI030",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-decisions.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-decisions.lazy.js",
+      "sha256": "53ecd3713b1c3f1d4966e45618047acb3315aba420bd34c8c01a376b096c25c0",
+      "bytes": 220
+    },
+    {
+      "source_id": "AI031",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-prompt-cache.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-prompt-cache.js",
+      "sha256": "cdb4c30de4e8918994e18556529077ee5d952db0d6960bb299a76f6d8d139d2a",
+      "bytes": 392
+    },
+    {
+      "source_id": "AI032",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses-shared.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses-shared.js",
+      "sha256": "9d43cd9cf0923a7f902d8f7c3cae7088394bdac75d6d8a2c702e077d3f37c041",
+      "bytes": 36294
+    },
+    {
+      "source_id": "AI033",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses.js",
+      "sha256": "47a18e965b9637a74132dd282fc973bf09d73fee6f6d8da85004af88aace2f78",
+      "bytes": 16337
+    },
+    {
+      "source_id": "AI034",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses.lazy.js",
+      "sha256": "ff6755b78f76a83ab50aee5603eb8f5efd8b9608be449a535847d49c0be0f0ca",
+      "bytes": 174
+    },
+    {
+      "source_id": "AI035",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.js",
+      "sha256": "6a45b7d63b6f25cabc3c6837311af8ab3cb585bd1656fb59fe106d58795d1deb",
+      "bytes": 5416
+    },
+    {
+      "source_id": "AI036",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openrouter-images.lazy.js",
+      "sha256": "0ae9c490e8050e8e958d076a9c7ecb21715aa8bc5f85127619d822ca10bc62a6",
+      "bytes": 235
+    },
+    {
+      "source_id": "AI037",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/pi-messages.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/pi-messages.js",
+      "sha256": "be3f14292cd4dcee719723353e23e578027926e3ff7980cb1ce813189afd9a30",
+      "bytes": 12619
+    },
+    {
+      "source_id": "AI038",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/pi-messages.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/pi-messages.lazy.js",
+      "sha256": "857a77e2a89923a9c88c136bc06072b9c9577574dd01da97ce2966a646f7d430",
+      "bytes": 159
+    },
+    {
+      "source_id": "AI039",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/simple-options.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/simple-options.js",
+      "sha256": "ce381ab6783175012249e775774750bedcdd80cff82cd9423e58830bb0e5111d",
+      "bytes": 3826
+    },
+    {
+      "source_id": "AI040",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/system-one-shared.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/system-one-shared.js",
+      "sha256": "392c6e7d279b016424ff44f9c1c4b4ce4068f3d132b5243461532c14dd83ed18",
+      "bytes": 6755
+    },
+    {
+      "source_id": "AI041",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/transform-messages.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/transform-messages.js",
+      "sha256": "c6453211d846e09c0cc1dbc63b1e58bbbab19d9a0ef1bbf464e1198475af9626",
+      "bytes": 9669
+    },
+    {
+      "source_id": "AI042",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/typesafe-system-one.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/typesafe-system-one.js",
+      "sha256": "0c708b9b8a80a4401d38b131f5d9f359d5e8c1b0d38753a6a808d2d624dc2c2a",
+      "bytes": 1629
+    },
+    {
+      "source_id": "AI043",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/api/typesafe-system-one.lazy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/typesafe-system-one.lazy.js",
+      "sha256": "9dff2f5316c78d265d02a1c908047bc890c4fa0b13769806f07f326d71adfac2",
+      "bytes": 228
+    },
+    {
+      "source_id": "AI044",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.js",
+      "sha256": "5d0ea91a2fd2acf84e3b9717ce59e75006933c68d8efa91873894a9d963d41a0",
+      "bytes": 1666
+    },
+    {
+      "source_id": "AI045",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.js",
+      "sha256": "7e47b1a35815d04d9798ba7d8b9870409eeb522c36752c97a4c67416caaf2358",
+      "bytes": 2045
+    },
+    {
+      "source_id": "AI046",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/helpers.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/helpers.js",
+      "sha256": "afa67f03895ace888d574c0c86c226cab35521cecc51fe4c0320ba710fb32a97",
+      "bytes": 2110
+    },
+    {
+      "source_id": "AI047",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/anthropic.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/anthropic.js",
+      "sha256": "835268caed5dab6a0c7f157c551ed59a00635c76305e6e0c41b579c41aa07bc5",
+      "bytes": 9936
+    },
+    {
+      "source_id": "AI048",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/callback-server.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/callback-server.js",
+      "sha256": "2dda468f4937edcf7bb5e8528de4bf7753efbe5b48610a3f9ea47ff2c4908ede",
+      "bytes": 5800
+    },
+    {
+      "source_id": "AI049",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/device-code.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/device-code.js",
+      "sha256": "8f197cc9af67be64b82939573d719d1b55388f96f2e53cb8c47f9618fc1297eb",
+      "bytes": 3269
+    },
+    {
+      "source_id": "AI050",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/github-copilot.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/github-copilot.js",
+      "sha256": "1ab09c4fa63ca084c2dea43174ab5a20373d4fedf2986eda7fc3430bfd962eab",
+      "bytes": 15679
+    },
+    {
+      "source_id": "AI051",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/kimi-coding.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/kimi-coding.js",
+      "sha256": "f1a7eb1053d8a1aa4bda5695795a471c624e8110554fab149d1bb6d546fcf836",
+      "bytes": 10252
+    },
+    {
+      "source_id": "AI052",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/load.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/load.js",
+      "sha256": "fb73105e414825e6c599ed8c00783fbd597fea1913e5625cc56910e27b761182",
+      "bytes": 2902
+    },
+    {
+      "source_id": "AI053",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/meta.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/meta.js",
+      "sha256": "852ceb0cb0d14e92f78dbc5aacbe345e0416e3b65c574f6acc1f5191566b6870",
+      "bytes": 7975
+    },
+    {
+      "source_id": "AI054",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/openai-chatgpt.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/openai-chatgpt.js",
+      "sha256": "4cf9fc758a07ffe4ee022326404b5dcc86767ee4154945c0417c7f95eaecdcc2",
+      "bytes": 11679
+    },
+    {
+      "source_id": "AI055",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/openai-codex.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/openai-codex.js",
+      "sha256": "0b94a219ddb5982f0ee543ef03138ed0254ce6ee0a57c9d89d39c242e2eaf6f6",
+      "bytes": 13483
+    },
+    {
+      "source_id": "AI056",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/openrouter.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/openrouter.js",
+      "sha256": "b69e807ed855095aa17b2c0d1a15f350c77e3a49f2a66853f227916daacb4703",
+      "bytes": 6152
+    },
+    {
+      "source_id": "AI057",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/pkce.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/pkce.js",
+      "sha256": "d54668654e89d6fe6994a09a7f9399e732a411fcb31c99eb8b5e60349763708c",
+      "bytes": 1003
+    },
+    {
+      "source_id": "AI058",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/radius.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/radius.js",
+      "sha256": "60fc2bbff997b56f312bb3707ea20345e5de83a2d75d1a6c6d5d9af173021638",
+      "bytes": 9711
+    },
+    {
+      "source_id": "AI059",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/xai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/oauth/xai.js",
+      "sha256": "d34783560dc2ac75d6e717b248136eb75a902fbd53b3e56fb9f2ec50c6c793d7",
+      "bytes": 7503
+    },
+    {
+      "source_id": "AI060",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "sha256": "3fcec09018831324d9c7fb02f4aea707e8a9e4fec5a2bdf1b3d84d716fd3091e",
+      "bytes": 6696
+    },
+    {
+      "source_id": "AI061",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/types.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/types.js",
+      "sha256": "01ae2a5b120382f9a648ced7ee8507493a134f216d100fc61600c6c9738235d2",
+      "bytes": 44
+    },
+    {
+      "source_id": "AI062",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/bedrock-provider.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/bedrock-provider.js",
+      "sha256": "96834cdb63f47c93cdb0cf13622c1ffa7b3d4b0866c46dc4b2a84ed1338c79b4",
+      "bytes": 189
+    },
+    {
+      "source_id": "AI063",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/bun-oauth.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/bun-oauth.js",
+      "sha256": "f1f860158642e327c06fc8c3b5d566f115d4924463673d22d8a07e8e056ae593",
+      "bytes": 1188
+    },
+    {
+      "source_id": "AI064",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/cli.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/cli.js",
+      "sha256": "15efe3d849331391ced3f38e55f53609a7952e8359229c8b65c1172e8e9608a5",
+      "bytes": 4762
+    },
+    {
+      "source_id": "AI065",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat.js",
+      "sha256": "b5f7c048f1916c0194231ff14f7136ce660973a369a590a9e971f31ee49d972f",
+      "bytes": 9450
+    },
+    {
+      "source_id": "AI066",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/compat/extension-oauth-types.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/compat/extension-oauth-types.js",
+      "sha256": "2c46620284590b553d57375ddac9aa1ef3361448a3db883c2c58793be68242e7",
+      "bytes": 60
+    },
+    {
+      "source_id": "AI067",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/env-api-keys.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/env-api-keys.js",
+      "sha256": "8166f316e3c8adaa8c089561c644169a89fdc9ef2d67a752bbba738a5415a616",
+      "bytes": 7813
+    },
+    {
+      "source_id": "AI068",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/image-models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/image-models.js",
+      "sha256": "281e5aeaaa5464a2a2761ced19c1ed4f9e486d9f5396fa7ce8f709e08e8135f8",
+      "bytes": 1155
+    },
+    {
+      "source_id": "AI069",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/images-api-registry.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images-api-registry.js",
+      "sha256": "f0c1987d73ba7e84ee398e70755e309d9ec813d724f2a3116f2376b1cd1b0ab7",
+      "bytes": 764
+    },
+    {
+      "source_id": "AI070",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/images.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/images.js",
+      "sha256": "ba363450c047ac2573f1f65c60898b02b606c9258b9dd113755af5c1968a9915",
+      "bytes": 761
+    },
+    {
+      "source_id": "AI071",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js",
+      "sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "bytes": 952
+    },
+    {
+      "source_id": "AI072",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/legacy-api-aliases.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/legacy-api-aliases.js",
+      "sha256": "1b0f1077431ce2d8eeea25172e721c58e6fc1c1a396a731ffb62f2b54672bd12",
+      "bytes": 4329
+    },
+    {
+      "source_id": "AI073",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/model-catalog.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/model-catalog.js",
+      "sha256": "dc494ba6ee6eaae2be181d8ad5b3247d0bb16c665ee34c26a27d71811935d200",
+      "bytes": 632
+    },
+    {
+      "source_id": "AI074",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.js",
+      "sha256": "bbce61b3123d849c711a64051b37166a2180ba379bc6c8e20b360f08787d2b5d",
+      "bytes": 587
+    },
+    {
+      "source_id": "AI075",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/models.generated.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.generated.js",
+      "sha256": "4b56a81c5f5592c3253e6d9ed233b0ca5913d8cb6897a0b368dc08802b6269bd",
+      "bytes": 11275
+    },
+    {
+      "source_id": "AI076",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "bytes": 32750
+    },
+    {
+      "source_id": "AI077",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/oauth.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/oauth.js",
+      "sha256": "bcdee371a91250a4d60f56b272d03959c9f6c401e73c3a1065d0a0dd002eec1a",
+      "bytes": 44
+    },
+    {
+      "source_id": "AI078",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/all.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/all.js",
+      "sha256": "b152eb706e7968debded248f538fda008869e93fea2042ba089fe64793c40340",
+      "bytes": 5609
+    },
+    {
+      "source_id": "AI079",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/amazon-bedrock.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/amazon-bedrock.js",
+      "sha256": "2529299b0e820465cb3bcbec1ef4d4f2e3513385084e25b80c0e4c016779fa2e",
+      "bytes": 3894
+    },
+    {
+      "source_id": "AI080",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/amazon-bedrock.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/amazon-bedrock.models.js",
+      "sha256": "1e4b83835e8952d59b501ddbc04e8b8e15fedfb94a183c0595643a6923abdd28",
+      "bytes": 655
+    },
+    {
+      "source_id": "AI081",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/ant-ling.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/ant-ling.js",
+      "sha256": "518587507d88641fa3ca4da014297b72a4d80900c21fe423bb513fd147836504",
+      "bytes": 605
+    },
+    {
+      "source_id": "AI082",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/ant-ling.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/ant-ling.models.js",
+      "sha256": "349aee512346a1d36d8b57294be3e31c05b6ff31f4a301b1691e16eef5ea6767",
+      "bytes": 607
+    },
+    {
+      "source_id": "AI083",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/anthropic.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/anthropic.js",
+      "sha256": "55a84e43fa8ee4382c41aa6872985f098080eaf73a5b8aa4451d7ce6db8c131d",
+      "bytes": 3548
+    },
+    {
+      "source_id": "AI084",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/anthropic.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/anthropic.models.js",
+      "sha256": "415abca5324e43073ee30cee8ad01c2b4150f93440a439c7c7a7933424dd5f7e",
+      "bytes": 615
+    },
+    {
+      "source_id": "AI085",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/azure.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/azure.js",
+      "sha256": "365152aaae1ffde873497da5e3af4b93faebf2628ffb7a798c989be06bda7e71",
+      "bytes": 2120
+    },
+    {
+      "source_id": "AI086",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/azure.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/azure.models.js",
+      "sha256": "9fc05f302b7a2d1b045a8c3b1f9d93fdb7e92bf15e829120e002af3cb1c83162",
+      "bytes": 583
+    },
+    {
+      "source_id": "AI087",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/baseten.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/baseten.js",
+      "sha256": "cf6a2d4b2ead54db5a44fe7231ca4a48df782c68c5e04a88388dcb2fb9cb5809",
+      "bytes": 601
+    },
+    {
+      "source_id": "AI088",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/baseten.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/baseten.models.js",
+      "sha256": "b4d07108692210546d56568a666aead9bc4a713c8ee504caaafca14b9273b3c0",
+      "bytes": 599
+    },
+    {
+      "source_id": "AI089",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cerebras.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cerebras.js",
+      "sha256": "54ad3fdb12d934bf06d69bfc7e586a7e038966eab579539583e02349860784cd",
+      "bytes": 605
+    },
+    {
+      "source_id": "AI090",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cerebras.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cerebras.models.js",
+      "sha256": "711f7a401be91b8a9ed63493dec577f4d4725f9cfa3bb3251adc10040972bc35",
+      "bytes": 607
+    },
+    {
+      "source_id": "AI091",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-ai-gateway.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-ai-gateway.js",
+      "sha256": "e099b01f7df70041f7e9f5d3237f4da25eabef7e7015e77c13b465036e90ea59",
+      "bytes": 1363
+    },
+    {
+      "source_id": "AI092",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-ai-gateway.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-ai-gateway.models.js",
+      "sha256": "18ccf3a6a5f7b31985bd97f7ed91be98f471f92519182d8a7ea9b559fe32b77c",
+      "bytes": 711
+    },
+    {
+      "source_id": "AI093",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-auth.js",
+      "sha256": "5a3aaf34dadc97773b77150be31b2327532dab92c8982c77ca8d32e1d84faa59",
+      "bytes": 3655
+    },
+    {
+      "source_id": "AI094",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-stream.js",
+      "sha256": "b815d17959fe76c2b916d16f74be51f6393939aaf640e865db514832e0fadbf4",
+      "bytes": 1315
+    },
+    {
+      "source_id": "AI095",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-workers-ai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-workers-ai.js",
+      "sha256": "d07ebc882420d601fd54493deda1fac0a0c37c4f48a65dc7f3b93e93786969c5",
+      "bytes": 1109
+    },
+    {
+      "source_id": "AI096",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-workers-ai.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/cloudflare-workers-ai.models.js",
+      "sha256": "6cc7dda625cb181225966377ecdc8d506c1067ea31f6bbc595411aeb7fd2e67c",
+      "bytes": 711
+    },
+    {
+      "source_id": "AI097",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/compat-schema.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/compat-schema.js",
+      "sha256": "c1f0ee32fd1fb32a003d38b38e5b369bb4088e596050b0fce4b25fe1173cea8f",
+      "bytes": 26918
+    },
+    {
+      "source_id": "AI098",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/deepseek.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/deepseek.js",
+      "sha256": "d0a155e9c724a36c60ebabd71c47e2f7e26799e1b8b7079a835e9ccec33378f0",
+      "bytes": 603
+    },
+    {
+      "source_id": "AI099",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/deepseek.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/deepseek.models.js",
+      "sha256": "a0dd589c336e29eb1b8340afae64d06ae4a932b12f735dc717c944e55210f7e0",
+      "bytes": 607
+    },
+    {
+      "source_id": "AI100",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/faux.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/faux.js",
+      "sha256": "f305a512f2d90547e87b402f2b335ba0d8a9f1b7c535b8a44bfc6fce8250d26a",
+      "bytes": 20668
+    },
+    {
+      "source_id": "AI101",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/fireworks.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/fireworks.js",
+      "sha256": "e5aaf35df7f54f7f1684cc18c464135f3f1bf0d4a169acff9c9e91ccaf39d0fd",
+      "bytes": 801
+    },
+    {
+      "source_id": "AI102",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/fireworks.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/fireworks.models.js",
+      "sha256": "ab1ad909e8779db90c44fcbb2cba9138877e81b05ed58a77d6d36caad52fed71",
+      "bytes": 615
+    },
+    {
+      "source_id": "AI103",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/github-copilot.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/github-copilot.js",
+      "sha256": "a58cc41225577213020f9508b76fbcc1bdccc672ffe66c79a1963e755c855ec5",
+      "bytes": 1667
+    },
+    {
+      "source_id": "AI104",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/github-copilot.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/github-copilot.models.js",
+      "sha256": "5d321843bc796f50f21c0cf5ecd33c20da80a7c7f1fff0e1a7914bb5ba727432",
+      "bytes": 655
+    },
+    {
+      "source_id": "AI105",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google-vertex.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google-vertex.js",
+      "sha256": "26c13449ea7b57d40878742db956210e70af0c89638cb87a1d9b4739f2bac59a",
+      "bytes": 4282
+    },
+    {
+      "source_id": "AI106",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google-vertex.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google-vertex.models.js",
+      "sha256": "0b4d455573c557a8142b4d6601673e6571ee5148c504ac1ac5e90cd71e9d41de",
+      "bytes": 647
+    },
+    {
+      "source_id": "AI107",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google.js",
+      "sha256": "a3593ee2fa77efa4f867e8ba2a8f3e1a947bf6e873552b92b554145e847e5df0",
+      "bytes": 613
+    },
+    {
+      "source_id": "AI108",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/google.models.js",
+      "sha256": "823134094bd5a7edb97be1f5e6a0034e6e1d89b6648ba06c74f12e0b369cd61c",
+      "bytes": 591
+    },
+    {
+      "source_id": "AI109",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/groq.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/groq.js",
+      "sha256": "25e580e96ab18f0eaff2791ceaa1384c2d5623b0da5e0376f5aff1ee17bc32b9",
+      "bytes": 573
+    },
+    {
+      "source_id": "AI110",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/groq.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/groq.models.js",
+      "sha256": "1bbb0911366fadbe576544b1d4cafd61cbba5c6741a0507aa4272579cab919c8",
+      "bytes": 575
+    },
+    {
+      "source_id": "AI111",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/huggingface.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/huggingface.js",
+      "sha256": "0b98efc192c8b9bcfbfcfcd123bba32ebed01e003668f37384fbe25416b983f5",
+      "bytes": 627
+    },
+    {
+      "source_id": "AI112",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/huggingface.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/huggingface.models.js",
+      "sha256": "fbf494c1f8e68d708d013d2ac9a66c6b3c876282ef3669fd702f8c1a55e94ab6",
+      "bytes": 631
+    },
+    {
+      "source_id": "AI113",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/images/register-builtins.js",
+      "sha256": "c29932ca6dd008a5421bb91e489341f14a8be7d408cbde71894cc15546d37377",
+      "bytes": 1220
+    },
+    {
+      "source_id": "AI114",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/kimi-coding.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/kimi-coding.js",
+      "sha256": "aa4c115c5f57750281176a6d5d7a42e19689a5bef10dcfd11f4b4ae0e3f7c8cc",
+      "bytes": 950
+    },
+    {
+      "source_id": "AI115",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/kimi-coding.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/kimi-coding.models.js",
+      "sha256": "4ab9826c07dfd709900e424ecccd3e971c6cc38bb63436c53a1d854583602808",
+      "bytes": 631
+    },
+    {
+      "source_id": "AI116",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/meta.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/meta.js",
+      "sha256": "f0ba7b97a407336f30cfb230c4c32bece9e0fd23b0ebdbdae11503374e5ab44c",
+      "bytes": 873
+    },
+    {
+      "source_id": "AI117",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/meta.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/meta.models.js",
+      "sha256": "7fe34a6a5d333069a8efb92eb5e7840a9eee798602e69228deede6b6ceda6fea",
+      "bytes": 575
+    },
+    {
+      "source_id": "AI118",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax-cn.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax-cn.js",
+      "sha256": "a4287d33e5dc3b91b63c18a0dae07bb3f113b11a8f748343b073b098af84113f",
+      "bytes": 630
+    },
+    {
+      "source_id": "AI119",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax-cn.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax-cn.models.js",
+      "sha256": "8684608a2950ee6ff517d5dfeb6ca23d4784107b6a367f78b77b69449418bc41",
+      "bytes": 623
+    },
+    {
+      "source_id": "AI120",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax.js",
+      "sha256": "db9842be5c86f9498355acdc12e58cc47c1c537d0bcb024d05fa2802e76f9802",
+      "bytes": 602
+    },
+    {
+      "source_id": "AI121",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/minimax.models.js",
+      "sha256": "16602fd0007482bbe43d74c2fde6acda50b9bc39ae389774306c7d1e2834a5d1",
+      "bytes": 599
+    },
+    {
+      "source_id": "AI122",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/mistral.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/mistral.js",
+      "sha256": "9f7861fb15beb9a42b8c3031ec5ba751c68f0bcd8ce258b0922a9e52c225f3a6",
+      "bytes": 601
+    },
+    {
+      "source_id": "AI123",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/mistral.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/mistral.models.js",
+      "sha256": "39fdbdc4d75347f3a64d767ea8bb3bde21ecb5c927c4d252485f4c9b44c3dd65",
+      "bytes": 599
+    },
+    {
+      "source_id": "AI124",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/model-schema.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/model-schema.js",
+      "sha256": "cab7de29fa76728a436979e228c41e8c6abce999477f2c98fa7e2c97b6ef3cf7",
+      "bytes": 3563
+    },
+    {
+      "source_id": "AI125",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai-cn.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai-cn.js",
+      "sha256": "bb34cb02d69423877c2db14736918ee879b8a789d0f247bf92ed512714d7b078",
+      "bytes": 643
+    },
+    {
+      "source_id": "AI126",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai-cn.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai-cn.models.js",
+      "sha256": "652b4907f9794c5fe52fce656b91f97824403a2325ccf5a5975cb42847bd8861",
+      "bytes": 647
+    },
+    {
+      "source_id": "AI127",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai.js",
+      "sha256": "e8763b3bd10b596a1ad6963904b8fe82795cf6ba5a84fc24273e12976018a41c",
+      "bytes": 623
+    },
+    {
+      "source_id": "AI128",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/moonshotai.models.js",
+      "sha256": "a5c3f3acee42dc2992ad225e600d6242c4e58775140f7bc655794ffba4042b85",
+      "bytes": 623
+    },
+    {
+      "source_id": "AI129",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/nvidia.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/nvidia.js",
+      "sha256": "37cb9c92fd0523ddb7cb2a64d0a3549f81e2a9e7070c6d021897654d464aefb9",
+      "bytes": 596
+    },
+    {
+      "source_id": "AI130",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/nvidia.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/nvidia.models.js",
+      "sha256": "9b6db60f03107618159128fe5ff29fa30e8fc7ba5747df2cbc66180f66710472",
+      "bytes": 591
+    },
+    {
+      "source_id": "AI131",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai-codex.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai-codex.js",
+      "sha256": "44087142be22adfd09cf1a87edbbdb74ce155b5fd34e70fa4666f3a9f8a9a680",
+      "bytes": 838
+    },
+    {
+      "source_id": "AI132",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai-codex.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai-codex.models.js",
+      "sha256": "6cf3121e84d836dccf2c738c205884dbecce844b80a168035de4adb9ba218343",
+      "bytes": 639
+    },
+    {
+      "source_id": "AI133",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai.js",
+      "sha256": "9dc3881e858b0280e809ec04b8b17f22580fcb1871da2edf3cfbdfa3c13747b3",
+      "bytes": 1446
+    },
+    {
+      "source_id": "AI134",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai.models.js",
+      "sha256": "a83ebad953df78543c31a41c2f10bf4de1ec04ae59c30de676ef40b8b5736d35",
+      "bytes": 591
+    },
+    {
+      "source_id": "AI135",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-go.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-go.js",
+      "sha256": "7c14ba02605949d7c937d89cad55e2e2eed81d13086728b4173c3d3640d5d6f5",
+      "bytes": 1194
+    },
+    {
+      "source_id": "AI136",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-go.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-go.models.js",
+      "sha256": "1087ff6cbfe26b315e930a660ab324d3178ae2b58b3d8b69d4e7e56189c97435",
+      "bytes": 631
+    },
+    {
+      "source_id": "AI137",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode-headers.js",
+      "sha256": "24b5878ceb19abaa3987c2526ac14afdd6fc1e796f6e187a49e71b058972a741",
+      "bytes": 939
+    },
+    {
+      "source_id": "AI138",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode.js",
+      "sha256": "36e5c35c6f449783c672d44b4cc59eb97c4bad858df8ad5ce52612ed7d3951f8",
+      "bytes": 1488
+    },
+    {
+      "source_id": "AI139",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/opencode.models.js",
+      "sha256": "c6b25a0fc80752e27186b179178f93660655a4d8e13bfc972b3d07b383617a5d",
+      "bytes": 607
+    },
+    {
+      "source_id": "AI140",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter-api.js",
+      "sha256": "3259b64988618c8839427173408c5d642a448c7aff3a502c019a73e839192e36",
+      "bytes": 1830
+    },
+    {
+      "source_id": "AI141",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter.js",
+      "sha256": "158f877d062114c8a283c2687ae4a30f8ba34ae43aea81de4b7f43a57e0f59f0",
+      "bytes": 4292
+    },
+    {
+      "source_id": "AI142",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openrouter.models.js",
+      "sha256": "9ce32674ee98465fbecbcf2500beded2744277e3915067a29e0f25ae8c2e26d8",
+      "bytes": 623
+    },
+    {
+      "source_id": "AI143",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-cn.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-cn.js",
+      "sha256": "a1c291b3a212c5569370fb0d28aa67ac353128c1ee8033820e50bfc45afb4368",
+      "bytes": 732
+    },
+    {
+      "source_id": "AI144",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-cn.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-cn.models.js",
+      "sha256": "e8d65b0d3e0e4aff0eca4dac25435696bb527d391b0eb2370feb42ab0b9ef777",
+      "bytes": 687
+    },
+    {
+      "source_id": "AI145",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-individual.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-individual.js",
+      "sha256": "b4201e8e897d9dea1ac5305157c8d518ac2370739f4d73b4c75abfd7b8c761d4",
+      "bytes": 797
+    },
+    {
+      "source_id": "AI146",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-individual.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan-individual.models.js",
+      "sha256": "20b7b02af55cedd37b228b162fe529dbc5286661ec50a4f274d33f6892644bfa",
+      "bytes": 751
+    },
+    {
+      "source_id": "AI147",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan.js",
+      "sha256": "0580b8cb75d6e2064409d8bfbdbb10e6daf321e1c641d1fb3bea95da39295449",
+      "bytes": 710
+    },
+    {
+      "source_id": "AI148",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/qwen-token-plan.models.js",
+      "sha256": "ed6e45ed454723231bccb0d07b9b14fa9eabe1fce897f07c456e9ec2df4f64d0",
+      "bytes": 663
+    },
+    {
+      "source_id": "AI149",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius-config.js",
+      "sha256": "d9d863bda4b33f3d98c2717c912cc7f394b93301f9c87d73adc7c8c7e8f8cb5e",
+      "bytes": 2541
+    },
+    {
+      "source_id": "AI150",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius.js",
+      "sha256": "9f5516e81b00b8aff7f986052eacf822d2c1dc9f78c8cbafbf4e2cf91e2b9d2b",
+      "bytes": 3418
+    },
+    {
+      "source_id": "AI151",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/radius.models.js",
+      "sha256": "62a1f3acd3b0a2b2ffe482370ea7e78de2032e6cf245aa3f2e6ac5eed3452386",
+      "bytes": 591
+    },
+    {
+      "source_id": "AI152",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/together.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/together.js",
+      "sha256": "40a43f847c9320d1f46cc3df3a785f0bb4e246d5f49877d03f5242c033dd1528",
+      "bytes": 605
+    },
+    {
+      "source_id": "AI153",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/together.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/together.models.js",
+      "sha256": "84228cabbab1c917fcb74170eee1e99c95275899cda33ff579ec0720d15beceb",
+      "bytes": 607
+    },
+    {
+      "source_id": "AI154",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/typesafe.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/typesafe.js",
+      "sha256": "83fc7cf71dc4fe705480c7494c3d624ddf3612f63818ec11434b2ad1e3e05460",
+      "bytes": 658
+    },
+    {
+      "source_id": "AI155",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/typesafe.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/typesafe.models.js",
+      "sha256": "01b9a4fd9a14ff0e92f93c192789322b62bdff2d07efbcabe2c10d1a1b015570",
+      "bytes": 607
+    },
+    {
+      "source_id": "AI156",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/vercel-ai-gateway.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/vercel-ai-gateway.js",
+      "sha256": "ab6bdd6097782f102bbd81bac979e30199c368e76a01e2f34980404ce2ba727c",
+      "bytes": 1010
+    },
+    {
+      "source_id": "AI157",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/vercel-ai-gateway.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/vercel-ai-gateway.models.js",
+      "sha256": "27c68f0eaa8c7d3d6689784e9e6fdba97d4f3c7ae9819d40007ba0beea0c95b9",
+      "bytes": 679
+    },
+    {
+      "source_id": "AI158",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xai.js",
+      "sha256": "e5d69e97c788ce044f6c225fb38c04ec5b04defa639c02abfb022b466a90b9e9",
+      "bytes": 872
+    },
+    {
+      "source_id": "AI159",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xai.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xai.models.js",
+      "sha256": "b264e29d3ee5622a9881a2b199d2c71f096f96fce8a0513185a0b60924d3311c",
+      "bytes": 567
+    },
+    {
+      "source_id": "AI160",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-ams.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-ams.js",
+      "sha256": "fe4bfede6558715e94e5e8997dd51fbd176bab8e651a972fe3be667218605222",
+      "bytes": 733
+    },
+    {
+      "source_id": "AI161",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-ams.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-ams.models.js",
+      "sha256": "7cf04ec99fe505c4f5d7d725d4bd43749b45321697bb029cbf7dc54199911df7",
+      "bytes": 711
+    },
+    {
+      "source_id": "AI162",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-cn.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-cn.js",
+      "sha256": "201773161e1b98269671fd4f23b6b01d7d661fb029e2a6762e261c2a8cf0be09",
+      "bytes": 723
+    },
+    {
+      "source_id": "AI163",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-cn.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-cn.models.js",
+      "sha256": "ad162db1a8847670e3dfb4dbcc09e2a16b4638aa09433820af3cc1e0dfcaa96e",
+      "bytes": 703
+    },
+    {
+      "source_id": "AI164",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-sgp.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-sgp.js",
+      "sha256": "61019ea4bd04801c227f51b69ae7da4c3c64242124e2da0f89d9971bf50ed0cd",
+      "bytes": 733
+    },
+    {
+      "source_id": "AI165",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-sgp.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi-token-plan-sgp.models.js",
+      "sha256": "77357e88c0cfcdb321300fef586d4d75e1ce23205eee70f6946fd0d6095db102",
+      "bytes": 711
+    },
+    {
+      "source_id": "AI166",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi.js",
+      "sha256": "e57526646b06815287d13fd320d23944e869c53e046dd4b9f4795b8240226587",
+      "bytes": 590
+    },
+    {
+      "source_id": "AI167",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/xiaomi.models.js",
+      "sha256": "04f7cceef3219404e8d6214bf93f050a02ed732c55dbe2cbc00ac9e7cd8b5351",
+      "bytes": 591
+    },
+    {
+      "source_id": "AI168",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai-coding-cn.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai-coding-cn.js",
+      "sha256": "3820dea6091183bafa6b0c37e2cca684fba6d50674f190db259b2765c70efa85",
+      "bytes": 667
+    },
+    {
+      "source_id": "AI169",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai-coding-cn.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai-coding-cn.models.js",
+      "sha256": "a3fcf259259d3fe29f3b66cf1579c91a46da03375d4c96a5b720cae7473e687c",
+      "bytes": 647
+    },
+    {
+      "source_id": "AI170",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai.js",
+      "sha256": "d897597f9bd9749ccc674c34e5c3bb738d9b90911b04c7f7fc7bc66150d6ff40",
+      "bytes": 571
+    },
+    {
+      "source_id": "AI171",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai.models.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/zai.models.js",
+      "sha256": "500e17ed8ff77ba19f297d44ad9aaa087434a0e1c2accdd844838efb42605525",
+      "bytes": 567
+    },
+    {
+      "source_id": "AI172",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/session-resources.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/session-resources.js",
+      "sha256": "9228618eeaebc6b5a1746d28d1859b1e23f0f65e978dc9f6e20eb29d65b17e2a",
+      "bytes": 640
+    },
+    {
+      "source_id": "AI173",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "sha256": "c6b5617c0e92d08d94028306c809b47eaa62f4dc9f3a95a18bf39eb2bf872d79",
+      "bytes": 8453
+    },
+    {
+      "source_id": "AI174",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/types.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/types.js",
+      "sha256": "01ae2a5b120382f9a648ced7ee8507493a134f216d100fc61600c6c9738235d2",
+      "bytes": 44
+    },
+    {
+      "source_id": "AI175",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort-signals.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort-signals.js",
+      "sha256": "9f68d51e0862b3deafc21bc0349d652410a8b283688af72c937272cb7b87cdc5",
+      "bytes": 1088
+    },
+    {
+      "source_id": "AI176",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js",
+      "sha256": "17326034a23e443ca216f0b6ecb73db1dfd36a06698643ef77dc3ba9401f0636",
+      "bytes": 1551
+    },
+    {
+      "source_id": "AI177",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js",
+      "sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+      "bytes": 964
+    },
+    {
+      "source_id": "AI178",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/error-body.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/error-body.js",
+      "sha256": "3fbe4d7fdaa35ef2a65bd8d84f83317d774ad49db9403b00ef663a09ce1d454b",
+      "bytes": 5811
+    },
+    {
+      "source_id": "AI179",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "sha256": "b5b606011ab0dce2a5db309dd812c9b8ddd0bbcbc9416de699fb9cd087cc84d6",
+      "bytes": 3752
+    },
+    {
+      "source_id": "AI180",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+      "bytes": 4027
+    },
+    {
+      "source_id": "AI181",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/hash.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/hash.js",
+      "sha256": "7dd6b602e479f30b32d1babeacb1fcb96bd234b13355991caa169013f7885d57",
+      "bytes": 595
+    },
+    {
+      "source_id": "AI182",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/headers.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/headers.js",
+      "sha256": "69a355967b3e735a9b22d46f4cf41b901eb2ce29c2c438b20d46de67668533c7",
+      "bytes": 694
+    },
+    {
+      "source_id": "AI183",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js",
+      "sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+      "bytes": 6754
+    },
+    {
+      "source_id": "AI184",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "sha256": "ffb5960ed8ba38a01ea338e129dbca589088c211c9da623ffb61102a1d27ce56",
+      "bytes": 4327
+    },
+    {
+      "source_id": "AI185",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "bytes": 2053
+    },
+    {
+      "source_id": "AI186",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js",
+      "sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+      "bytes": 677
+    },
+    {
+      "source_id": "AI187",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "sha256": "9f29307b06dd11207f7f1a30cf07801c9b12741f715b8c61b90807dfa730580a",
+      "bytes": 4420
+    },
+    {
+      "source_id": "AI188",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "sha256": "6d758fcb9fde90c98d1adf325f6421b51341becf7880057b09374c94210b387c",
+      "bytes": 6793
+    },
+    {
+      "source_id": "AI189",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/overflow.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/overflow.js",
+      "sha256": "3c50cf631de6ad583443c3aca3c21f8a1ff657e49ebee396bdaab0ce18d47714",
+      "bytes": 10885
+    },
+    {
+      "source_id": "AI190",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "sha256": "e1f64c60f0fde39a3a649e541d8248a85fdeefe414ff8b4dddf5f1be962d47e6",
+      "bytes": 1696
+    },
+    {
+      "source_id": "AI191",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-retry.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-retry.js",
+      "sha256": "46da2f14c0f5d58164a44c1b2837d8ab7674ded3ae4c732d02ae62c87b39b939",
+      "bytes": 4131
+    },
+    {
+      "source_id": "AI192",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/retry.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/retry.js",
+      "sha256": "b9b2e6914d6f99f921ddc1b680d24430ec608e26b29a9b1ab9683f8a889d4df0",
+      "bytes": 9749
+    },
+    {
+      "source_id": "AI193",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "sha256": "77cb844b43f502cc24b25ef284ec5a6f6ac375ac994bcf688275848e1475bc80",
+      "bytes": 1204
+    },
+    {
+      "source_id": "AI194",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sleep.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sleep.js",
+      "sha256": "c09f7f9033a4516bfc3ec5796d587dea958c1bc0fc5d3fe4b847ca10bddbed4f",
+      "bytes": 478
+    },
+    {
+      "source_id": "AI195",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "bytes": 1421
+    },
+    {
+      "source_id": "AI196",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "bytes": 9748
+    },
+    {
+      "source_id": "AI197",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "sha256": "f423ce8a95ab8342b05a16c3c516049ee7d9979d0ef1d2ba484eb3b169c482e5",
+      "bytes": 724
+    },
+    {
+      "source_id": "AI198",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "sha256": "4e444c68e031550dfd534bf2cf2f123ba5a1053dd0953005ee720ef4e0487bf5",
+      "bytes": 2045
+    },
+    {
+      "source_id": "AI199",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/validation.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/validation.js",
+      "sha256": "a45b42f298937ea475f326c4181b515c909b240fb82df58891907cce9954c700",
+      "bytes": 10758
+    },
+    {
+      "source_id": "AI200",
+      "census_id": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+      "bytes": 180
+    }
+  ],
+  "source_count": 200,
+  "source_bytes": 931910,
+  "parser": {
+    "name": "typescript",
+    "version": "6.0.3",
+    "script_kind": "JS",
+    "target": "Latest",
+    "parents": true,
+    "parse_errors": 0,
+    "evaluation": "none"
+  },
+  "literal_nodes": 5319,
+  "literal_kinds": {
+    "StringLiteral": 4888,
+    "TemplateExpression": 429,
+    "NoSubstitutionTemplateLiteral": 2
+  },
+  "template_static_token_ranges": 1071,
+  "template_expression_ranges": 640,
+  "regex_nodes": 100,
+  "word_navigation_candidates": 902,
+  "word_navigation_rule": "ASCII letters length>=3 and at least one whitespace; on parsed string text or template static parts joined by one space. Navigation only; no English/runtime/translation certainty.",
+  "new_expression_nodes": 577,
+  "catch_clause_nodes": 122,
+  "error_name_navigation_candidates": 351,
+  "context_records": 2875,
+  "context_kinds": {
+    "IfStatement": 1034,
+    "FunctionDeclaration": 570,
+    "BinaryExpression": 667,
+    "ConditionalExpression": 273,
+    "ArrowFunction": 284,
+    "FunctionExpression": 8,
+    "Constructor": 12,
+    "MethodDeclaration": 27
+  },
+  "context_limits": {
+    "enclosing_functions": 1,
+    "nearest_guards": 2,
+    "condition_or_head_excerpt_utf16_units": 80,
+    "function_name_utf16_limit": 80
+  },
+  "offsets": {
+    "start_end": "UTF16 code units, inclusive start/exclusive end. Line/column 1-based UTF16.",
+    "decoded_text_json": "Parser text for ordinary/no-substitution literals; static parsed segment array for templates. No interpolation evaluation; tagged template flags retained.",
+    "regex": "Raw pattern and flags source only; no RegExp evaluation."
+  },
+  "coverage": {
+    "all_string_and_template_nodes": true,
+    "empty_singleword_glyph_values_retained": true,
+    "whole_body_semantic_reviews_added": 0,
+    "catalog_occurrences_certified": 0,
+    "current_semantic_owners": "See separate pi-ai-runtime-census.csv; no owner is inferred from lexical rows."
+  },
+  "interpretation": "Lexical navigation only. Function/if/ternary/short-circuit ancestors are syntactic containment, not actual execution guards, caller closure, English, localization candidates or runtime publication. Numeric/boolean/null literals, comments and bare identifiers are outside this text-literal ledger. Literal/template and regex/control ledgers intentionally overlap. Canonical versus exact public patch provenance checked separately for every body in both installed trees. No audited source import or execution.",
+  "artifact_sha256_utf8_lf": {
+    "pi-ai-lexical.csv": "138658781bcbae6ab6a8bfdc3d2c852ce1a651b2b826315016b4c60cde9947e6",
+    "pi-ai-lexical-regex.csv": "529bb060fec006a1f385f8982acaa856d983cd6107fca8b16576befff562763a",
+    "pi-ai-lexical-contexts.csv": "2cd7a710f3b86307fda7b6a238f48688fe0de3dc42971b26b0707f53f7d8a919",
+    "pi-ai-lexical-leads.csv": "036b186c6ece118e669a0104d7196ac849cd874e59ae04aa5383c5a8d4879c55",
+    "pi-ai-lexical-scope.csv": "f61a868d04e111ba0e52b8eb33bb1b6a4528abd516f029eca5adc742d3bebca0"
+  }
+}
