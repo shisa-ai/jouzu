@@ -1,0 +1,24 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_sources": 11,
+  "full_source_lines": 644,
+  "bounded_consumer_sources": 2,
+  "annotation_rows": 16,
+  "package_descriptions": 4,
+  "protected_classifiers": 5,
+  "protected_authors": 2,
+  "configured_title": 1,
+  "protected_product_publisher_fields": 3,
+  "SVG_annotation": 1,
+  "source_only_notes": [
+    "CSS has imports, source selectors, theme/style rules and comments, with no authored generated-content caption.",
+    "Release extension manifest values are exact package/version/provenance/tool/entry identifiers; no new prose sentence field.",
+    "Commands and build settings are source data; npm/Cargo/Hatch/Tauri/compiler/browser/native diagnostics remain external.",
+    "Complete local source export does not promote a package annotation or protected value to default UI prose."
+  ],
+  "artifact_sha256_utf8_lf": {
+    "package-asset-text.csv": "6ec0b62d53a8dfeb6f4e52635534dbbcccafd82b31dc431642ab1d8981652127",
+    "package-asset-lines.csv": "1dc3244c637710053a4ab2996bf49d7bc3cb58e757dc943ecbc2eb11047dab6e",
+    "package-asset-text-scope.csv": "36e9c1183a31b2262ee626e9d8f5570b9e5881b6c832486cfded1ee95f3ef516"
+  }
+}

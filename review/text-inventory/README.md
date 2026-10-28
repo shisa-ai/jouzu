@@ -501,6 +501,18 @@ are module/path/glob/alias/bind/type values and a Cargo rebuild directive, with 
 new authored runtime sentence. Compiler, framework, browser and OS messages keep
 their external producer boundaries. No build, config, package or test executes.
 
+[package-asset-text.csv](package-asset-text.csv) separates sixteen package,
+product, window-title and SVG annotations across eleven complete metadata/asset
+sources (644 lines). The [line export](package-asset-lines.csv) preserves all
+physical source lines, including protected command, dependency, version, tool
+and style values; the [scope](package-asset-text-scope.csv) keeps two native/page
+consumer anchors bounded. Four descriptions are metadata reading records. Five
+Python classifiers and author/product identities retain exact values. The native
+window builder consumes the configured title; native presentation is not tested.
+The page imports the SVG with empty outer image alt, so its internal label is not
+promoted to a page accessibility name. The
+[snapshot](package-asset-text-snapshot.json) pins the export and qualifications.
+
 [license-source-text.csv](license-source-text.csv) retains eight exact license
 source bodies (744 lines, 41,470 bytes), with per-copy Git provenance and
 [physical line records](license-source-lines.csv) that reconstruct every byte.
@@ -1762,6 +1774,7 @@ python -B review/text-inventory/verify-launcher-support.py
 python -B review/text-inventory/verify-launcher-config-text.py
 python -B review/text-inventory/verify-resource-config-text.py
 python -B review/text-inventory/verify-license-source-text.py
+python -B review/text-inventory/verify-package-asset-text.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py

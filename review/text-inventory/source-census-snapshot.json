@@ -112,6 +112,7 @@
     "launcher-config-text-scope.csv": "5d203f87893d73b64b1a160ae3d5c8bc5292be168217fa2a332385ce0a699df6",
     "resource-config-text-scope.csv": "b706f87ce3dac3525c47c25b040b6406dcb10038118932b97458101fd1800e2b",
     "license-source-scope.csv": "fd19dd64b1011ae2f3370d5dffb338c92ca3b0476356350021a56ef07678119e",
+    "package-asset-text-scope.csv": "36e9c1183a31b2262ee626e9d8f5570b9e5881b6c832486cfded1ee95f3ef516",
     "installer-dependencies-scope.csv": "d7029caef18c55372665644dd50a938b96aba6c103821edd99d0bd87fe246316",
     "python-console-scope.csv": "b33435dd93a5da7d140fe862d6330faa8bfbc11d83e1b0b322e4e9982326132e",
     "python-review-tools-scope.csv": "08fc9003ec55af0f1d5fad66e323455317f93a174e7c87da078b8501d8154273",
