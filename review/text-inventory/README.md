@@ -66,6 +66,19 @@ finite English wording list: their source-defined wrappers and delivery
 conditions need explicit boundary records. Current tables do not close those
 areas or certify runtime layout or translation quality.
 
+[documentation-text.csv](documentation-text.csv) exports every nonblank source
+line from the base snapshot's 87 documentation/instruction files: 6,142 rows
+across 8,492 lines, with 2,350 blank lines omitted. It uses `source_text` and
+`source_location` rather than inferring that every line is English. Audience,
+Unicode script tags, structural line kind and reading conditions preserve code,
+links, examples and multilingual prose. The [scope](documentation-text-scope.csv)
+pins all 87 Git blobs/SHA-256 values. Exact prior-owner links identify 678 profile
+and input-guide overlaps. Four reviewed generic source examples remain verbatim;
+the bounded source screen found no sensitive line requiring redaction. This is
+complete mechanical document text extraction, with no new runtime, caller or
+behavior proof. Product delivery conditions remain in their own units. Follow-on
+target documentation changes are part of the separate main-update review.
+
 [source-census.csv](source-census.csv) lists all 1,206 tracked blobs at the source
 pin, their immutable Git object IDs and references into the reviewed scope
 tables or English catalog export. It includes source, commands, tests, resources,
@@ -1356,6 +1369,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
+python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
