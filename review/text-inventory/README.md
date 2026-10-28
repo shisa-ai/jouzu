@@ -1463,6 +1463,17 @@ child output, input source and cleanup errors remain separate producers. Source
 expressions are not rendered Python strings. No helper, command, generated
 example or user-state operation was executed.
 
+[python-review-helper-tests.csv](python-review-helper-tests.csv) records all
+1,331 lines of the two Python review-helper test sources. Its 144 rows separate
+72 protected unittest method identifiers, fixture diagnostics and stdout,
+assertion/subtest data, version and IPC markers, and fourteen delivery or
+suppression boundaries. The [exclusions](python-review-helper-tests-exclusions.csv)
+account for 994 material AST nodes; generated-source evidence distinguishes six
+synthetic parser placeholders from source literals. The
+[scope](python-review-helper-tests-scope.csv) retains the separate helper producer
+owners. Native unittest/OS diagnostics, captured streams and teardown failures
+remain qualified; no tests, generated programs or helper scenarios were run.
+
 [python-dev-build-tests.csv](python-dev-build-tests.csv) covers the full 873-line
 Python development-build test source. Its 965 records distinguish 35 unittest
 class/method selectors, three authored skip reasons, two explicit test failures,
@@ -1740,6 +1751,7 @@ python -B review/text-inventory/verify-session-ui-producers.py
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-python-review-tools.py
 python -B review/text-inventory/verify-python-dev-build-tests.py
+python -B review/text-inventory/verify-python-review-helper-tests.py
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-copied-runtime.py
