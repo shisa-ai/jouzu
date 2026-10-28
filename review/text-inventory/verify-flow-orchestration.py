@@ -234,6 +234,29 @@ def main():
     assert 'attempt?.phase !== "claimed" || !attempt.consumed' in at(P+'pi-controller-host.ts',168)
     assert 'controller.view().producers.length' in at(P+'pi-session-ingress.ts',766)
     assert 'Producer state changed' in at(P+'task-producer.ts',129)
+    # Summary and expanded raw body are distinct sinks for accepted work.
+    renderer=P+'flow-message-renderer.ts'
+    assert 'if ((kind === "work" || kind === "alert") && typeof content === "string")' in at(renderer,93)
+    assert 'short(first, 120)' in at(renderer,96)
+    assert 'short(rest.join(" "), 200)' in at(renderer,98)
+    assert 'if (!summary || expanded)' in at(renderer,129)
+    delivery_ids={'FLOW-ORCHESTRATION-042','FLOW-ORCHESTRATION-062','FLOW-ORCHESTRATION-071'}
+    def verify_work_delivery(records):
+        selected=[r for r in records if r['item_id'] in delivery_ids]
+        assert len(selected)==3
+        for r in selected:
+            assert 'compact summary' in r['consumer_evidence']
+            assert 'no summary exists or expanded=true' in r['consumer_evidence']
+            assert 'raw framed JSON is rendered at line 129 even collapsed' not in r['consumer_evidence']
+            assert renderer+':93-130' in r['display_location']
+    verify_work_delivery(rows)
+    rejected=False
+    bad=[dict(r) for r in rows]
+    target=next(r for r in bad if r['item_id']=='FLOW-ORCHESTRATION-042')
+    target['consumer_evidence']=target['consumer_evidence'].replace('no summary exists or expanded=true','always visible')
+    try:verify_work_delivery(bad)
+    except AssertionError:rejected=True
+    assert rejected,'Work raw-body visibility broadening was accepted'
     assert counts=={'catalog':4,'fixed':58,'dynamic':14},counts
     assert rows[23]['item_id']=='FLOW-ORCHESTRATION-024' and 'Qualified alternate' in rows[23]['trigger']
     assert rows[73]['item_id']=='FLOW-ORCHESTRATION-074' and rows[73]['english_location']==P+'background-results.ts:124'

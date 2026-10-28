@@ -617,7 +617,8 @@ It pins 44 sources and accounts for 49 first-party Error constructors, fourteen
 catches and 529 lexical tokens, plus the native bus's catch and four tokens.
 Controller-held reasons have no current UI consumer identified; retention/API
 failures and prevalidated consumption guards keep separate conditions. Accepted
-work continuation can become saved raw JSON/rendered/exported text, while task
+work continuation has a compact terminal summary; raw JSON is appended when
+expanded or no summary exists. Saved/exported text retains the body, while task
 cancellation context has no default saved-body claim. Read-observation stale/scope
 failures are swallowed. The native event bus logs its own English prefix and raw
 error object to stderr, separately from localized root notices. Twenty-two prior
