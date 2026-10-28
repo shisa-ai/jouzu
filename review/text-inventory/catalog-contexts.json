@@ -1,0 +1,1508 @@
+[
+  {
+    "message_id": "jouzu.cli.session.slash.settings",
+    "display_location": "Interactive prompt: /settings autocomplete description",
+    "trigger": "The autocomplete list contains /settings and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:72",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.model",
+    "display_location": "Interactive prompt: /model autocomplete description",
+    "trigger": "The autocomplete list contains /model and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:73",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.tree",
+    "display_location": "Interactive prompt: /tree autocomplete description",
+    "trigger": "The autocomplete list contains /tree and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:74",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.thinking",
+    "display_location": "Interactive prompt: /thinking autocomplete description",
+    "trigger": "The autocomplete list contains /thinking and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:75",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.export",
+    "display_location": "Interactive prompt: /export autocomplete description",
+    "trigger": "The autocomplete list contains /export and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:76",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.import",
+    "display_location": "Interactive prompt: /import autocomplete description",
+    "trigger": "The autocomplete list contains /import and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:77",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.share",
+    "display_location": "Interactive prompt: /share autocomplete description",
+    "trigger": "The autocomplete list contains /share and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:78",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bug",
+    "display_location": "Interactive prompt: /bug autocomplete description",
+    "trigger": "The autocomplete list contains /bug and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:79",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.copy",
+    "display_location": "Interactive prompt: /copy autocomplete description",
+    "trigger": "The autocomplete list contains /copy and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:80",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.name",
+    "display_location": "Interactive prompt: /name autocomplete description",
+    "trigger": "The autocomplete list contains /name and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:81",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.session",
+    "display_location": "Interactive prompt: /session autocomplete description",
+    "trigger": "The autocomplete list contains /session and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:82",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.changelog",
+    "display_location": "Interactive prompt: /changelog autocomplete description",
+    "trigger": "The autocomplete list contains /changelog and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:83",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.hotkeys",
+    "display_location": "Interactive prompt: /hotkeys autocomplete description",
+    "trigger": "The autocomplete list contains /hotkeys and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:84",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.fork",
+    "display_location": "Interactive prompt: /fork autocomplete description",
+    "trigger": "The autocomplete list contains /fork and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:85",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.clone",
+    "display_location": "Interactive prompt: /clone autocomplete description",
+    "trigger": "The autocomplete list contains /clone and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:86",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.trust",
+    "display_location": "Interactive prompt: /trust autocomplete description",
+    "trigger": "The autocomplete list contains /trust and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:87",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.login",
+    "display_location": "Interactive prompt: /login autocomplete description",
+    "trigger": "The autocomplete list contains /login and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:88",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.logout",
+    "display_location": "Interactive prompt: /logout autocomplete description",
+    "trigger": "The autocomplete list contains /logout and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:89",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.new",
+    "display_location": "Interactive prompt: /new autocomplete description",
+    "trigger": "The autocomplete list contains /new and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:90",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.compact",
+    "display_location": "Interactive prompt: /compact autocomplete description",
+    "trigger": "The autocomplete list contains /compact and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:91",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.resume",
+    "display_location": "Interactive prompt: /resume autocomplete description",
+    "trigger": "The autocomplete list contains /resume and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:92",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.reload",
+    "display_location": "Interactive prompt: /reload autocomplete description",
+    "trigger": "The autocomplete list contains /reload and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:93",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.quit",
+    "display_location": "Interactive prompt: /quit autocomplete description",
+    "trigger": "The autocomplete list contains /quit and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:94",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.catalogs",
+    "display_location": "Interactive prompt: /catalogs autocomplete description",
+    "trigger": "The autocomplete list contains /catalogs and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:95",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.about",
+    "display_location": "Interactive prompt: /about autocomplete description",
+    "trigger": "The autocomplete list contains /about and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:96",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.fast",
+    "display_location": "Interactive prompt: /fast autocomplete description",
+    "trigger": "The autocomplete list contains /fast and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:97",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.scrollback",
+    "display_location": "Interactive prompt: /scrollback autocomplete description",
+    "trigger": "The autocomplete list contains /scrollback and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:98",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.flow",
+    "display_location": "Interactive prompt: /flow autocomplete description",
+    "trigger": "The autocomplete list contains /flow and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:99",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.mcp",
+    "display_location": "Interactive prompt: /mcp autocomplete description",
+    "trigger": "The autocomplete list contains /mcp and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:100",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.llama",
+    "display_location": "Interactive prompt: /llama autocomplete description",
+    "trigger": "The autocomplete list contains /llama and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:101",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.tasks",
+    "display_location": "Interactive prompt: /tasks autocomplete description",
+    "trigger": "The autocomplete list contains /tasks and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:102",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.goal",
+    "display_location": "Interactive prompt: /goal autocomplete description",
+    "trigger": "The autocomplete list contains /goal and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:103",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.multiloop",
+    "display_location": "Interactive prompt: /multiloop autocomplete description",
+    "trigger": "The autocomplete list contains /multiloop and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:104",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.schedulePrompt",
+    "display_location": "Interactive prompt: /schedule-prompt autocomplete description",
+    "trigger": "The autocomplete list contains /schedule-prompt and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:105",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bg",
+    "display_location": "Interactive prompt: /bg autocomplete description",
+    "trigger": "The autocomplete list contains /bg and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:106",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bgList",
+    "display_location": "Interactive prompt: /bg:list autocomplete description",
+    "trigger": "The autocomplete list contains /bg:list and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:107",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bgNext",
+    "display_location": "Interactive prompt: /bg:next autocomplete description",
+    "trigger": "The autocomplete list contains /bg:next and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:108",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bgClear",
+    "display_location": "Interactive prompt: /bg:clear autocomplete description",
+    "trigger": "The autocomplete list contains /bg:clear and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:109",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bgRun",
+    "display_location": "Interactive prompt: /bg:run autocomplete description",
+    "trigger": "The autocomplete list contains /bg:run and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:110",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.bgStop",
+    "display_location": "Interactive prompt: /bg:stop autocomplete description",
+    "trigger": "The autocomplete list contains /bg:stop and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:111",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.piVcc",
+    "display_location": "Interactive prompt: /pi-vcc autocomplete description",
+    "trigger": "The autocomplete list contains /pi-vcc and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:112",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.piVccRecall",
+    "display_location": "Interactive prompt: /pi-vcc-recall autocomplete description",
+    "trigger": "The autocomplete list contains /pi-vcc-recall and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:113",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.codePreviewHealth",
+    "display_location": "Interactive prompt: /code-preview-health autocomplete description",
+    "trigger": "The autocomplete list contains /code-preview-health and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:114",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.codePreviewSettings",
+    "display_location": "Interactive prompt: /code-preview-settings autocomplete description",
+    "trigger": "The autocomplete list contains /code-preview-settings and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:115",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.jouzuReview",
+    "display_location": "Interactive prompt: /jouzu-review autocomplete description",
+    "trigger": "The autocomplete list contains /jouzu-review and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:116",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.skillJouzuReference",
+    "display_location": "Interactive prompt: /skill:jouzu-reference autocomplete description",
+    "trigger": "The autocomplete list contains /skill:jouzu-reference and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:117",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.skillJouzuClearWriting",
+    "display_location": "Interactive prompt: /skill:jouzu-clear-writing autocomplete description",
+    "trigger": "The autocomplete list contains /skill:jouzu-clear-writing and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:118",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.skillJouzuAntiSlop",
+    "display_location": "Interactive prompt: /skill:jouzu-anti-slop autocomplete description",
+    "trigger": "The autocomplete list contains /skill:jouzu-anti-slop and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:119",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.skillJouzuDelegation",
+    "display_location": "Interactive prompt: /skill:jouzu-delegation autocomplete description",
+    "trigger": "The autocomplete list contains /skill:jouzu-delegation and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:120",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.skillJouzuSourceCheck",
+    "display_location": "Interactive prompt: /skill:jouzu-source-check autocomplete description",
+    "trigger": "The autocomplete list contains /skill:jouzu-source-check and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:121",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.session.slash.skillMultiloop",
+    "display_location": "Interactive prompt: /skill:multiloop autocomplete description",
+    "trigger": "The autocomplete list contains /skill:multiloop and its suggestion is rendered. The localizer requires a defined, nonempty description and known command ownership: an untagged Pi builtin, or a bundled/installed registration with matching source scope and registered description. User registrations with only the same name are insufficient. Uses the active catalog; English appears with the English catalog or English fallback.",
+    "consumer_evidence": [
+      "packages/session-ui/src/contracts.ts:122",
+      "packages/session-ui/src/prompt-frame.ts:172",
+      "packages/session-ui/src/prompt-frame.ts:188",
+      "packages/session-ui/src/prompt-frame.ts:233",
+      "packages/session-ui/src/extension.ts:87",
+      "packages/session-ui/src/extension.ts:160"
+    ],
+    "translation_boundary": "Translate the description; preserve command spelling, argument hints, provenance tags and user-owned descriptions.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.title",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:552",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.usageHeading",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:554",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.commandsHeading",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:557",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.acp",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:463",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.doctor",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:464",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.catalog",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:465",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.profilePlan",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:466",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.profileApply",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:467",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.keybindings",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:468",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.selfUpdate",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:469",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.command.pi",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:470",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.textguard.scanning",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:475",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.textguard.handling",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:476",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.textguard.controls",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:477",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.option.textguardStrict",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:487",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.option.textguardOff",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:488",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.option.textguardFiles",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:489",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.option.uiLocale",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:563",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.alias",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:494",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.resume",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:498",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.profile",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:499",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.startup",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:500",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.palette",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:501",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.catalogs",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:505",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.sections",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:506",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.help.footer.pi",
+    "display_location": "CLI --help standard output",
+    "trigger": "parseJouzuArgs selects help for --help or -h as the command, or acp --help / acp -h. runMainCli calls formatHelp and writes its result to stdout. All help sections are included; terminal width changes wrapping and table layout. The active English catalog or English fallback supplies this pattern.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:510",
+      "packages/cli/src/args.ts:526",
+      "packages/cli/src/main-cli.ts:137"
+    ],
+    "translation_boundary": "Translate help prose; preserve commands, options, locale tags and placeholder arguments.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.optionValueRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "A parsed Jouzu option has an empty = value, or its following value is absent or empty. Used for --jouzu-home, --jouzu-profile, --jouzu-ui-locale and profile --profile.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:122",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.internalParserError",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "readOptionValue receives a token that is neither the requested option nor its option= form. All current callers guard their tokens first; no ordinary CLI input route was found for this defensive error.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:126",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.catalogOperationRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu catalog is followed by an operation other than status, refresh, accept, validate or conformance. Omitted operation defaults to status.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:142",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.catalogAcceptOptionsRequireValues",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "While parsing jouzu catalog accept, a token after the revision has no following nonempty value. This check runs before the option name is validated.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:151",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.catalogUnknownAcceptOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu catalog accept has an unknown option or repeats --digest or --source after its first assignment; that option has a nonempty following value.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:156",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.catalogAcceptUsage",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "After catalog accept options are parsed, the revision or digest is absent, or the digest is not exactly 64 lowercase hexadecimal characters.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:160",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.catalogFileRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu catalog validate or conformance has no nonempty file path, has an extra token other than --json, or repeats --json.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:167",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.catalogUnknownOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu catalog status/refresh contains a duplicate --json, an unknown option, or a second positional source ID. Accepted --json and the first positional source are consumed before this error.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:183",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.selfUpdateOperationRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu self-update has an operation other than status, check, apply or policy. Omitted operation defaults to status.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:195",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.selfUpdatePolicyRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu self-update policy has no policy or a value other than auto-restart, notify or off.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:200",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.selfUpdatePolicySingleValue",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu self-update policy has a valid policy followed by one or more extra arguments.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:202",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.selfUpdateUnknownOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu self-update status/check has an argument other than its single optional --json, or apply has any argument including --json.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:209",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.keybindingsOperationRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu keybindings has an operation other than status, plan, apply or reset. Omitted operation defaults to status.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:223",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.keybindingsUnknownOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu keybindings status/plan has an argument other than its single optional --json, or apply/reset has any argument including --json.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:229",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileMixedSelection",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "A launch-level --jouzu-profile was parsed before the profile command; profile command parsing rejects that selection before validating its operation.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:242",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileOperationRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu profile has no operation, or an operation other than plan or apply, and no launch-level profile selection already caused an error.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:246",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileRepeatedOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu profile plan/apply specifies --profile or --profile= more than once.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:253",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileInvalidId",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "The profile command --profile value was parsed but is neither core nor ja.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:256",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileRepeatedJson",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu profile plan repeats --json. The apply operation treats --json as an unknown option instead.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:263",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileUnknownOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu profile plan/apply contains a token other than a valid --profile option or plan-only --json, including --json on apply.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:268",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileMigrationOperationRequired",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu profile-migration has an operation other than plan, apply or rollback. Omitted operation defaults to plan.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:280",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.profileMigrationUnknownOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu profile-migration contains anything other than one plan-only --json or one apply-only --yes, including repetitions and any rollback argument.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:294",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.homeRepeated",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Launch options before the command repeat --jouzu-home or --jouzu-home= after a home value was already assigned.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:310",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.launchProfileRepeated",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Launch options before the command repeat --jouzu-profile or --jouzu-profile= after a profile value was already assigned.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:317",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.launchProfileInvalidId",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "A launch --jouzu-profile value was parsed but is neither core nor ja.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:320",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.uiLocaleRepeated",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Launch options before the command repeat --jouzu-ui-locale or --jouzu-ui-locale= after a locale value was already assigned.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:327",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.uiLocaleInvalid",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "A launch --jouzu-ui-locale value was parsed but is not in UI_LOCALE_PREFERENCES: auto, en, ja, zh-Hans or zh-Hant.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:330",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.textguardRepeated",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Launch options before the command repeat one of --jouzu-textguard-files, --jouzu-textguard-strict or --jouzu-textguard-off.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:347",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.unknownJouzuOption",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "A launch token before the command starts with --jouzu- but is not one of the recognized Jouzu launch options.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:353",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.textguardOffStrict",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Both --jouzu-textguard-off and --jouzu-textguard-strict were supplied before the command. This check precedes the off/files incompatibility check.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:358",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.textguardOffFiles",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Both --jouzu-textguard-off and --jouzu-textguard-files were supplied before the command, without the off/strict check having thrown first.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:361",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.versionHelpArguments",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "Extra arguments follow the --version/-v or --help/-h command, or follow acp except its single --help/-h argument.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:369",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  },
+  {
+    "message_id": "jouzu.cli.args.doctorUnexpectedToken",
+    "display_location": "CLI usage-error detail on stderr",
+    "trigger": "jouzu doctor has an argument other than its single optional --json, including a repeated --json.",
+    "consumer_evidence": [
+      "packages/cli/src/args.ts:376",
+      "packages/cli/src/args.ts:61",
+      "packages/cli/src/main-cli.ts:862",
+      "packages/cli/src/cli.ts:159"
+    ],
+    "translation_boundary": "Translate the catalog pattern inside the usage-error wrapper. Preserve supplied option/token names and allowed machine values. Defensive paths remain listed even where current CLI callers exclude them.",
+    "evidence": "source-traced"
+  }
+]
