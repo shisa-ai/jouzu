@@ -300,6 +300,16 @@ helper have separate activation conditions. The
 one pinned patch output; imported provider, catalog and native-lock errors remain
 separate producers. Credential values and remote account content are protected.
 
+[pi-session-config.csv](pi-session-config.csv) adds 49 inherited session/settings/
+resource occurrences and 21 [payload boundaries](pi-session-config-boundaries.csv).
+Ten complete bodies and all 700 lexical occurrences are covered in the
+[scope](pi-session-config-scope.csv) and 651
+[exclusions](pi-session-config-exclusions.csv). Scan limits caught by their callers,
+session invariants, prevalidated setters and collision metadata have distinct
+dispositions. The [evidence](pi-session-config-evidence.json) verifies seven
+archive-identical bodies and three pinned patch outputs. Package-manager, skill,
+prompt, extension, native and schema error producers remain separately open.
+
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
 occurrences and eight dynamic boundaries. It includes notices, invalid-command
@@ -473,6 +483,7 @@ node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cl
 node review/text-inventory/verify-pi-tools.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-auth-model.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-session-config.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
