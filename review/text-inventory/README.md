@@ -815,7 +815,7 @@ warning without undoing the effect; the reporter must return before the warning
 is appended. Surviving content has conditional model/saved/export routes, while
 later handlers, content policy and tool renderers can suppress display. Native
 handshake listener errors and tool-call/result exceptions have distinct catches.
-Four corruption controls pass. No schedule, subagent, file, event, model, native
+Five corruption controls pass. No schedule, subagent, file, event, model, native
 or UI operation was executed.
 
 [input-example-text.csv](input-example-text.csv) adds 127 example/guide records:

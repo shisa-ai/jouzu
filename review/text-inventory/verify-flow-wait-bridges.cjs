@@ -45,7 +45,7 @@ function validate(texts,rows=primary,xrows=excluded){
   assert(a.kind==='excluded'||Object.entries(r).every(([k,v])=>['english','message_id'].includes(k)||v),'Empty primary context');
   for(const v of Object.values(r)){assert(!/(?<!\w)[A-Za-z]:[\\/]/.test(v),'Local host path');for(const m of v.matchAll(/((?:packages\/|npm:@earendil-works\/pi-coding-agent@1\.4\.0\/)[A-Za-z0-9_./-]+):(\d+)(?:-(\d+))?/g)){assert(texts.has(m[1]),'Unpinned proof path: '+m[1]);const len=texts.get(m[1]).split(/\r?\n/).length;assert(+m[2]>0&&+(m[3]??m[2])>=+m[2]&&+(m[3]??m[2])<=len,'Proof range drift');refs++}}
  }
- assert(used.size===142&&fixed===20&&catalog===0&&bounds===8&&aliasUsed.size===0,'Partition drift');return refs;
+ assert(used.size===142&&fixed===20&&catalog===0&&bounds===8&&aliasUsed.size===0,'Partition drift');assert(rows.find(r=>r.english==='Scheduled prompt storage has an unsupported format.').trigger.includes('Null/unsupported-version values reach this fixed guard'),'Null guard preemption drift');return refs;
 }
 const refs=validate(sources);assert(scopes.length===13&&Object.keys(ev.full_bodies).length===2,'Scope count');
 const P='packages/cli/src/',body=sources.get(P+'flow-control/schedule-waits.ts');
@@ -54,5 +54,6 @@ assert(ev.controls.filter(c=>c.kind==='error').length===17&&ev.controls.filter(c
 assert(primary.filter(r=>r.english.includes('could not be registered')).every(r=>r.trigger.includes('options.onError must return normally')&&r.consumer_evidence.includes('policy may replace')),'Fallback/paint gates omitted');
 let negatives=0;function reject(fn){let failed=false;try{fn()}catch{failed=true}assert(failed,'Corruption accepted');negatives++}
 reject(()=>validate(sources,primary.slice(1)));reject(()=>validate(sources,primary.map(r=>r===primary.find(r=>r.english)?{...r,english:r.english+'!'}:r)));reject(()=>validate(sources,primary,excluded.slice(1)));
+reject(()=>validate(sources,primary.map(r=>r.english==='Scheduled prompt storage has an unsupported format.'?{...r,trigger:r.trigger.replace('Null/unsupported-version values reach this fixed guard','Null fails before the guard')}:r)));
 const changed=new Map(sources);changed.set(P+'flow-control/schedule-waits.ts',body.replace('Scheduled prompt storage contains an invalid job.','Changed job guard.'));reject(()=>validate(changed));
 console.log(JSON.stringify({primary_rows:28,fixed:20,boundaries:8,excluded:122,source_nodes:142,full_bodies:2,full_lines:420,pinned_sources:13,errors:17,catches:5,source_references:refs,negative_controls:negatives,status:'passed; source only'},null,2));
