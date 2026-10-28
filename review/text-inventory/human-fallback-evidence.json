@@ -1,0 +1,1006 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": [
+    "packages/cli/src/human-messages.ts",
+    "packages/cli/src/terminal-layout.ts"
+  ],
+  "reviewed_ranges": {},
+  "anchors": [
+    {
+      "item_id": "HUMAN-FALLBACK-001",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 34,
+      "expression": "\"command\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-002",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 46,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-003",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 55,
+      "expression": "\"url\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-004",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 63,
+      "expression": "\"model-id\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-005",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 76,
+      "expression": "\"error-code\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-006",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 91,
+      "expression": "\"source-error\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-007",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 21,
+      "column": 108,
+      "expression": "\"digest\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-008",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 38,
+      "column": 27,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-009",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 38,
+      "column": 34,
+      "expression": "\"ja\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-010",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 38,
+      "column": 41,
+      "expression": "\"zh-Hans\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-011",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 38,
+      "column": 53,
+      "expression": "\"zh-Hant\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-012",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 47,
+      "column": 17,
+      "expression": "\"command\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-013",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 52,
+      "column": 17,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-014",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 57,
+      "column": 17,
+      "expression": "\"url\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-015",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 62,
+      "column": 17,
+      "expression": "\"model-id\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-016",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 67,
+      "column": 17,
+      "expression": "\"error-code\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-017",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 72,
+      "column": 17,
+      "expression": "\"source-error\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-018",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 77,
+      "column": 17,
+      "expression": "\"digest\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-019",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 83,
+      "column": 12,
+      "expression": "\"jouzu.cli.error.piImport\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-020",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 84,
+      "column": 22,
+      "expression": "\"jouzu.cli.error.keybindingConflict\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-021",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 85,
+      "column": 30,
+      "expression": "\"jouzu.cli.error.keybindingConflict.recovery\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-022",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 86,
+      "column": 20,
+      "expression": "\"jouzu.cli.error.keybindingConfig\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-023",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 87,
+      "column": 16,
+      "expression": "\"jouzu.cli.error.profileState\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-024",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 88,
+      "column": 24,
+      "expression": "\"jouzu.cli.error.profileState.recovery\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-025",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 89,
+      "column": 19,
+      "expression": "\"jouzu.cli.error.profileConflict\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-026",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 90,
+      "column": 27,
+      "expression": "\"jouzu.cli.error.profileConflict.recovery\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-027",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 91,
+      "column": 9,
+      "expression": "\"jouzu.cli.error.usage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-028",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 92,
+      "column": 13,
+      "expression": "\"jouzu.cli.error.usage.hint\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-029",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 93,
+      "column": 11,
+      "expression": "\"jouzu.cli.error.generic\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-030",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 95,
+      "column": 10,
+      "expression": "\"jouzu.cli.error.update\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-031",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 97,
+      "column": 23,
+      "expression": "\"jouzu.cli.args.optionValueRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-032",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 98,
+      "column": 23,
+      "expression": "\"jouzu.cli.args.internalParserError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-033",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 99,
+      "column": 28,
+      "expression": "\"jouzu.cli.args.catalogOperationRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-034",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 100,
+      "column": 37,
+      "expression": "\"jouzu.cli.args.catalogAcceptOptionsRequireValues\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-035",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 101,
+      "column": 30,
+      "expression": "\"jouzu.cli.args.catalogUnknownAcceptOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-036",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 102,
+      "column": 22,
+      "expression": "\"jouzu.cli.args.catalogAcceptUsage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-037",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 103,
+      "column": 23,
+      "expression": "\"jouzu.cli.args.catalogFileRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-038",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 104,
+      "column": 24,
+      "expression": "\"jouzu.cli.args.catalogUnknownOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-039",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 105,
+      "column": 31,
+      "expression": "\"jouzu.cli.args.selfUpdateOperationRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-040",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 106,
+      "column": 28,
+      "expression": "\"jouzu.cli.args.selfUpdatePolicyRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-041",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 107,
+      "column": 31,
+      "expression": "\"jouzu.cli.args.selfUpdatePolicySingleValue\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-042",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 108,
+      "column": 27,
+      "expression": "\"jouzu.cli.args.selfUpdateUnknownOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-043",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 109,
+      "column": 32,
+      "expression": "\"jouzu.cli.args.keybindingsOperationRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-044",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 110,
+      "column": 28,
+      "expression": "\"jouzu.cli.args.keybindingsUnknownOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-045",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 111,
+      "column": 25,
+      "expression": "\"jouzu.cli.args.profileMixedSelection\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-046",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 112,
+      "column": 28,
+      "expression": "\"jouzu.cli.args.profileOperationRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-047",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 113,
+      "column": 25,
+      "expression": "\"jouzu.cli.args.profileRepeatedOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-048",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 114,
+      "column": 20,
+      "expression": "\"jouzu.cli.args.profileInvalidId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-049",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 115,
+      "column": 23,
+      "expression": "\"jouzu.cli.args.profileRepeatedJson\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-050",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 116,
+      "column": 24,
+      "expression": "\"jouzu.cli.args.profileUnknownOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-051",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 117,
+      "column": 37,
+      "expression": "\"jouzu.cli.args.profileMigrationOperationRequired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-052",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 118,
+      "column": 33,
+      "expression": "\"jouzu.cli.args.profileMigrationUnknownOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-053",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 119,
+      "column": 16,
+      "expression": "\"jouzu.cli.args.homeRepeated\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-054",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 120,
+      "column": 25,
+      "expression": "\"jouzu.cli.args.launchProfileRepeated\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-055",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 121,
+      "column": 26,
+      "expression": "\"jouzu.cli.args.launchProfileInvalidId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-056",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 122,
+      "column": 20,
+      "expression": "\"jouzu.cli.args.uiLocaleRepeated\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-057",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 123,
+      "column": 19,
+      "expression": "\"jouzu.cli.args.uiLocaleInvalid\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-058",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 124,
+      "column": 21,
+      "expression": "\"jouzu.cli.args.textguardRepeated\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-059",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 125,
+      "column": 22,
+      "expression": "\"jouzu.cli.args.unknownJouzuOption\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-060",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 126,
+      "column": 22,
+      "expression": "\"jouzu.cli.args.textguardOffStrict\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-061",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 127,
+      "column": 21,
+      "expression": "\"jouzu.cli.args.textguardOffFiles\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-062",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 128,
+      "column": 25,
+      "expression": "\"jouzu.cli.args.doctorUnexpectedToken\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-063",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 129,
+      "column": 24,
+      "expression": "\"jouzu.cli.args.versionHelpArguments\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-064",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 139,
+      "column": 27,
+      "expression": "\"Jouzu Pi import failed: {message}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-065",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 140,
+      "column": 37,
+      "expression": "\"{plan}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-066",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 141,
+      "column": 45,
+      "expression": "'Resolve the conflicts above, then run \"jouzu keybindings apply\" again.'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-067",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 142,
+      "column": 35,
+      "expression": "\"Jouzu keybindings failed: {message}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-068",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 143,
+      "column": 31,
+      "expression": "\"Jouzu profile state is unreadable: {message}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-069",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 145,
+      "column": 3,
+      "expression": "'Recovery: repair or remove the profile state file, then run \"jouzu profile plan\" and \"jouzu profile apply\" again.'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-070",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 146,
+      "column": 34,
+      "expression": "\"{plan}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-071",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 147,
+      "column": 42,
+      "expression": "'Resolve the conflicts above, then run \"jouzu profile apply\" again.'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-072",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 148,
+      "column": 24,
+      "expression": "\"Error: {message}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-073",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 149,
+      "column": 28,
+      "expression": "'Run \"jouzu --help\" for Jouzu usage or \"jouzu pi --help\" for Pi usage.'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-074",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 150,
+      "column": 26,
+      "expression": "\"Jouzu failed: {message}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-075",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 151,
+      "column": 25,
+      "expression": "\"Jouzu update failed: {message}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-076",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 152,
+      "column": 38,
+      "expression": "\"{option} requires a value\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-077",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 153,
+      "column": 38,
+      "expression": "\"internal parser error for {option}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-078",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 155,
+      "column": 3,
+      "expression": "'catalog requires \"status\", \"refresh\", \"accept\", \"validate\", or \"conformance\"'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-079",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 156,
+      "column": 52,
+      "expression": "\"catalog accept options require values\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-080",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 157,
+      "column": 45,
+      "expression": "\"unknown catalog accept option: {option}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-081",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 158,
+      "column": 37,
+      "expression": "\"catalog accept requires <revision> --digest <sha256> [--source <source-id>]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-082",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 159,
+      "column": 38,
+      "expression": "\"catalog {operation} requires one file path and optional --json\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-083",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 160,
+      "column": 39,
+      "expression": "\"unknown catalog {operation} option: {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-084",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 161,
+      "column": 46,
+      "expression": "'self-update requires \"status\", \"check\", \"apply\", or \"policy\"'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-085",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 162,
+      "column": 43,
+      "expression": "\"self-update policy must be one of: auto-restart, notify, off\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-086",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 163,
+      "column": 46,
+      "expression": "\"self-update policy accepts exactly one value\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-087",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 164,
+      "column": 42,
+      "expression": "\"unknown self-update {operation} option: {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-088",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 165,
+      "column": 47,
+      "expression": "'keybindings requires \"status\", \"plan\", \"apply\", or \"reset\"'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-089",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 166,
+      "column": 43,
+      "expression": "\"unknown keybindings {operation} option: {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-090",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 167,
+      "column": 40,
+      "expression": "\"use profile --profile <core|ja>; do not mix it with --jouzu-profile\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-091",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 168,
+      "column": 43,
+      "expression": "'profile requires \"plan\" or \"apply\"'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-092",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 169,
+      "column": 40,
+      "expression": "\"--profile may be specified only once\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-093",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 170,
+      "column": 35,
+      "expression": "\"--profile must be one of: {values}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-094",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 171,
+      "column": 38,
+      "expression": "\"--json may be specified only once\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-095",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 172,
+      "column": 39,
+      "expression": "\"unknown profile {operation} option: {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-096",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 173,
+      "column": 52,
+      "expression": "'profile-migration requires \"plan\", \"apply\", or \"rollback\"'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-097",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 174,
+      "column": 48,
+      "expression": "\"unknown profile-migration {operation} option: {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-098",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 175,
+      "column": 31,
+      "expression": "\"--jouzu-home may be specified only once\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-099",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 176,
+      "column": 40,
+      "expression": "\"--jouzu-profile may be specified only once\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-100",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 177,
+      "column": 41,
+      "expression": "\"--jouzu-profile must be one of: {values}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-101",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 178,
+      "column": 35,
+      "expression": "\"--jouzu-ui-locale may be specified only once\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-102",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 179,
+      "column": 34,
+      "expression": "\"--jouzu-ui-locale must be one of: {values}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-103",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 180,
+      "column": 36,
+      "expression": "\"{option} may be specified only once\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-104",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 181,
+      "column": 37,
+      "expression": "\"unknown Jouzu option: {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-105",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 182,
+      "column": 37,
+      "expression": "\"--jouzu-textguard-off and --jouzu-textguard-strict cannot be combined\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-106",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 183,
+      "column": 36,
+      "expression": "\"--jouzu-textguard-off and --jouzu-textguard-files cannot be combined\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-107",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 184,
+      "column": 40,
+      "expression": "\"doctor does not accept {token}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-108",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 185,
+      "column": 39,
+      "expression": "'{command} does not accept arguments; use \"jouzu pi {command}\" for Pi'",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-109",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 206,
+      "column": 26,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-110",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 216,
+      "column": 82,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-111",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 219,
+      "column": 46,
+      "expression": "`unknown human message id: ${message.id}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-112",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 222,
+      "column": 44,
+      "expression": "`human message ${message.id} is missing value \"${name}\"`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-113",
+      "path": "packages/cli/src/terminal-layout.ts",
+      "line": 14,
+      "column": 8,
+      "expression": "\"./session-ui/color.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-114",
+      "path": "packages/cli/src/terminal-layout.ts",
+      "line": 30,
+      "column": 8,
+      "expression": "\"./session-ui/layout.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-BOUNDARY-01",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 206,
+      "column": 1,
+      "expression": "typeof value === \"object\"",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-BOUNDARY-02",
+      "path": "packages/cli/src/human-messages.ts",
+      "line": 218,
+      "column": 1,
+      "expression": "const template = table?.[message.id]",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-BOUNDARY-03",
+      "path": "packages/cli/src/args.ts",
+      "line": 36,
+      "column": 1,
+      "expression": "super(resolveHumanMessage(message))",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HUMAN-FALLBACK-BOUNDARY-04",
+      "path": "packages/cli/src/terminal-layout.ts",
+      "line": 30,
+      "column": 1,
+      "expression": "} from \"./session-ui/layout.js\"",
+      "kind": "boundary"
+    }
+  ],
+  "related_catalog_ids": {
+    "HUMAN-FALLBACK-064": "jouzu.cli.error.piImport",
+    "HUMAN-FALLBACK-065": "jouzu.cli.error.keybindingConflict",
+    "HUMAN-FALLBACK-066": "jouzu.cli.error.keybindingConflict.recovery",
+    "HUMAN-FALLBACK-067": "jouzu.cli.error.keybindingConfig",
+    "HUMAN-FALLBACK-068": "jouzu.cli.error.profileState",
+    "HUMAN-FALLBACK-069": "jouzu.cli.error.profileState.recovery",
+    "HUMAN-FALLBACK-070": "jouzu.cli.error.profileConflict",
+    "HUMAN-FALLBACK-071": "jouzu.cli.error.profileConflict.recovery",
+    "HUMAN-FALLBACK-072": "jouzu.cli.error.usage",
+    "HUMAN-FALLBACK-073": "jouzu.cli.error.usage.hint",
+    "HUMAN-FALLBACK-074": "jouzu.cli.error.generic",
+    "HUMAN-FALLBACK-075": "jouzu.cli.error.update",
+    "HUMAN-FALLBACK-076": "jouzu.cli.args.optionValueRequired",
+    "HUMAN-FALLBACK-077": "jouzu.cli.args.internalParserError",
+    "HUMAN-FALLBACK-078": "jouzu.cli.args.catalogOperationRequired",
+    "HUMAN-FALLBACK-079": "jouzu.cli.args.catalogAcceptOptionsRequireValues",
+    "HUMAN-FALLBACK-080": "jouzu.cli.args.catalogUnknownAcceptOption",
+    "HUMAN-FALLBACK-081": "jouzu.cli.args.catalogAcceptUsage",
+    "HUMAN-FALLBACK-082": "jouzu.cli.args.catalogFileRequired",
+    "HUMAN-FALLBACK-083": "jouzu.cli.args.catalogUnknownOption",
+    "HUMAN-FALLBACK-084": "jouzu.cli.args.selfUpdateOperationRequired",
+    "HUMAN-FALLBACK-085": "jouzu.cli.args.selfUpdatePolicyRequired",
+    "HUMAN-FALLBACK-086": "jouzu.cli.args.selfUpdatePolicySingleValue",
+    "HUMAN-FALLBACK-087": "jouzu.cli.args.selfUpdateUnknownOption",
+    "HUMAN-FALLBACK-088": "jouzu.cli.args.keybindingsOperationRequired",
+    "HUMAN-FALLBACK-089": "jouzu.cli.args.keybindingsUnknownOption",
+    "HUMAN-FALLBACK-090": "jouzu.cli.args.profileMixedSelection",
+    "HUMAN-FALLBACK-091": "jouzu.cli.args.profileOperationRequired",
+    "HUMAN-FALLBACK-092": "jouzu.cli.args.profileRepeatedOption",
+    "HUMAN-FALLBACK-093": "jouzu.cli.args.profileInvalidId",
+    "HUMAN-FALLBACK-094": "jouzu.cli.args.profileRepeatedJson",
+    "HUMAN-FALLBACK-095": "jouzu.cli.args.profileUnknownOption",
+    "HUMAN-FALLBACK-096": "jouzu.cli.args.profileMigrationOperationRequired",
+    "HUMAN-FALLBACK-097": "jouzu.cli.args.profileMigrationUnknownOption",
+    "HUMAN-FALLBACK-098": "jouzu.cli.args.homeRepeated",
+    "HUMAN-FALLBACK-099": "jouzu.cli.args.launchProfileRepeated",
+    "HUMAN-FALLBACK-100": "jouzu.cli.args.launchProfileInvalidId",
+    "HUMAN-FALLBACK-101": "jouzu.cli.args.uiLocaleRepeated",
+    "HUMAN-FALLBACK-102": "jouzu.cli.args.uiLocaleInvalid",
+    "HUMAN-FALLBACK-103": "jouzu.cli.args.textguardRepeated",
+    "HUMAN-FALLBACK-104": "jouzu.cli.args.unknownJouzuOption",
+    "HUMAN-FALLBACK-105": "jouzu.cli.args.textguardOffStrict",
+    "HUMAN-FALLBACK-106": "jouzu.cli.args.textguardOffFiles",
+    "HUMAN-FALLBACK-107": "jouzu.cli.args.doctorUnexpectedToken",
+    "HUMAN-FALLBACK-108": "jouzu.cli.args.versionHelpArguments"
+  },
+  "reviewed_data": {
+    "human-fallback.csv": "83d6b436565091c0c367e93cf33d79f2ecdd47644cb35e556bb5744d178e6757",
+    "human-fallback-exclusions.csv": "3ebff048565ab279fc6c1d70a1fa0a316e13f2f671c898197e29e926f2731a47",
+    "human-fallback-scope.csv": "ee148447c7893a57005095795a4055250cf0a140f2d6061514d14cd3d0d59207"
+  }
+}

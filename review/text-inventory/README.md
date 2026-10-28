@@ -578,6 +578,20 @@ failure or are suppressed, with a conditional user warning. The
 [scope](session-label-text-scope.csv) pins 11 sources. No model, git, tmux, session
 or native operation was executed.
 
+[human-fallback.csv](human-fallback.csv) records 45 English resolver templates,
+two qualified helper Error messages and four forwarding boundaries. The complete
+225-line resolver and 30-line terminal re-export shim contain 114 string/template
+nodes, partitioned with 67 [exclusions](human-fallback-exclusions.csv). Source
+fallback templates use `{argument}` syntax; their related Fluent IDs use a
+separate formatter. All 36 parser constructor calls supply the required values.
+Ordinary CLI handling rerenders retained descriptors with its catalog, while
+external parser/resolver consumers can inspect raw English `Error.message` or
+returns. Templates with no current parser constructor caller are explicitly
+qualified; table membership alone does not establish a display gap. The shim
+adds no human prose and does not close its forwarded layout/color modules.
+[Scope](human-fallback-scope.csv) pins five source bodies. No resolver, parser or
+terminal code was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -705,6 +719,7 @@ node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
 node review/text-inventory/verify-pi-ui-adapter.cjs
 node review/text-inventory/verify-session-label-text.cjs
+node review/text-inventory/verify-human-fallback.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
