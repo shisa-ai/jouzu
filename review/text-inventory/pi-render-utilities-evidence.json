@@ -1,0 +1,2719 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "7e63442f26215c47b02f26766b104c7d158d4ae9",
+  "inventory_file": "pi-render-utilities.csv",
+  "scope_file": "pi-render-utilities-scope.csv",
+  "boundary_file": "pi-render-utilities-boundaries.csv",
+  "exclusion_file": "pi-render-utilities-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/pi-prose-wrapping.ts",
+      "sha256": "41d9ea2d5f046fa6a97b955989e63a07932605db4745269625b37639d4c305bb"
+    },
+    {
+      "source": "packages/cli/src/textguard-policy.ts",
+      "sha256": "16322c507662368353a312b0ce0c777ee7325e7e438aab107ef3a37b8fabdbac"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js",
+      "sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+      "cli_nested_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          20,
+          85
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js",
+      "sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "cli_nested_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          50,
+          74
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/bash-execution.js",
+      "sha256": "88ba62ac0f3cd6808b087c30915ad4091af7f1746da2caa371b7f0de34fd234e",
+      "cli_nested_sha256": "88ba62ac0f3cd6808b087c30915ad4091af7f1746da2caa371b7f0de34fd234e",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          59,
+          73
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+      "cli_nested_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          752,
+          771
+        ],
+        [
+          858,
+          877
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          467,
+          492
+        ],
+        [
+          837,
+          852
+        ],
+        [
+          1153,
+          1178
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          351,
+          418
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js",
+      "sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+      "cli_nested_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1170,
+          1191
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-convert.js",
+      "sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+      "cli_nested_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-resize-core.js",
+      "sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+      "cli_nested_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          37,
+          58
+        ],
+        [
+          118,
+          127
+        ]
+      ],
+      "purpose": "Bounded prior source consumer/catch/payload route only; no new whole-body claim."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.d.ts",
+      "sha256": "ecdf1765e2a9589c0b062d4bec4dbf7243d8a11bd3c862aa93e64319ec0796af",
+      "cli_nested_sha256": "ecdf1765e2a9589c0b062d4bec4dbf7243d8a11bd3c862aa93e64319ec0796af",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.d.ts.map",
+      "sha256": "2785d3d739ff451e5d31140c51c5435a72852b37dbbdbb7d03ddd072821ae1b2",
+      "cli_nested_sha256": "2785d3d739ff451e5d31140c51c5435a72852b37dbbdbb7d03ddd072821ae1b2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.js.map",
+      "sha256": "565b6b0b4ce4abc53b636ba6e1e67355e261f328ad9c671cad878f4c418e8241",
+      "cli_nested_sha256": "565b6b0b4ce4abc53b636ba6e1e67355e261f328ad9c671cad878f4c418e8241",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.d.ts",
+      "sha256": "b5868e217c93239c4b5c1baf9c2af3453073055782174818958b50449cb9bb3e",
+      "cli_nested_sha256": "b5868e217c93239c4b5c1baf9c2af3453073055782174818958b50449cb9bb3e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.d.ts.map",
+      "sha256": "34b6db1df92f368ec1a7ba672ec306c9974f53e4977481d8d7550aa27e83d4c0",
+      "cli_nested_sha256": "34b6db1df92f368ec1a7ba672ec306c9974f53e4977481d8d7550aa27e83d4c0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.js.map",
+      "sha256": "b487272b3057af9a3d17a3d18c94b411aa3c1bb904546872d9aace23f78af17f",
+      "cli_nested_sha256": "b487272b3057af9a3d17a3d18c94b411aa3c1bb904546872d9aace23f78af17f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.d.ts",
+      "sha256": "23338819cc54c964c0bf8d278f2c939899524529d21d0c2d84b4401705ab83b9",
+      "cli_nested_sha256": "23338819cc54c964c0bf8d278f2c939899524529d21d0c2d84b4401705ab83b9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.d.ts.map",
+      "sha256": "414a34c23ed2e75488df5f0d0891c34183e389444722c99e5b42e1380e7e1580",
+      "cli_nested_sha256": "414a34c23ed2e75488df5f0d0891c34183e389444722c99e5b42e1380e7e1580",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.js.map",
+      "sha256": "4d4db43d1b9d836e069a70d3fa9a5de09a6970e416dd40fffda3fbc7e96abae2",
+      "cli_nested_sha256": "4d4db43d1b9d836e069a70d3fa9a5de09a6970e416dd40fffda3fbc7e96abae2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.d.ts",
+      "sha256": "cd47fcabe77c441dbcbd685fd0ccf39f39979e11714ccc760de58de24646c1f3",
+      "cli_nested_sha256": "cd47fcabe77c441dbcbd685fd0ccf39f39979e11714ccc760de58de24646c1f3",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.d.ts.map",
+      "sha256": "cdb663a63ec4f5fd42dcef05efe582e0b58764b936270bacb9b83ea70a456167",
+      "cli_nested_sha256": "cdb663a63ec4f5fd42dcef05efe582e0b58764b936270bacb9b83ea70a456167",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.js.map",
+      "sha256": "7d2ae6c45c9e53ca712fec4135a30fdcae1815f9b2cbb3863c844efcedbf496c",
+      "cli_nested_sha256": "7d2ae6c45c9e53ca712fec4135a30fdcae1815f9b2cbb3863c844efcedbf496c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.d.ts",
+      "sha256": "0c1da4f64727ce0ec221bc356afafd0510c15f946c8b7cbe6abb0474b4ce6809",
+      "cli_nested_sha256": "0c1da4f64727ce0ec221bc356afafd0510c15f946c8b7cbe6abb0474b4ce6809",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.d.ts.map",
+      "sha256": "b8c8a9113632d82cc31c85bab08bcaadc975202dc94c7138ab74f15437c6096e",
+      "cli_nested_sha256": "b8c8a9113632d82cc31c85bab08bcaadc975202dc94c7138ab74f15437c6096e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.js.map",
+      "sha256": "18ce66672973d93f177932c9e91c6d2b4d98aa4b1ff995c8db6ef6bb4b6d96ea",
+      "cli_nested_sha256": "18ce66672973d93f177932c9e91c6d2b4d98aa4b1ff995c8db6ef6bb4b6d96ea",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.d.ts",
+      "sha256": "6dee0d11843861cfb16f9c9906ba50e8621e96e2e2e6e9f71571b7157cfde93f",
+      "cli_nested_sha256": "6dee0d11843861cfb16f9c9906ba50e8621e96e2e2e6e9f71571b7157cfde93f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.d.ts.map",
+      "sha256": "6df26eae6afcaab84cd8fc44775b44f21ee22f3298b4a79548e91e6e119aa541",
+      "cli_nested_sha256": "6df26eae6afcaab84cd8fc44775b44f21ee22f3298b4a79548e91e6e119aa541",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.js.map",
+      "sha256": "55fa196939e933289aa96dfbe72936bc2aa11a2e95e97433c2d148085c0cfbc9",
+      "cli_nested_sha256": "55fa196939e933289aa96dfbe72936bc2aa11a2e95e97433c2d148085c0cfbc9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.d.ts",
+      "sha256": "968dc9abe565b6652b6a7f1b16a4169af996ec70a0f0a322595abeeed9707d6e",
+      "cli_nested_sha256": "968dc9abe565b6652b6a7f1b16a4169af996ec70a0f0a322595abeeed9707d6e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.d.ts.map",
+      "sha256": "8f1f44da8acc518b5533aa69c420a30a1677dc2af20244dae16b17da25609dec",
+      "cli_nested_sha256": "8f1f44da8acc518b5533aa69c420a30a1677dc2af20244dae16b17da25609dec",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.js.map",
+      "sha256": "1246750b18e5a2177dbcf68f1290ad5649d457f2aaa16b3130056d2bc3417c1a",
+      "cli_nested_sha256": "1246750b18e5a2177dbcf68f1290ad5649d457f2aaa16b3130056d2bc3417c1a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.d.ts",
+      "sha256": "e7c6d7456c7a4a33d1723600444e8486fbf6305270df65ad34a3ce03eb145032",
+      "cli_nested_sha256": "e7c6d7456c7a4a33d1723600444e8486fbf6305270df65ad34a3ce03eb145032",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.d.ts.map",
+      "sha256": "1ccfb44bec8fd2c72f4091fd2b972194cc0e4505c41c7847c6a753fe010fb8e7",
+      "cli_nested_sha256": "1ccfb44bec8fd2c72f4091fd2b972194cc0e4505c41c7847c6a753fe010fb8e7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.js.map",
+      "sha256": "720c65f85469d3ca753aa151b1b32ca2f8d1059de6a3c8a16ac6d579e70fdf98",
+      "cli_nested_sha256": "720c65f85469d3ca753aa151b1b32ca2f8d1059de6a3c8a16ac6d579e70fdf98",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/bash-execution.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-convert.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-resize-core.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 1,
+    "proofs": 1,
+    "scopes": 8,
+    "external_boundaries": 8,
+    "excluded_occurrences": 140,
+    "dispositioned_source_files": 8,
+    "string_template_occurrences": 141,
+    "protected_regex_literals": 12,
+    "error_constructors": 1,
+    "catch_clauses": 3,
+    "throw_statements": 1,
+    "all_new_expressions": 8,
+    "protected_control_occurrences": 2,
+    "full_runtime_lines": 711,
+    "runtime_source_bytes": 25812,
+    "nonruntime_assets": 24,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 8
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.render-utilities.ansi.60.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.js",
+      "line": 60,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "Expected a \\`string\\`, got \\`${typeof value}\\`",
+      "evidence": "`Expected a \\`string\\`, got \\`${typeof value}\\``"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.js",
+        "read_lines": [
+          1,
+          71
+        ],
+        "string_template_occurrences": 16,
+        "fixed_rows": 1,
+        "excluded_occurrences": 15,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 60,
+            "column": 15,
+            "constructor": "TypeError",
+            "message_argument": 0,
+            "message_expression": "`Expected a \\`string\\`, got \\`${typeof value}\\``"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 36,
+            "column": 19,
+            "callee": "RegExp",
+            "source": "new RegExp(`(?:${OSC_START}[\\\\s\\\\S]*?${ST})|${CSI_START}${CSI_FINAL}`, \"g\")"
+          },
+          {
+            "line": 39,
+            "column": 34,
+            "callee": "RegExp",
+            "source": "new RegExp(`(?:${OSC_START}(?:[^\\\\u0007\\\\u009C\\\\u001B]|\\\\u001B(?!\\\\\\\\))*|${CSI_START})$`)"
+          },
+          {
+            "line": 60,
+            "column": 15,
+            "callee": "TypeError",
+            "source": "new TypeError(`Expected a \\`string\\`, got \\`${typeof value}\\``)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 60,
+            "column": 9,
+            "expression": "new TypeError(`Expected a \\`string\\`, got \\`${typeof value}\\``)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 47,
+            "column": 10,
+            "callee": "value.includes",
+            "arguments": [
+              "\"\\u001B\""
+            ]
+          },
+          {
+            "line": 47,
+            "column": 39,
+            "callee": "value.includes",
+            "arguments": [
+              "\"\\u009B\""
+            ]
+          },
+          {
+            "line": 50,
+            "column": 25,
+            "callee": "Math.max",
+            "arguments": [
+              "0",
+              "value.length - MAX_PENDING_ANSI_LENGTH"
+            ]
+          },
+          {
+            "line": 51,
+            "column": 19,
+            "callee": "unfinishedAnsiAtEndRegex.exec",
+            "arguments": [
+              "value.slice(windowStart)"
+            ]
+          },
+          {
+            "line": 51,
+            "column": 49,
+            "callee": "value.slice",
+            "arguments": [
+              "windowStart"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 24,
+            "callee": "value.slice",
+            "arguments": [
+              "0",
+              "splitAt"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 58,
+            "callee": "value.slice",
+            "arguments": [
+              "splitAt"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 10,
+            "callee": "value.includes",
+            "arguments": [
+              "\"\\u001B\""
+            ]
+          },
+          {
+            "line": 63,
+            "column": 39,
+            "callee": "value.includes",
+            "arguments": [
+              "\"\\u009B\""
+            ]
+          },
+          {
+            "line": 69,
+            "column": 12,
+            "callee": "value.replace",
+            "arguments": [
+              "ansiRegex",
+              "\"\""
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 47,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 63,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b"
+          }
+        ],
+        "review": "Full71 source lines. Stream splitting preserves pending ESC/CSI suffix at most 256 code units; strips finite regex matches. One own TypeError template when stripAnsi value not string; conditional API guard retained, ordinary bash path decodes string. Regex source fragments/control bytes/protocol separators protected, no display label."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.js",
+        "read_lines": [
+          1,
+          40
+        ],
+        "string_template_occurrences": 14,
+        "fixed_rows": 0,
+        "excluded_occurrences": 14,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 2,
+            "column": 10,
+            "callee": "Number.isInteger",
+            "arguments": [
+              "codePoint"
+            ]
+          },
+          {
+            "line": 5,
+            "column": 12,
+            "callee": "String.fromCodePoint",
+            "arguments": [
+              "codePoint"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 9,
+            "callee": "entity.startsWith",
+            "arguments": [
+              "\"#x\""
+            ]
+          },
+          {
+            "line": 20,
+            "column": 36,
+            "callee": "entity.startsWith",
+            "arguments": [
+              "\"#X\""
+            ]
+          },
+          {
+            "line": 21,
+            "column": 16,
+            "callee": "decodeCodePoint",
+            "arguments": [
+              "Number.parseInt(entity.slice(2), 16)"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 32,
+            "callee": "Number.parseInt",
+            "arguments": [
+              "entity.slice(2)",
+              "16"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 48,
+            "callee": "entity.slice",
+            "arguments": [
+              "2"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 9,
+            "callee": "entity.startsWith",
+            "arguments": [
+              "\"#\""
+            ]
+          },
+          {
+            "line": 24,
+            "column": 16,
+            "callee": "decodeCodePoint",
+            "arguments": [
+              "Number.parseInt(entity.slice(1), 10)"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 32,
+            "callee": "Number.parseInt",
+            "arguments": [
+              "entity.slice(1)",
+              "10"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 48,
+            "callee": "entity.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 28,
+            "callee": "html.indexOf",
+            "arguments": [
+              "\";\"",
+              "index + 1"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 20,
+            "callee": "html.slice",
+            "arguments": [
+              "index + 1",
+              "semicolonIndex"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 21,
+            "callee": "decodeHtmlEntity",
+            "arguments": [
+              "entity"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full40 lines. Five named entities plus numeric Unicode codepoint-range/integer validation; unknown/out-of-range undefined. Encoded entity keys and decoded punctuation are syntax/data. No Error/throw/catch/prose. Called by syntax highlight converter, not independent HTML UI."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.js",
+        "read_lines": [
+          1,
+          7
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "protected_regex_literals": 2,
+        "regex_census_sha256": "41c4778849195431c587b0a41384c53ad237bc1f901e171fbea0df886c598901",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 12,
+            "callee": "input\n        .replace(/\"(?:\\\\.|[^\"\\\\])*\"|\\/\\/[^\\n]*/g, (m) => (m[0] === '\"' ? m : \"\"))\n        .replace",
+            "arguments": [
+              "/\"(?:\\\\.|[^\"\\\\])*\"|,(\\s*[}\\]])/g",
+              "(m, tail) => tail ?? (m[0] === '\"' ? m : \"\")"
+            ]
+          },
+          {
+            "line": 3,
+            "column": 12,
+            "callee": "input\n        .replace",
+            "arguments": [
+              "/\"(?:\\\\.|[^\"\\\\])*\"|\\/\\/[^\\n]*/g",
+              "(m) => (m[0] === '\"' ? m : \"\")"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full7 lines. Regex source transforms line comments/trailing commas preserving quoted literals. No parsing/error definition; downstream JSON.parse errors belong consumer/runtime. Quotes/empty strings are syntax."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.js",
+        "read_lines": [
+          1,
+          184
+        ],
+        "string_template_occurrences": 42,
+        "fixed_rows": 0,
+        "excluded_occurrences": 42,
+        "protected_regex_literals": 2,
+        "regex_census_sha256": "183587c72f1aeffe17a0ada50c18bc84831588feb137241e5b927370229f6f12",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 53,
+            "column": 31,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n            setImmediate(() => {\n                void import(\"highlight.js/lib/index.js\").then(() => resolve(), () => {\n                    // Eager languages and plaintext fallback remain available.\n                    resolve();\n                });\n            });\n        })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "highlight.js/lib/core.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/bash.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/c.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/cpp.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/csharp.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/dart.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/go.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/groovy.js"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/java.js"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/javascript.js"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/json.js"
+          },
+          {
+            "line": 12,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/kotlin.js"
+          },
+          {
+            "line": 13,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/lua.js"
+          },
+          {
+            "line": 14,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/nix.js"
+          },
+          {
+            "line": 15,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/perl.js"
+          },
+          {
+            "line": 16,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/php.js"
+          },
+          {
+            "line": 17,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/python.js"
+          },
+          {
+            "line": 18,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/ruby.js"
+          },
+          {
+            "line": 19,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/rust.js"
+          },
+          {
+            "line": 20,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/scala.js"
+          },
+          {
+            "line": 21,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/swift.js"
+          },
+          {
+            "line": 22,
+            "column": 1,
+            "specifier": "highlight.js/lib/languages/typescript.js"
+          },
+          {
+            "line": 23,
+            "column": 1,
+            "specifier": "./html.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 47,
+            "column": 32,
+            "callee": "Object.entries",
+            "arguments": [
+              "eagerLanguages"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 5,
+            "callee": "hljs.registerLanguage",
+            "arguments": [
+              "name",
+              "language"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 13,
+            "callee": "setImmediate",
+            "arguments": [
+              "() => {\n                void import(\"highlight.js/lib/index.js\").then(() => resolve(), () => {\n                    // Eager languages and plaintext fallback remain available.\n                    resolve();\n                });\n            }"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 22,
+            "callee": "import(\"highlight.js/lib/index.js\").then",
+            "arguments": [
+              "() => resolve()",
+              "() => {\n                    // Eager languages and plaintext fallback remain available.\n                    resolve();\n                }"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 22,
+            "callee": "import",
+            "arguments": [
+              "\"highlight.js/lib/index.js\""
+            ]
+          },
+          {
+            "line": 55,
+            "column": 69,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 57,
+            "column": 21,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 67,
+            "column": 19,
+            "callee": "/\\sclass\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')/.exec",
+            "arguments": [
+              "tag"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 29,
+            "callee": "classValue.split",
+            "arguments": [
+              "/\\s+/"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 13,
+            "callee": "className.startsWith",
+            "arguments": [
+              "HIGHLIGHT_CLASS_PREFIX"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 20,
+            "callee": "className.slice",
+            "arguments": [
+              "HIGHLIGHT_CLASS_PREFIX.length"
+            ]
+          },
+          {
+            "line": 84,
+            "column": 22,
+            "callee": "scope.indexOf",
+            "arguments": [
+              "\".\""
+            ]
+          },
+          {
+            "line": 86,
+            "column": 39,
+            "callee": "scope.slice",
+            "arguments": [
+              "0",
+              "dotIndex"
+            ]
+          },
+          {
+            "line": 91,
+            "column": 23,
+            "callee": "scope.indexOf",
+            "arguments": [
+              "\"-\""
+            ]
+          },
+          {
+            "line": 93,
+            "column": 39,
+            "callee": "scope.slice",
+            "arguments": [
+              "0",
+              "dashIndex"
+            ]
+          },
+          {
+            "line": 106,
+            "column": 27,
+            "callee": "getScopeFormatter",
+            "arguments": [
+              "scope",
+              "theme"
+            ]
+          },
+          {
+            "line": 114,
+            "column": 10,
+            "callee": "html.startsWith",
+            "arguments": [
+              "\"<span\"",
+              "index"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 27,
+            "callee": "getActiveFormatter",
+            "arguments": [
+              "scopes",
+              "theme"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 15,
+            "callee": "textBuffer\n                .split(\"\\n\")\n                .map((line) => (line ? formatter(line) : line))\n                .join",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 130,
+            "column": 15,
+            "callee": "textBuffer\n                .split(\"\\n\")\n                .map",
+            "arguments": [
+              "(line) => (line ? formatter(line) : line)"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 15,
+            "callee": "textBuffer\n                .split",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 132,
+            "column": 40,
+            "callee": "formatter",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 139,
+            "column": 13,
+            "callee": "isSpanOpenTagStart",
+            "arguments": [
+              "html",
+              "index"
+            ]
+          },
+          {
+            "line": 140,
+            "column": 33,
+            "callee": "html.indexOf",
+            "arguments": [
+              "\">\"",
+              "index + 5"
+            ]
+          },
+          {
+            "line": 142,
+            "column": 17,
+            "callee": "flushText",
+            "arguments": []
+          },
+          {
+            "line": 143,
+            "column": 29,
+            "callee": "html.slice",
+            "arguments": [
+              "index",
+              "tagEndIndex + 1"
+            ]
+          },
+          {
+            "line": 144,
+            "column": 31,
+            "callee": "getScopeFromSpanTag",
+            "arguments": [
+              "tag"
+            ]
+          },
+          {
+            "line": 145,
+            "column": 17,
+            "callee": "scopes.push",
+            "arguments": [
+              "scope"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 13,
+            "callee": "html.startsWith",
+            "arguments": [
+              "SPAN_CLOSE",
+              "index"
+            ]
+          },
+          {
+            "line": 151,
+            "column": 13,
+            "callee": "flushText",
+            "arguments": []
+          },
+          {
+            "line": 153,
+            "column": 17,
+            "callee": "scopes.pop",
+            "arguments": []
+          },
+          {
+            "line": 159,
+            "column": 29,
+            "callee": "decodeHtmlEntityAt",
+            "arguments": [
+              "html",
+              "index"
+            ]
+          },
+          {
+            "line": 169,
+            "column": 5,
+            "callee": "flushText",
+            "arguments": []
+          },
+          {
+            "line": 174,
+            "column": 11,
+            "callee": "hljs.highlight",
+            "arguments": [
+              "code",
+              "{\n            language: options.language,\n            ignoreIllegals: options.ignoreIllegals,\n        }"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 11,
+            "callee": "hljs.highlightAuto",
+            "arguments": [
+              "code",
+              "options.languageSubset"
+            ]
+          },
+          {
+            "line": 179,
+            "column": 12,
+            "callee": "renderHighlightedHtml",
+            "arguments": [
+              "html",
+              "options.theme"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 12,
+            "callee": "hljs.getLanguage",
+            "arguments": [
+              "name"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full184 lines. Eager language registration at module evaluation; lazy all-language dynamic import rejection handled by resolve without notice. highlight and theme callback errors not caught locally; native theme wraps highlight calls and falls back source lines. Language IDs/HTML span scaffolding are protected, output is input code text after entity decoding plus caller styling. External Highlight.js source/errors/logging remain pending; browser vendored highlight body is a different artifact."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.js",
+        "read_lines": [
+          1,
+          9
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 12,
+            "callee": "content.startsWith",
+            "arguments": [
+              "\"\\uFEFF\""
+            ]
+          },
+          {
+            "line": 3,
+            "column": 66,
+            "callee": "content.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 7,
+            "column": 12,
+            "callee": "splitBom",
+            "arguments": [
+              "content"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full9 lines. Only BOM split/strip, caller text preserved. BOM and empty string protected; no display/error sentence. Config/file/tool edit consumers retain their own parse/output/error routes."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.js",
+        "read_lines": [
+          1,
+          48
+        ],
+        "string_template_occurrences": 7,
+        "fixed_rows": 0,
+        "excluded_occurrences": 7,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./image-process.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 14,
+            "column": 10,
+            "callee": "content.some",
+            "arguments": [
+              "(block) => block.type === \"image\""
+            ]
+          },
+          {
+            "line": 22,
+            "column": 13,
+            "callee": "normalized.push",
+            "arguments": [
+              "block"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 33,
+            "callee": "processImage",
+            "arguments": [
+              "Buffer.from(block.data, \"base64\")",
+              "block.mimeType",
+              "{\n            autoResizeImages,\n            resizeOptions: options?.resizeOptions,\n        }"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 46,
+            "callee": "Buffer.from",
+            "arguments": [
+              "block.data",
+              "\"base64\""
+            ]
+          },
+          {
+            "line": 33,
+            "column": 13,
+            "callee": "normalized.push",
+            "arguments": [
+              "block"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 13,
+            "callee": "normalized.push",
+            "arguments": [
+              "block"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 9,
+            "callee": "normalized.push",
+            "arguments": [
+              "{ type: \"image\", data: processed.data, mimeType: processed.mimeType }"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 13,
+            "callee": "normalized.push",
+            "arguments": [
+              "{ type: \"text\", text: processed.hints.join(\"\\n\") }"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 51,
+            "callee": "processed.hints.join",
+            "arguments": [
+              "\"\\n\""
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full48 lines. No image returns original array. Each image processed; !ok keeps original block, successful changed/data/MIME or hints replaces block and appends hints joined newline. Later native content policy may replace/withhold. No own error/headline. Imported processImage hints/errors belong prior Pi tools body, runtime/codec edges remain open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.js",
+        "read_lines": [
+          1,
+          157
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 110,
+            "column": 17,
+            "callee": "Uint8Array",
+            "source": "new Uint8Array(src.length)"
+          },
+          {
+            "line": 121,
+            "column": 12,
+            "callee": "photon.PhotonImage",
+            "source": "new photon.PhotonImage(dst, h, w)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 16,
+            "column": 23,
+            "callee": "read32",
+            "arguments": [
+              "tiffStart + 4"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 24,
+            "callee": "read16",
+            "arguments": [
+              "ifdStart"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 13,
+            "callee": "read16",
+            "arguments": [
+              "entryPos"
+            ]
+          },
+          {
+            "line": 26,
+            "column": 27,
+            "callee": "read16",
+            "arguments": [
+              "entryPos + 8"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 17,
+            "callee": "hasExifHeader",
+            "arguments": [
+              "bytes",
+              "segmentStart"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 25,
+            "callee": "String.fromCharCode",
+            "arguments": [
+              "bytes[offset]",
+              "bytes[offset + 1]",
+              "bytes[offset + 2]",
+              "bytes[offset + 3]"
+            ]
+          },
+          {
+            "line": 68,
+            "column": 49,
+            "callee": "hasExifHeader",
+            "arguments": [
+              "bytes",
+              "dataStart"
+            ]
+          },
+          {
+            "line": 88,
+            "column": 22,
+            "callee": "findJpegTiffOffset",
+            "arguments": [
+              "bytes"
+            ]
+          },
+          {
+            "line": 100,
+            "column": 22,
+            "callee": "findWebpTiffOffset",
+            "arguments": [
+              "bytes"
+            ]
+          },
+          {
+            "line": 104,
+            "column": 12,
+            "callee": "readOrientationFromTiff",
+            "arguments": [
+              "bytes",
+              "tiffOffset"
+            ]
+          },
+          {
+            "line": 107,
+            "column": 15,
+            "callee": "image.get_width",
+            "arguments": []
+          },
+          {
+            "line": 108,
+            "column": 15,
+            "callee": "image.get_height",
+            "arguments": []
+          },
+          {
+            "line": 109,
+            "column": 17,
+            "callee": "image.get_raw_pixels",
+            "arguments": []
+          },
+          {
+            "line": 114,
+            "column": 28,
+            "callee": "dstIndex",
+            "arguments": [
+              "x",
+              "y",
+              "w",
+              "h"
+            ]
+          },
+          {
+            "line": 125,
+            "column": 25,
+            "callee": "getExifOrientation",
+            "arguments": [
+              "originalBytes"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 13,
+            "callee": "photon.fliph",
+            "arguments": [
+              "image"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 13,
+            "callee": "photon.fliph",
+            "arguments": [
+              "image"
+            ]
+          },
+          {
+            "line": 134,
+            "column": 13,
+            "callee": "photon.flipv",
+            "arguments": [
+              "image"
+            ]
+          },
+          {
+            "line": 137,
+            "column": 13,
+            "callee": "photon.flipv",
+            "arguments": [
+              "image"
+            ]
+          },
+          {
+            "line": 140,
+            "column": 29,
+            "callee": "rotate90",
+            "arguments": [
+              "photon",
+              "image",
+              "(x, y, _w, h) => x * h + (h - 1 - y)"
+            ]
+          },
+          {
+            "line": 141,
+            "column": 13,
+            "callee": "photon.fliph",
+            "arguments": [
+              "rotated"
+            ]
+          },
+          {
+            "line": 145,
+            "column": 20,
+            "callee": "rotate90",
+            "arguments": [
+              "photon",
+              "image",
+              "(x, y, _w, h) => x * h + (h - 1 - y)"
+            ]
+          },
+          {
+            "line": 147,
+            "column": 29,
+            "callee": "rotate90",
+            "arguments": [
+              "photon",
+              "image",
+              "(x, y, w, h) => (w - 1 - x) * h + y"
+            ]
+          },
+          {
+            "line": 148,
+            "column": 13,
+            "callee": "photon.fliph",
+            "arguments": [
+              "rotated"
+            ]
+          },
+          {
+            "line": 152,
+            "column": 20,
+            "callee": "rotate90",
+            "arguments": [
+              "photon",
+              "image",
+              "(x, y, w, h) => (w - 1 - x) * h + y"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full157 lines. Parses JPEG/WebP EXIF/TIFF integer orientation, defaults to 1; flip/rotation pixel operations return original/new image. Only string EXIF format tag. No own Error/throw/catch/prose. Photon methods/allocations may throw, bounded callers catch conversion/resize failures; dependency/codec implementation pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.js",
+        "read_lines": [
+          1,
+          195
+        ],
+        "string_template_occurrences": 54,
+        "fixed_rows": 0,
+        "excluded_occurrences": 54,
+        "protected_regex_literals": 8,
+        "regex_census_sha256": "6069882fb2e33c8083ac4f3f91b6019d6a1eec35ec1a05b945ab7a694268b15e",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 20,
+            "column": 28,
+            "callee": "URL",
+            "source": "new URL(url)"
+          },
+          {
+            "line": 121,
+            "column": 28,
+            "callee": "URL",
+            "source": "new URL(repoWithoutRef)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 35,
+            "column": 9,
+            "source": "catch {\n            return { repo: url };\n        }"
+          },
+          {
+            "line": 63,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 125,
+            "column": 9,
+            "source": "catch {\n            return null;\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "hosted-git-info"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 26,
+            "callee": "url.match",
+            "arguments": [
+              "/^git@([^:]+):(.+)$/"
+            ]
+          },
+          {
+            "line": 6,
+            "column": 30,
+            "callee": "pathWithMaybeRef.indexOf",
+            "arguments": [
+              "\"@\""
+            ]
+          },
+          {
+            "line": 9,
+            "column": 26,
+            "callee": "pathWithMaybeRef.slice",
+            "arguments": [
+              "0",
+              "refSeparator"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 21,
+            "callee": "pathWithMaybeRef.slice",
+            "arguments": [
+              "refSeparator + 1"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 9,
+            "callee": "url.includes",
+            "arguments": [
+              "\"://\""
+            ]
+          },
+          {
+            "line": 21,
+            "column": 38,
+            "callee": "parsed.pathname.replace",
+            "arguments": [
+              "/^\\/+/",
+              "\"\""
+            ]
+          },
+          {
+            "line": 22,
+            "column": 34,
+            "callee": "pathWithMaybeRef.indexOf",
+            "arguments": [
+              "\"@\""
+            ]
+          },
+          {
+            "line": 25,
+            "column": 30,
+            "callee": "pathWithMaybeRef.slice",
+            "arguments": [
+              "0",
+              "refSeparator"
+            ]
+          },
+          {
+            "line": 26,
+            "column": 25,
+            "callee": "pathWithMaybeRef.slice",
+            "arguments": [
+              "refSeparator + 1"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 23,
+            "callee": "parsed.toString().replace",
+            "arguments": [
+              "/\\/$/",
+              "\"\""
+            ]
+          },
+          {
+            "line": 31,
+            "column": 23,
+            "callee": "parsed.toString",
+            "arguments": []
+          },
+          {
+            "line": 39,
+            "column": 24,
+            "callee": "url.indexOf",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 43,
+            "column": 18,
+            "callee": "url.slice",
+            "arguments": [
+              "0",
+              "slashIndex"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 30,
+            "callee": "url.slice",
+            "arguments": [
+              "slashIndex + 1"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 26,
+            "callee": "pathWithMaybeRef.indexOf",
+            "arguments": [
+              "\"@\""
+            ]
+          },
+          {
+            "line": 49,
+            "column": 22,
+            "callee": "pathWithMaybeRef.slice",
+            "arguments": [
+              "0",
+              "refSeparator"
+            ]
+          },
+          {
+            "line": 50,
+            "column": 17,
+            "callee": "pathWithMaybeRef.slice",
+            "arguments": [
+              "refSeparator + 1"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 16,
+            "callee": "decodeURIComponent",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 68,
+            "column": 21,
+            "callee": "decodeForValidation",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 13,
+            "callee": "candidate.includes",
+            "arguments": [
+              "\"\\0\""
+            ]
+          },
+          {
+            "line": 74,
+            "column": 41,
+            "callee": "candidate.includes",
+            "arguments": [
+              "\"\\\\\""
+            ]
+          },
+          {
+            "line": 74,
+            "column": 69,
+            "callee": "candidate.startsWith",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 77,
+            "column": 28,
+            "callee": "candidate.includes",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 80,
+            "column": 13,
+            "callee": "candidate.split(\"/\").includes",
+            "arguments": [
+              "\"..\""
+            ]
+          },
+          {
+            "line": 80,
+            "column": 13,
+            "callee": "candidate.split",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 87,
+            "column": 9,
+            "callee": "args.path.startsWith",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 90,
+            "column": 28,
+            "callee": "args.path.replace(/\\.git$/, \"\").replace",
+            "arguments": [
+              "/^\\/+/",
+              "\"\""
+            ]
+          },
+          {
+            "line": 90,
+            "column": 28,
+            "callee": "args.path.replace",
+            "arguments": [
+              "/\\.git$/",
+              "\"\""
+            ]
+          },
+          {
+            "line": 91,
+            "column": 42,
+            "callee": "normalizedPath.split",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 94,
+            "column": 9,
+            "callee": "hasUnsafeGitInstallPart",
+            "arguments": [
+              "args.host",
+              "false"
+            ]
+          },
+          {
+            "line": 94,
+            "column": 54,
+            "callee": "hasUnsafeGitInstallPart",
+            "arguments": [
+              "normalizedPath",
+              "true"
+            ]
+          },
+          {
+            "line": 103,
+            "column": 17,
+            "callee": "Boolean",
+            "arguments": [
+              "args.ref"
+            ]
+          },
+          {
+            "line": 107,
+            "column": 43,
+            "callee": "splitRef",
+            "arguments": [
+              "url"
+            ]
+          },
+          {
+            "line": 111,
+            "column": 26,
+            "callee": "repoWithoutRef.match",
+            "arguments": [
+              "/^git@([^:]+):(.+)$/"
+            ]
+          },
+          {
+            "line": 116,
+            "column": 14,
+            "callee": "repoWithoutRef.startsWith",
+            "arguments": [
+              "\"https://\""
+            ]
+          },
+          {
+            "line": 117,
+            "column": 9,
+            "callee": "repoWithoutRef.startsWith",
+            "arguments": [
+              "\"http://\""
+            ]
+          },
+          {
+            "line": 118,
+            "column": 9,
+            "callee": "repoWithoutRef.startsWith",
+            "arguments": [
+              "\"ssh://\""
+            ]
+          },
+          {
+            "line": 119,
+            "column": 9,
+            "callee": "repoWithoutRef.startsWith",
+            "arguments": [
+              "\"git://\""
+            ]
+          },
+          {
+            "line": 123,
+            "column": 20,
+            "callee": "parsed.pathname.replace",
+            "arguments": [
+              "/^\\/+/",
+              "\"\""
+            ]
+          },
+          {
+            "line": 130,
+            "column": 28,
+            "callee": "repoWithoutRef.indexOf",
+            "arguments": [
+              "\"/\""
+            ]
+          },
+          {
+            "line": 134,
+            "column": 16,
+            "callee": "repoWithoutRef.slice",
+            "arguments": [
+              "0",
+              "slashIndex"
+            ]
+          },
+          {
+            "line": 135,
+            "column": 16,
+            "callee": "repoWithoutRef.slice",
+            "arguments": [
+              "slashIndex + 1"
+            ]
+          },
+          {
+            "line": 136,
+            "column": 14,
+            "callee": "host.includes",
+            "arguments": [
+              "\".\""
+            ]
+          },
+          {
+            "line": 141,
+            "column": 12,
+            "callee": "buildGitSource",
+            "arguments": [
+              "{ repo, host, path, ref }"
+            ]
+          },
+          {
+            "line": 151,
+            "column": 21,
+            "callee": "source.trim",
+            "arguments": []
+          },
+          {
+            "line": 152,
+            "column": 26,
+            "callee": "trimmed.startsWith",
+            "arguments": [
+              "\"git:\""
+            ]
+          },
+          {
+            "line": 153,
+            "column": 32,
+            "callee": "trimmed.slice(4).trim",
+            "arguments": []
+          },
+          {
+            "line": 153,
+            "column": 32,
+            "callee": "trimmed.slice",
+            "arguments": [
+              "4"
+            ]
+          },
+          {
+            "line": 154,
+            "column": 27,
+            "callee": "/^(https?|ssh|git):\\/\\//i.test",
+            "arguments": [
+              "url"
+            ]
+          },
+          {
+            "line": 157,
+            "column": 19,
+            "callee": "splitRef",
+            "arguments": [
+              "url"
+            ]
+          },
+          {
+            "line": 158,
+            "column": 30,
+            "callee": "[split.ref ? `${split.repo}#${split.ref}` : undefined, url].filter",
+            "arguments": [
+              "(value) => Boolean(value)"
+            ]
+          },
+          {
+            "line": 158,
+            "column": 108,
+            "callee": "Boolean",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 160,
+            "column": 22,
+            "callee": "hostedGitInfo.fromUrl",
+            "arguments": [
+              "candidate"
+            ]
+          },
+          {
+            "line": 162,
+            "column": 30,
+            "callee": "info.project?.includes",
+            "arguments": [
+              "\"@\""
+            ]
+          },
+          {
+            "line": 165,
+            "column": 37,
+            "callee": "split.repo.startsWith",
+            "arguments": [
+              "\"http://\""
+            ]
+          },
+          {
+            "line": 166,
+            "column": 18,
+            "callee": "split.repo.startsWith",
+            "arguments": [
+              "\"https://\""
+            ]
+          },
+          {
+            "line": 167,
+            "column": 18,
+            "callee": "split.repo.startsWith",
+            "arguments": [
+              "\"ssh://\""
+            ]
+          },
+          {
+            "line": 168,
+            "column": 18,
+            "callee": "split.repo.startsWith",
+            "arguments": [
+              "\"git://\""
+            ]
+          },
+          {
+            "line": 169,
+            "column": 18,
+            "callee": "split.repo.startsWith",
+            "arguments": [
+              "\"git@\""
+            ]
+          },
+          {
+            "line": 170,
+            "column": 20,
+            "callee": "buildGitSource",
+            "arguments": [
+              "{\n                repo: useHttpsPrefix ? `https://${split.repo}` : split.repo,\n                host: info.domain || \"\",\n                path: `${info.user}/${info.project}`,\n                ref: info.committish || split.ref || undefined,\n            }"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 29,
+            "callee": "[split.ref ? `https://${split.repo}#${split.ref}` : undefined, `https://${url}`].filter",
+            "arguments": [
+              "(value) => Boolean(value)"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 128,
+            "callee": "Boolean",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 180,
+            "column": 22,
+            "callee": "hostedGitInfo.fromUrl",
+            "arguments": [
+              "candidate"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 30,
+            "callee": "info.project?.includes",
+            "arguments": [
+              "\"@\""
+            ]
+          },
+          {
+            "line": 185,
+            "column": 20,
+            "callee": "buildGitSource",
+            "arguments": [
+              "{\n                repo: `https://${split.repo}`,\n                host: info.domain || \"\",\n                path: `${info.user}/${info.project}`,\n                ref: info.committish || split.ref || undefined,\n            }"
+            ]
+          },
+          {
+            "line": 193,
+            "column": 12,
+            "callee": "parseGenericGitUrl",
+            "arguments": [
+              "url"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full195 lines. Three catches discard URL/decode errors into original repo/null; hostedGitInfo.fromUrl outside local catch. Protocol/ref/host/path templates are protected source identities, may appear in package tags/CLI labels. Unsafe encoded/NUL/backslash/absolute/dotdot parts reject via null. No own Error or human prose. hosted-git-info/native URL error/log producer graph pending."
+      }
+    ],
+    "method": "Full eight local source bodies read, every literal/template partitioned with exact JSON exclusions; Error/new/throw/catch/regex/import/export/control and all call-expression census. Bounded actual consumers qualified. Source-only, no audited module/native/render/parser/codec/runtime executed."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/utils/ansi.js",
+      "dist/utils/exif-orientation.js",
+      "dist/utils/git.js",
+      "dist/utils/html.js",
+      "dist/utils/json.js",
+      "dist/utils/syntax-highlight.js",
+      "dist/utils/text.js",
+      "dist/utils/tool-result-images.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/utils/ansi.d.ts",
+      "dist/utils/ansi.d.ts.map",
+      "dist/utils/ansi.js.map",
+      "dist/utils/exif-orientation.d.ts",
+      "dist/utils/exif-orientation.d.ts.map",
+      "dist/utils/exif-orientation.js.map",
+      "dist/utils/git.d.ts",
+      "dist/utils/git.d.ts.map",
+      "dist/utils/git.js.map",
+      "dist/utils/html.d.ts",
+      "dist/utils/html.d.ts.map",
+      "dist/utils/html.js.map",
+      "dist/utils/json.d.ts",
+      "dist/utils/json.d.ts.map",
+      "dist/utils/json.js.map",
+      "dist/utils/syntax-highlight.d.ts",
+      "dist/utils/syntax-highlight.d.ts.map",
+      "dist/utils/syntax-highlight.js.map",
+      "dist/utils/text.d.ts",
+      "dist/utils/text.d.ts.map",
+      "dist/utils/text.js.map",
+      "dist/utils/tool-result-images.d.ts",
+      "dist/utils/tool-result-images.d.ts.map",
+      "dist/utils/tool-result-images.js.map"
+    ]
+  },
+  "prior_ownership": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0303"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0315"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0321"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0331"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0332"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0333"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0311"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.js",
+      "historical_census_status": "body-review-pending",
+      "new_full_body_owner": "pi-render-utilities-scope.csv",
+      "prior_full_body_claim": false,
+      "historical_census_row_id": "pi.runtime-census.0314"
+    }
+  ],
+  "pending_producer_boundaries": [
+    {
+      "source": "external:highlight.js/lib/core.js-and-language-grammars",
+      "status": "unbundled-dependency-full-bodies-errors-console-pending"
+    },
+    {
+      "source": "external:hosted-git-info",
+      "status": "parser-dependency-implementation-pending"
+    },
+    {
+      "source": "external:Photon-WASM-native-image-allocator",
+      "status": "codec-implementation-pending"
+    },
+    {
+      "source": "external:Node-runtime-URL-JSON-filesystem-events-typed-input-errors",
+      "status": "external-runtime-and-extra-API-consumers-pending"
+    }
+  ],
+  "limits": [
+    "Eight finite full local bodies only; historical census/old ledgers unchanged. Dependency grammars/codec/hosted-git parser/runtime/OS/transitive package graph remain open.",
+    "One conditional TypeError definition, no default well-typed caller failure established. Malformed custom data and direct APIs can trigger; consumer owns ultimate display. No matching owned canonical catalog definition established.",
+    "Image hints are imported producer payload, later tool-result policy can withhold/replace before retained/delivered. Input code/git identity/BOM/entity/regex/control syntax protected, no invented English metadata label.",
+    "Highlight module registration/import may log externally; lazy import rejection alone is suppressed. Native theme catches highlight but language validation/import paths outside catch remain open. Browser export vendored highlight is separately inventoried bytes.",
+    "Normal strings TypeScript decoded; templates preserve source interpolation and escape spelling. No audited modules loaded or native/terminal/image/model/network/git/child operations executed; no product/old/shared/census edits."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-render-utilities.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-render-utilities.csv": "dba2bf680aa0a42bf62ebad0d77ce8119b60db239f053bebe713dd841589bd37",
+    "pi-render-utilities-boundaries.csv": "ff1b72e4caad3c5972f44a2147ddd49c259b1f8c2eb65954e8404eb9ecfc7965",
+    "pi-render-utilities-scope.csv": "1f23a241630c06eb7f2b20b3aa964d73a19d716a99b14f648a85d1bc7a80950f",
+    "pi-render-utilities-exclusions.csv": "11f60bcf0021f13420ce035764d013b985854c2fc20bb5f941874af955aae851"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/utils/ansi.js",
+            "archive_sha256": "c616ab4bd8da8bc5d8e94e38cc63224dbd98586cb3a7cffb75e47f1077b18031",
+            "root_sha256": "c616ab4bd8da8bc5d8e94e38cc63224dbd98586cb3a7cffb75e47f1077b18031",
+            "cli_nested_sha256": "c616ab4bd8da8bc5d8e94e38cc63224dbd98586cb3a7cffb75e47f1077b18031",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/html.js",
+            "archive_sha256": "c66d54969546b4e1d67ecf074a2fbd6ef89c7c3b9bb81c8037e5785694ae844f",
+            "root_sha256": "c66d54969546b4e1d67ecf074a2fbd6ef89c7c3b9bb81c8037e5785694ae844f",
+            "cli_nested_sha256": "c66d54969546b4e1d67ecf074a2fbd6ef89c7c3b9bb81c8037e5785694ae844f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/json.js",
+            "archive_sha256": "af872ad0c998359d86a61b0b60079f39c2bb8aac94bfcc9e084db42c5b889782",
+            "root_sha256": "af872ad0c998359d86a61b0b60079f39c2bb8aac94bfcc9e084db42c5b889782",
+            "cli_nested_sha256": "af872ad0c998359d86a61b0b60079f39c2bb8aac94bfcc9e084db42c5b889782",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/syntax-highlight.js",
+            "archive_sha256": "066a7fe4b550466a92a434c066a1e6242fe7a637d0450fe77ed2c47ead4c6c14",
+            "root_sha256": "066a7fe4b550466a92a434c066a1e6242fe7a637d0450fe77ed2c47ead4c6c14",
+            "cli_nested_sha256": "066a7fe4b550466a92a434c066a1e6242fe7a637d0450fe77ed2c47ead4c6c14",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/text.js",
+            "archive_sha256": "e5520be5740ddb7d67ebd09ef33ea2aee2e360925593ad3a7842b6534304a0f3",
+            "root_sha256": "e5520be5740ddb7d67ebd09ef33ea2aee2e360925593ad3a7842b6534304a0f3",
+            "cli_nested_sha256": "e5520be5740ddb7d67ebd09ef33ea2aee2e360925593ad3a7842b6534304a0f3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/tool-result-images.js",
+            "archive_sha256": "455ca6c514d0b3da8342e3538ff94864a6ac295e2746a5b983788f9f17791042",
+            "root_sha256": "455ca6c514d0b3da8342e3538ff94864a6ac295e2746a5b983788f9f17791042",
+            "cli_nested_sha256": "455ca6c514d0b3da8342e3538ff94864a6ac295e2746a5b983788f9f17791042",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/exif-orientation.js",
+            "archive_sha256": "56b7a7f9f9e6e357fd0d93f3245382e1a0fce795bda3aa8af94448182f09d475",
+            "root_sha256": "56b7a7f9f9e6e357fd0d93f3245382e1a0fce795bda3aa8af94448182f09d475",
+            "cli_nested_sha256": "56b7a7f9f9e6e357fd0d93f3245382e1a0fce795bda3aa8af94448182f09d475",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/git.js",
+            "archive_sha256": "ff37bd23b2a2b39478e8f6959812ccc9c9b36ed87782894475b96945fb7bf35b",
+            "root_sha256": "ff37bd23b2a2b39478e8f6959812ccc9c9b36ed87782894475b96945fb7bf35b",
+            "cli_nested_sha256": "ff37bd23b2a2b39478e8f6959812ccc9c9b36ed87782894475b96945fb7bf35b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/bash-executor.js",
+            "archive_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+            "root_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+            "cli_nested_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/render-utils.js",
+            "archive_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "root_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "cli_nested_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/bash-execution.js",
+            "archive_sha256": "88ba62ac0f3cd6808b087c30915ad4091af7f1746da2caa371b7f0de34fd234e",
+            "root_sha256": "88ba62ac0f3cd6808b087c30915ad4091af7f1746da2caa371b7f0de34fd234e",
+            "cli_nested_sha256": "88ba62ac0f3cd6808b087c30915ad4091af7f1746da2caa371b7f0de34fd234e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme.js",
+            "archive_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "root_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "cli_nested_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/package-manager.js",
+            "archive_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+            "root_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+            "cli_nested_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-convert.js",
+            "archive_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+            "root_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+            "cli_nested_sha256": "12387e0f5d6575e8037556b9703cdac7eee61584d7e1788bc6e24310612b8799",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/image-resize-core.js",
+            "archive_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+            "root_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+            "cli_nested_sha256": "6023f261c2d504cc0854e8f12d5ce813bd7edf944a1121fe953783f9673fb4ef",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/ansi.d.ts",
+            "archive_sha256": "ecdf1765e2a9589c0b062d4bec4dbf7243d8a11bd3c862aa93e64319ec0796af",
+            "root_sha256": "ecdf1765e2a9589c0b062d4bec4dbf7243d8a11bd3c862aa93e64319ec0796af",
+            "cli_nested_sha256": "ecdf1765e2a9589c0b062d4bec4dbf7243d8a11bd3c862aa93e64319ec0796af",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/ansi.d.ts.map",
+            "archive_sha256": "2785d3d739ff451e5d31140c51c5435a72852b37dbbdbb7d03ddd072821ae1b2",
+            "root_sha256": "2785d3d739ff451e5d31140c51c5435a72852b37dbbdbb7d03ddd072821ae1b2",
+            "cli_nested_sha256": "2785d3d739ff451e5d31140c51c5435a72852b37dbbdbb7d03ddd072821ae1b2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/ansi.js.map",
+            "archive_sha256": "565b6b0b4ce4abc53b636ba6e1e67355e261f328ad9c671cad878f4c418e8241",
+            "root_sha256": "565b6b0b4ce4abc53b636ba6e1e67355e261f328ad9c671cad878f4c418e8241",
+            "cli_nested_sha256": "565b6b0b4ce4abc53b636ba6e1e67355e261f328ad9c671cad878f4c418e8241",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/html.d.ts",
+            "archive_sha256": "b5868e217c93239c4b5c1baf9c2af3453073055782174818958b50449cb9bb3e",
+            "root_sha256": "b5868e217c93239c4b5c1baf9c2af3453073055782174818958b50449cb9bb3e",
+            "cli_nested_sha256": "b5868e217c93239c4b5c1baf9c2af3453073055782174818958b50449cb9bb3e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/html.d.ts.map",
+            "archive_sha256": "34b6db1df92f368ec1a7ba672ec306c9974f53e4977481d8d7550aa27e83d4c0",
+            "root_sha256": "34b6db1df92f368ec1a7ba672ec306c9974f53e4977481d8d7550aa27e83d4c0",
+            "cli_nested_sha256": "34b6db1df92f368ec1a7ba672ec306c9974f53e4977481d8d7550aa27e83d4c0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/html.js.map",
+            "archive_sha256": "b487272b3057af9a3d17a3d18c94b411aa3c1bb904546872d9aace23f78af17f",
+            "root_sha256": "b487272b3057af9a3d17a3d18c94b411aa3c1bb904546872d9aace23f78af17f",
+            "cli_nested_sha256": "b487272b3057af9a3d17a3d18c94b411aa3c1bb904546872d9aace23f78af17f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/json.d.ts",
+            "archive_sha256": "23338819cc54c964c0bf8d278f2c939899524529d21d0c2d84b4401705ab83b9",
+            "root_sha256": "23338819cc54c964c0bf8d278f2c939899524529d21d0c2d84b4401705ab83b9",
+            "cli_nested_sha256": "23338819cc54c964c0bf8d278f2c939899524529d21d0c2d84b4401705ab83b9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/json.d.ts.map",
+            "archive_sha256": "414a34c23ed2e75488df5f0d0891c34183e389444722c99e5b42e1380e7e1580",
+            "root_sha256": "414a34c23ed2e75488df5f0d0891c34183e389444722c99e5b42e1380e7e1580",
+            "cli_nested_sha256": "414a34c23ed2e75488df5f0d0891c34183e389444722c99e5b42e1380e7e1580",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/json.js.map",
+            "archive_sha256": "4d4db43d1b9d836e069a70d3fa9a5de09a6970e416dd40fffda3fbc7e96abae2",
+            "root_sha256": "4d4db43d1b9d836e069a70d3fa9a5de09a6970e416dd40fffda3fbc7e96abae2",
+            "cli_nested_sha256": "4d4db43d1b9d836e069a70d3fa9a5de09a6970e416dd40fffda3fbc7e96abae2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/syntax-highlight.d.ts",
+            "archive_sha256": "cd47fcabe77c441dbcbd685fd0ccf39f39979e11714ccc760de58de24646c1f3",
+            "root_sha256": "cd47fcabe77c441dbcbd685fd0ccf39f39979e11714ccc760de58de24646c1f3",
+            "cli_nested_sha256": "cd47fcabe77c441dbcbd685fd0ccf39f39979e11714ccc760de58de24646c1f3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/syntax-highlight.d.ts.map",
+            "archive_sha256": "cdb663a63ec4f5fd42dcef05efe582e0b58764b936270bacb9b83ea70a456167",
+            "root_sha256": "cdb663a63ec4f5fd42dcef05efe582e0b58764b936270bacb9b83ea70a456167",
+            "cli_nested_sha256": "cdb663a63ec4f5fd42dcef05efe582e0b58764b936270bacb9b83ea70a456167",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/syntax-highlight.js.map",
+            "archive_sha256": "7d2ae6c45c9e53ca712fec4135a30fdcae1815f9b2cbb3863c844efcedbf496c",
+            "root_sha256": "7d2ae6c45c9e53ca712fec4135a30fdcae1815f9b2cbb3863c844efcedbf496c",
+            "cli_nested_sha256": "7d2ae6c45c9e53ca712fec4135a30fdcae1815f9b2cbb3863c844efcedbf496c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/text.d.ts",
+            "archive_sha256": "0c1da4f64727ce0ec221bc356afafd0510c15f946c8b7cbe6abb0474b4ce6809",
+            "root_sha256": "0c1da4f64727ce0ec221bc356afafd0510c15f946c8b7cbe6abb0474b4ce6809",
+            "cli_nested_sha256": "0c1da4f64727ce0ec221bc356afafd0510c15f946c8b7cbe6abb0474b4ce6809",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/text.d.ts.map",
+            "archive_sha256": "b8c8a9113632d82cc31c85bab08bcaadc975202dc94c7138ab74f15437c6096e",
+            "root_sha256": "b8c8a9113632d82cc31c85bab08bcaadc975202dc94c7138ab74f15437c6096e",
+            "cli_nested_sha256": "b8c8a9113632d82cc31c85bab08bcaadc975202dc94c7138ab74f15437c6096e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/text.js.map",
+            "archive_sha256": "18ce66672973d93f177932c9e91c6d2b4d98aa4b1ff995c8db6ef6bb4b6d96ea",
+            "root_sha256": "18ce66672973d93f177932c9e91c6d2b4d98aa4b1ff995c8db6ef6bb4b6d96ea",
+            "cli_nested_sha256": "18ce66672973d93f177932c9e91c6d2b4d98aa4b1ff995c8db6ef6bb4b6d96ea",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/tool-result-images.d.ts",
+            "archive_sha256": "6dee0d11843861cfb16f9c9906ba50e8621e96e2e2e6e9f71571b7157cfde93f",
+            "root_sha256": "6dee0d11843861cfb16f9c9906ba50e8621e96e2e2e6e9f71571b7157cfde93f",
+            "cli_nested_sha256": "6dee0d11843861cfb16f9c9906ba50e8621e96e2e2e6e9f71571b7157cfde93f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/tool-result-images.d.ts.map",
+            "archive_sha256": "6df26eae6afcaab84cd8fc44775b44f21ee22f3298b4a79548e91e6e119aa541",
+            "root_sha256": "6df26eae6afcaab84cd8fc44775b44f21ee22f3298b4a79548e91e6e119aa541",
+            "cli_nested_sha256": "6df26eae6afcaab84cd8fc44775b44f21ee22f3298b4a79548e91e6e119aa541",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/tool-result-images.js.map",
+            "archive_sha256": "55fa196939e933289aa96dfbe72936bc2aa11a2e95e97433c2d148085c0cfbc9",
+            "root_sha256": "55fa196939e933289aa96dfbe72936bc2aa11a2e95e97433c2d148085c0cfbc9",
+            "cli_nested_sha256": "55fa196939e933289aa96dfbe72936bc2aa11a2e95e97433c2d148085c0cfbc9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/exif-orientation.d.ts",
+            "archive_sha256": "968dc9abe565b6652b6a7f1b16a4169af996ec70a0f0a322595abeeed9707d6e",
+            "root_sha256": "968dc9abe565b6652b6a7f1b16a4169af996ec70a0f0a322595abeeed9707d6e",
+            "cli_nested_sha256": "968dc9abe565b6652b6a7f1b16a4169af996ec70a0f0a322595abeeed9707d6e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/exif-orientation.d.ts.map",
+            "archive_sha256": "8f1f44da8acc518b5533aa69c420a30a1677dc2af20244dae16b17da25609dec",
+            "root_sha256": "8f1f44da8acc518b5533aa69c420a30a1677dc2af20244dae16b17da25609dec",
+            "cli_nested_sha256": "8f1f44da8acc518b5533aa69c420a30a1677dc2af20244dae16b17da25609dec",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/exif-orientation.js.map",
+            "archive_sha256": "1246750b18e5a2177dbcf68f1290ad5649d457f2aaa16b3130056d2bc3417c1a",
+            "root_sha256": "1246750b18e5a2177dbcf68f1290ad5649d457f2aaa16b3130056d2bc3417c1a",
+            "cli_nested_sha256": "1246750b18e5a2177dbcf68f1290ad5649d457f2aaa16b3130056d2bc3417c1a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/git.d.ts",
+            "archive_sha256": "e7c6d7456c7a4a33d1723600444e8486fbf6305270df65ad34a3ce03eb145032",
+            "root_sha256": "e7c6d7456c7a4a33d1723600444e8486fbf6305270df65ad34a3ce03eb145032",
+            "cli_nested_sha256": "e7c6d7456c7a4a33d1723600444e8486fbf6305270df65ad34a3ce03eb145032",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/git.d.ts.map",
+            "archive_sha256": "1ccfb44bec8fd2c72f4091fd2b972194cc0e4505c41c7847c6a753fe010fb8e7",
+            "root_sha256": "1ccfb44bec8fd2c72f4091fd2b972194cc0e4505c41c7847c6a753fe010fb8e7",
+            "cli_nested_sha256": "1ccfb44bec8fd2c72f4091fd2b972194cc0e4505c41c7847c6a753fe010fb8e7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/git.js.map",
+            "archive_sha256": "720c65f85469d3ca753aa151b1b32ca2f8d1059de6a3c8a16ac6d579e70fdf98",
+            "root_sha256": "720c65f85469d3ca753aa151b1b32ca2f8d1059de6a3c8a16ac6d579e70fdf98",
+            "cli_nested_sha256": "720c65f85469d3ca753aa151b1b32ca2f8d1059de6a3c8a16ac6d579e70fdf98",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 41,
+    "byte_identical_scope_files": 39,
+    "pinned_patch_scope_files": 2,
+    "unresolved_scope_differences": 0
+  },
+  "historical_ownership_census": {
+    "source": "review/text-inventory/pi-runtime-census.csv",
+    "sha256": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225",
+    "status": "historical pending snapshot; not mutated by this unit"
+  }
+}
