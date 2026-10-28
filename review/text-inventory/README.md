@@ -758,7 +758,7 @@ view data is distinct from persisted native admission reasons. Result review-not
 English can survive in saved/raw/expanded/exported content while compact summary
 uses a catalog label. Manifest input limits, cursor errors, retention/attachment
 routes and complete-member byte budgets retain their precise guards. Wider
-ingress, service and host bodies remain pending; submission, user-input
+service and host bodies remain pending; ingress, submission, user-input
 and work helpers follow below.
 No controller, queue, tool, model, native or user-state producer was executed.
 
@@ -773,7 +773,7 @@ receipt view. Consumption, cancellation evidence, admission holds and unknown
 states retain exact precedence. Queue/context-only cancellation can evaluate a
 catalog lookup whose text is discarded. Submitted user text has its own guarded
 native/model/saved/export route, separate from receipt text. Wider native,
-ingress and service producers remain open; submission and wait bridges follow below. No grants,
+service producers remain open; ingress, submission and wait bridges follow below. No grants,
 input, private state, model, native or tool producer was executed.
 
 [flow-submission-text.csv](flow-submission-text.csv) adds 117 durable-submission
@@ -788,6 +788,20 @@ consumer. Validation-only placeholders are not saved. Ingress can suppress
 transition/stale failures, while other errors reach qualified API, tool or current
 notification paths. No native queue/archive command sink is inferred from the
 management API. No journal, queue, private state, native or UI producer executed.
+
+[flow-ingress-text.csv](flow-ingress-text.csv) adds 78 ingress records:
+54 fixed occurrences, five catalog consumers and nineteen payload boundaries.
+The complete 1,627-line body and [scope](flow-ingress-text-scope.csv) pin 27
+sources, accounting for 41 Error constructors, two private exclusions,
+seventeen helper calls, 29 catches and 374 lexical tokens, with 21 prior
+full-body links. The default root omits custom host admission, so related
+refusal/failure/reentrancy messages remain API-qualified. Stale retention errors
+can be replaced; inner dispatch transition errors and disposed/fenced outer
+stale failures have different suppressors. Idle wait guidance can be saved as a
+custom message, while queued guidance is request projection without an automatic
+transcript/export claim. Management, grant, lifecycle and optional reporting routes
+retain their conditions. Artifact digests pin Git LF bytes. No ingress, admission,
+callback, journal, queue, model, native or UI operation was executed.
 
 [flow-wait-bridges.csv](flow-wait-bridges.csv) adds twenty fixed occurrences
 and eight boundaries across the complete 420-line schedule/subagent wait pair.
@@ -1370,6 +1384,7 @@ python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-flow-submission-text.py
+python -B review/text-inventory/verify-flow-ingress-text.py
 node review/text-inventory/verify-flow-wait-bridges.cjs
 node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-web-adapter-text.py
