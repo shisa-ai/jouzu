@@ -1,0 +1,2939 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "packages/cli/src/astra-compatibility.ts": 177,
+    "packages/cli/src/context-clamp.ts": 169,
+    "packages/cli/src/dashboard-policy.ts": 59,
+    "packages/cli/src/display-catalog.ts": 31,
+    "packages/cli/src/fast-mode.ts": 85,
+    "packages/cli/src/interactive-startup.ts": 56,
+    "packages/cli/src/model-thinking-startup.ts": 24,
+    "packages/cli/src/pre-runtime.ts": 42,
+    "packages/cli/src/startup-settings.ts": 77,
+    "packages/cli/src/runtime-output.ts": 53,
+    "packages/cli/src/terminal-title-filter.ts": 40,
+    "packages/cli/src/metadata.ts": 112,
+    "packages/cli/src/acp.ts": 1
+  },
+  "anchors": [
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 1,
+      "column": 33,
+      "expression": "\"@earendil-works/pi-ai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-001",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-ai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 2,
+      "column": 56,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-002",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 6,
+      "column": 57,
+      "expression": "\"id\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-003",
+      "kind": "excluded",
+      "english": "id",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 6,
+      "column": 64,
+      "expression": "\"api\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-004",
+      "kind": "excluded",
+      "english": "api",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 6,
+      "column": 72,
+      "expression": "\"provider\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-005",
+      "kind": "excluded",
+      "english": "provider",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 6,
+      "column": 85,
+      "expression": "\"baseUrl\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-006",
+      "kind": "excluded",
+      "english": "baseUrl",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 7,
+      "column": 19,
+      "expression": "\"gpt-6-astra\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-007",
+      "kind": "excluded",
+      "english": "gpt-6-astra",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 7,
+      "column": 50,
+      "expression": "\"openai-responses\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-008",
+      "kind": "excluded",
+      "english": "openai-responses",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 7,
+      "column": 91,
+      "expression": "\"openai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-009",
+      "kind": "excluded",
+      "english": "openai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 8,
+      "column": 27,
+      "expression": "\"https://api.openai.com/v1\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-010",
+      "kind": "excluded",
+      "english": "https://api.openai.com/v1",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 8,
+      "column": 76,
+      "expression": "\"https://api.openai.com/v1/\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-011",
+      "kind": "excluded",
+      "english": "https://api.openai.com/v1/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 19,
+      "column": 9,
+      "expression": "\"low\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-012",
+      "kind": "excluded",
+      "english": "low",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 20,
+      "column": 12,
+      "expression": "\"medium\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-013",
+      "kind": "excluded",
+      "english": "medium",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 21,
+      "column": 10,
+      "expression": "\"high\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-014",
+      "kind": "excluded",
+      "english": "high",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 22,
+      "column": 11,
+      "expression": "\"xhigh\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-015",
+      "kind": "excluded",
+      "english": "xhigh",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 23,
+      "column": 9,
+      "expression": "\"max\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-016",
+      "kind": "excluded",
+      "english": "max",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 33,
+      "column": 38,
+      "expression": "\"id\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-017",
+      "kind": "excluded",
+      "english": "id",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 33,
+      "column": 45,
+      "expression": "\"api\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-018",
+      "kind": "excluded",
+      "english": "api",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 33,
+      "column": 53,
+      "expression": "\"provider\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-019",
+      "kind": "excluded",
+      "english": "provider",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 33,
+      "column": 66,
+      "expression": "\"baseUrl\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-020",
+      "kind": "excluded",
+      "english": "baseUrl",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 33,
+      "column": 78,
+      "expression": "\"compat\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-021",
+      "kind": "excluded",
+      "english": "compat",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 36,
+      "column": 66,
+      "expression": "\"compat\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-022",
+      "kind": "excluded",
+      "english": "compat",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 49,
+      "column": 64,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-023",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 52,
+      "column": 21,
+      "expression": "\"temperature\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-024",
+      "kind": "excluded",
+      "english": "temperature",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 52,
+      "column": 36,
+      "expression": "\"top_p\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-025",
+      "kind": "excluded",
+      "english": "top_p",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 52,
+      "column": 45,
+      "expression": "\"top_logprobs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-026",
+      "kind": "excluded",
+      "english": "top_logprobs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 52,
+      "column": 61,
+      "expression": "\"logprobs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-027",
+      "kind": "excluded",
+      "english": "logprobs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 54,
+      "column": 61,
+      "expression": "\"message.output_text.logprobs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-028",
+      "kind": "excluded",
+      "english": "message.output_text.logprobs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 56,
+      "column": 51,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-029",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 59,
+      "column": 41,
+      "expression": "\"none\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-030",
+      "kind": "excluded",
+      "english": "none",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 59,
+      "column": 49,
+      "expression": "\"off\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-031",
+      "kind": "excluded",
+      "english": "off",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 59,
+      "column": 56,
+      "expression": "\"minimal\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-032",
+      "kind": "excluded",
+      "english": "minimal",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 60,
+      "column": 22,
+      "expression": "\"low\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-033",
+      "kind": "excluded",
+      "english": "low",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 63,
+      "column": 32,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-034",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 72,
+      "column": 40,
+      "expression": "\"30m\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-035",
+      "kind": "excluded",
+      "english": "30m",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 83,
+      "column": 56,
+      "expression": "\"thinkingLevel\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-036",
+      "kind": "excluded",
+      "english": "thinkingLevel",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 54,
+      "expression": "\"off\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-037",
+      "kind": "excluded",
+      "english": "off",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 61,
+      "expression": "\"minimal\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-038",
+      "kind": "excluded",
+      "english": "minimal",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 72,
+      "expression": "\"low\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-039",
+      "kind": "excluded",
+      "english": "low",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 79,
+      "expression": "\"medium\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-040",
+      "kind": "excluded",
+      "english": "medium",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 89,
+      "expression": "\"high\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-041",
+      "kind": "excluded",
+      "english": "high",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 97,
+      "expression": "\"xhigh\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-042",
+      "kind": "excluded",
+      "english": "xhigh",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 84,
+      "column": 106,
+      "expression": "\"max\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-043",
+      "kind": "excluded",
+      "english": "max",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 90,
+      "column": 22,
+      "expression": "\"thinking_level_change\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-044",
+      "kind": "excluded",
+      "english": "thinking_level_change",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 96,
+      "column": 30,
+      "expression": "\"modelRegistry\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-045",
+      "kind": "excluded",
+      "english": "modelRegistry",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 96,
+      "column": 47,
+      "expression": "\"getRegisteredProviderConfig\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-046",
+      "kind": "excluded",
+      "english": "getRegisteredProviderConfig",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 109,
+      "column": 15,
+      "expression": "\"low\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-047",
+      "kind": "excluded",
+      "english": "low",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 110,
+      "column": 18,
+      "expression": "\"medium\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-048",
+      "kind": "excluded",
+      "english": "medium",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 111,
+      "column": 16,
+      "expression": "\"high\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-049",
+      "kind": "excluded",
+      "english": "high",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 112,
+      "column": 17,
+      "expression": "\"xhigh\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-050",
+      "kind": "excluded",
+      "english": "xhigh",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 113,
+      "column": 15,
+      "expression": "\"max\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-051",
+      "kind": "excluded",
+      "english": "max",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 134,
+      "column": 9,
+      "expression": "\"jouzu-astra-compatibility\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-052",
+      "kind": "excluded",
+      "english": "jouzu-astra-compatibility",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 140,
+      "column": 66,
+      "expression": "\"openai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-053",
+      "kind": "excluded",
+      "english": "openai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 141,
+      "column": 28,
+      "expression": "\"openai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-054",
+      "kind": "excluded",
+      "english": "openai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 146,
+      "column": 52,
+      "expression": "\"openai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-055",
+      "kind": "excluded",
+      "english": "openai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 150,
+      "column": 25,
+      "expression": "\"openai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-056",
+      "kind": "excluded",
+      "english": "openai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 151,
+      "column": 61,
+      "expression": "\"openai\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-057",
+      "kind": "excluded",
+      "english": "openai",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 153,
+      "column": 10,
+      "expression": "\"session_shutdown\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-058",
+      "kind": "excluded",
+      "english": "session_shutdown",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 154,
+      "column": 26,
+      "expression": "\"reload\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-059",
+      "kind": "excluded",
+      "english": "reload",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 157,
+      "column": 10,
+      "expression": "\"session_start\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-060",
+      "kind": "excluded",
+      "english": "session_start",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 166,
+      "column": 10,
+      "expression": "\"before_provider_request\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-061",
+      "kind": "excluded",
+      "english": "before_provider_request",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 1,
+      "column": 61,
+      "expression": "\"node:fs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-062",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 2,
+      "column": 22,
+      "expression": "\"node:path\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-063",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 3,
+      "column": 45,
+      "expression": "\"./cli-messages.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-064",
+      "kind": "excluded",
+      "english": "./cli-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 4,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-065",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 5,
+      "column": 33,
+      "expression": "\"./model-catalog.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-066",
+      "kind": "excluded",
+      "english": "./model-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 6,
+      "column": 33,
+      "expression": "\"./paths.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-067",
+      "kind": "excluded",
+      "english": "./paths.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 7,
+      "column": 40,
+      "expression": "\"./private-fs.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-068",
+      "kind": "excluded",
+      "english": "./private-fs.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 53,
+      "column": 18,
+      "expression": "\"jouzu.cli.context.policy.notBoundedFile\"",
+      "item_id": "CLI-STARTUP-SUPPORT-001",
+      "kind": "catalog",
+      "english": "context policy must be a bounded regular file",
+      "catalog_id": "jouzu.cli.context.policy.notBoundedFile"
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 54,
+      "column": 13,
+      "expression": "\"jouzu.cli.context.policy.notObject\"",
+      "item_id": "CLI-STARTUP-SUPPORT-002",
+      "kind": "catalog",
+      "english": "context policy must be an object",
+      "catalog_id": "jouzu.cli.context.policy.notObject"
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 55,
+      "column": 15,
+      "expression": "\"jouzu.cli.context.policy.unknownKeys\"",
+      "item_id": "CLI-STARTUP-SUPPORT-003",
+      "kind": "catalog",
+      "english": "context policy has unknown keys: { $keys }",
+      "catalog_id": "jouzu.cli.context.policy.unknownKeys"
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 56,
+      "column": 25,
+      "expression": "\"jouzu.cli.context.policy.schemaVersionRequired\"",
+      "item_id": "CLI-STARTUP-SUPPORT-004",
+      "kind": "catalog",
+      "english": "context policy requires schemaVersion { $version }",
+      "catalog_id": "jouzu.cli.context.policy.schemaVersionRequired"
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 57,
+      "column": 18,
+      "expression": "\"jouzu.cli.context.policy.maxTokensRange\"",
+      "item_id": "CLI-STARTUP-SUPPORT-005",
+      "kind": "catalog",
+      "english": "context policy maxContextTokens must be an integer from { $min } to { $max }",
+      "catalog_id": "jouzu.cli.context.policy.maxTokensRange"
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 61,
+      "column": 26,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-069",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 65,
+      "column": 31,
+      "expression": "\"context-policy.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-070",
+      "kind": "excluded",
+      "english": "context-policy.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 83,
+      "column": 52,
+      "expression": "\"utf8\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-071",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 85,
+      "column": 62,
+      "expression": "\"schemaVersion\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-072",
+      "kind": "excluded",
+      "english": "schemaVersion",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 85,
+      "column": 89,
+      "expression": "\"maxContextTokens\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-073",
+      "kind": "excluded",
+      "english": "maxContextTokens",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 87,
+      "column": 102,
+      "expression": "\", \"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-074",
+      "kind": "excluded",
+      "english": ", ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 99,
+      "column": 32,
+      "expression": "\"number\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-075",
+      "kind": "excluded",
+      "english": "number",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 125,
+      "column": 31,
+      "expression": "`${JSON.stringify(file, null, 2)}\\n`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-076",
+      "kind": "excluded",
+      "english": "${JSON.stringify(file, null, 2)}\\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 166,
+      "column": 45,
+      "expression": "\"Off\"",
+      "item_id": "CLI-STARTUP-SUPPORT-006",
+      "kind": "fixed",
+      "english": "Off",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 167,
+      "column": 44,
+      "expression": "`${Math.round(maxContextTokens / 100_000) / 10}M`",
+      "item_id": "CLI-STARTUP-SUPPORT-007",
+      "kind": "fixed",
+      "english": "${Math.round(maxContextTokens / 100_000) / 10}M",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 168,
+      "column": 9,
+      "expression": "`${Math.round(maxContextTokens / 1_000)}K`",
+      "item_id": "CLI-STARTUP-SUPPORT-008",
+      "kind": "fixed",
+      "english": "${Math.round(maxContextTokens / 1_000)}K",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 1,
+      "column": 41,
+      "expression": "\"node:fs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-077",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 2,
+      "column": 22,
+      "expression": "\"node:path\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-078",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 3,
+      "column": 33,
+      "expression": "\"./model-catalog.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-079",
+      "kind": "excluded",
+      "english": "./model-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 4,
+      "column": 33,
+      "expression": "\"./paths.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-080",
+      "kind": "excluded",
+      "english": "./paths.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 5,
+      "column": 40,
+      "expression": "\"./private-fs.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-081",
+      "kind": "excluded",
+      "english": "./private-fs.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 7,
+      "column": 29,
+      "expression": "\"compact\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-082",
+      "kind": "excluded",
+      "english": "compact",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 7,
+      "column": 41,
+      "expression": "\"expanded\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-083",
+      "kind": "excluded",
+      "english": "expanded",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 7,
+      "column": 54,
+      "expression": "\"hidden\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-084",
+      "kind": "excluded",
+      "english": "hidden",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 8,
+      "column": 59,
+      "expression": "\"compact\"",
+      "item_id": "CLI-STARTUP-SUPPORT-009",
+      "kind": "fixed",
+      "english": "compact",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 8,
+      "column": 70,
+      "expression": "\"expanded\"",
+      "item_id": "CLI-STARTUP-SUPPORT-010",
+      "kind": "fixed",
+      "english": "expanded",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 8,
+      "column": 82,
+      "expression": "\"hidden\"",
+      "item_id": "CLI-STARTUP-SUPPORT-011",
+      "kind": "fixed",
+      "english": "hidden",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 13,
+      "column": 89,
+      "expression": "\"dashboard-policy.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-085",
+      "kind": "excluded",
+      "english": "dashboard-policy.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 19,
+      "column": 20,
+      "expression": "\"Dashboard policy must be a regular file no larger than 8 KiB.\"",
+      "item_id": "CLI-STARTUP-SUPPORT-012",
+      "kind": "fixed",
+      "english": "Dashboard policy must be a regular file no larger than 8 KiB.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 20,
+      "column": 52,
+      "expression": "\"utf8\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-086",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 21,
+      "column": 34,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-087",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 22,
+      "column": 20,
+      "expression": "\"Dashboard policy must be an object.\"",
+      "item_id": "CLI-STARTUP-SUPPORT-013",
+      "kind": "fixed",
+      "english": "Dashboard policy must be an object.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 24,
+      "column": 49,
+      "expression": "\"schemaVersion\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-088",
+      "kind": "excluded",
+      "english": "schemaVersion",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 24,
+      "column": 76,
+      "expression": "\"mode\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-089",
+      "kind": "excluded",
+      "english": "mode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 25,
+      "column": 20,
+      "expression": "\"Dashboard policy requires schemaVersion 1 and mode only.\"",
+      "item_id": "CLI-STARTUP-SUPPORT-014",
+      "kind": "fixed",
+      "english": "Dashboard policy requires schemaVersion 1 and mode only.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 27,
+      "column": 20,
+      "expression": "\"Dashboard mode must be compact, expanded, or hidden.\"",
+      "item_id": "CLI-STARTUP-SUPPORT-015",
+      "kind": "fixed",
+      "english": "Dashboard mode must be compact, expanded, or hidden.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 30,
+      "column": 49,
+      "expression": "\"ENOENT\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-090",
+      "kind": "excluded",
+      "english": "ENOENT",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 30,
+      "column": 74,
+      "expression": "\"compact\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-091",
+      "kind": "excluded",
+      "english": "compact",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 31,
+      "column": 18,
+      "expression": "\"compact\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-092",
+      "kind": "excluded",
+      "english": "compact",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 35,
+      "column": 55,
+      "expression": "\"Dashboard mode must be compact, expanded, or hidden.\"",
+      "item_id": "CLI-STARTUP-SUPPORT-016",
+      "kind": "fixed",
+      "english": "Dashboard mode must be compact, expanded, or hidden.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 37,
+      "column": 36,
+      "expression": "`Cannot save dashboard policy: ${loaded.error}`",
+      "item_id": "CLI-STARTUP-SUPPORT-017",
+      "kind": "fixed",
+      "english": "Cannot save dashboard policy: ${loaded.error}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 40,
+      "column": 3,
+      "expression": "`${JSON.stringify({ schemaVersion: 1, mode }, null, 2)}\\n`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-093",
+      "kind": "excluded",
+      "english": "${JSON.stringify({ schemaVersion: 1, mode }, null, 2)}\\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 57,
+      "column": 24,
+      "expression": "\"hidden\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-094",
+      "kind": "excluded",
+      "english": "hidden",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/display-catalog.ts",
+      "line": 1,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-095",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 1,
+      "column": 56,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-096",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 2,
+      "column": 45,
+      "expression": "\"./cli-messages.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-097",
+      "kind": "excluded",
+      "english": "./cli-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 3,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-098",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 5,
+      "column": 33,
+      "expression": "\"jouzu-fast-mode\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-099",
+      "kind": "excluded",
+      "english": "jouzu-fast-mode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 6,
+      "column": 25,
+      "expression": "\"jouzu-fast-mode\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-100",
+      "kind": "excluded",
+      "english": "jouzu-fast-mode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 13,
+      "column": 14,
+      "expression": "/^gpt-/i",
+      "item_id": "CLI-STARTUP-SUPPORT-X-101",
+      "kind": "excluded",
+      "english": "/^gpt-/i",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 13,
+      "column": 56,
+      "expression": "\"openai-responses\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-102",
+      "kind": "excluded",
+      "english": "openai-responses",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 13,
+      "column": 92,
+      "expression": "\"openai-codex-responses\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-103",
+      "kind": "excluded",
+      "english": "openai-codex-responses",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 21,
+      "column": 23,
+      "expression": "\"custom\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-104",
+      "kind": "excluded",
+      "english": "custom",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 23,
+      "column": 26,
+      "expression": "\"boolean\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-105",
+      "kind": "excluded",
+      "english": "boolean",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 30,
+      "column": 9,
+      "expression": "\"jouzu-fast-mode\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-106",
+      "kind": "excluded",
+      "english": "jouzu-fast-mode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 33,
+      "column": 94,
+      "expression": "\"on\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-107",
+      "kind": "excluded",
+      "english": "on",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 35,
+      "column": 66,
+      "expression": "\"info\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-108",
+      "kind": "excluded",
+      "english": "info",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 35,
+      "column": 75,
+      "expression": "\"warning\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-109",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 35,
+      "column": 87,
+      "expression": "\"info\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-110",
+      "kind": "excluded",
+      "english": "info",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 36,
+      "column": 22,
+      "expression": "\"print\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-111",
+      "kind": "excluded",
+      "english": "print",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 39,
+      "column": 23,
+      "expression": "\"fast\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-112",
+      "kind": "excluded",
+      "english": "fast",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 40,
+      "column": 39,
+      "expression": "\"jouzu.cli.session.slash.fast\"",
+      "item_id": "CLI-STARTUP-SUPPORT-018",
+      "kind": "catalog",
+      "english": "Show Fast mode; on/off changes it for this session",
+      "catalog_id": "jouzu.cli.session.slash.fast"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 42,
+      "column": 7,
+      "expression": "\"on\"",
+      "item_id": "CLI-STARTUP-SUPPORT-019",
+      "kind": "fixed",
+      "english": "on",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 42,
+      "column": 13,
+      "expression": "\"off\"",
+      "item_id": "CLI-STARTUP-SUPPORT-020",
+      "kind": "fixed",
+      "english": "off",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 45,
+      "column": 31,
+      "expression": "\"on\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-113",
+      "kind": "excluded",
+      "english": "on",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 45,
+      "column": 50,
+      "expression": "\"off\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-114",
+      "kind": "excluded",
+      "english": "off",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 46,
+      "column": 40,
+      "expression": "\"jouzu.cli.fast.usage\"",
+      "item_id": "CLI-STARTUP-SUPPORT-021",
+      "kind": "catalog",
+      "english": "Use /fast, /fast on, or /fast off.",
+      "catalog_id": "jouzu.cli.fast.usage"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 46,
+      "column": 65,
+      "expression": "\"warning\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-115",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 51,
+      "column": 41,
+      "expression": "\"jouzu.cli.fast.busy\"",
+      "item_id": "CLI-STARTUP-SUPPORT-022",
+      "kind": "catalog",
+      "english": "Wait for the current response before changing Fast mode.",
+      "catalog_id": "jouzu.cli.fast.busy"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 51,
+      "column": 65,
+      "expression": "\"warning\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-116",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 54,
+      "column": 22,
+      "expression": "\"on\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-117",
+      "kind": "excluded",
+      "english": "on",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 55,
+      "column": 41,
+      "expression": "\"jouzu.cli.fast.ineligible\"",
+      "item_id": "CLI-STARTUP-SUPPORT-023",
+      "kind": "catalog",
+      "english": "Select a GPT model using an OpenAI Responses or Codex connection before turning Fast mode on.",
+      "catalog_id": "jouzu.cli.fast.ineligible"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 55,
+      "column": 71,
+      "expression": "\"warning\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-118",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 58,
+      "column": 34,
+      "expression": "\"on\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-119",
+      "kind": "excluded",
+      "english": "on",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 66,
+      "column": 32,
+      "expression": "\"jouzu.cli.fast.on\"",
+      "item_id": "CLI-STARTUP-SUPPORT-024",
+      "kind": "catalog",
+      "english": "Fast mode on for this session. Requests use priority processing and higher usage rates.",
+      "catalog_id": "jouzu.cli.fast.on"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 67,
+      "column": 32,
+      "expression": "\"jouzu.cli.fast.inactive\"",
+      "item_id": "CLI-STARTUP-SUPPORT-025",
+      "kind": "catalog",
+      "english": "Fast mode on for this session; inactive for the selected model.",
+      "catalog_id": "jouzu.cli.fast.inactive"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 68,
+      "column": 31,
+      "expression": "\"jouzu.cli.fast.off\"",
+      "item_id": "CLI-STARTUP-SUPPORT-026",
+      "kind": "catalog",
+      "english": "Fast mode off for this session.",
+      "catalog_id": "jouzu.cli.fast.off"
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 72,
+      "column": 10,
+      "expression": "\"session_start\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-120",
+      "kind": "excluded",
+      "english": "session_start",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 73,
+      "column": 10,
+      "expression": "\"session_tree\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-121",
+      "kind": "excluded",
+      "english": "session_tree",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 74,
+      "column": 10,
+      "expression": "\"model_select\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-122",
+      "kind": "excluded",
+      "english": "model_select",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 75,
+      "column": 10,
+      "expression": "\"session_shutdown\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-123",
+      "kind": "excluded",
+      "english": "session_shutdown",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 76,
+      "column": 10,
+      "expression": "\"before_provider_request\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-124",
+      "kind": "excluded",
+      "english": "before_provider_request",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 80,
+      "column": 52,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-125",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 81,
+      "column": 56,
+      "expression": "\"priority\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-126",
+      "kind": "excluded",
+      "english": "priority",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 81,
+      "column": 69,
+      "expression": "\"default\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-127",
+      "kind": "excluded",
+      "english": "default",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 43,
+      "expression": "\"auth\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-128",
+      "kind": "excluded",
+      "english": "auth",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 51,
+      "expression": "\"config\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-129",
+      "kind": "excluded",
+      "english": "config",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 61,
+      "expression": "\"install\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-130",
+      "kind": "excluded",
+      "english": "install",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 72,
+      "expression": "\"list\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-131",
+      "kind": "excluded",
+      "english": "list",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 80,
+      "expression": "\"remove\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-132",
+      "kind": "excluded",
+      "english": "remove",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 90,
+      "expression": "\"uninstall\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-133",
+      "kind": "excluded",
+      "english": "uninstall",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 1,
+      "column": 103,
+      "expression": "\"update\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-134",
+      "kind": "excluded",
+      "english": "update",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 3,
+      "column": 2,
+      "expression": "\"-h\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-135",
+      "kind": "excluded",
+      "english": "-h",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 4,
+      "column": 2,
+      "expression": "\"--help\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-136",
+      "kind": "excluded",
+      "english": "--help",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 5,
+      "column": 2,
+      "expression": "\"-p\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-137",
+      "kind": "excluded",
+      "english": "-p",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 6,
+      "column": 2,
+      "expression": "\"--print\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-138",
+      "kind": "excluded",
+      "english": "--print",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 7,
+      "column": 2,
+      "expression": "\"-v\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-139",
+      "kind": "excluded",
+      "english": "-v",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 8,
+      "column": 2,
+      "expression": "\"--version\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-140",
+      "kind": "excluded",
+      "english": "--version",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 9,
+      "column": 2,
+      "expression": "\"--list-models\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-141",
+      "kind": "excluded",
+      "english": "--list-models",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 10,
+      "column": 2,
+      "expression": "\"--export\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-142",
+      "kind": "excluded",
+      "english": "--export",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 12,
+      "column": 40,
+      "expression": "\"json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-143",
+      "kind": "excluded",
+      "english": "json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 12,
+      "column": 48,
+      "expression": "\"print\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-144",
+      "kind": "excluded",
+      "english": "print",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 12,
+      "column": 57,
+      "expression": "\"rpc\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-145",
+      "kind": "excluded",
+      "english": "rpc",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 13,
+      "column": 41,
+      "expression": "\"json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-146",
+      "kind": "excluded",
+      "english": "json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 13,
+      "column": 49,
+      "expression": "\"rpc\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-147",
+      "kind": "excluded",
+      "english": "rpc",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 22,
+      "column": 15,
+      "expression": "\"--mode\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-148",
+      "kind": "excluded",
+      "english": "--mode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 23,
+      "column": 54,
+      "expression": "\"\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-149",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 27,
+      "column": 22,
+      "expression": "\"--mode=\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-150",
+      "kind": "excluded",
+      "english": "--mode=",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 27,
+      "column": 73,
+      "expression": "\"--mode=\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-151",
+      "kind": "excluded",
+      "english": "--mode=",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 42,
+      "column": 50,
+      "expression": "\"dumb\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-152",
+      "kind": "excluded",
+      "english": "dumb",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 47,
+      "column": 56,
+      "expression": "\"--export=\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-153",
+      "kind": "excluded",
+      "english": "--export=",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 48,
+      "column": 15,
+      "expression": "\"--mode\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-154",
+      "kind": "excluded",
+      "english": "--mode",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 49,
+      "column": 53,
+      "expression": "\"\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-155",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 53,
+      "column": 22,
+      "expression": "\"--mode=\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-156",
+      "kind": "excluded",
+      "english": "--mode=",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/interactive-startup.ts",
+      "line": 53,
+      "column": 72,
+      "expression": "\"--mode=\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-157",
+      "kind": "excluded",
+      "english": "--mode=",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 1,
+      "column": 75,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-158",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 6,
+      "column": 29,
+      "expression": "\"modelRegistry\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-159",
+      "kind": "excluded",
+      "english": "modelRegistry",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 12,
+      "column": 15,
+      "expression": "\"--thinking\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-160",
+      "kind": "excluded",
+      "english": "--thinking",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 12,
+      "column": 46,
+      "expression": "\"--thinking=\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-161",
+      "kind": "excluded",
+      "english": "--thinking=",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 13,
+      "column": 15,
+      "expression": "\"--model\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-162",
+      "kind": "excluded",
+      "english": "--model",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 14,
+      "column": 20,
+      "expression": "\"--provider\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-163",
+      "kind": "excluded",
+      "english": "--provider",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 19,
+      "column": 36,
+      "expression": "\"getModels\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-164",
+      "kind": "excluded",
+      "english": "getModels",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 19,
+      "column": 50,
+      "expression": "\"hasConfiguredAuth\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-165",
+      "kind": "excluded",
+      "english": "hasConfiguredAuth",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/pre-runtime.ts",
+      "line": 11,
+      "column": 60,
+      "expression": "\"./command-report.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-166",
+      "kind": "excluded",
+      "english": "./command-report.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/pre-runtime.ts",
+      "line": 12,
+      "column": 56,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-167",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/pre-runtime.ts",
+      "line": 13,
+      "column": 39,
+      "expression": "\"./ui-locale.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-168",
+      "kind": "excluded",
+      "english": "./ui-locale.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 1,
+      "column": 53,
+      "expression": "\"node:fs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-169",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 2,
+      "column": 22,
+      "expression": "\"node:path\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-170",
+      "kind": "excluded",
+      "english": "node:path",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 3,
+      "column": 33,
+      "expression": "\"./paths.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-171",
+      "kind": "excluded",
+      "english": "./paths.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 4,
+      "column": 67,
+      "expression": "\"./private-fs.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-172",
+      "kind": "excluded",
+      "english": "./private-fs.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 6,
+      "column": 29,
+      "expression": "'\"quietStartup\": true'",
+      "item_id": "CLI-STARTUP-SUPPORT-X-173",
+      "kind": "excluded",
+      "english": "\"quietStartup\": true",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 9,
+      "column": 36,
+      "expression": "\"settings.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-174",
+      "kind": "excluded",
+      "english": "settings.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 11,
+      "column": 35,
+      "expression": "`{\\n  ${QUIET_STARTUP_ENTRY}\\n}\\n`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-175",
+      "kind": "excluded",
+      "english": "{\\n  ${QUIET_STARTUP_ENTRY}\\n}\\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 17,
+      "column": 38,
+      "expression": "\"utf8\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-176",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 24,
+      "column": 35,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-177",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 24,
+      "column": 72,
+      "expression": "\"quietStartup\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-178",
+      "kind": "excluded",
+      "english": "quietStartup",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 26,
+      "column": 39,
+      "expression": "/\\}\\s*$/u",
+      "item_id": "CLI-STARTUP-SUPPORT-X-179",
+      "kind": "excluded",
+      "english": "/\\}\\s*$/u",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 29,
+      "column": 55,
+      "expression": "\"\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-180",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 29,
+      "column": 60,
+      "expression": "\",\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-181",
+      "kind": "excluded",
+      "english": ",",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 30,
+      "column": 18,
+      "expression": "`${contents.slice(0, closingBrace)}${separator}\\n  ${QUIET_STARTUP_ENTRY}\\n${contents.slice(closingBrace)}`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-182",
+      "kind": "excluded",
+      "english": "${contents.slice(0, closingBrace)}${separator}\\n  ${QUIET_STARTUP_ENTRY}\\n${contents.slice(closingBrace)}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 35,
+      "column": 31,
+      "expression": "'\"lastChangelogVersion\"'",
+      "item_id": "CLI-STARTUP-SUPPORT-X-183",
+      "kind": "excluded",
+      "english": "\"lastChangelogVersion\"",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 45,
+      "column": 36,
+      "expression": "\"settings.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-184",
+      "kind": "excluded",
+      "english": "settings.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 47,
+      "column": 35,
+      "expression": "`{\\n  ${CHANGELOG_VERSION_KEY}: ${versionJson}\\n}\\n`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-185",
+      "kind": "excluded",
+      "english": "{\\n  ${CHANGELOG_VERSION_KEY}: ${versionJson}\\n}\\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 53,
+      "column": 38,
+      "expression": "\"utf8\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-186",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 60,
+      "column": 35,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-187",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 62,
+      "column": 8,
+      "expression": "\"lastChangelogVersion\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-188",
+      "kind": "excluded",
+      "english": "lastChangelogVersion",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 63,
+      "column": 40,
+      "expression": "/\\}\\s*$/u",
+      "item_id": "CLI-STARTUP-SUPPORT-X-189",
+      "kind": "excluded",
+      "english": "/\\}\\s*$/u",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 65,
+      "column": 56,
+      "expression": "\"\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-190",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 65,
+      "column": 61,
+      "expression": "\",\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-191",
+      "kind": "excluded",
+      "english": ",",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 66,
+      "column": 19,
+      "expression": "`${contents.slice(0, closingBrace)}${separator}\\n  ${CHANGELOG_VERSION_KEY}: ${versionJson}\\n${contents.slice(closingBrace)}`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-192",
+      "kind": "excluded",
+      "english": "${contents.slice(0, closingBrace)}${separator}\\n  ${CHANGELOG_VERSION_KEY}: ${versionJson}\\n${contents.slice(closingBrace)}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 75,
+      "column": 31,
+      "expression": "`${JSON.stringify(record, null, 2)}\\n`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-193",
+      "kind": "excluded",
+      "english": "${JSON.stringify(record, null, 2)}\\n",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 1,
+      "column": 37,
+      "expression": "\"./terminal-title-filter.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-194",
+      "kind": "excluded",
+      "english": "./terminal-title-filter.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 3,
+      "column": 33,
+      "expression": "`\\x1B\\[[0-?]*[ -/]*[@-~]`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-195",
+      "kind": "excluded",
+      "english": "\u001b[[0-?]*[ -/]*[@-~]",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 5,
+      "column": 12,
+      "expression": "`(To resume this session:(?:${ANSI_SEQUENCE})*[\\t ]+)pi[^\\r\\n]*[\\t ]--session[\\t ]+([A-Za-z0-9._-]+)(?=\\r?\\n|$)`",
+      "item_id": "CLI-STARTUP-SUPPORT-X-196",
+      "kind": "excluded",
+      "english": "(To resume this session:(?:${ANSI_SEQUENCE})*[\\t ]+)pi[^\\r\\n]*[\\t ]--session[\\t ]+([A-Za-z0-9._-]+)(?=\\r?\\n|$)",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 6,
+      "column": 2,
+      "expression": "\"g\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-197",
+      "kind": "excluded",
+      "english": "g",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 11,
+      "column": 38,
+      "expression": "\"$1jz --session $2\"",
+      "item_id": "CLI-STARTUP-SUPPORT-027",
+      "kind": "fixed",
+      "english": "$1jz --session $2",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 14,
+      "column": 32,
+      "expression": "\"\\u001b]0;π - \"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-198",
+      "kind": "excluded",
+      "english": "\u001b]0;π - ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 15,
+      "column": 35,
+      "expression": "\"\\u001b]0;Jouzu - \"",
+      "item_id": "CLI-STARTUP-SUPPORT-028",
+      "kind": "fixed",
+      "english": "\u001b]0;Jouzu - ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 41,
+      "column": 33,
+      "expression": "\"string\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-199",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 42,
+      "column": 40,
+      "expression": "\"string\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-200",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/terminal-title-filter.ts",
+      "line": 8,
+      "column": 39,
+      "expression": "\"string\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-201",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 1,
+      "column": 30,
+      "expression": "\"node:fs\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-202",
+      "kind": "excluded",
+      "english": "node:fs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 3,
+      "column": 20,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-203",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 40,
+      "column": 38,
+      "expression": "\"utf8\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-204",
+      "kind": "excluded",
+      "english": "utf8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 44,
+      "column": 26,
+      "expression": "\"object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-205",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 48,
+      "column": 40,
+      "expression": "\"Jouzu build metadata must be an object\"",
+      "item_id": "CLI-STARTUP-SUPPORT-029",
+      "kind": "fixed",
+      "english": "Jouzu build metadata must be an object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 50,
+      "column": 16,
+      "expression": "\",\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-206",
+      "kind": "excluded",
+      "english": ",",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 50,
+      "column": 25,
+      "expression": "\"builtAt,gitCommit,gitDirty,schemaVersion\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-207",
+      "kind": "excluded",
+      "english": "builtAt,gitCommit,gitDirty,schemaVersion",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 51,
+      "column": 19,
+      "expression": "\"Jouzu build metadata has unsupported fields\"",
+      "item_id": "CLI-STARTUP-SUPPORT-030",
+      "kind": "fixed",
+      "english": "Jouzu build metadata has unsupported fields",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 53,
+      "column": 49,
+      "expression": "\"unsupported Jouzu build metadata schema\"",
+      "item_id": "CLI-STARTUP-SUPPORT-031",
+      "kind": "fixed",
+      "english": "unsupported Jouzu build metadata schema",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 55,
+      "column": 28,
+      "expression": "\"string\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-208",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 56,
+      "column": 4,
+      "expression": "/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/",
+      "item_id": "CLI-STARTUP-SUPPORT-X-209",
+      "kind": "excluded",
+      "english": "/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 60,
+      "column": 19,
+      "expression": "\"Jouzu build timestamp must be a canonical UTC instant\"",
+      "item_id": "CLI-STARTUP-SUPPORT-032",
+      "kind": "fixed",
+      "english": "Jouzu build timestamp must be a canonical UTC instant",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 62,
+      "column": 33,
+      "expression": "\"string\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-210",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 62,
+      "column": 46,
+      "expression": "/^[0-9a-f]{40}(?:[0-9a-f]{24})?$/",
+      "item_id": "CLI-STARTUP-SUPPORT-X-211",
+      "kind": "excluded",
+      "english": "/^[0-9a-f]{40}(?:[0-9a-f]{24})?$/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 63,
+      "column": 19,
+      "expression": "\"Jouzu build commit must be a full Git object ID\"",
+      "item_id": "CLI-STARTUP-SUPPORT-033",
+      "kind": "fixed",
+      "english": "Jouzu build commit must be a full Git object ID",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 65,
+      "column": 32,
+      "expression": "\"boolean\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-212",
+      "kind": "excluded",
+      "english": "boolean",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 65,
+      "column": 59,
+      "expression": "\"Jouzu build dirty flag must be boolean\"",
+      "item_id": "CLI-STARTUP-SUPPORT-034",
+      "kind": "fixed",
+      "english": "Jouzu build dirty flag must be boolean",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 76,
+      "column": 16,
+      "expression": "/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})/",
+      "item_id": "CLI-STARTUP-SUPPORT-X-213",
+      "kind": "excluded",
+      "english": "/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})/",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 77,
+      "column": 30,
+      "expression": "\"Jouzu build timestamp cannot be formatted\"",
+      "item_id": "CLI-STARTUP-SUPPORT-035",
+      "kind": "fixed",
+      "english": "Jouzu build timestamp cannot be formatted",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 79,
+      "column": 16,
+      "expression": "`${year}${month}${day}-${hour}${minute}${second}`",
+      "item_id": "CLI-STARTUP-SUPPORT-036",
+      "kind": "fixed",
+      "english": "${year}${month}${day}-${hour}${minute}${second}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 80,
+      "column": 17,
+      "expression": "`g${build.gitCommit.slice(0, 8)}${build.gitDirty ? \".dirty\" : \"\"}`",
+      "item_id": "CLI-STARTUP-SUPPORT-037",
+      "kind": "fixed",
+      "english": "g${build.gitCommit.slice(0, 8)}${build.gitDirty ? \".dirty\" : \"\"}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 80,
+      "column": 68,
+      "expression": "\".dirty\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-214",
+      "kind": "excluded",
+      "english": ".dirty",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 80,
+      "column": 79,
+      "expression": "\"\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-215",
+      "kind": "excluded",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 81,
+      "column": 9,
+      "expression": "`${jouzuVersion}-dev.${stamp}+${source}`",
+      "item_id": "CLI-STARTUP-SUPPORT-038",
+      "kind": "fixed",
+      "english": "${jouzuVersion}-dev.${stamp}+${source}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 86,
+      "column": 51,
+      "expression": "\"./build-info.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-216",
+      "kind": "excluded",
+      "english": "./build-info.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 88,
+      "column": 33,
+      "expression": "\"code\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-217",
+      "kind": "excluded",
+      "english": "code",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 88,
+      "column": 67,
+      "expression": "\"ENOENT\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-218",
+      "kind": "excluded",
+      "english": "ENOENT",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 94,
+      "column": 60,
+      "expression": "\"../package.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-219",
+      "kind": "excluded",
+      "english": "../package.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 95,
+      "column": 40,
+      "expression": "\"./pi.lock.json\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-220",
+      "kind": "excluded",
+      "english": "./pi.lock.json",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 97,
+      "column": 33,
+      "expression": "`bundled Pi lock is missing ${PI_PACKAGE}`",
+      "item_id": "CLI-STARTUP-SUPPORT-039",
+      "kind": "fixed",
+      "english": "bundled Pi lock is missing ${PI_PACKAGE}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 100,
+      "column": 4,
+      "expression": "`Jouzu runtime dependency ${packageMetadata.dependencies?.[PI_PACKAGE] ?? \"(missing)\"} does not match bundled Pi lock ${piRecord.version}`",
+      "item_id": "CLI-STARTUP-SUPPORT-040",
+      "kind": "fixed",
+      "english": "Jouzu runtime dependency ${packageMetadata.dependencies?.[PI_PACKAGE] ?? \"(missing)\"} does not match bundled Pi lock ${piRecord.version}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 100,
+      "column": 78,
+      "expression": "\"(missing)\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-221",
+      "kind": "excluded",
+      "english": "(missing)",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/acp.ts",
+      "line": 1,
+      "column": 56,
+      "expression": "\"./acp-server.js\"",
+      "item_id": "CLI-STARTUP-SUPPORT-X-222",
+      "kind": "excluded",
+      "english": "./acp-server.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 113,
+      "column": 3,
+      "expression": "return { error:",
+      "item_id": "CLI-STARTUP-SUPPORT-041",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 125,
+      "column": 2,
+      "expression": "writeFilePrivateAtomic",
+      "item_id": "CLI-STARTUP-SUPPORT-042",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 29,
+      "column": 2,
+      "expression": "} catch",
+      "item_id": "CLI-STARTUP-SUPPORT-043",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/display-catalog.ts",
+      "line": 22,
+      "column": 3,
+      "expression": "format:",
+      "item_id": "CLI-STARTUP-SUPPORT-044",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/fast-mode.ts",
+      "line": 33,
+      "column": 5,
+      "expression": "ctx.ui.setStatus",
+      "item_id": "CLI-STARTUP-SUPPORT-045",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/astra-compatibility.ts",
+      "line": 150,
+      "column": 5,
+      "expression": "pi.registerProvider",
+      "item_id": "CLI-STARTUP-SUPPORT-046",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/model-thinking-startup.ts",
+      "line": 23,
+      "column": 2,
+      "expression": "return resolveCliModel",
+      "item_id": "CLI-STARTUP-SUPPORT-047",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/pre-runtime.ts",
+      "line": 38,
+      "column": 3,
+      "expression": "display:",
+      "item_id": "CLI-STARTUP-SUPPORT-048",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 21,
+      "column": 2,
+      "expression": "} catch",
+      "item_id": "CLI-STARTUP-SUPPORT-049",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/runtime-output.ts",
+      "line": 39,
+      "column": 2,
+      "expression": "const titleFilter",
+      "item_id": "CLI-STARTUP-SUPPORT-050",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 86,
+      "column": 3,
+      "expression": "return parseBuildInfo",
+      "item_id": "CLI-STARTUP-SUPPORT-051",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/acp.ts",
+      "line": 1,
+      "column": 1,
+      "expression": "export {",
+      "item_id": "CLI-STARTUP-SUPPORT-052",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "packages/cli/src/context-clamp.ts",
+      "line": 112,
+      "column": 4,
+      "expression": "catch (error) {\n\t\treturn { error: error instanceof Error ? error.message : String(error) };\n\t}",
+      "kind": "catch",
+      "disposition": "Raw Error.message/String retained in returned error field; downstream consumer guard decides publication."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 19,
+      "column": 10,
+      "expression": "new Error(\"Dashboard policy must be a regular file no larger than 8 KiB.\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 22,
+      "column": 10,
+      "expression": "new Error(\"Dashboard policy must be an object.\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 25,
+      "column": 10,
+      "expression": "new Error(\"Dashboard policy requires schemaVersion 1 and mode only.\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 27,
+      "column": 10,
+      "expression": "new Error(\"Dashboard mode must be compact, expanded, or hidden.\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 29,
+      "column": 4,
+      "expression": "catch (error) {\n\t\tif ((error as NodeJS.ErrnoException).code === \"ENOENT\") return { mode: \"compact\" };\n\t\treturn { mode: \"compact\", error: error instanceof Error ? error.message : String(error) };\n\t}",
+      "kind": "catch",
+      "disposition": "Raw Error.message/String retained in returned error field; downstream consumer guard decides publication."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 35,
+      "column": 45,
+      "expression": "new Error(\"Dashboard mode must be compact, expanded, or hidden.\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/dashboard-policy.ts",
+      "line": 37,
+      "column": 26,
+      "expression": "new Error(`Cannot save dashboard policy: ${loaded.error}`)",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 21,
+      "column": 4,
+      "expression": "catch {\n\t\treturn false;\n\t}",
+      "kind": "catch",
+      "disposition": "JSON parse failure suppressed to false."
+    },
+    {
+      "path": "packages/cli/src/startup-settings.ts",
+      "line": 57,
+      "column": 4,
+      "expression": "catch {\n\t\treturn false;\n\t}",
+      "kind": "catch",
+      "disposition": "JSON parse failure suppressed to false."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 48,
+      "column": 30,
+      "expression": "new Error(\"Jouzu build metadata must be an object\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 51,
+      "column": 9,
+      "expression": "new Error(\"Jouzu build metadata has unsupported fields\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 53,
+      "column": 39,
+      "expression": "new Error(\"unsupported Jouzu build metadata schema\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 60,
+      "column": 9,
+      "expression": "new Error(\"Jouzu build timestamp must be a canonical UTC instant\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 63,
+      "column": 9,
+      "expression": "new Error(\"Jouzu build commit must be a full Git object ID\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 65,
+      "column": 49,
+      "expression": "new Error(\"Jouzu build dirty flag must be boolean\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 77,
+      "column": 20,
+      "expression": "new Error(\"Jouzu build timestamp cannot be formatted\")",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 87,
+      "column": 4,
+      "expression": "catch (error) {\n\t\tif (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return undefined;\n\t\tthrow error;\n\t}",
+      "kind": "catch",
+      "disposition": "Only ENOENT suppressed; other errors rethrown."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 97,
+      "column": 23,
+      "expression": "new Error(`bundled Pi lock is missing ${PI_PACKAGE}`)",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    },
+    {
+      "path": "packages/cli/src/metadata.ts",
+      "line": 99,
+      "column": 9,
+      "expression": "new Error(\n\t\t\t`Jouzu runtime dependency ${packageMetadata.dependencies?.[PI_PACKAGE] ?? \"(missing)\"} does not match bundled Pi lock ${piRecord.version}`,\n\t\t)",
+      "kind": "error",
+      "disposition": "Own fixed Error forwarded through stated caller wrapper, or original guard qualified direct API; source-trigger retained in primary row."
+    }
+  ],
+  "counts": {
+    "primary": 52,
+    "catalog": 12,
+    "fixed": 28,
+    "boundaries": 12,
+    "excluded": 222,
+    "nodes": 262,
+    "errors": 15,
+    "catches": 5,
+    "scope": 28
+  },
+  "reviewed_data": {
+    "cli-startup-support.csv": "7507856d6e8a5317b093b17750f05ad64c122dfcac8d8c253153275ec88b6439",
+    "cli-startup-support-exclusions.csv": "835ef22cef72e5b5edc3520ca747d01e98b2233746047dbe78a42f47d7be2d0b",
+    "cli-startup-support-scope.csv": "102a1ad7b4fcc478cb5510f91517a3d52672caa3650fae7914d9b893c13fc2d2"
+  },
+  "canonical_runtime_census_sha256_utf8_lf": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225"
+}

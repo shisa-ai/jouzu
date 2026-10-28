@@ -115,6 +115,21 @@ report/error producers. A catalog value used only in a proved unreachable
 guard remains in the English catalog rather than being counted as a normal
 invalid-argument response.
 
+[cli-startup-support.csv](cli-startup-support.csv) adds 52 helper records:
+twelve catalog occurrences, 28 fixed/protected fragments and twelve boundaries.
+Thirteen complete startup, policy, metadata, provider-adapter, output and shim
+bodies cover 926 lines. The [scope](cli-startup-support-scope.csv) pins 28 sources;
+all 262 AST string/template/regex nodes are partitioned against 222
+[exclusions](cli-startup-support-exclusions.csv), with fifteen Error constructors
+and five catches. Settings context-policy causes use default English on the
+current caller while surrounding messages use its active catalog. Fast mode has
+explicit print stdout and conditional native UI delivery. Dashboard read/save
+causes, metadata corruption versus API guards, technical mode/build identities
+and silent JSON fallbacks remain distinct. Resume rewriting requires one matching
+string chunk; protected titles are subsequently filtered on current main. Native
+resolver warning fields are discarded by the thinking-suffix helper. Five
+corruption controls pass; no startup, file, provider, UI or stdout producer ran.
+
 [host-ui.csv](host-ui.csv) adds 30 help/host-policy records: 14 catalog
 occurrences, ten fixed or protected command/key/refusal occurrences and six
 payload boundaries. Three complete bodies and all 65 lexical occurrences are
@@ -1020,6 +1035,7 @@ python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
+node review/text-inventory/verify-cli-startup-support.cjs
 node review/text-inventory/verify-host-ui.cjs
 node review/text-inventory/verify-scrollback.cjs
 python -B review/text-inventory/verify-doctor.py
