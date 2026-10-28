@@ -254,6 +254,17 @@ the package permits Python >=3.10, so these observations do not qualify the
 whole supported interpreter range or its locale resources. Native exception and
 output-stream failures remain explicit runtime boundaries.
 
+[textguard-native.csv](textguard-native.csv) records 418 native TextGuard
+occurrences and boundaries, including 122 native English occurrences, protected
+protocol values, ignored rule metadata, build diagnostics and two JavaScript API
+errors. The [scope table](textguard-native-scope.csv) accounts for all 22
+non-vendored Go bodies and 13 bundled rule bodies. Generic bridge errors have
+separate conditions from the production helper, which returns structured
+evidence/reason codes; the JavaScript supervisor discards helper stderr.
+Admission's reparse and later abort/generation checks can replace those codes
+again. Vendored wording and broader policy/review UI producers remain separate
+pending scopes. No scanner, compiler or rules were executed.
+
 Counts describe records in each table. Catalog links, repeated wording,
 different consumers and dynamic boundaries overlap; do not add these counts as
 a number of unique messages or translation fixes. `english_location` locates a
@@ -283,6 +294,7 @@ python -B review/text-inventory/verify-flow-report.py
 node review/text-inventory/verify-flow-storage.cjs
 node review/text-inventory/verify-flow-receipts.cjs
 python -B review/text-inventory/verify-python-console.py --observe
+python -B review/text-inventory/verify-textguard-native.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```
 

@@ -20,7 +20,7 @@ SCOPES = [
     'doctor-scope.csv', 'updater-scope.csv', 'profiles-scope.csv', 'profile-migration-scope.csv', 'flow-display-scope.csv',
     'flow-report-scope.csv', 'flow-storage-scope.csv', 'flow-receipts-scope.csv',
     'launcher-scope.csv', 'launcher-helpers-scope.csv', 'launcher-support-scope.csv',
-    'installer-dependencies-scope.csv', 'python-console-scope.csv',
+    'installer-dependencies-scope.csv', 'python-console-scope.csv', 'textguard-native-scope.csv',
 ]
 FIELDS = ['path', 'git_mode', 'git_blob', 'path_category', 'scope_reference_status', 'scope_records_json']
 
