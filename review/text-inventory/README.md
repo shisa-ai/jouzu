@@ -939,6 +939,19 @@ clipboard failures and suppressed catches have distinct delivery evidence.
 External GitHub, tmux, Node and native UI wording remains separately delegated.
 No applicator, copied producer, build, child, native or network code was executed.
 
+[ci-text.csv](ci-text.csv) adds 3,754 authored workflow records: 2,167 YAML
+keys/scalars, 1,200 inline lexical/nested occurrences, 201 unresolved workflow
+expressions and 186 delivery boundaries. The [scope](ci-text-scope.csv) covers
+all ten first-party workflow bodies, 1,545 lines and ten source hashes/frozen main
+blob identities. Human wording includes ten workflow labels, 98 explicit step
+labels, 24 input descriptions and sixteen inline prose occurrences. Log errors,
+step summaries, PowerShell/Python/Node guards and public issue/release copy have
+separate source conditions. Secret references remain unresolved identifiers;
+no secret value was read. Called scripts, 77 external action uses, two local
+reusable workflow calls and runner/service/native wording retain boundaries;
+ten-file source coverage is not transitive CI coverage. No workflow, action,
+child, install, network or publication producer was executed.
+
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
 protocol values, ignored rule metadata, build diagnostics and two JavaScript API
@@ -1045,6 +1058,7 @@ python -B review/text-inventory/verify-validation-scripts.py
 python -B review/text-inventory/verify-qualification-scripts.py
 python -B review/text-inventory/verify-dev-build-text.py
 python -B review/text-inventory/verify-copied-bootstrap.py
+python -B review/text-inventory/verify-ci-text.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-textguard-owned.cjs
