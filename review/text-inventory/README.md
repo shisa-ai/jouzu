@@ -814,6 +814,19 @@ qualified delivery boundaries. Its root census has 70 covered scripts and 11
 pending; copied inputs and dependency producers remain separate. No validation
 producer, review sample, child, native or network operation was executed.
 
+[qualification-scripts.csv](qualification-scripts.csv) adds 1,679 operator-script
+records: 1,526 primary literal/regex occurrences, eight hashbangs, 34 nested
+occurrences, 66 main and eight generated assertion boundaries, one embedded echo
+fragment and 36 other delivery boundaries. The
+[scope](qualification-scripts-scope.csv) covers ten complete bodies, 3,068 lines
+and 131 pinned source hashes/Git blob identities. Records distinguish emitted
+reports, fixture/model inputs, generated code, streamed/captured child output,
+retry/cleanup replacement and native assertions. This root-script snapshot has
+80 covered bodies and one pending body, the 656-line dev-build.sh. Six copied
+upstream bodies retain separate pending boundaries. Verification reads source and
+frozen blob metadata without running Git, scripts, models, children, network or
+product producers.
+
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
 protocol values, ignored rule metadata, build diagnostics and two JavaScript API
@@ -898,6 +911,7 @@ python -B review/text-inventory/verify-copied-runtime.py
 python -B review/text-inventory/verify-release-scripts.py
 python -B review/text-inventory/verify-build-integration.py
 python -B review/text-inventory/verify-validation-scripts.py
+python -B review/text-inventory/verify-qualification-scripts.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
