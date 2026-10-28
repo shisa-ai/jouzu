@@ -150,6 +150,16 @@ states are explicitly qualified. Several helper calls omit the catalog argument,
 including logout formatting and login progress, and direct bearer-input English
 is retained. Source/account/token/sync helper bodies remain separate producers.
 
+[model-picker.csv](model-picker.csv) records 206 picker/state/ranking occurrences:
+107 catalog occurrences across 88 IDs, 56 fixed or protected machine occurrences
+and 43 dynamic boundaries. The [scope table](model-picker-scope.csv) covers three
+complete bodies, recovery and doctor routes, selection/search/cycle consumers
+and swallowed native-host fallback errors. Normal recovery generally replaces
+parse details with a quarantine notice; doctor reads without recovery and can
+retain those details. Recovery also matches `/regular file/` against an error
+message, so translating that message requires preserving its control behavior.
+Injected API guards and registration labels retain their qualified consumers.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -320,6 +330,7 @@ python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-profiles.py
 python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-catalog-settings.py
+python -B review/text-inventory/verify-model-picker.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
