@@ -22,6 +22,7 @@ SCOPES = [
     'main-update-model-picker-tests-scope.csv',
     'main-update-model-ranking-tests-scope.csv',
     'main-update-message-table-scope.csv',
+    'main-update-model-sync-scope.csv',
     'main-update-model-text-scope.csv',
     'main-update-release-text-scope.csv',
     'main-update-resource-delta-scope.csv',
@@ -69,6 +70,8 @@ def full_extent(name, row):
             ('Full test source body/', 'Full source text/AST partition;',
              'Full source body. All literal/template/regex')):
         return 'full-test-source-only'
+    if name == 'main-update-model-sync-scope.csv' and status == 'full-source-body':
+        return 'full-local-product-source-only'
     if status == 'full-target-body-lexical-and-control-review' or extent.startswith(
             ('Full helper body;', 'Full packaging body')):
         return 'full-local-product-source-only'
@@ -86,7 +89,7 @@ def generate():
     for name in SCOPES:
         for number, row in enumerate(table(name), 1):
             path = source_path(row)
-            if row.get('revision') != TARGET or path not in by_path:
+            if row.get('revision', row.get('source_revision')) != TARGET or path not in by_path:
                 continue
             link = dict(
                 table=name, record_number=number,
@@ -119,11 +122,11 @@ def generate():
     for row in rows:
         counts[row['local_body_extent']] = counts.get(row['local_body_extent'], 0) + 1
     assert counts == {
-        'bounded-changed-source-or-metadata-only': 3,
+        'bounded-changed-source-or-metadata-only': 1,
         'complete-byte-delta-only': 20,
         'full-document-source-export-only': 7,
         'full-English-source-export-only': 2,
-        'full-local-product-source-only': 14,
+        'full-local-product-source-only': 16,
         'full-test-source-only': 13,
     }, counts
     snapshot = dict(base_revision=BASE, target_revision=TARGET, changed_paths=59,

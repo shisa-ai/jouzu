@@ -25,12 +25,12 @@ identity, while changed callers, configuration and upstream patches need separat
 review. No checkout or product operation is performed by this census.
 
 [main-update-review-links.csv](main-update-review-links.csv) reconciles all 59
-changed target paths to exact scope records and target Git hashes. Thirty-six
-have a complete local source export/read: fourteen product/packaging bodies,
+changed target paths to exact scope records and target Git hashes. Thirty-eight
+have a complete local source export/read: sixteen product/packaging bodies,
 thirteen test bodies, seven documents and two changed English catalogs. Twenty
-resource paths have complete byte-delta proofs; three product source paths retain
+resource paths have complete byte-delta proofs; one product source path retains
 bounded changed-source review. The
-[snapshot](main-update-review-links-snapshot.json) pins all twelve scope inputs;
+[snapshot](main-update-review-links-snapshot.json) pins all thirteen scope inputs;
 these navigation links do not promote supporting records, close target callers
 or qualify newly patched dependencies. Existing base tables keep their source pin.
 
@@ -61,6 +61,23 @@ blob. The [scope](main-update-message-table-scope.csv) and
 [snapshot](main-update-message-table-snapshot.json) pin the target source and
 catalog export. Imported formatter behavior and wider target callers retain
 separate boundaries. No product source is evaluated.
+
+[main-update-model-sync.csv](main-update-model-sync.csv) records 26 local
+source definitions and ten qualified catalog-call occurrences across the complete
+fetched-main catalog-sync and provider-receipt transform bodies (1,305 lines).
+The 333 [exclusions](main-update-model-sync-exclusions.csv) retain protected and
+internal source occurrences; 25
+[boundaries](main-update-model-sync-boundaries.csv) distinguish cache, HTTP,
+account, cancellation, lock, callback and transform behavior. Unconfigured status
+and refresh error classification can use default English even when another
+catalog is supplied to the outer operation; the Settings refresh caller supplies
+only its environment. Caller-aborted checkpoints bypass classification and
+persistence. Unused lock-description labels remain excluded, and the current
+release helper catches its filesystem failures. The
+[scope](main-update-model-sync-scope.csv) pins two full target bodies and bounded
+consumers; base owners remain separate. Twenty-six corruption controls pass.
+Declared transform after-hashes do not establish execution or target installed-byte
+qualification, and no catalog, transform or native operation runs.
 
 [main-update-model-text.csv](main-update-model-text.csv) records 25 fetched-main
 Models delta occurrences: fifteen catalog consumers (three new headings), four
@@ -2046,6 +2063,7 @@ node review/text-inventory/verify-test-source-sites.cjs
 node review/text-inventory/verify-fixture-ipc-text.cjs
 python -B review/text-inventory/verify-data-fixture-text.py
 python -B review/text-inventory/verify-main-update-census.py
+python -B review/text-inventory/verify-main-update-model-sync.py
 python -B review/text-inventory/verify-main-update-resource-delta.py
 node review/text-inventory/verify-main-update-message-table.cjs
 python -B review/text-inventory/verify-main-update-review-links.py

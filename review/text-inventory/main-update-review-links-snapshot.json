@@ -7,8 +7,8 @@
     "complete-byte-delta-only": 20,
     "full-document-source-export-only": 7,
     "full-English-source-export-only": 2,
-    "full-local-product-source-only": 14,
-    "bounded-changed-source-or-metadata-only": 3,
+    "full-local-product-source-only": 16,
+    "bounded-changed-source-or-metadata-only": 1,
     "full-test-source-only": 13
   },
   "input_sha256_utf8_lf": {
@@ -19,6 +19,7 @@
     "main-update-model-picker-tests-scope.csv": "57b2de6e347f8364ea70c6a8ee31d5b983dbf29297f5ff9b14f24748f0323da5",
     "main-update-model-ranking-tests-scope.csv": "2da684b08607f1fa670f995935b15bd9dcb0779780faac5e119be5888e3e0fa0",
     "main-update-message-table-scope.csv": "eed460d431cf25c9811b6e90e1c5350346cb82a74e22c28cc798b173c7cf8e24",
+    "main-update-model-sync-scope.csv": "edc7d7e4c852019da16511e05f30622c6806ba6c02eef705f3e9e2c7db49abb8",
     "main-update-model-text-scope.csv": "5bc986f8a428b46b1607da943802645528922a9d879df70caadf455ea9786658",
     "main-update-release-text-scope.csv": "7cfaf223c09767ab58f1c8c45de968117046ebf6fb57853df64196a5c2f94e43",
     "main-update-resource-delta-scope.csv": "236c1facb7d025b5b9fb12b4fdd7df2361a1a7de23b7f5ee8dc1dd1c38d2ff98",
