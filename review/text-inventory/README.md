@@ -882,7 +882,7 @@ and 131 pinned source hashes/Git blob identities. Records distinguish emitted
 reports, fixture/model inputs, generated code, streamed/captured child output,
 retry/cleanup replacement and native assertions. This root-script snapshot has
 80 covered bodies and one pending body, the 656-line dev-build.sh continued below. Six copied
-upstream bodies retain separate pending boundaries. Verification reads source and
+upstream bodies are covered by the copied-bootstrap unit below. Verification reads source and
 frozen blob metadata without running Git, scripts, models, children, network or
 product producers.
 
@@ -895,8 +895,21 @@ spelling and branch conditions. Hook return status, successful receipt warnings,
 lock status 75, argument return 2, unresolved generated quoting and redirection
 order have separate dispositions. The finite root-script census now accounts
 for all 81 bodies: eighty prior plus this one, with zero root bodies pending.
-Six copied upstream bodies remain separate. Verification executes no Bash,
+Six copied upstream bodies follow below. Verification executes no Bash,
 Node producer, Git, build, hook, install, native or network operation.
+
+[copied-bootstrap.csv](copied-bootstrap.csv) adds 338 checked-in upstream records:
+313 primary nonempty literal/template/regex occurrences, seven nested patch
+occurrences and eighteen boundaries. Its [scope](copied-bootstrap-scope.csv)
+covers six complete bodies, 1,192 lines, 26 source hashes and frozen main blob
+identities. Four runtime/applicator bodies have separate dispositions from two
+declaration files. Twenty-eight empty strings and 77 comments are structurally
+accounted for. Five before/after replacement pairs retain their role and raw
+escaping; 22 Flow ingress Error/TypeError branches keep their caller guards.
+Build activation, copied destinations, bug-report replacements, receipts,
+clipboard failures and suppressed catches have distinct delivery evidence.
+External GitHub, tmux, Node and native UI wording remains separately delegated.
+No applicator, copied producer, build, child, native or network code was executed.
 
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
@@ -986,6 +999,7 @@ python -B review/text-inventory/verify-build-integration.py
 python -B review/text-inventory/verify-validation-scripts.py
 python -B review/text-inventory/verify-qualification-scripts.py
 python -B review/text-inventory/verify-dev-build-text.py
+python -B review/text-inventory/verify-copied-bootstrap.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
