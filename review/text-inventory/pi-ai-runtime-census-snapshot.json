@@ -1,0 +1,32 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "package": "@earendil-works/pi-ai",
+  "package_version": "1.4.0",
+  "authority": "Exact transitive package-lock entry; upstream Pi lock does not separately name AI integrity.",
+  "root_lock_sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+  "archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+  "archive_sha256": "b40e2ba8bb6fc332908f8b96e837dc2d1fdfb45eb9cd382f5aed111462981e3c",
+  "upstream_pin_sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+  "deviation_manifest_sha256": {
+    "upstream/pi-provider-receipts/patch.lock.json": "ad5d0b62372f2445fe1c50b073fcf37eee20c1d2a734639d07056e57f7f36a2c"
+  },
+  "canonical_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+  "cli_nested_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+  "metadata_transform_source": "scripts/configure-release-packlists.mjs",
+  "metadata_transform_sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+  "runtime_files": 200,
+  "runtime_bytes": 931910,
+  "physical_lines": 20585,
+  "exact_archive_matches": 184,
+  "pinned_source_patch_after_matches": 16,
+  "local_source_owners_present": 13,
+  "local_source_bodies_pending": 187,
+  "pending_bytes": 854705,
+  "owner_input_sha256_utf8_lf": {
+    "pi-ai-model-auth-scope.csv": "f2d604651785a90908a2943a3ef184a2a3dfcc43f0c44b9fcac8d679fadcd55e",
+    "pi-ai-request-text-scope.csv": "186226a506db80c9b177149664e1674e9c677a54470290d35007406b9d441324"
+  },
+  "coverage_boundary": "File identity and local review ownership only. Retain each owner's wording, guards, exclusions and native/SDK/caller limits. Hashing, packaging, importing or lexical indexing does not establish complete English, caller, dependency or runtime visibility coverage.",
+  "separate_census": "Pi AI only; does not change the coding-agent/TUI 384-source census.",
+  "nonruntime_boundary": "Maps, type declarations, documentation, license and metadata are outside this JavaScript universe; no absence-of-text claim."
+}

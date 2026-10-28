@@ -891,6 +891,18 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-ai-runtime-census.csv](pi-ai-runtime-census.csv) enumerates all 200 locked
+Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
+Both installed trees match: 184 files equal the canonical archive and sixteen
+equal exact public patch after-hashes, with archive before-hashes checked. The
+[snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
+authority, public patch manifest and nested package-list transform. Thirteen
+files have explicit complete local review owners; 187 files (854,705 bytes)
+remain pending in this census. File identity does not establish wording or
+caller closure. This separate Pi AI universe does not change the 384-source
+coding-agent/TUI census; non-JavaScript package resources remain outside it.
+Five corruption controls pass without importing audited code.
+
 [pi-ai-request-text.csv](pi-ai-request-text.csv) records six request/operation
 error definitions and 25 qualified telemetry metadata fragments across six
 complete Pi AI bodies (718 lines). The 158
@@ -2077,6 +2089,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-bundle-provider-adapters.py
