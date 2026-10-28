@@ -520,6 +520,20 @@ markers/capture syntax and JSON grammar stay protected. Ledger preparation and
 withholding can replace earlier failures; optional/native callbacks remain
 qualified. Four corruption controls pass without product/state/parser execution.
 
+[native-request-state.csv](native-request-state.csv) adds 75 retained-request
+records: 66 fixed Error message occurrences and nine payload/native boundaries.
+Four complete bodies cover 1,355 lines, with 11 pinned sources in the
+[scope](native-request-state-scope.csv). All 283 string/template/regex nodes are
+partitioned with 217 [exclusions](native-request-state-exclusions.csv). Every
+Error has its exact nearest source guard; these bodies have no catches. Records
+distinguish Flow status read warnings, repair-command notifications, lifecycle
+rejections and reconciliation callbacks. Snapshot inspection can run transactional
+validation/index repair; the inventory never invokes it. Optional failure text
+can be dropped at the byte budget, while projection views can retain explicit
+custom/tool-result content. Stored hashes, status codes and retention IDs remain
+protected; forwarding alone does not establish a visual publisher. Four
+corruption controls pass without product/store/native execution.
+
 [session-primitives.csv](session-primitives.csv) adds 26 formatting/boundary
 records: 18 protected frame/spacing/ANSI compositions and eight caller, native,
 callback or forwarding boundaries. The
@@ -824,6 +838,7 @@ node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 node review/text-inventory/verify-flow-model-input.cjs
+node review/text-inventory/verify-native-request-state.cjs
 python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
