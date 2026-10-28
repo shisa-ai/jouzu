@@ -878,6 +878,22 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-ai-request-text.csv](pi-ai-request-text.csv) records six request/operation
+error definitions and 25 qualified telemetry metadata fragments across six
+complete Pi AI bodies (718 lines). The 158
+[exclusions](pi-ai-request-text-exclusions.csv) complete the literal/template
+partition, and twelve [boundaries](pi-ai-request-text-boundaries.csv) distinguish
+lazy setup, event/result precedence, capability checks, cancellation, identity,
+transcript replay and diagnostic downloads. Native requests use lazy forwarding
+but bypass the collection's telemetry observer. Exported schema descriptions do
+not automatically become span labels; actual metric definitions can reach an
+explicit adapter, while the default adapter discards them. Live, forced and
+standalone transcript projections retain different persistence conditions.
+The [scope](pi-ai-request-text-scope.csv) pins six complete local bodies; four
+foreign support files remain bounded installed/hash evidence. All three canonical
+archives, both installed trees, the public nested AI manifest transform and
+25 corruption controls pass. No model, telemetry, export or native operation runs.
+
 [pi-ai-model-auth.csv](pi-ai-model-auth.csv) records 39 qualified error,
 auth-source and thinking-level definitions across seven complete Pi AI bodies
 (1,051 lines). The 84 [exclusions](pi-ai-model-auth-exclusions.csv) account for
@@ -2047,6 +2063,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-bundle-provider-adapters.py
 node review/text-inventory/verify-pi-bundle-lexical.cjs

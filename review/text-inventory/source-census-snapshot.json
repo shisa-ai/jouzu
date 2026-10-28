@@ -110,6 +110,7 @@
     "pi-llama-support-scope.csv": "2b2781a148d0bd89b7056199d93993c4f779212c480853756045559000ba0675",
     "pi-bundle-entry-support-scope.csv": "116e0ce41c4d115e187320403fd323ff7b7909af7d17cf2adf6a783a2ef5504b",
     "pi-bundle-lexical-scope.csv": "a31167f9df48b55fbeb58f8b80b8154e8fd249589470b94fa94e7ad3b55287ed",
+    "pi-ai-request-text-scope.csv": "186226a506db80c9b177149664e1674e9c677a54470290d35007406b9d441324",
     "pi-ai-model-auth-scope.csv": "f2d604651785a90908a2943a3ef184a2a3dfcc43f0c44b9fcac8d679fadcd55e",
     "pi-bundle-provider-adapters-scope.csv": "2a42d3301f0dbfc6ca73103f8f71d6ea57c81cae02f5ea51c1457fb32581224d",
     "copied-bootstrap-scope.csv": "3c8bb7c770e5ec065317fcf7b773792f350819ba6a84ce63b92513ae6bed0ae8",

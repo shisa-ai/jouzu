@@ -1,0 +1,3290 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "6d0a66f501a28ce44017d45bd63a821ad6b7ed03",
+  "inventory_file": "pi-ai-request-text.csv",
+  "scope_file": "pi-ai-request-text-scope.csv",
+  "boundary_file": "pi-ai-request-text-boundaries.csv",
+  "exclusion_file": "pi-ai-request-text-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54"
+    }
+  ],
+  "ai_archive_pin": {
+    "source": "package-lock.json",
+    "entry": "node_modules/@earendil-works/pi-ai",
+    "version": "1.4.0",
+    "resolved": "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-1.4.0.tgz",
+    "integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+    "root_lock_sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+    "upstream_pin_separately_names_ai": false,
+    "authority": "BASE346 exact transitive pi-ai1.4.0 lock; pinned coding-agent metadata declares exact1.4.0 dependency. Upstream/pi.lock Agent/TUI/deviations still verified, no invented AI package integrity field."
+  },
+  "metadata_transform": {
+    "source": "scripts/configure-release-packlists.mjs",
+    "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "read_ranges": [
+      [
+        7,
+        18
+      ],
+      [
+        48,
+        58
+      ]
+    ],
+    "root_disposition": "canonical-archive-package-json-byte-exact",
+    "cli_nested_disposition": "exact-public-releaseDependencyFiles-and-JSON2-newline-transform-only-files-changed",
+    "exclusions": [
+      "!**/*.map",
+      "!**/*.d.ts",
+      "!**/*.d.mts",
+      "!**/*.d.cts"
+    ]
+  },
+  "ai_metadata_proof": {
+    "canonical_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+    "root_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+    "cli_nested_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+    "expected_release_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+    "changed_fields": [
+      "files"
+    ],
+    "source": "scripts/configure-release-packlists.mjs",
+    "source_sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "canonical_archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ=="
+  },
+  "supplemental_packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-telemetry",
+      "version": "1.4.0",
+      "package_json_sha256": "d6e047b173341260b811a294e377e2f90ce31755fdc94ac2fe30bfbdf0d32847",
+      "qualification": "installed bounded source/hash-only; no canonical archive supplied in this unit"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-telemetry",
+      "version": "1.4.0",
+      "package_json_sha256": "1a6b1a7d5d2e9c896566ce0a94a9123818873adffc19a2907e17e6a1172d0d4c",
+      "qualification": "installed bounded source/hash-only; no canonical archive supplied in this unit"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-agent-core",
+      "version": "1.4.0",
+      "package_json_sha256": "3ee9a0f81587b917e7a010e4391fc10d2b04fa48091b693bffebe3b9b55e9f14",
+      "qualification": "installed bounded source/hash-only; no canonical archive supplied in this unit"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-agent-core",
+      "version": "1.4.0",
+      "package_json_sha256": "97ddea9d15adf87a857b24f3bded6b47c080aba169df5fa61aeea0007ad5c252",
+      "qualification": "installed bounded source/hash-only; no canonical archive supplied in this unit"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "package-lock.json",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76"
+    },
+    {
+      "source": "scripts/configure-release-packlists.mjs",
+      "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab"
+    },
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          21,
+          26
+        ],
+        [
+          475,
+          602
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1397,
+          1421
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js",
+      "sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          133,
+          154
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          84,
+          94
+        ],
+        [
+          110,
+          117
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          288,
+          291
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+      "sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+      "cli_nested_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          184,
+          199
+        ],
+        [
+          205,
+          218
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1091,
+          1116
+        ],
+        [
+          1289,
+          1293
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/pi-user-agent.js",
+      "sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+      "cli_nested_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          5
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js",
+      "sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          24
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          427,
+          527
+        ],
+        [
+          568,
+          625
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+      "cli_nested_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          35,
+          59
+        ],
+        [
+          77,
+          105
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "cli_nested_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js",
+      "sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+      "cli_nested_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+      "cli_nested_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          2
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses.lazy.js",
+      "sha256": "ff6755b78f76a83ab50aee5603eb8f5efd8b9608be449a535847d49c0be0f0ca",
+      "cli_nested_sha256": "ff6755b78f76a83ab50aee5603eb8f5efd8b9608be449a535847d49c0be0f0ca",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          3
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai.js",
+      "sha256": "9dc3881e858b0280e809ec04b8b17f22580fcb1871da2edf3cfbdfa3c13747b3",
+      "cli_nested_sha256": "9dc3881e858b0280e809ec04b8b17f22580fcb1871da2edf3cfbdfa3c13747b3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          31
+        ]
+      ],
+      "purpose": "Bounded native/API/request/error/protocol/resource/export support, not whole-body owner."
+    },
+    {
+      "source": "npm:@earendil-works/pi-telemetry@1.4.0/dist/index.js",
+      "sha256": "b34be60c5fac72aefc31e9fddd80aafb32d2a76332a49ce42887555990e15da6",
+      "cli_nested_sha256": "b34be60c5fac72aefc31e9fddd80aafb32d2a76332a49ce42887555990e15da6",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          17
+        ]
+      ],
+      "canonical_archive_proof": false,
+      "purpose": "Bounded installed/hash-only foreign support; no canonical archive assigned and no whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-telemetry@1.4.0/dist/metrics.js",
+      "sha256": "8774c8b24fe6beb263bfc3f1cb13cf2365101a29c30d2a7fbfb2d9ff7aca5e88",
+      "cli_nested_sha256": "8774c8b24fe6beb263bfc3f1cb13cf2365101a29c30d2a7fbfb2d9ff7aca5e88",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          13
+        ]
+      ],
+      "canonical_archive_proof": false,
+      "purpose": "Bounded installed/hash-only foreign support; no canonical archive assigned and no whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-telemetry@1.4.0/dist/noop.js",
+      "sha256": "9a7880859aacfcbfba3c765bf3b478c8cb0299c7fedb88dc649c64f103a0256a",
+      "cli_nested_sha256": "9a7880859aacfcbfba3c765bf3b478c8cb0299c7fedb88dc649c64f103a0256a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "canonical_archive_proof": false,
+      "purpose": "Bounded installed/hash-only foreign support; no canonical archive assigned and no whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent.js",
+      "sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "cli_nested_sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          30,
+          45
+        ]
+      ],
+      "canonical_archive_proof": false,
+      "purpose": "Bounded installed/hash-only foreign support; no canonical archive assigned and no whole-body closure."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.d.ts",
+      "sha256": "5c508df1918a03c50275be56f198a33483ce43fe67e0f3329d48f7995e55c49c",
+      "cli_nested_sha256": "5c508df1918a03c50275be56f198a33483ce43fe67e0f3329d48f7995e55c49c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.d.ts.map",
+      "sha256": "99c45737b29796ec81aff95e48a5ff391229e23a524c373df1013c350a62c006",
+      "cli_nested_sha256": "99c45737b29796ec81aff95e48a5ff391229e23a524c373df1013c350a62c006",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js.map",
+      "sha256": "d6685a9e9d341f6806307fc98f4b84dbcc2b64c65b386c0867bed9466c99e7c1",
+      "cli_nested_sha256": "d6685a9e9d341f6806307fc98f4b84dbcc2b64c65b386c0867bed9466c99e7c1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.d.ts",
+      "sha256": "52cdeef4b8094a926d3fc5e848b7db753a0d31a04cc151576ee76b3451000746",
+      "cli_nested_sha256": "52cdeef4b8094a926d3fc5e848b7db753a0d31a04cc151576ee76b3451000746",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.d.ts.map",
+      "sha256": "07ba83ab75e86f2b785820dae856dccb6d4c6f1d7a601d974f8e613f5d0c9e57",
+      "cli_nested_sha256": "07ba83ab75e86f2b785820dae856dccb6d4c6f1d7a601d974f8e613f5d0c9e57",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js.map",
+      "sha256": "fc0b2f124ee5541b9028ee090d121583a9dc63c97a84f1a16791eee3f9c2d2d7",
+      "cli_nested_sha256": "fc0b2f124ee5541b9028ee090d121583a9dc63c97a84f1a16791eee3f9c2d2d7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.d.ts",
+      "sha256": "a3b69dc22cbd2fd71de51877a54bf10315c63e33138b9e20addf8ad1cc968ea4",
+      "cli_nested_sha256": "a3b69dc22cbd2fd71de51877a54bf10315c63e33138b9e20addf8ad1cc968ea4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.d.ts.map",
+      "sha256": "4f04472979dbf9ffc8a655772dfe43d903bb8c06871cec159801297344050407",
+      "cli_nested_sha256": "4f04472979dbf9ffc8a655772dfe43d903bb8c06871cec159801297344050407",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js.map",
+      "sha256": "da46eda2f58cbd003de04d912cdf504a8189abd785e3192dec7e75a5b3ecf189",
+      "cli_nested_sha256": "da46eda2f58cbd003de04d912cdf504a8189abd785e3192dec7e75a5b3ecf189",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.d.ts",
+      "sha256": "570e1ba5dbd96a0ba61a29b0f649ba0696c2661a67c2225406225d265091287c",
+      "cli_nested_sha256": "570e1ba5dbd96a0ba61a29b0f649ba0696c2661a67c2225406225d265091287c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.d.ts.map",
+      "sha256": "bec0cec5fe1b2c066d37f58beb15576c7b42a01dd76f530edf0d17c52b236e8a",
+      "cli_nested_sha256": "bec0cec5fe1b2c066d37f58beb15576c7b42a01dd76f530edf0d17c52b236e8a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js.map",
+      "sha256": "2d1149fc7e4bfd87e608380c9e56500d222635e0d4872ec0df193f532eb23809",
+      "cli_nested_sha256": "2d1149fc7e4bfd87e608380c9e56500d222635e0d4872ec0df193f532eb23809",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.d.ts",
+      "sha256": "f3807fb050f2c72bf26dc76ba9cacb9604fd263fb78b3473b5db8ce6bd2926f4",
+      "cli_nested_sha256": "f3807fb050f2c72bf26dc76ba9cacb9604fd263fb78b3473b5db8ce6bd2926f4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.d.ts.map",
+      "sha256": "ba33394778793a11c7582a2f0ebadf4178cfab621b4778a09ed494df53f6ed31",
+      "cli_nested_sha256": "ba33394778793a11c7582a2f0ebadf4178cfab621b4778a09ed494df53f6ed31",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js.map",
+      "sha256": "068473be8501b1c1d1ba83322158f670061fbd24ee2faafc415346969d249071",
+      "cli_nested_sha256": "068473be8501b1c1d1ba83322158f670061fbd24ee2faafc415346969d249071",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.d.ts",
+      "sha256": "ca69c6883f6a82f8e87dd87b0d8f4ef8b643cafda20eaaaf1dffb633f4fc6ce6",
+      "cli_nested_sha256": "ca69c6883f6a82f8e87dd87b0d8f4ef8b643cafda20eaaaf1dffb633f4fc6ce6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.d.ts.map",
+      "sha256": "9be24a0318c152fc56c520d45405d5a80cf625b00ff86c70a08818a35087b560",
+      "cli_nested_sha256": "9be24a0318c152fc56c520d45405d5a80cf625b00ff86c70a08818a35087b560",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js.map",
+      "sha256": "627cf7984533badb1c825f2f60086d5b0440d404b970c90b9e6ba2995ce8ab63",
+      "cli_nested_sha256": "627cf7984533badb1c825f2f60086d5b0440d404b970c90b9e6ba2995ce8ab63",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/pi-user-agent.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-responses.lazy.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/providers/openai.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 31,
+    "proofs": 31,
+    "scopes": 6,
+    "external_boundaries": 12,
+    "excluded_occurrences": 158,
+    "dispositioned_source_files": 6,
+    "string_template_occurrences": 189,
+    "protected_regex_literals": 0,
+    "error_constructors": 6,
+    "models_error_constructors": 4,
+    "aggregate_error_constructors": 0,
+    "error_super_calls": 0,
+    "catch_clauses": 1,
+    "throw_statements": 6,
+    "all_new_expressions": 18,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 718,
+    "runtime_source_bytes": 31233,
+    "nonruntime_assets": 18,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 6
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.ai-request-text.lazy.76.33",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "line": 76,
+      "column": 33,
+      "kind": "string-literal",
+      "english": "API does not support deferred responses",
+      "evidence": "\"API does not support deferred responses\""
+    },
+    {
+      "item_id": "pi.ai-request-text.lazy.84.33",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "line": 84,
+      "column": 33,
+      "kind": "string-literal",
+      "english": "API cannot cancel deferred responses",
+      "evidence": "\"API cannot cancel deferred responses\""
+    },
+    {
+      "item_id": "pi.ai-request-text.operations.12.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "line": 12,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Model ${model.provider}/${model.id} is not a chat model",
+      "evidence": "`Model ${model.provider}/${model.id} is not a chat model`"
+    },
+    {
+      "item_id": "pi.ai-request-text.operations.17.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "line": 17,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Model ${model.provider}/${model.id} is not an image model",
+      "evidence": "`Model ${model.provider}/${model.id} is not an image model`"
+    },
+    {
+      "item_id": "pi.ai-request-text.operations.22.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "line": 22,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Model ${model.provider}/${model.id} is not a classifier model",
+      "evidence": "`Model ${model.provider}/${model.id} is not a classifier model`"
+    },
+    {
+      "item_id": "pi.ai-request-text.operations.28.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "line": 28,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Model ${model.provider}/${model.id} does not accept image input",
+      "evidence": "`Model ${model.provider}/${model.id} does not accept image input`"
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.2.49",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 2,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "Provider identifier.",
+      "evidence": "\"Provider identifier.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.3.46",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 3,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "Requested model identifier.",
+      "evidence": "\"Requested model identifier.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.6.18",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 6,
+      "column": 18,
+      "kind": "string-literal",
+      "english": "Normalized stop reason.",
+      "evidence": "\"Normalized stop reason.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.10.18",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 10,
+      "column": 18,
+      "kind": "string-literal",
+      "english": "One logical model request, including authentication and provider setup.",
+      "evidence": "\"One logical model request, including authentication and provider setup.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.14.45",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 14,
+      "column": 45,
+      "kind": "string-literal",
+      "english": "API identifier.",
+      "evidence": "\"API identifier.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.16.51",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 16,
+      "column": 51,
+      "kind": "string-literal",
+      "english": "Scalar requested reasoning level.",
+      "evidence": "\"Scalar requested reasoning level.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.20.55",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 20,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Uncached input tokens.",
+      "evidence": "\"Uncached input tokens.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.21.56",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 21,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Output tokens.",
+      "evidence": "\"Output tokens.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.22.60",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 22,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "Cache-read tokens.",
+      "evidence": "\"Cache-read tokens.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.23.61",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 23,
+      "column": 61,
+      "kind": "string-literal",
+      "english": "Cache-write tokens.",
+      "evidence": "\"Cache-write tokens.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.24.54",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 24,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Total request cost in USD.",
+      "evidence": "\"Total request cost in USD.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.25.55",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 25,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Provider response identifier.",
+      "evidence": "\"Provider response identifier.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.28.45",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 28,
+      "column": 45,
+      "kind": "string-literal",
+      "english": "First normalized stream event delivered.",
+      "evidence": "\"First normalized stream event delivered.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.30.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 30,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "A completed content block; content is never recorded.",
+      "evidence": "\"A completed content block; content is never recorded.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.34.34",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 34,
+      "column": 34,
+      "kind": "string-literal",
+      "english": "Block kind.",
+      "evidence": "\"Block kind.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.38.55",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 38,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Content block index.",
+      "evidence": "\"Content block index.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.39.55",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 39,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "UTF-16 character count.",
+      "evidence": "\"UTF-16 character count.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.40.54",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 40,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Tool name, for tool-call blocks only.",
+      "evidence": "\"Tool name, for tool-call blocks only.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.46.20",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 46,
+      "column": 20,
+      "kind": "string-literal",
+      "english": "Stop reason is error: provider_error with at most 500 error-message characters. Aborted stays ok.",
+      "evidence": "\"Stop reason is error: provider_error with at most 500 error-message characters. Aborted stays ok.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.54.50",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 54,
+      "column": 50,
+      "kind": "string-literal",
+      "english": "One deferred-response poll, not the deferred request's lifetime.",
+      "evidence": "\"One deferred-response poll, not the deferred request's lifetime.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.59.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 59,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "Logical request or poll duration.",
+      "evidence": "\"Logical request or poll duration.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.65.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 65,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "Time to the first normalized stream event.",
+      "evidence": "\"Time to the first normalized stream event.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.71.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 71,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "Reported model token usage; pending and deferred polls are excluded.",
+      "evidence": "\"Reported model token usage; pending and deferred polls are excluded.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.78.34",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 78,
+      "column": 34,
+      "kind": "string-literal",
+      "english": "Token usage category.",
+      "evidence": "\"Token usage category.\""
+    },
+    {
+      "item_id": "pi.ai-request-text.telemetry.86.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "line": 86,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "Reported model cost; pending and deferred polls are excluded.",
+      "evidence": "\"Reported model cost; pending and deferred polls are excluded.\""
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+        "read_lines": [
+          1,
+          90
+        ],
+        "string_template_occurrences": 10,
+        "fixed_rows": 2,
+        "excluded_occurrences": 8,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 76,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"API does not support deferred responses\""
+          },
+          {
+            "line": 84,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"API cannot cancel deferred responses\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 47,
+            "column": 19,
+            "callee": "AssistantMessageEventStream",
+            "source": "new AssistantMessageEventStream()"
+          },
+          {
+            "line": 76,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(\"API does not support deferred responses\")"
+          },
+          {
+            "line": 84,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(\"API cannot cancel deferred responses\")"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 76,
+            "column": 17,
+            "expression": "new Error(\"API does not support deferred responses\")"
+          },
+          {
+            "line": 84,
+            "column": 17,
+            "expression": "new Error(\"API cannot cancel deferred responses\")"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "../utils/event-stream.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 18,
+            "column": 64,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 9,
+            "callee": "target.push",
+            "arguments": [
+              "event"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 9,
+            "callee": "observer?.onEvent",
+            "arguments": [
+              "event"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 9,
+            "callee": "hasResult",
+            "arguments": [
+              "source"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 24,
+            "callee": "source.result",
+            "arguments": []
+          },
+          {
+            "line": 37,
+            "column": 5,
+            "callee": "target.end",
+            "arguments": [
+              "result"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 5,
+            "callee": "observeResult",
+            "arguments": [
+              "result"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 23,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 53,
+            "column": 9,
+            "callee": "observer?.onResult",
+            "arguments": [
+              "result"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 5,
+            "callee": "setup()\n        .then((inner) => forwardStream(outer, inner, observer, observeResult))\n        .catch",
+            "arguments": [
+              "(error) => {\n        const message = createSetupErrorMessage(model, error, startedAt);\n        const event = { type: \"error\", reason: \"error\", error: message };\n        outer.push(event);\n        observer?.onEvent?.(event);\n        outer.end(message);\n        observeResult(message);\n    }"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 5,
+            "callee": "setup()\n        .then",
+            "arguments": [
+              "(inner) => forwardStream(outer, inner, observer, observeResult)"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 5,
+            "callee": "setup",
+            "arguments": []
+          },
+          {
+            "line": 56,
+            "column": 26,
+            "callee": "forwardStream",
+            "arguments": [
+              "outer",
+              "inner",
+              "observer",
+              "observeResult"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 25,
+            "callee": "createSetupErrorMessage",
+            "arguments": [
+              "model",
+              "error",
+              "startedAt"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 9,
+            "callee": "outer.push",
+            "arguments": [
+              "event"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 9,
+            "callee": "observer?.onEvent",
+            "arguments": [
+              "event"
+            ]
+          },
+          {
+            "line": 62,
+            "column": 9,
+            "callee": "outer.end",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 9,
+            "callee": "observeResult",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 46,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => (await load()).stream(model, context, options)"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 76,
+            "callee": "(await load()).stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 83,
+            "callee": "load",
+            "arguments": []
+          },
+          {
+            "line": 70,
+            "column": 52,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => (await load()).streamSimple(model, context, options)"
+            ]
+          },
+          {
+            "line": 70,
+            "column": 82,
+            "callee": "(await load()).streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 70,
+            "column": 89,
+            "callee": "load",
+            "arguments": []
+          },
+          {
+            "line": 73,
+            "column": 57,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n            const implementation = await load();\n            if (!implementation.fetchDeferred)\n                throw new Error(\"API does not support deferred responses\");\n            return implementation.fetchDeferred(model, handle, options);\n        }"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 42,
+            "callee": "load",
+            "arguments": []
+          },
+          {
+            "line": 77,
+            "column": 20,
+            "callee": "implementation.fetchDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          },
+          {
+            "line": 82,
+            "column": 42,
+            "callee": "load",
+            "arguments": []
+          },
+          {
+            "line": 85,
+            "column": 19,
+            "callee": "implementation.cancelDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full90 lines read. Lazy forwarding/result precedence, setup/observer rejection, synchronous setup escape, error packet, once-only observer, and conditional deferred API guards partitioned. Provider/event-stream/callback errors remain data boundaries; native active path distinct from optional capability guards."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+        "read_lines": [
+          1,
+          191
+        ],
+        "string_template_occurrences": 115,
+        "fixed_rows": 25,
+        "excluded_occurrences": 90,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 101,
+            "column": 25,
+            "callee": "WeakMap",
+            "source": "new WeakMap()"
+          },
+          {
+            "line": 115,
+            "column": 23,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 116,
+            "column": 22,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n        finish = resolve;\n    })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-telemetry"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 50,
+            "column": 36,
+            "callee": "defineTelemetrySchema",
+            "arguments": [
+              "{\n    version: 1,\n    spans: {\n        \"pi.ai.request\": request,\n        \"pi.ai.poll\": { ...request, description: \"One deferred-response poll, not the deferred request's lifetime.\" },\n    },\n    metrics: {\n        \"pi.ai.request.duration\": {\n            kind: \"histogram\",\n            description: \"Logical request or poll duration.\",\n            unit: \"ms\",\n            attributes: { provider, model, stop: { ...stop, required: true } },\n        },\n        \"pi.ai.first_chunk.duration\": {\n            kind: \"histogram\",\n            description: \"Time to the first normalized stream event.\",\n            unit: \"ms\",\n            attributes: { provider, model },\n        },\n        \"pi.ai.tokens\": {\n            kind: \"counter\",\n            description: \"Reported model token usage; pending and deferred polls are excluded.\",\n            unit: \"token\",\n            attributes: {\n                provider,\n                model,\n                kind: {\n                    type: \"string\",\n                    description: \"Token usage category.\",\n                    values: [\"input\", \"output\", \"cache_read\", \"cache_write\"],\n                    required: true,\n                },\n            },\n        },\n        \"pi.ai.cost\": {\n            kind: \"counter\",\n            description: \"Reported model cost; pending and deferred polls are excluded.\",\n            unit: \"USD\",\n            attributes: { provider, model },\n        },\n    },\n}"
+            ]
+          },
+          {
+            "line": 93,
+            "column": 21,
+            "callee": "createTypedMetrics",
+            "arguments": [
+              "adapter",
+              "[AI_TELEMETRY_SCHEMA]"
+            ]
+          },
+          {
+            "line": 95,
+            "column": 26,
+            "callee": "metrics.histogram",
+            "arguments": [
+              "\"pi.ai.request.duration\""
+            ]
+          },
+          {
+            "line": 96,
+            "column": 29,
+            "callee": "metrics.histogram",
+            "arguments": [
+              "\"pi.ai.first_chunk.duration\""
+            ]
+          },
+          {
+            "line": 97,
+            "column": 17,
+            "callee": "metrics.counter",
+            "arguments": [
+              "\"pi.ai.tokens\""
+            ]
+          },
+          {
+            "line": 98,
+            "column": 15,
+            "callee": "metrics.counter",
+            "arguments": [
+              "\"pi.ai.cost\""
+            ]
+          },
+          {
+            "line": 103,
+            "column": 21,
+            "callee": "performance.now",
+            "arguments": []
+          },
+          {
+            "line": 106,
+            "column": 23,
+            "callee": "instrumentCache.get",
+            "arguments": [
+              "adapter"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 23,
+            "callee": "createInstruments",
+            "arguments": [
+              "adapter"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 9,
+            "callee": "instrumentCache.set",
+            "arguments": [
+              "adapter",
+              "instruments"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 19,
+            "callee": "createTypedSpanStarter",
+            "arguments": [
+              "options?.telemetry ?? NOOP_TELEMETRY_CONTEXT",
+              "[AI_TELEMETRY_SCHEMA]"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 14,
+            "callee": "start",
+            "arguments": [
+              "\"pi.ai.poll\"",
+              "startAttributes",
+              "run"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 14,
+            "callee": "start",
+            "arguments": [
+              "\"pi.ai.request\"",
+              "startAttributes",
+              "run"
+            ]
+          },
+          {
+            "line": 137,
+            "column": 17,
+            "callee": "span.addEvent",
+            "arguments": [
+              "\"pi.ai.first_chunk\""
+            ]
+          },
+          {
+            "line": 138,
+            "column": 17,
+            "callee": "firstChunkDuration.record",
+            "arguments": [
+              "performance.now() - started",
+              "attributes",
+              "span"
+            ]
+          },
+          {
+            "line": 138,
+            "column": 43,
+            "callee": "performance.now",
+            "arguments": []
+          },
+          {
+            "line": 141,
+            "column": 17,
+            "callee": "toolChars.set",
+            "arguments": [
+              "event.contentIndex",
+              "(toolChars.get(event.contentIndex) ?? 0) + event.delta.length"
+            ]
+          },
+          {
+            "line": 141,
+            "column": 52,
+            "callee": "toolChars.get",
+            "arguments": [
+              "event.contentIndex"
+            ]
+          },
+          {
+            "line": 144,
+            "column": 17,
+            "callee": "span.addEvent",
+            "arguments": [
+              "\"pi.ai.block\"",
+              "{\n                    type: event.type === \"text_end\" ? \"text\" : \"thinking\",\n                    index: event.contentIndex,\n                    chars: event.content.length,\n                }"
+            ]
+          },
+          {
+            "line": 151,
+            "column": 31,
+            "callee": "toolChars.get",
+            "arguments": [
+              "event.contentIndex"
+            ]
+          },
+          {
+            "line": 152,
+            "column": 17,
+            "callee": "toolChars.delete",
+            "arguments": [
+              "event.contentIndex"
+            ]
+          },
+          {
+            "line": 153,
+            "column": 17,
+            "callee": "span.addEvent",
+            "arguments": [
+              "\"pi.ai.block\"",
+              "{\n                    type: \"tool_call\",\n                    index: event.contentIndex,\n                    chars,\n                    tool: event.toolCall.name,\n                }"
+            ]
+          },
+          {
+            "line": 163,
+            "column": 17,
+            "callee": "span.setAttributes",
+            "arguments": [
+              "{\n                    stop: message.stopReason,\n                    \"usage.input\": message.usage.input,\n                    \"usage.output\": message.usage.output,\n                    \"usage.cache_read\": message.usage.cacheRead,\n                    \"usage.cache_write\": message.usage.cacheWrite,\n                    \"cost.total\": message.usage.cost.total,\n                    \"response.id\": message.responseId,\n                }"
+            ]
+          },
+          {
+            "line": 173,
+            "column": 21,
+            "callee": "span.setStatus",
+            "arguments": [
+              "{\n                        status: \"error\",\n                        error: { name: \"provider_error\", message: message.errorMessage?.slice(0, 500) ?? \"\" },\n                    }"
+            ]
+          },
+          {
+            "line": 175,
+            "column": 67,
+            "callee": "message.errorMessage?.slice",
+            "arguments": [
+              "0",
+              "500"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 17,
+            "callee": "requestDuration.record",
+            "arguments": [
+              "performance.now() - started",
+              "{ ...attributes, stop: message.stopReason }",
+              "span"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 40,
+            "callee": "performance.now",
+            "arguments": []
+          },
+          {
+            "line": 180,
+            "column": 21,
+            "callee": "tokens.add",
+            "arguments": [
+              "message.usage.input",
+              "{ ...attributes, kind: \"input\" }"
+            ]
+          },
+          {
+            "line": 181,
+            "column": 21,
+            "callee": "tokens.add",
+            "arguments": [
+              "message.usage.output",
+              "{ ...attributes, kind: \"output\" }"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 21,
+            "callee": "tokens.add",
+            "arguments": [
+              "message.usage.cacheRead",
+              "{ ...attributes, kind: \"cache_read\" }"
+            ]
+          },
+          {
+            "line": 183,
+            "column": 21,
+            "callee": "tokens.add",
+            "arguments": [
+              "message.usage.cacheWrite",
+              "{ ...attributes, kind: \"cache_write\" }"
+            ]
+          },
+          {
+            "line": 184,
+            "column": 21,
+            "callee": "cost.add",
+            "arguments": [
+              "message.usage.cost.total",
+              "attributes"
+            ]
+          },
+          {
+            "line": 187,
+            "column": 13,
+            "callee": "finish",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full191 lines read. Schema resource descriptions and actual metric-definition publication recorded with NOOP/cache/native-bypass gates. Span starter does not publish descriptions; runtime event/status/metrics names are protected protocol tokens. First-event, block counts, provider_error truncation, final-result and poll counter gates traced. External adapter/runtime telemetry implementation pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js",
+        "read_lines": [
+          1,
+          141
+        ],
+        "string_template_occurrences": 32,
+        "fixed_rows": 0,
+        "excluded_occurrences": 32,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 49,
+            "column": 16,
+            "callee": "URL",
+            "source": "new URL(baseUrl)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 51,
+            "column": 5,
+            "source": "catch {\n        return false;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./version.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 43,
+            "column": 27,
+            "callee": "getClientVersion",
+            "arguments": [
+              "identity"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 21,
+            "callee": "runtimeDescription",
+            "arguments": []
+          },
+          {
+            "line": 56,
+            "column": 48,
+            "callee": "target.baseUrl.includes",
+            "arguments": [
+              "\"openrouter.ai\""
+            ]
+          },
+          {
+            "line": 59,
+            "column": 44,
+            "callee": "matchesHost",
+            "arguments": [
+              "target.baseUrl",
+              "NVIDIA_NIM_HOST"
+            ]
+          },
+          {
+            "line": 62,
+            "column": 84,
+            "callee": "matchesHost",
+            "arguments": [
+              "target.baseUrl",
+              "OPENCODE_HOST"
+            ]
+          },
+          {
+            "line": 70,
+            "column": 9,
+            "callee": "isOpenRouter",
+            "arguments": [
+              "target"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 48,
+            "callee": "categories.join",
+            "arguments": [
+              "\",\""
+            ]
+          },
+          {
+            "line": 80,
+            "column": 9,
+            "callee": "isNvidiaNim",
+            "arguments": [
+              "target"
+            ]
+          },
+          {
+            "line": 81,
+            "column": 45,
+            "callee": "name.charAt(0).toUpperCase",
+            "arguments": []
+          },
+          {
+            "line": 81,
+            "column": 45,
+            "callee": "name.charAt",
+            "arguments": [
+              "0"
+            ]
+          },
+          {
+            "line": 81,
+            "column": 76,
+            "callee": "name.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 82,
+            "column": 9,
+            "callee": "isOpenCode",
+            "arguments": [
+              "target"
+            ]
+          },
+          {
+            "line": 91,
+            "column": 25,
+            "callee": "isOpenCode",
+            "arguments": [
+              "target"
+            ]
+          },
+          {
+            "line": 98,
+            "column": 28,
+            "callee": "formatUserAgent",
+            "arguments": [
+              "identity"
+            ]
+          },
+          {
+            "line": 98,
+            "column": 58,
+            "callee": "getAttributionHeaders",
+            "arguments": [
+              "target",
+              "identity"
+            ]
+          },
+          {
+            "line": 104,
+            "column": 64,
+            "callee": "mergeClientIdentity",
+            "arguments": [
+              "identity",
+              "options?.identity"
+            ]
+          },
+          {
+            "line": 106,
+            "column": 29,
+            "callee": "models.getProviders",
+            "arguments": []
+          },
+          {
+            "line": 107,
+            "column": 30,
+            "callee": "models.getProvider",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 34,
+            "callee": "models.getModels",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 37,
+            "callee": "models.getModel",
+            "arguments": [
+              "provider",
+              "id"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 46,
+            "callee": "models.getModelsOfType",
+            "arguments": [
+              "type",
+              "provider"
+            ]
+          },
+          {
+            "line": 111,
+            "column": 49,
+            "callee": "models.getModelOfType",
+            "arguments": [
+              "type",
+              "provider",
+              "id"
+            ]
+          },
+          {
+            "line": 112,
+            "column": 37,
+            "callee": "models.getAllModels",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 113,
+            "column": 31,
+            "callee": "models.refresh",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 114,
+            "column": 45,
+            "callee": "models.checkAuth",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 115,
+            "column": 48,
+            "callee": "models.getAvailable",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 116,
+            "column": 60,
+            "callee": "models.getAvailableOfType",
+            "arguments": [
+              "type",
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 117,
+            "column": 51,
+            "callee": "models.getAllAvailable",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 118,
+            "column": 18,
+            "callee": "models.getAuth.bind",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 60,
+            "callee": "models.login",
+            "arguments": [
+              "providerId",
+              "type",
+              "interaction",
+              "options"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 42,
+            "callee": "models.logout",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 121,
+            "column": 46,
+            "callee": "models.stream",
+            "arguments": [
+              "model",
+              "context",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 121,
+            "column": 76,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 122,
+            "column": 48,
+            "callee": "models.complete",
+            "arguments": [
+              "model",
+              "context",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 122,
+            "column": 80,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 52,
+            "callee": "models.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 88,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 124,
+            "column": 54,
+            "callee": "models.completeSimple",
+            "arguments": [
+              "model",
+              "context",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 124,
+            "column": 92,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 125,
+            "column": 53,
+            "callee": "models.streamDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 125,
+            "column": 90,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 52,
+            "callee": "models.fetchDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 88,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 127,
+            "column": 53,
+            "callee": "models.cancelDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 127,
+            "column": 90,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 54,
+            "callee": "models.generateImages",
+            "arguments": [
+              "model",
+              "context",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 92,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 129,
+            "column": 48,
+            "callee": "models.classify",
+            "arguments": [
+              "model",
+              "context",
+              "withIdentity(options)"
+            ]
+          },
+          {
+            "line": 129,
+            "column": 80,
+            "callee": "withIdentity",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 131,
+            "column": 10,
+            "callee": "isMutableModels",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 135,
+            "column": 36,
+            "callee": "models.setProvider",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 136,
+            "column": 33,
+            "callee": "models.deleteProvider",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 137,
+            "column": 31,
+            "callee": "models.clearProviders",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full141 lines read. Protocol User-Agent/attribution/session-header templates and constants protected; browser/runtime/environment/URL errors and custom identity values are payload/API boundaries. Nullish and per-field override rules, provider/host matching, and mutable wrapper capability gates traced; no own human error prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+        "read_lines": [
+          1,
+          53
+        ],
+        "string_template_occurrences": 18,
+        "fixed_rows": 4,
+        "excluded_occurrences": 14,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 12,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Model ${model.provider}/${model.id} is not a chat model`"
+          },
+          {
+            "line": 17,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Model ${model.provider}/${model.id} is not an image model`"
+          },
+          {
+            "line": 22,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Model ${model.provider}/${model.id} is not a classifier model`"
+          },
+          {
+            "line": 28,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Model ${model.provider}/${model.id} does not accept image input`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 12,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} is not a chat model`)"
+          },
+          {
+            "line": 17,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} is not an image model`)"
+          },
+          {
+            "line": 22,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} is not a classifier model`)"
+          },
+          {
+            "line": 28,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} does not accept image input`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 12,
+            "column": 9,
+            "expression": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} is not a chat model`)"
+          },
+          {
+            "line": 17,
+            "column": 9,
+            "expression": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} is not an image model`)"
+          },
+          {
+            "line": 22,
+            "column": 9,
+            "expression": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} is not a classifier model`)"
+          },
+          {
+            "line": 28,
+            "column": 9,
+            "expression": "new ModelsError(\"provider\", `Model ${model.provider}/${model.id} does not accept image input`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./models-error.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 8,
+            "column": 12,
+            "callee": "getModelType",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 10,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 16,
+            "column": 10,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"image\""
+            ]
+          },
+          {
+            "line": 21,
+            "column": 10,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"classifier\""
+            ]
+          },
+          {
+            "line": 27,
+            "column": 36,
+            "callee": "model.input.includes",
+            "arguments": [
+              "\"image\""
+            ]
+          },
+          {
+            "line": 38,
+            "column": 64,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 20,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 49,
+            "column": 64,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 50,
+            "column": 20,
+            "callee": "Date.now",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full53 lines read. Four ModelsError message-argument1 headlines versus code-argument0. Model-type defaulting and classifier image gate exact; error result helpers expose conditional dynamic message/error/aborted fields, not automatic assistant/UI packets."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+        "read_lines": [
+          1,
+          218
+        ],
+        "string_template_occurrences": 10,
+        "fixed_rows": 0,
+        "excluded_occurrences": 10,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 42,
+            "column": 19,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 60,
+            "column": 22,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 127,
+            "column": 27,
+            "callee": "Map",
+            "source": "new Map(previous.map((tool) => [tool.name, tool]))"
+          },
+          {
+            "line": 128,
+            "column": 26,
+            "callee": "Map",
+            "source": "new Map(current.map((tool) => [tool.name, tool]))"
+          },
+          {
+            "line": 146,
+            "column": 25,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 163,
+            "column": 22,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 184,
+            "column": 22,
+            "callee": "Set",
+            "source": "new Set()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./text.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 24,
+            "column": 28,
+            "callee": "createInitialSystemMessage",
+            "arguments": [
+              "context.systemPrompt",
+              "context.tools"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 21,
+            "callee": "isSystemMessage",
+            "arguments": [
+              "first"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 12,
+            "callee": "getInitialSystemMessage",
+            "arguments": [
+              "messages"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 48,
+            "callee": "messages.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 14,
+            "callee": "isSystemMessage",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 47,
+            "column": 13,
+            "callee": "tools.delete",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 13,
+            "callee": "tools.set",
+            "arguments": [
+              "tool.name",
+              "tool"
+            ]
+          },
+          {
+            "line": 51,
+            "column": 16,
+            "callee": "tools.values",
+            "arguments": []
+          },
+          {
+            "line": 63,
+            "column": 14,
+            "callee": "isSystemMessage",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 66,
+            "column": 22,
+            "callee": "contentText",
+            "arguments": [
+              "message.content"
+            ]
+          },
+          {
+            "line": 68,
+            "column": 13,
+            "callee": "content.push",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 37,
+            "callee": "Object.entries",
+            "arguments": [
+              "message.sections ?? {}"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 17,
+            "callee": "sections.delete",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 17,
+            "callee": "sections.set",
+            "arguments": [
+              "name",
+              "value"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 19,
+            "callee": "getCurrentTools",
+            "arguments": [
+              "messages"
+            ]
+          },
+          {
+            "line": 81,
+            "column": 18,
+            "callee": "content.join",
+            "arguments": [
+              "\"\\n\\n\""
+            ]
+          },
+          {
+            "line": 82,
+            "column": 45,
+            "callee": "Object.fromEntries",
+            "arguments": [
+              "sections"
+            ]
+          },
+          {
+            "line": 89,
+            "column": 21,
+            "callee": "getCurrentSystemMessage",
+            "arguments": [
+              "messages"
+            ]
+          },
+          {
+            "line": 90,
+            "column": 22,
+            "callee": "getSystemMessageText",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 97,
+            "column": 18,
+            "callee": "getCurrentSystemMessage",
+            "arguments": [
+              "context.messages"
+            ]
+          },
+          {
+            "line": 98,
+            "column": 22,
+            "callee": "context.messages.filter",
+            "arguments": [
+              "(message) => message.role !== \"system\""
+            ]
+          },
+          {
+            "line": 103,
+            "column": 55,
+            "callee": "collapseSystemMessages",
+            "arguments": [
+              "context"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 21,
+            "callee": "JSON.parse",
+            "arguments": [
+              "JSON.stringify(tool.parameters)"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 32,
+            "callee": "JSON.stringify",
+            "arguments": [
+              "tool.parameters"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 12,
+            "callee": "JSON.stringify",
+            "arguments": [
+              "toToolDeclaration(left)"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 27,
+            "callee": "toToolDeclaration",
+            "arguments": [
+              "left"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 56,
+            "callee": "JSON.stringify",
+            "arguments": [
+              "toToolDeclaration(right)"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 71,
+            "callee": "toToolDeclaration",
+            "arguments": [
+              "right"
+            ]
+          },
+          {
+            "line": 127,
+            "column": 35,
+            "callee": "previous.map",
+            "arguments": [
+              "(tool) => [tool.name, tool]"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 34,
+            "callee": "current.map",
+            "arguments": [
+              "(tool) => [tool.name, tool]"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 21,
+            "callee": "current\n            .filter((tool) => {\n            const previousTool = previousTools.get(tool.name);\n            return previousTool === undefined || !declarationsEqual(previousTool, tool);\n        })\n            .map",
+            "arguments": [
+              "toToolDeclaration"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 21,
+            "callee": "current\n            .filter",
+            "arguments": [
+              "(tool) => {\n            const previousTool = previousTools.get(tool.name);\n            return previousTool === undefined || !declarationsEqual(previousTool, tool);\n        }"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 34,
+            "callee": "previousTools.get",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 51,
+            "callee": "declarationsEqual",
+            "arguments": [
+              "previousTool",
+              "tool"
+            ]
+          },
+          {
+            "line": 136,
+            "column": 23,
+            "callee": "previous\n            .filter((tool) => {\n            const currentTool = currentTools.get(tool.name);\n            return currentTool === undefined || !declarationsEqual(tool, currentTool);\n        })\n            .map",
+            "arguments": [
+              "(tool) => ({ name: tool.name })"
+            ]
+          },
+          {
+            "line": 136,
+            "column": 23,
+            "callee": "previous\n            .filter",
+            "arguments": [
+              "(tool) => {\n            const currentTool = currentTools.get(tool.name);\n            return currentTool === undefined || !declarationsEqual(tool, currentTool);\n        }"
+            ]
+          },
+          {
+            "line": 138,
+            "column": 33,
+            "callee": "currentTools.get",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 139,
+            "column": 50,
+            "callee": "declarationsEqual",
+            "arguments": [
+              "tool",
+              "currentTool"
+            ]
+          },
+          {
+            "line": 148,
+            "column": 14,
+            "callee": "isSystemMessage",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 151,
+            "column": 13,
+            "callee": "definitions.set",
+            "arguments": [
+              "tool.name",
+              "tool"
+            ]
+          },
+          {
+            "line": 153,
+            "column": 16,
+            "callee": "definitions.values",
+            "arguments": []
+          },
+          {
+            "line": 165,
+            "column": 14,
+            "callee": "isSystemMessage",
+            "arguments": [
+              "message"
+            ]
+          },
+          {
+            "line": 168,
+            "column": 30,
+            "callee": "declared.get",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 169,
+            "column": 44,
+            "callee": "declarationsEqual",
+            "arguments": [
+              "previous",
+              "tool"
+            ]
+          },
+          {
+            "line": 171,
+            "column": 13,
+            "callee": "declared.set",
+            "arguments": [
+              "tool.name",
+              "tool"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 12,
+            "callee": "findLastNonAdditiveToolChange",
+            "arguments": [
+              "messages.filter(isSystemMessage)"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 42,
+            "callee": "messages.filter",
+            "arguments": [
+              "isSystemMessage"
+            ]
+          },
+          {
+            "line": 191,
+            "column": 17,
+            "callee": "declared.has",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 193,
+            "column": 13,
+            "callee": "declared.add",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 209,
+            "column": 28,
+            "callee": "messages.filter",
+            "arguments": [
+              "isSystemMessage"
+            ]
+          },
+          {
+            "line": 211,
+            "column": 32,
+            "callee": "getCurrentTools",
+            "arguments": [
+              "systemMessages"
+            ]
+          },
+          {
+            "line": 215,
+            "column": 20,
+            "callee": "Math.max",
+            "arguments": [
+              "getInitialSystemMessage(messages) ? 1 : 0",
+              "findLastNonAdditiveToolChange(systemMessages) + 1"
+            ]
+          },
+          {
+            "line": 215,
+            "column": 29,
+            "callee": "getInitialSystemMessage",
+            "arguments": [
+              "messages"
+            ]
+          },
+          {
+            "line": 215,
+            "column": 72,
+            "callee": "findLastNonAdditiveToolChange",
+            "arguments": [
+              "systemMessages"
+            ]
+          },
+          {
+            "line": 216,
+            "column": 28,
+            "callee": "getCurrentTools",
+            "arguments": [
+              "systemMessages.slice(0, folded)"
+            ]
+          },
+          {
+            "line": 216,
+            "column": 44,
+            "callee": "systemMessages.slice",
+            "arguments": [
+              "0",
+              "folded"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full218 lines read. Initial prompt/tools folding, replay sections, current/declared tool state, JSON tool declarations/comparison and transport folding exact. Only role/mode/separator/empty strings authored locally; upstream prompt/tool description/schema payloads retain native live/exportFromFile/request-only distinctions. Imported text formatter remains pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js",
+        "read_lines": [
+          1,
+          25
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 6,
+            "column": 12,
+            "callee": "String",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 48,
+            "callee": "formatThrownValue",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 31,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 20,
+            "column": 50,
+            "callee": "extractDiagnosticError",
+            "arguments": [
+              "error"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full25 lines read. Error versus arbitrary thrown-value formatting, diagnostic extraction and append semantics exact. ThrownValue/name/code/type are technical diagnostic identity; arbitrary messages/stacks/details can reach optional JSONL/download/API data, not independent fixed UI captions. No catch protects getters/String or frozen-message mutation."
+      }
+    ],
+    "method": "Six complete Pi AI request/diagnostic helper bodies read: 718 lines; every literal/template partitioned plus Error/ModelsError/AggregateError message argument, constructor/throw/catch/regex/control/import/export/callback census. Native lazy/normalization/assertion/error-result routes distinct from optional collection observer/SDK/capabilities. Schema/NOOP/adapter metadata publication, retained diagnostic/download and current-prompt export gates bounded. No audited module/provider/model/parser/terminal/observer/network/store execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-ai",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/api/lazy.js",
+      "dist/telemetry.js",
+      "dist/utils/diagnostics.js",
+      "dist/utils/identity.js",
+      "dist/utils/model-operations.js",
+      "dist/utils/transcript.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/api/lazy.d.ts",
+      "dist/api/lazy.d.ts.map",
+      "dist/api/lazy.js.map",
+      "dist/telemetry.d.ts",
+      "dist/telemetry.d.ts.map",
+      "dist/telemetry.js.map",
+      "dist/utils/diagnostics.d.ts",
+      "dist/utils/diagnostics.d.ts.map",
+      "dist/utils/diagnostics.js.map",
+      "dist/utils/identity.d.ts",
+      "dist/utils/identity.d.ts.map",
+      "dist/utils/identity.js.map",
+      "dist/utils/model-operations.d.ts",
+      "dist/utils/model-operations.d.ts.map",
+      "dist/utils/model-operations.js.map",
+      "dist/utils/transcript.d.ts",
+      "dist/utils/transcript.d.ts.map",
+      "dist/utils/transcript.js.map"
+    ],
+    "status": "six-canonical-full-local-bodies-only-not-whole-pi-ai-package-census-or-closure"
+  },
+  "prior_scope_references": [],
+  "prior_full_body_owners": [],
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "status": "whole-body-pending; bounded-push/end/result-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "status": "whole-body-pending; bounded-content/system-text1-18-only; request-time section-update prose outside finite unit"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "status": "bounded-version-constant-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-telemetry@1.4.0/dist",
+      "status": "canonical archive/full typed/NOOP/adapter/context/renderer graph pending; installed hash-only support"
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent.js",
+      "status": "bounded installed current-prompt getter only; no canonical archive/full graph claim here"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api-and-provider-implementation-graph",
+      "status": "lazy loader/provider/API/error/diagnostic producers pending or separately owned bundle copies; no semantic equivalence inferred"
+    },
+    {
+      "source": "external:adapter-context-schema-publication-observer-JS-getters-JSON-native-errors-network-payload",
+      "status": "additional producers/publication/delivery pending"
+    }
+  ],
+  "limits": [
+    "Six finite canonical Pi AI1.4.0 bodies,718 lines/31233 bytes, immutable BASE346. Canonical/root/nested compared with exact transitive-lock SRI. No whole Pi AI/SDK/provider/compiled graph closure; historical census unchanged.",
+    "Root AI manifest canonical; nested exact public release files-glob transform. Agent/TUI/AI after hashes checked both trees118total. Foreign pi-telemetry/agent-core bounded supports have installed package/source hash proofs only, canonical archives not supplied.",
+    "ModelsError message argument1/code0; AggregateError argument1. Lazy setup called synchronously before promise catch; observer/forwarding rejection may occur after terminal event; catch-path callback/formatting failure not recovered. Native active packet routes qualified.",
+    "Telemetry descriptions are exported schema/resource API data or concrete metric-definition adapter metadata. Default NOOP ignores metadata, typed span starter ignores descriptions, native ModelRuntime bypasses collection observer; no default terminal/HTML/Flow description paint established.",
+    "Telemetry first-event/block/tool counts, 500-character provider-error status and exact !poll-or-not-pending/deferred accounting recorded. Custom adapter/context failure and void span starter rejection external; no guarantee complete spans or universal payload suppression.",
+    "User-Agent/header/host/runtime identity is protocol data. Native/SDK per-field overrides, Bun/Node/browser formatting, URL catch extent and mutable wrapper presence checks traced. External server/debug/log echoes remain payload boundaries.",
+    "Live HTML receives persisted state.systemPrompt/tools; exportFromFile supplies neither. Forced request projection is not thereby persisted. Upstream prompt/tool/schema payload can surface only through actual retained state and export gates; no model-only blanket exclusion.",
+    "Diagnostic objects require explicit append/retention. JSON/RPC/session and viewer JSONL download may carry name/message/stack/code/details. Ordinary assistant paint uses errorMessage, not diagnostics. ThrownValue is protected technical identity, dynamic message/error producers pending.",
+    "text/event-stream/version/provider/API bodies remain pending except bounded support. Only source/evidence parsing performed; no audited modules, parsers, model/terminal/native/adapter/network operations executed.",
+    "Only six new artifacts authored; no old/shared/census/index/product/dependency mutations or git staging/commit."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-ai-request-text.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-ai-request-text.csv": "a002a6d365623a75222a9b4a665c5e25fbc27f3f1922d0ff7d56a5cf2e350050",
+    "pi-ai-request-text-boundaries.csv": "b3f1ba3c48841d8a5e058fab1078622e3bc8c0709eb10c8106787aef53ab0382",
+    "pi-ai-request-text-scope.csv": "186226a506db80c9b177149664e1674e9c677a54470290d35007406b9d441324",
+    "pi-ai-request-text-exclusions.csv": "8f1dff3555d3c4b301a6c124fb443a678c39d3a999659d3137f09777f5707118"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/assistant-message.js",
+            "archive_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "root_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/json-event.js",
+            "archive_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+            "root_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+            "cli_nested_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/pi-user-agent.js",
+            "archive_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+            "root_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+            "cli_nested_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      },
+      {
+        "name": "@earendil-works/pi-ai",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/api/lazy.js",
+            "archive_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+            "root_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+            "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/telemetry.js",
+            "archive_sha256": "c6b5617c0e92d08d94028306c809b47eaa62f4dc9f3a95a18bf39eb2bf872d79",
+            "root_sha256": "c6b5617c0e92d08d94028306c809b47eaa62f4dc9f3a95a18bf39eb2bf872d79",
+            "cli_nested_sha256": "c6b5617c0e92d08d94028306c809b47eaa62f4dc9f3a95a18bf39eb2bf872d79",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/identity.js",
+            "archive_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+            "root_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+            "cli_nested_sha256": "32b45824054a8a6125a7f3caedd9ff1c594f1a109fd2af4fa1b5729f4578ab62",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/model-operations.js",
+            "archive_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+            "root_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+            "cli_nested_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/transcript.js",
+            "archive_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+            "root_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+            "cli_nested_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/diagnostics.js",
+            "archive_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+            "root_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+            "cli_nested_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "root_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models.js",
+            "archive_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "root_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/event-stream.js",
+            "archive_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+            "root_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+            "cli_nested_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/text.js",
+            "archive_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+            "root_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+            "cli_nested_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/models-error.js",
+            "archive_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+            "root_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+            "cli_nested_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/version.js",
+            "archive_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+            "root_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+            "cli_nested_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/openai-responses.lazy.js",
+            "archive_sha256": "ff6755b78f76a83ab50aee5603eb8f5efd8b9608be449a535847d49c0be0f0ca",
+            "root_sha256": "ff6755b78f76a83ab50aee5603eb8f5efd8b9608be449a535847d49c0be0f0ca",
+            "cli_nested_sha256": "ff6755b78f76a83ab50aee5603eb8f5efd8b9608be449a535847d49c0be0f0ca",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/providers/openai.js",
+            "archive_sha256": "9dc3881e858b0280e809ec04b8b17f22580fcb1871da2edf3cfbdfa3c13747b3",
+            "root_sha256": "9dc3881e858b0280e809ec04b8b17f22580fcb1871da2edf3cfbdfa3c13747b3",
+            "cli_nested_sha256": "9dc3881e858b0280e809ec04b8b17f22580fcb1871da2edf3cfbdfa3c13747b3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/lazy.d.ts",
+            "archive_sha256": "5c508df1918a03c50275be56f198a33483ce43fe67e0f3329d48f7995e55c49c",
+            "root_sha256": "5c508df1918a03c50275be56f198a33483ce43fe67e0f3329d48f7995e55c49c",
+            "cli_nested_sha256": "5c508df1918a03c50275be56f198a33483ce43fe67e0f3329d48f7995e55c49c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/lazy.d.ts.map",
+            "archive_sha256": "99c45737b29796ec81aff95e48a5ff391229e23a524c373df1013c350a62c006",
+            "root_sha256": "99c45737b29796ec81aff95e48a5ff391229e23a524c373df1013c350a62c006",
+            "cli_nested_sha256": "99c45737b29796ec81aff95e48a5ff391229e23a524c373df1013c350a62c006",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/lazy.js.map",
+            "archive_sha256": "d6685a9e9d341f6806307fc98f4b84dbcc2b64c65b386c0867bed9466c99e7c1",
+            "root_sha256": "d6685a9e9d341f6806307fc98f4b84dbcc2b64c65b386c0867bed9466c99e7c1",
+            "cli_nested_sha256": "d6685a9e9d341f6806307fc98f4b84dbcc2b64c65b386c0867bed9466c99e7c1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/telemetry.d.ts",
+            "archive_sha256": "52cdeef4b8094a926d3fc5e848b7db753a0d31a04cc151576ee76b3451000746",
+            "root_sha256": "52cdeef4b8094a926d3fc5e848b7db753a0d31a04cc151576ee76b3451000746",
+            "cli_nested_sha256": "52cdeef4b8094a926d3fc5e848b7db753a0d31a04cc151576ee76b3451000746",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/telemetry.d.ts.map",
+            "archive_sha256": "07ba83ab75e86f2b785820dae856dccb6d4c6f1d7a601d974f8e613f5d0c9e57",
+            "root_sha256": "07ba83ab75e86f2b785820dae856dccb6d4c6f1d7a601d974f8e613f5d0c9e57",
+            "cli_nested_sha256": "07ba83ab75e86f2b785820dae856dccb6d4c6f1d7a601d974f8e613f5d0c9e57",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/telemetry.js.map",
+            "archive_sha256": "fc0b2f124ee5541b9028ee090d121583a9dc63c97a84f1a16791eee3f9c2d2d7",
+            "root_sha256": "fc0b2f124ee5541b9028ee090d121583a9dc63c97a84f1a16791eee3f9c2d2d7",
+            "cli_nested_sha256": "fc0b2f124ee5541b9028ee090d121583a9dc63c97a84f1a16791eee3f9c2d2d7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/identity.d.ts",
+            "archive_sha256": "a3b69dc22cbd2fd71de51877a54bf10315c63e33138b9e20addf8ad1cc968ea4",
+            "root_sha256": "a3b69dc22cbd2fd71de51877a54bf10315c63e33138b9e20addf8ad1cc968ea4",
+            "cli_nested_sha256": "a3b69dc22cbd2fd71de51877a54bf10315c63e33138b9e20addf8ad1cc968ea4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/identity.d.ts.map",
+            "archive_sha256": "4f04472979dbf9ffc8a655772dfe43d903bb8c06871cec159801297344050407",
+            "root_sha256": "4f04472979dbf9ffc8a655772dfe43d903bb8c06871cec159801297344050407",
+            "cli_nested_sha256": "4f04472979dbf9ffc8a655772dfe43d903bb8c06871cec159801297344050407",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/identity.js.map",
+            "archive_sha256": "da46eda2f58cbd003de04d912cdf504a8189abd785e3192dec7e75a5b3ecf189",
+            "root_sha256": "da46eda2f58cbd003de04d912cdf504a8189abd785e3192dec7e75a5b3ecf189",
+            "cli_nested_sha256": "da46eda2f58cbd003de04d912cdf504a8189abd785e3192dec7e75a5b3ecf189",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/model-operations.d.ts",
+            "archive_sha256": "570e1ba5dbd96a0ba61a29b0f649ba0696c2661a67c2225406225d265091287c",
+            "root_sha256": "570e1ba5dbd96a0ba61a29b0f649ba0696c2661a67c2225406225d265091287c",
+            "cli_nested_sha256": "570e1ba5dbd96a0ba61a29b0f649ba0696c2661a67c2225406225d265091287c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/model-operations.d.ts.map",
+            "archive_sha256": "bec0cec5fe1b2c066d37f58beb15576c7b42a01dd76f530edf0d17c52b236e8a",
+            "root_sha256": "bec0cec5fe1b2c066d37f58beb15576c7b42a01dd76f530edf0d17c52b236e8a",
+            "cli_nested_sha256": "bec0cec5fe1b2c066d37f58beb15576c7b42a01dd76f530edf0d17c52b236e8a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/model-operations.js.map",
+            "archive_sha256": "2d1149fc7e4bfd87e608380c9e56500d222635e0d4872ec0df193f532eb23809",
+            "root_sha256": "2d1149fc7e4bfd87e608380c9e56500d222635e0d4872ec0df193f532eb23809",
+            "cli_nested_sha256": "2d1149fc7e4bfd87e608380c9e56500d222635e0d4872ec0df193f532eb23809",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/transcript.d.ts",
+            "archive_sha256": "f3807fb050f2c72bf26dc76ba9cacb9604fd263fb78b3473b5db8ce6bd2926f4",
+            "root_sha256": "f3807fb050f2c72bf26dc76ba9cacb9604fd263fb78b3473b5db8ce6bd2926f4",
+            "cli_nested_sha256": "f3807fb050f2c72bf26dc76ba9cacb9604fd263fb78b3473b5db8ce6bd2926f4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/transcript.d.ts.map",
+            "archive_sha256": "ba33394778793a11c7582a2f0ebadf4178cfab621b4778a09ed494df53f6ed31",
+            "root_sha256": "ba33394778793a11c7582a2f0ebadf4178cfab621b4778a09ed494df53f6ed31",
+            "cli_nested_sha256": "ba33394778793a11c7582a2f0ebadf4178cfab621b4778a09ed494df53f6ed31",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/transcript.js.map",
+            "archive_sha256": "068473be8501b1c1d1ba83322158f670061fbd24ee2faafc415346969d249071",
+            "root_sha256": "068473be8501b1c1d1ba83322158f670061fbd24ee2faafc415346969d249071",
+            "cli_nested_sha256": "068473be8501b1c1d1ba83322158f670061fbd24ee2faafc415346969d249071",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/diagnostics.d.ts",
+            "archive_sha256": "ca69c6883f6a82f8e87dd87b0d8f4ef8b643cafda20eaaaf1dffb633f4fc6ce6",
+            "root_sha256": "ca69c6883f6a82f8e87dd87b0d8f4ef8b643cafda20eaaaf1dffb633f4fc6ce6",
+            "cli_nested_sha256": "ca69c6883f6a82f8e87dd87b0d8f4ef8b643cafda20eaaaf1dffb633f4fc6ce6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/diagnostics.d.ts.map",
+            "archive_sha256": "9be24a0318c152fc56c520d45405d5a80cf625b00ff86c70a08818a35087b560",
+            "root_sha256": "9be24a0318c152fc56c520d45405d5a80cf625b00ff86c70a08818a35087b560",
+            "cli_nested_sha256": "9be24a0318c152fc56c520d45405d5a80cf625b00ff86c70a08818a35087b560",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/diagnostics.js.map",
+            "archive_sha256": "627cf7984533badb1c825f2f60086d5b0440d404b970c90b9e6ba2995ce8ab63",
+            "root_sha256": "627cf7984533badb1c825f2f60086d5b0440d404b970c90b9e6ba2995ce8ab63",
+            "cli_nested_sha256": "627cf7984533badb1c825f2f60086d5b0440d404b970c90b9e6ba2995ce8ab63",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 41,
+    "byte_identical_scope_files": 38,
+    "pinned_patch_scope_files": 3,
+    "unresolved_scope_differences": 0
+  }
+}
