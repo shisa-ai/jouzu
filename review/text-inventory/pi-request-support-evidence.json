@@ -1,0 +1,2664 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "2e8c5c4cc71537eb5be6c4af10a5dfdfbffe9a03",
+  "inventory_file": "pi-request-support.csv",
+  "scope_file": "pi-request-support-scope.csv",
+  "boundary_file": "pi-request-support-boundaries.csv",
+  "exclusion_file": "pi-request-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/interactive-startup.ts",
+      "sha256": "8f03c3a6b7c94247fd1036d543255b4b20c5d0a920e9e115fa2f468fc6f2fb04"
+    },
+    {
+      "source": "packages/cli/src/runtime-output.ts",
+      "sha256": "b7c16e4afb28b45a3293d630fe48880a3c23d20d34bbc3fb8d3b5cf8092f0ae6"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/textguard-policy.ts",
+      "sha256": "16322c507662368353a312b0ce0c777ee7325e7e438aab107ef3a37b8fabdbac"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    }
+  ],
+  "owned_virtual_registration_census": {
+    "scope": "packages/*/src/**/*.ts excluding *.test.ts; literal registerVirtualModel token scan only, not full body review or dynamic/alias/compiled consumer closure",
+    "file_count": 247,
+    "corpus_sha256": "6a2fec8035a1ae08285c56052134a8f61d08cdb896091901c8d3b825c58fae21",
+    "matches": []
+  },
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          352,
+          418
+        ],
+        [
+          425,
+          455
+        ],
+        [
+          754,
+          777
+        ],
+        [
+          1248,
+          1257
+        ],
+        [
+          3332,
+          3369
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          164,
+          173
+        ],
+        [
+          464,
+          505
+        ],
+        [
+          509,
+          547
+        ],
+        [
+          725,
+          788
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-manager.js",
+      "sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+      "cli_nested_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          100,
+          108
+        ],
+        [
+          702,
+          711
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          468,
+          471
+        ],
+        [
+          521,
+          525
+        ],
+        [
+          710,
+          716
+        ],
+        [
+          820,
+          831
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1600,
+          1606
+        ],
+        [
+          2876,
+          2908
+        ],
+        [
+          2915,
+          2954
+        ],
+        [
+          3236,
+          3240
+        ],
+        [
+          3290,
+          3296
+        ],
+        [
+          3400,
+          3421
+        ],
+        [
+          4137,
+          4140
+        ],
+        [
+          4826,
+          4836
+        ],
+        [
+          5877,
+          5945
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/settings-selector.js",
+      "sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+      "cli_nested_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          303,
+          310
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js",
+      "sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          4,
+          26
+        ],
+        [
+          83,
+          88
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js",
+      "sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          133,
+          154
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          942,
+          955
+        ],
+        [
+          1289,
+          1293
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          84,
+          94
+        ],
+        [
+          110,
+          117
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          288,
+          291
+        ],
+        [
+          780,
+          788
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/settings-list.js",
+      "sha256": "ef0ba838df7a8ad0c6f833e9263fe6ac03033008f2283e6106033a8cf5f3af30",
+      "cli_nested_sha256": "ef0ba838df7a8ad0c6f833e9263fe6ac03033008f2283e6106033a8cf5f3af30",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          81,
+          96
+        ],
+        [
+          179,
+          222
+        ]
+      ],
+      "purpose": "Bounded actual caller/error/control/result/record/native/TUI/HTML/protocol support; prior full body owner remains separate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          20
+        ],
+        [
+          44,
+          65
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded lazy/tool/auth-source propagation support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          267,
+          286
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded lazy/tool/auth-source propagation support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent-loop.js",
+      "sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+      "cli_nested_sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          569,
+          615
+        ],
+        [
+          657,
+          665
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded lazy/tool/auth-source propagation support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "sha256": "3fcec09018831324d9c7fb02f4aea707e8a9e4fec5a2bdf1b3d84d716fd3091e",
+      "cli_nested_sha256": "3fcec09018831324d9c7fb02f4aea707e8a9e4fec5a2bdf1b3d84d716fd3091e",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          45
+        ],
+        [
+          124,
+          132
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded lazy/tool/auth-source propagation support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    }
+  ],
+  "external_dependency_metadata": [
+    {
+      "tree": "root",
+      "from": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "package": "undici",
+      "version": "8.12.3",
+      "resolved_package_json": "undici/package.json",
+      "sha256": "652933475722a1ac7b8531f29a728f856e018332f56ea39f79a2dcc3544d56d0",
+      "proof": "Installed closest-package metadata only; root package-lock node_modules/undici entry version association checked, canonical Undici archive/body not supplied or reviewed."
+    },
+    {
+      "tree": "cli-nested",
+      "from": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "package": "undici",
+      "version": "8.12.3",
+      "resolved_package_json": "undici/package.json",
+      "sha256": "11d8f9730b5943090089d918e653c281b6fe66dc91cfd1fb6c9c2f6e3d989431",
+      "proof": "Installed closest-package metadata only; root package-lock node_modules/undici entry version association checked, canonical Undici archive/body not supplied or reviewed."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.d.ts",
+      "sha256": "d2a244601fa737997d99cf832e07315690d26549aa0f9176ceab27cafdaa60ec",
+      "cli_nested_sha256": "d2a244601fa737997d99cf832e07315690d26549aa0f9176ceab27cafdaa60ec",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.d.ts.map",
+      "sha256": "8063d6525d6ee5239e6cb7d44085062b452858af05e42f2f3c255da975cc21d2",
+      "cli_nested_sha256": "8063d6525d6ee5239e6cb7d44085062b452858af05e42f2f3c255da975cc21d2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js.map",
+      "sha256": "c0b56bd7455117d91fa52acbf6fc9cb1b71594f840d0d45c9a2fe3752d8bce73",
+      "cli_nested_sha256": "c0b56bd7455117d91fa52acbf6fc9cb1b71594f840d0d45c9a2fe3752d8bce73",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.d.ts",
+      "sha256": "bf23a51f5b22ee643a6f292b6366d74ff1416b5e631fa3af8c134c255a3832d1",
+      "cli_nested_sha256": "bf23a51f5b22ee643a6f292b6366d74ff1416b5e631fa3af8c134c255a3832d1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.d.ts.map",
+      "sha256": "85c772e4d96bd9e32df0b28133e121c68a81f43cd2a07520aabc804ab79a16af",
+      "cli_nested_sha256": "85c772e4d96bd9e32df0b28133e121c68a81f43cd2a07520aabc804ab79a16af",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.js.map",
+      "sha256": "06f35b72e34fc550adc99285db059af9fbea3c568531a8bd4fc6b39144698f23",
+      "cli_nested_sha256": "06f35b72e34fc550adc99285db059af9fbea3c568531a8bd4fc6b39144698f23",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.d.ts",
+      "sha256": "d0a2f111c02c3126178a992a88d4a82b3f2bd99f6ae762a8dbd8336403b0d1e9",
+      "cli_nested_sha256": "d0a2f111c02c3126178a992a88d4a82b3f2bd99f6ae762a8dbd8336403b0d1e9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.d.ts.map",
+      "sha256": "6c2634cc3eb810796accfe826ab5d7e2761b549f1d04652cb091acd27706bd37",
+      "cli_nested_sha256": "6c2634cc3eb810796accfe826ab5d7e2761b549f1d04652cb091acd27706bd37",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js.map",
+      "sha256": "1dc7e15e6af406885a4eace69c50b8c0b4c530a4e01f3d5469c1cb1b5e10a6c5",
+      "cli_nested_sha256": "1dc7e15e6af406885a4eace69c50b8c0b4c530a4e01f3d5469c1cb1b5e10a6c5",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.d.ts",
+      "sha256": "aa9a74c4458655d30a6533d97785ddd62baf865bb6f8f89f9efb7008d5d4bb7c",
+      "cli_nested_sha256": "aa9a74c4458655d30a6533d97785ddd62baf865bb6f8f89f9efb7008d5d4bb7c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.d.ts.map",
+      "sha256": "3bc5e33275b28e276cf0e77d93f115a1c335e7c6a55d94ad832406a8f51b52ea",
+      "cli_nested_sha256": "3bc5e33275b28e276cf0e77d93f115a1c335e7c6a55d94ad832406a8f51b52ea",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.js.map",
+      "sha256": "4fa8d3f21fcf8656509ccc826ea2dc8dbe03176d84fa50cb8881080863aefc50",
+      "cli_nested_sha256": "4fa8d3f21fcf8656509ccc826ea2dc8dbe03176d84fa50cb8881080863aefc50",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.d.ts",
+      "sha256": "666d8e0b29aa4df3eee7cdff633705d4a272e90b24b762fc28c7d505b913f073",
+      "cli_nested_sha256": "666d8e0b29aa4df3eee7cdff633705d4a272e90b24b762fc28c7d505b913f073",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.d.ts.map",
+      "sha256": "055f5bc5beeea8b9a2cd6f001257ea1eb5ba3f1efc83700d7b6fa880742de02c",
+      "cli_nested_sha256": "055f5bc5beeea8b9a2cd6f001257ea1eb5ba3f1efc83700d7b6fa880742de02c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js.map",
+      "sha256": "04bc1443970eb52c2c57554238e5a585435ce1e87fd19224a33fc6c565ac9922",
+      "cli_nested_sha256": "04bc1443970eb52c2c57554238e5a585435ce1e87fd19224a33fc6c565ac9922",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.d.ts",
+      "sha256": "087afba0b7a4eca219e65e8ca28af1ed5e0eefbc289897ddb3ce069c57296651",
+      "cli_nested_sha256": "087afba0b7a4eca219e65e8ca28af1ed5e0eefbc289897ddb3ce069c57296651",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.d.ts.map",
+      "sha256": "599714b0ac83e82ed484b44d2661d57936a550b6051edb647f800fa525ef68ca",
+      "cli_nested_sha256": "599714b0ac83e82ed484b44d2661d57936a550b6051edb647f800fa525ef68ca",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js.map",
+      "sha256": "aea006f803be52c3866d83dd1bfc42814e43a12ddc29cfa1d288b74c86ca52a8",
+      "cli_nested_sha256": "aea006f803be52c3866d83dd1bfc42814e43a12ddc29cfa1d288b74c86ca52a8",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-manager.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/settings-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/settings-list.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 10,
+    "proofs": 10,
+    "scopes": 6,
+    "external_boundaries": 11,
+    "excluded_occurrences": 67,
+    "dispositioned_source_files": 6,
+    "string_template_occurrences": 77,
+    "protected_regex_literals": 1,
+    "error_constructors": 4,
+    "catch_clauses": 3,
+    "throw_statements": 4,
+    "all_new_expressions": 17,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 703,
+    "runtime_source_bytes": 28622,
+    "nonruntime_assets": 18,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 6
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.request-support.http.7.14",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 7,
+      "column": 14,
+      "kind": "string-literal",
+      "english": "30 sec",
+      "evidence": "\"30 sec\""
+    },
+    {
+      "item_id": "pi.request-support.http.8.14",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 8,
+      "column": 14,
+      "kind": "string-literal",
+      "english": "1 min",
+      "evidence": "\"1 min\""
+    },
+    {
+      "item_id": "pi.request-support.http.9.14",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 9,
+      "column": 14,
+      "kind": "string-literal",
+      "english": "2 min",
+      "evidence": "\"2 min\""
+    },
+    {
+      "item_id": "pi.request-support.http.10.14",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 10,
+      "column": 14,
+      "kind": "string-literal",
+      "english": "5 min",
+      "evidence": "\"5 min\""
+    },
+    {
+      "item_id": "pi.request-support.http.11.14",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 11,
+      "column": 14,
+      "kind": "string-literal",
+      "english": "disabled",
+      "evidence": "\"disabled\""
+    },
+    {
+      "item_id": "pi.request-support.http.36.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 36,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "${timeoutMs / 1000} sec",
+      "evidence": "`${timeoutMs / 1000} sec`"
+    },
+    {
+      "item_id": "pi.request-support.http.71.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "line": 71,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Invalid HTTP idle timeout: ${String(timeoutMs)}",
+      "evidence": "`Invalid HTTP idle timeout: ${String(timeoutMs)}`"
+    },
+    {
+      "item_id": "pi.request-support.virtual.87.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js",
+      "line": 87,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Virtual model ${model.provider}/${model.id} must be routed before streaming",
+      "evidence": "`Virtual model ${model.provider}/${model.id} must be routed before streaming`"
+    },
+    {
+      "item_id": "pi.request-support.virtual.100.37",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js",
+      "line": 100,
+      "column": 37,
+      "kind": "string-literal",
+      "english": "Virtual model",
+      "evidence": "\"Virtual model\""
+    },
+    {
+      "item_id": "pi.request-support.virtual.100.96",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js",
+      "line": 100,
+      "column": 96,
+      "kind": "string-literal",
+      "english": "virtual",
+      "evidence": "\"virtual\""
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js",
+        "read_lines": [
+          1,
+          101
+        ],
+        "string_template_occurrences": 10,
+        "fixed_rows": 0,
+        "excluded_occurrences": 10,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "25a93665cb5b6642b47a8a35c7c9ce0f0f41964a319c09709f2a0ca2bdfbbcc0",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 35,
+            "column": 21,
+            "callee": "TextDecoder",
+            "source": "new TextDecoder()"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 82,
+            "column": 13,
+            "expression": "err"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 78,
+            "column": 5,
+            "source": "catch (err) {\n        // An aborted command still returns the output it produced so far\n        if (!options?.signal?.aborted) {\n            tempFileStream?.end();\n            throw err;\n        }\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "../utils/ansi.js"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "../utils/output-files.js"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "../utils/shell.js"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./tools/truncate.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 30,
+            "column": 59,
+            "callee": "createOutputFileStream",
+            "arguments": [
+              "\"pi-bash\"",
+              "\".log\""
+            ]
+          },
+          {
+            "line": 32,
+            "column": 13,
+            "callee": "tempFileStream.write",
+            "arguments": [
+              "chunk"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 22,
+            "callee": "sanitizeBinaryOutput(stripAnsi(rawText)).replace",
+            "arguments": [
+              "/\\r/g",
+              "\"\""
+            ]
+          },
+          {
+            "line": 40,
+            "column": 22,
+            "callee": "sanitizeBinaryOutput",
+            "arguments": [
+              "stripAnsi(rawText)"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 43,
+            "callee": "stripAnsi",
+            "arguments": [
+              "rawText"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 13,
+            "callee": "ensureTempFile",
+            "arguments": []
+          },
+          {
+            "line": 49,
+            "column": 13,
+            "callee": "tempFileStream.write",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 52,
+            "column": 9,
+            "callee": "outputChunks.push",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 55,
+            "column": 29,
+            "callee": "outputChunks.shift",
+            "arguments": []
+          },
+          {
+            "line": 60,
+            "column": 13,
+            "callee": "options.onChunk",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 39,
+            "callee": "splitIncompleteAnsiSuffix",
+            "arguments": [
+              "pendingAnsi + decoder.decode(data, { stream: true })"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 79,
+            "callee": "decoder.decode",
+            "arguments": [
+              "data",
+              "{ stream: true }"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 9,
+            "callee": "appendText",
+            "arguments": [
+              "complete"
+            ]
+          },
+          {
+            "line": 70,
+            "column": 36,
+            "callee": "decoder.decode",
+            "arguments": []
+          },
+          {
+            "line": 72,
+            "column": 9,
+            "callee": "appendText",
+            "arguments": [
+              "rest"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 31,
+            "callee": "operations.exec",
+            "arguments": [
+              "command",
+              "cwd",
+              "{ onData, signal: options?.signal }"
+            ]
+          },
+          {
+            "line": 81,
+            "column": 13,
+            "callee": "tempFileStream?.end",
+            "arguments": []
+          },
+          {
+            "line": 85,
+            "column": 5,
+            "callee": "flushOutput",
+            "arguments": []
+          },
+          {
+            "line": 86,
+            "column": 24,
+            "callee": "outputChunks.join",
+            "arguments": [
+              "\"\""
+            ]
+          },
+          {
+            "line": 87,
+            "column": 30,
+            "callee": "truncateTail",
+            "arguments": [
+              "fullOutput"
+            ]
+          },
+          {
+            "line": 89,
+            "column": 9,
+            "callee": "ensureTempFile",
+            "arguments": []
+          },
+          {
+            "line": 91,
+            "column": 5,
+            "callee": "tempFileStream?.end",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full101 lines. No own English prose/Error. Custom operations output is ANSI/binary sanitized, CR removed, streamed to callback and rolling buffer, spill file at raw byte threshold or final truncation. outputBytes actually UTF16 text.length, at least one chunk retained. Nonabort operations rejection rethrows; aborted rejects suppressed, but flush/truncate/file/callback errors outside catch can still escape. Imported helpers separately fully owned."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.js",
+        "read_lines": [
+          1,
+          112
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 57,
+            "column": 20,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 23,
+            "column": 26,
+            "callee": "Math.min",
+            "arguments": [
+              "prev.promptTokens",
+              "promptTokens"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 12,
+            "callee": "models.getModel",
+            "arguments": [
+              "message.provider",
+              "message.model"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 36,
+            "callee": "Math.max",
+            "arguments": [
+              "0",
+              "paidPerToken - readPerToken"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 17,
+            "callee": "Math.max",
+            "arguments": [
+              "0",
+              "message.timestamp - prev.timestamp"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 32,
+            "callee": "Date.parse",
+            "arguments": [
+              "entry.timestamp"
+            ]
+          },
+          {
+            "line": 78,
+            "column": 26,
+            "callee": "detectMiss",
+            "arguments": [
+              "prev",
+              "entry.message",
+              "models"
+            ]
+          },
+          {
+            "line": 83,
+            "column": 17,
+            "callee": "misses.set",
+            "arguments": [
+              "entry.message",
+              "miss"
+            ]
+          },
+          {
+            "line": 85,
+            "column": 20,
+            "callee": "asPreviousRequest",
+            "arguments": [
+              "entry.message",
+              "prev?.reportedCache ?? false"
+            ]
+          },
+          {
+            "line": 95,
+            "column": 12,
+            "callee": "scan",
+            "arguments": [
+              "entries",
+              "models"
+            ]
+          },
+          {
+            "line": 103,
+            "column": 12,
+            "callee": "scan",
+            "arguments": [
+              "entries",
+              "models"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 12,
+            "callee": "detectMiss",
+            "arguments": [
+              "scan(entries, models).prev",
+              "message",
+              "models"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 23,
+            "callee": "scan",
+            "arguments": [
+              "entries",
+              "models"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full112 lines. No own prose/Error. Computes numeric cache misses/waste, 1024 floor, reset on compaction/branchsummary, cachewarm seeds prior; model switches counted. No stopReason filter inside scan. Model lookup/cost/time/entry data external, UI producer applies separate show/size thresholds. Protocol/type/model-key strings protected."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+        "read_lines": [
+          1,
+          98
+        ],
+        "string_template_occurrences": 13,
+        "fixed_rows": 7,
+        "excluded_occurrences": 6,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 71,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid HTTP idle timeout: ${String(timeoutMs)}`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 56,
+            "column": 36,
+            "callee": "undici.Client",
+            "source": "new undici.Client(origin, options)"
+          },
+          {
+            "line": 63,
+            "column": 36,
+            "callee": "undici.Pool",
+            "source": "new undici.Pool(origin, {\n        ...dispatcherOptions,\n        factory: createUndiciClient,\n    })"
+          },
+          {
+            "line": 71,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`)"
+          },
+          {
+            "line": 73,
+            "column": 48,
+            "callee": "undici.EnvHttpProxyAgent",
+            "source": "new undici.EnvHttpProxyAgent({\n        allowH2: false,\n        // Keep HTTP origins on CONNECT tunnels as they were before Undici 8.7.\n        proxyTunnel: true,\n        bodyTimeout: normalizedTimeoutMs,\n        connect: {\n            autoSelectFamilyAttemptTimeout: DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,\n        },\n        headersTimeout: normalizedTimeoutMs,\n        clientFactory: createUndiciClient,\n        factory: createUndiciOriginDispatcher,\n    })"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 71,
+            "column": 9,
+            "expression": "new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:events"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "undici"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 17,
+            "column": 25,
+            "callee": "value.trim",
+            "arguments": []
+          },
+          {
+            "line": 18,
+            "column": 13,
+            "callee": "trimmed.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 24,
+            "column": 16,
+            "callee": "parseHttpIdleTimeoutMs",
+            "arguments": [
+              "Number(trimmed)"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 39,
+            "callee": "Number",
+            "arguments": [
+              "trimmed"
+            ]
+          },
+          {
+            "line": 26,
+            "column": 39,
+            "callee": "Number.isFinite",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 12,
+            "callee": "Math.floor",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 20,
+            "callee": "HTTP_IDLE_TIMEOUT_CHOICES.find",
+            "arguments": [
+              "(item) => item.timeoutMs === timeoutMs"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 19,
+            "callee": "httpProxy?.trim",
+            "arguments": []
+          },
+          {
+            "line": 51,
+            "column": 9,
+            "callee": "EventEmitter.prototype.on.call",
+            "arguments": [
+              "dispatcher",
+              "\"error\"",
+              "ignoreUndiciDispatcherError"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 12,
+            "callee": "withUndiciErrorListener",
+            "arguments": [
+              "new undici.Client(origin, options)"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 16,
+            "callee": "createUndiciClient",
+            "arguments": [
+              "origin",
+              "dispatcherOptions"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 12,
+            "callee": "withUndiciErrorListener",
+            "arguments": [
+              "new undici.Pool(origin, {\n        ...dispatcherOptions,\n        factory: createUndiciClient,\n    })"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 33,
+            "callee": "parseHttpIdleTimeoutMs",
+            "arguments": [
+              "timeoutMs"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 55,
+            "callee": "String",
+            "arguments": [
+              "timeoutMs"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 24,
+            "callee": "withUndiciErrorListener",
+            "arguments": [
+              "new undici.EnvHttpProxyAgent({\n        allowH2: false,\n        // Keep HTTP origins on CONNECT tunnels as they were before Undici 8.7.\n        proxyTunnel: true,\n        bodyTimeout: normalizedTimeoutMs,\n        connect: {\n            autoSelectFamilyAttemptTimeout: DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,\n        },\n        headersTimeout: normalizedTimeoutMs,\n        clientFactory: createUndiciClient,\n        factory: createUndiciOriginDispatcher,\n    })"
+            ]
+          },
+          {
+            "line": 85,
+            "column": 5,
+            "callee": "undici.setGlobalDispatcher",
+            "arguments": [
+              "dispatcher"
+            ]
+          },
+          {
+            "line": 94,
+            "column": 9,
+            "callee": "undici.install",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full98 lines. Five preset labels plus fallback seconds template and invalid-input Error positive. disabled equality is parser control. Proxy env nullish assignment, Undici EventEmitter no-op error listener versus body rejection, client/pool selection, global dispatcher/fetch replacement guards. Actual undici8.12.3 closest-package metadata separately pinned; implementation/native/API diagnostics pending, no requests executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.js",
+        "read_lines": [
+          1,
+          179
+        ],
+        "string_template_occurrences": 13,
+        "fixed_rows": 0,
+        "excluded_occurrences": 13,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 22,
+            "column": 17,
+            "callee": "TextEncoder",
+            "source": "new TextEncoder()"
+          },
+          {
+            "line": 29,
+            "column": 17,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 88,
+            "column": 14,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 101,
+            "column": 33,
+            "callee": "NestedCallRecorder",
+            "source": "new NestedCallRecorder()"
+          },
+          {
+            "line": 124,
+            "column": 30,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n                release = resolve;\n            })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "./usage-totals.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 41,
+            "column": 22,
+            "callee": "JSON.stringify",
+            "arguments": [
+              "toolCall.arguments ?? {}"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 23,
+            "callee": "encoder.encode",
+            "arguments": [
+              "json"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 32,
+            "callee": "JSON.parse",
+            "arguments": [
+              "json"
+            ]
+          },
+          {
+            "line": 52,
+            "column": 9,
+            "callee": "this.calls.push",
+            "arguments": [
+              "record"
+            ]
+          },
+          {
+            "line": 53,
+            "column": 9,
+            "callee": "this.startedAt.set",
+            "arguments": [
+              "record",
+              "performance.now()"
+            ]
+          },
+          {
+            "line": 53,
+            "column": 36,
+            "callee": "performance.now",
+            "arguments": []
+          },
+          {
+            "line": 60,
+            "column": 29,
+            "callee": "Math.round",
+            "arguments": [
+              "performance.now() - (this.startedAt.get(record) ?? performance.now())"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 40,
+            "callee": "performance.now",
+            "arguments": []
+          },
+          {
+            "line": 60,
+            "column": 61,
+            "callee": "this.startedAt.get",
+            "arguments": [
+              "record"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 91,
+            "callee": "performance.now",
+            "arguments": []
+          },
+          {
+            "line": 61,
+            "column": 9,
+            "callee": "this.startedAt.delete",
+            "arguments": [
+              "record"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 28,
+            "callee": "errorText.slice",
+            "arguments": [
+              "0",
+              "NESTED_CALL_LIMITS.maxErrorChars"
+            ]
+          },
+          {
+            "line": 66,
+            "column": 35,
+            "callee": "combineUsage",
+            "arguments": [
+              "this.usage",
+              "usage"
+            ]
+          },
+          {
+            "line": 75,
+            "column": 23,
+            "callee": "this.calls.map",
+            "arguments": [
+              "(call) => ({ ...call })"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 52,
+            "callee": "calls.every",
+            "arguments": [
+              "(call) => call.status !== \"unfinished\""
+            ]
+          },
+          {
+            "line": 80,
+            "column": 12,
+            "callee": "(result.content ?? [])\n        .filter((block) => block.type === \"text\")\n        .map((block) => block.text)\n        .join",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 80,
+            "column": 12,
+            "callee": "(result.content ?? [])\n        .filter((block) => block.type === \"text\")\n        .map",
+            "arguments": [
+              "(block) => block.text"
+            ]
+          },
+          {
+            "line": 80,
+            "column": 12,
+            "callee": "(result.content ?? [])\n        .filter",
+            "arguments": [
+              "(block) => block.type === \"text\""
+            ]
+          },
+          {
+            "line": 90,
+            "column": 17,
+            "callee": "Promise.resolve",
+            "arguments": []
+          },
+          {
+            "line": 99,
+            "column": 21,
+            "callee": "this.scopes.get",
+            "arguments": [
+              "callerId"
+            ]
+          },
+          {
+            "line": 102,
+            "column": 13,
+            "callee": "this.scopes.set",
+            "arguments": [
+              "callerId",
+              "scope"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 24,
+            "callee": "scope.recorder.start",
+            "arguments": [
+              "toolCall"
+            ]
+          },
+          {
+            "line": 111,
+            "column": 15,
+            "callee": "this.host.emit",
+            "arguments": [
+              "{\n            type: \"tool_execution_start\",\n            toolCallId: toolCall.id,\n            toolName: name,\n            args: toolCall.arguments,\n            parentToolCallId: callerId,\n        }"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 14,
+            "callee": "this.host.isSequential",
+            "arguments": []
+          },
+          {
+            "line": 120,
+            "column": 17,
+            "callee": "this.host.getTools().find",
+            "arguments": [
+              "(tool) => tool.name === name"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 17,
+            "callee": "this.host.getTools",
+            "arguments": []
+          },
+          {
+            "line": 129,
+            "column": 9,
+            "callee": "this.scopes.set",
+            "arguments": [
+              "toolCall.id",
+              "{\n            recorder: scope.recorder,\n            nextId: 1,\n            holdsQueue: scope.holdsQueue || exclusive,\n        }"
+            ]
+          },
+          {
+            "line": 136,
+            "column": 29,
+            "callee": "this.host.runToolCall",
+            "arguments": [
+              "toolCall",
+              "callerId",
+              "options.signal",
+              "async (partialResult) => {\n                options.onUpdate?.(partialResult);\n                await this.host.emit({\n                    type: \"tool_execution_update\",\n                    toolCallId: toolCall.id,\n                    toolName: name,\n                    args: toolCall.arguments,\n                    partialResult,\n                    parentToolCallId: callerId,\n                });\n            }"
+            ]
+          },
+          {
+            "line": 137,
+            "column": 17,
+            "callee": "options.onUpdate",
+            "arguments": [
+              "partialResult"
+            ]
+          },
+          {
+            "line": 138,
+            "column": 23,
+            "callee": "this.host.emit",
+            "arguments": [
+              "{\n                    type: \"tool_execution_update\",\n                    toolCallId: toolCall.id,\n                    toolName: name,\n                    args: toolCall.arguments,\n                    partialResult,\n                    parentToolCallId: callerId,\n                }"
+            ]
+          },
+          {
+            "line": 149,
+            "column": 13,
+            "callee": "this.scopes.delete",
+            "arguments": [
+              "toolCall.id"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 13,
+            "callee": "release",
+            "arguments": []
+          },
+          {
+            "line": 152,
+            "column": 9,
+            "callee": "scope.recorder.finish",
+            "arguments": [
+              "record",
+              "outcome.isError",
+              "textOf(outcome.result)"
+            ]
+          },
+          {
+            "line": 152,
+            "column": 56,
+            "callee": "textOf",
+            "arguments": [
+              "outcome.result"
+            ]
+          },
+          {
+            "line": 155,
+            "column": 13,
+            "callee": "scope.recorder.addUsage",
+            "arguments": [
+              "outcome.result.usage"
+            ]
+          },
+          {
+            "line": 156,
+            "column": 15,
+            "callee": "this.host.emit",
+            "arguments": [
+              "{\n            type: \"tool_execution_end\",\n            toolCallId: toolCall.id,\n            toolName: name,\n            result: outcome.result,\n            isError: outcome.isError,\n            ...(outcome.durationMs === undefined ? {} : { durationMs: outcome.durationMs }),\n            parentToolCallId: callerId,\n        }"
+            ]
+          },
+          {
+            "line": 169,
+            "column": 23,
+            "callee": "this.scopes.get",
+            "arguments": [
+              "toolCallId"
+            ]
+          },
+          {
+            "line": 170,
+            "column": 9,
+            "callee": "this.scopes.delete",
+            "arguments": [
+              "toolCallId"
+            ]
+          },
+          {
+            "line": 173,
+            "column": 25,
+            "callee": "scope.recorder.snapshot",
+            "arguments": []
+          },
+          {
+            "line": 176,
+            "column": 9,
+            "callee": "this.scopes.clear",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full179 lines. No own English prose/Error. Exact nested count/argument/error caps, shared recorder/usage, serial queue, start/update/end events, finally release but no global failure catch. Statuses mapped to export icons, no raw status caption; names/args/error text external payload. Current direct-tool policy blocks designated nested operations, TextGuard final result may replace; internal progress route separately qualified."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js",
+        "read_lines": [
+          1,
+          89
+        ],
+        "string_template_occurrences": 5,
+        "fixed_rows": 0,
+        "excluded_occurrences": 5,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 23,
+            "column": 61,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "String(error)"
+          },
+          {
+            "line": 29,
+            "column": 65,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "String(error)"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 13,
+            "column": 19,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n                try {\n                    getRawStdoutWrite()(text, (error) => {\n                        if (error)\n                            reject(error);\n                        else\n                            resolve();\n                    });\n                }\n                catch (error) {\n                    reject(error instanceof Error ? error : new Error(String(error)));\n                }\n            })"
+          },
+          {
+            "line": 23,
+            "column": 61,
+            "callee": "Error",
+            "source": "new Error(String(error))"
+          },
+          {
+            "line": 29,
+            "column": 65,
+            "callee": "Error",
+            "source": "new Error(String(error))"
+          },
+          {
+            "line": 34,
+            "column": 19,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => setTimeout(resolve, RAW_STDOUT_RETRY_DELAY_MS))"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 32,
+            "column": 17,
+            "expression": "writeError"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 22,
+            "column": 17,
+            "source": "catch (error) {\n                    reject(error instanceof Error ? error : new Error(String(error)));\n                }"
+          },
+          {
+            "line": 28,
+            "column": 9,
+            "source": "catch (error) {\n            const writeError = error instanceof Error ? error : new Error(String(error));\n            const code = writeError.code;\n            if (code !== \"ENOBUFS\" && code !== \"EAGAIN\" && code !== \"EWOULDBLOCK\") {\n                throw writeError;\n            }\n            await new Promise((resolve) => setTimeout(resolve, RAW_STDOUT_RETRY_DELAY_MS));\n        }"
+          }
+        ],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 3,
+            "column": 26,
+            "callee": "Promise.resolve",
+            "arguments": []
+          },
+          {
+            "line": 8,
+            "column": 12,
+            "callee": "process.stdout.write.bind",
+            "arguments": [
+              "process.stdout"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 21,
+            "callee": "getRawStdoutWrite()",
+            "arguments": [
+              "text",
+              "(error) => {\n                        if (error)\n                            reject(error);\n                        else\n                            resolve();\n                    }"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 21,
+            "callee": "getRawStdoutWrite",
+            "arguments": []
+          },
+          {
+            "line": 17,
+            "column": 29,
+            "callee": "reject",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 29,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 23,
+            "column": 21,
+            "callee": "reject",
+            "arguments": [
+              "error instanceof Error ? error : new Error(String(error))"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 71,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 75,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 44,
+            "callee": "setTimeout",
+            "arguments": [
+              "resolve",
+              "RAW_STDOUT_RETRY_DELAY_MS"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 28,
+            "callee": "process.stdout.write.bind",
+            "arguments": [
+              "process.stdout"
+            ]
+          },
+          {
+            "line": 43,
+            "column": 28,
+            "callee": "process.stderr.write.bind",
+            "arguments": [
+              "process.stderr"
+            ]
+          },
+          {
+            "line": 47,
+            "column": 20,
+            "callee": "rawStderrWrite",
+            "arguments": [
+              "String(chunk)",
+              "encodingOrCallback"
+            ]
+          },
+          {
+            "line": 47,
+            "column": 35,
+            "callee": "String",
+            "arguments": [
+              "chunk"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 16,
+            "callee": "rawStderrWrite",
+            "arguments": [
+              "String(chunk)",
+              "callback"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 31,
+            "callee": "String",
+            "arguments": [
+              "chunk"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 26,
+            "callee": "rawStdoutWriteTail.then",
+            "arguments": [
+              "() => writeRawStdoutChunk(text)"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 56,
+            "callee": "writeRawStdoutChunk",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 10,
+            "callee": "rawStdoutWriteTail.catch",
+            "arguments": [
+              "() => {\n        process.exit(1);\n    }"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 9,
+            "callee": "process.exit",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 86,
+            "column": 11,
+            "callee": "waitForRawStdoutBackpressure",
+            "arguments": []
+          },
+          {
+            "line": 87,
+            "column": 11,
+            "callee": "writeRawStdoutChunk",
+            "arguments": [
+              "\"\""
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full89 lines. No own fixed human headline: dynamic native write Error arguments and errno control codes. Captures raw stdout/stderr on takeover, incidental stdout String(chunk) redirected stderr, ordered raw writer transient retry indefinitely, fatal rejection exits1; wait/flush tail semantics exact. Native I/O/Error payload pending; no stream/TTY/process execution."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js",
+        "read_lines": [
+          1,
+          124
+        ],
+        "string_template_occurrences": 27,
+        "fixed_rows": 3,
+        "excluded_occurrences": 24,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 87,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Virtual model ${model.provider}/${model.id} must be routed before streaming`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 87,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Virtual model ${model.provider}/${model.id} must be routed before streaming`)"
+          },
+          {
+            "line": 106,
+            "column": 17,
+            "callee": "Set",
+            "source": "new Set(virtualModels.map((model) => model.id))"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 87,
+            "column": 9,
+            "expression": "new Error(`Virtual model ${model.provider}/${model.id} must be routed before streaming`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 35,
+            "column": 80,
+            "callee": "isVirtualModel",
+            "arguments": [
+              "entry.message"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 28,
+            "callee": "findLastModelChange",
+            "arguments": [
+              "branch",
+              "i"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 37,
+            "callee": "getModel",
+            "arguments": [
+              "change.provider",
+              "change.modelId"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 39,
+            "callee": "isVirtualModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 69,
+            "column": 35,
+            "callee": "levels.includes",
+            "arguments": [
+              "level"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 20,
+            "callee": "levels.some",
+            "arguments": [
+              "(level) => level !== \"off\""
+            ]
+          },
+          {
+            "line": 86,
+            "column": 12,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n        throw new Error(`Virtual model ${model.provider}/${model.id} must be routed before streaming`);\n    }"
+            ]
+          },
+          {
+            "line": 106,
+            "column": 25,
+            "callee": "virtualModels.map",
+            "arguments": [
+              "(model) => model.id"
+            ]
+          },
+          {
+            "line": 107,
+            "column": 34,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => !isVirtualModel(model) && !(isModelType(model, \"chat\") && ids.has(model.id))"
+            ]
+          },
+          {
+            "line": 107,
+            "column": 60,
+            "callee": "isVirtualModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 107,
+            "column": 87,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 107,
+            "column": 117,
+            "callee": "ids.has",
+            "arguments": [
+              "model.id"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 33,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => isVirtualModel(model)"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 58,
+            "callee": "isVirtualModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 112,
+            "column": 30,
+            "callee": "physical",
+            "arguments": [
+              "provider.getModels()"
+            ]
+          },
+          {
+            "line": 112,
+            "column": 39,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 113,
+            "column": 33,
+            "callee": "physical",
+            "arguments": [
+              "provider.getAllModels?.() ?? provider.getModels()"
+            ]
+          },
+          {
+            "line": 113,
+            "column": 42,
+            "callee": "provider.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 113,
+            "column": 71,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 115,
+            "column": 26,
+            "callee": "physical",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 116,
+            "column": 25,
+            "callee": "filterModels",
+            "arguments": [
+              "real",
+              "credential"
+            ]
+          },
+          {
+            "line": 116,
+            "column": 71,
+            "callee": "virtual",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 42,
+            "callee": "filterAllModels",
+            "arguments": [
+              "physical(models)",
+              "credential"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 58,
+            "callee": "physical",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 92,
+            "callee": "virtual",
+            "arguments": [
+              "models"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 46,
+            "callee": "isVirtualModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 70,
+            "callee": "unroutedStream",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 94,
+            "callee": "provider.stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 121,
+            "column": 52,
+            "callee": "isVirtualModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 121,
+            "column": 76,
+            "callee": "unroutedStream",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 121,
+            "column": 100,
+            "callee": "provider.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full124 lines. One lazy unrouted Error, auth name API metadata and source suffix token positive; all other API/model/thinking/state/role identifiers protected. findLatestResponse skips error/aborted; getBranchSelection physical response path does not apply same stopReason filter. Virtual state custom entry branch-specific, catalogs/cost/name/input limits payload. Normal streamSimple routing versus direct provider/API distinct."
+      }
+    ],
+    "method": "Full6 finite local bodies703 lines read; all literal/template occurrences partitioned plus Error/new/throw/catch/regex/import/export/control/all-call census. Actual custom/bash/files/stream/cancellation, cache, HTTP settings/API/proxy/emitter/fetch, nested record/policy/events/export, stdout protocol, virtual router/API/error/source boundaries qualified. No audited modules/child/HTTP/network/provider/agent/model/tool/worker/native/TTY/streams/config/state/timers execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/core/bash-executor.js",
+      "dist/core/cache-stats.js",
+      "dist/core/http-dispatcher.js",
+      "dist/core/nested-tool-calls.js",
+      "dist/core/output-guard.js",
+      "dist/core/virtual-models.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/core/bash-executor.d.ts",
+      "dist/core/bash-executor.d.ts.map",
+      "dist/core/bash-executor.js.map",
+      "dist/core/cache-stats.d.ts",
+      "dist/core/cache-stats.d.ts.map",
+      "dist/core/cache-stats.js.map",
+      "dist/core/http-dispatcher.d.ts",
+      "dist/core/http-dispatcher.d.ts.map",
+      "dist/core/http-dispatcher.js.map",
+      "dist/core/nested-tool-calls.d.ts",
+      "dist/core/nested-tool-calls.d.ts.map",
+      "dist/core/nested-tool-calls.js.map",
+      "dist/core/output-guard.d.ts",
+      "dist/core/output-guard.d.ts.map",
+      "dist/core/output-guard.js.map",
+      "dist/core/virtual-models.d.ts",
+      "dist/core/virtual-models.d.ts.map",
+      "dist/core/virtual-models.js.map"
+    ]
+  },
+  "prior_ownership": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0105",
+      "new_full_body_owner": "pi-request-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0108",
+      "new_full_body_owner": "pi-request-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0137",
+      "new_full_body_owner": "pi-request-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0150",
+      "new_full_body_owner": "pi-request-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0151",
+      "new_full_body_owner": "pi-request-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0202",
+      "new_full_body_owner": "pi-request-support-scope.csv",
+      "prior_full_body_claim": false
+    }
+  ],
+  "prior_full_body_claims": [],
+  "historical_ownership_census": {
+    "source": "review/text-inventory/pi-runtime-census.csv",
+    "sha256": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225",
+    "status": "historical pending snapshot frozen; follow-on current full owners independently checked"
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "external:Undici@8.12.3",
+      "status": "actual-root-nested-nearest-metadata-and-root-lock-version-only-no-canonical-archive-or-body-closure"
+    },
+    {
+      "source": "external:@earendil-works/pi-ai-and-pi-agent-core",
+      "status": "four-bounded-two-tree-hash-support-files-no-supplied-canonical-archives-or-full-body-closure"
+    },
+    {
+      "source": "external:OS-fs-shell-child-HTTP-TLS-proxy-native-stream-console-tool-provider-model-custom-callback",
+      "status": "implementation/error/data/callback/optional-consumer-graph-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "status": "compiled-bundle-full-body-pending-unbundled-source-not-copy-closure"
+    }
+  ],
+  "limits": [
+    "Six full local runtime bodies703 lines28622 bytes immutable BASE346 exact1.4.0/root/nested/canonical+publicpatch pin. Historical census remains frozen; prior/follow-on source owners checked no duplicate. SDK/session/requests/provider/core/compiled/external graph remains open.",
+    "Ten fixed definitions: five HTTP choices, fallbackseconds, configure Error, lazy unrouted virtual Error, virtual auth API/search name and source suffix. Zero local prose in bash/cache/nested/output helpers does not hide their external diagnostics/file/log/wire/render payload boundaries.",
+    "HTTP settings label/description localized but values/currentValue not replaced; disabled parsing occurrence is protected canonical config control. Saved malformed setting preempts own configure Error. Nearest Undici8.12.3 root/nested metadata and root lock, not historical comment8.7 proof; no Undici archive/body closure.",
+    "Bash output sanitized/streamed/spilled before success; rolling text length UTF16 not strictbytes. Only operations rejection inside try can be suppressed on abort; flush/file/truncation/callback outside catch not globally suppressed. Imported ANSI/shell/truncate/outputfiles prior full owners, no duplicate closure.",
+    "Cache scan local floor1024 and reset/seeding/model-switch logic numeric; live display excludes aborted/error assistant branch and applies showCacheMissNotices plus20000tokens/.1cost threshold; replay may derive misses from scan without stopReason filtering. No module own notice prose.",
+    "Nested caps256calls/8KiBperarg/32KiBtotal/500errorchars affect records, not stop execution. Error arguments/record payload can paint HTML, status maps icons. start/record/events/queue/preparation/callback can reject outside catch; finally only wraps runToolCall.",
+    "Current codemode no-op and direct-tool name policy may preempt nested execution. Final TextGuard replacement differs optional raw internal progress emitted through host public callback; do not assume normal _handleAgentEvent progress filter applies. TUI nestedstart skipped, generic protocol/custom listeners may see events.",
+    "Stdout takeover rawwriter+redirect payload routes no local captions; transient errno retries indefinitely, fatal rawtail exits1; native stream/writer errors external. JSON/RPC branding bypass distinct, no execution.",
+    "Virtual normal streamSimple routes before provider, raw/API-specific stream may hit own lazyError; virtual catalog/state/thinking model payload protected. findLatestResponse skips errors/aborts, branch selection physical assistant branch differs. Auth name API/search metadata versus actual source suffix display separated.",
+    "Four supplementary pi-ai/agent-core bounded exact1.4.0 two-tree support files outside supplied canonical archives, no foreign full source closure. No old/shared/product/census/index/git edits or audited module/native/process/model/parser/runtime operations."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-request-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-request-support.csv": "bb66f6299fec96993f7529a34ebd3e1c180d682bcc8b1934c511e3825ebf964a",
+    "pi-request-support-boundaries.csv": "66b7f2c4cc4a8d9771f6bc905e8ea78cafb9ded3a3fc0baff1eb426c91896978",
+    "pi-request-support-scope.csv": "852bf7fc21075fe9c26e4816cf88e43821baeec58c4399010850dc66e289f8c3",
+    "pi-request-support-exclusions.csv": "caf9fffaf316d9d31f5e9caa021ea940a9123f728e7309eafb93bfab1c25cb0b"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/bash-executor.js",
+            "archive_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+            "root_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+            "cli_nested_sha256": "6732b7e5f8a1f45c09fcda9c34da9248a55d54eddf0d3b2cb6798e192773c58d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-stats.js",
+            "archive_sha256": "b0f3f1030bbc42d4f941b397dd4a311be3a7dda071e97b94b9092a3aacb08fe3",
+            "root_sha256": "b0f3f1030bbc42d4f941b397dd4a311be3a7dda071e97b94b9092a3aacb08fe3",
+            "cli_nested_sha256": "b0f3f1030bbc42d4f941b397dd4a311be3a7dda071e97b94b9092a3aacb08fe3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/http-dispatcher.js",
+            "archive_sha256": "f9aa2c81b0a5958ffba6368506f24c9b202904c234ada19494cdc9c4a1d0e97b",
+            "root_sha256": "f9aa2c81b0a5958ffba6368506f24c9b202904c234ada19494cdc9c4a1d0e97b",
+            "cli_nested_sha256": "f9aa2c81b0a5958ffba6368506f24c9b202904c234ada19494cdc9c4a1d0e97b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/nested-tool-calls.js",
+            "archive_sha256": "62a69500b63b1967e350305aa5f6762345ceb397fe5c5e7f6e6ca6c8fc16c034",
+            "root_sha256": "62a69500b63b1967e350305aa5f6762345ceb397fe5c5e7f6e6ca6c8fc16c034",
+            "cli_nested_sha256": "62a69500b63b1967e350305aa5f6762345ceb397fe5c5e7f6e6ca6c8fc16c034",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/output-guard.js",
+            "archive_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+            "root_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+            "cli_nested_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/virtual-models.js",
+            "archive_sha256": "83f1a9caa7bcd4cbf1ac84c157b0eeb2d5009f85a7f6f4265383b5e2edc323a5",
+            "root_sha256": "83f1a9caa7bcd4cbf1ac84c157b0eeb2d5009f85a7f6f4265383b5e2edc323a5",
+            "cli_nested_sha256": "83f1a9caa7bcd4cbf1ac84c157b0eeb2d5009f85a7f6f4265383b5e2edc323a5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/settings-manager.js",
+            "archive_sha256": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+            "root_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+            "cli_nested_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/main.js",
+            "archive_sha256": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+            "root_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/settings-selector.js",
+            "archive_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+            "root_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+            "cli_nested_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/oauth-selector.js",
+            "archive_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "root_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/assistant-message.js",
+            "archive_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "root_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/bash-executor.d.ts",
+            "archive_sha256": "d2a244601fa737997d99cf832e07315690d26549aa0f9176ceab27cafdaa60ec",
+            "root_sha256": "d2a244601fa737997d99cf832e07315690d26549aa0f9176ceab27cafdaa60ec",
+            "cli_nested_sha256": "d2a244601fa737997d99cf832e07315690d26549aa0f9176ceab27cafdaa60ec",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/bash-executor.d.ts.map",
+            "archive_sha256": "8063d6525d6ee5239e6cb7d44085062b452858af05e42f2f3c255da975cc21d2",
+            "root_sha256": "8063d6525d6ee5239e6cb7d44085062b452858af05e42f2f3c255da975cc21d2",
+            "cli_nested_sha256": "8063d6525d6ee5239e6cb7d44085062b452858af05e42f2f3c255da975cc21d2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/bash-executor.js.map",
+            "archive_sha256": "c0b56bd7455117d91fa52acbf6fc9cb1b71594f840d0d45c9a2fe3752d8bce73",
+            "root_sha256": "c0b56bd7455117d91fa52acbf6fc9cb1b71594f840d0d45c9a2fe3752d8bce73",
+            "cli_nested_sha256": "c0b56bd7455117d91fa52acbf6fc9cb1b71594f840d0d45c9a2fe3752d8bce73",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-stats.d.ts",
+            "archive_sha256": "bf23a51f5b22ee643a6f292b6366d74ff1416b5e631fa3af8c134c255a3832d1",
+            "root_sha256": "bf23a51f5b22ee643a6f292b6366d74ff1416b5e631fa3af8c134c255a3832d1",
+            "cli_nested_sha256": "bf23a51f5b22ee643a6f292b6366d74ff1416b5e631fa3af8c134c255a3832d1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-stats.d.ts.map",
+            "archive_sha256": "85c772e4d96bd9e32df0b28133e121c68a81f43cd2a07520aabc804ab79a16af",
+            "root_sha256": "85c772e4d96bd9e32df0b28133e121c68a81f43cd2a07520aabc804ab79a16af",
+            "cli_nested_sha256": "85c772e4d96bd9e32df0b28133e121c68a81f43cd2a07520aabc804ab79a16af",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-stats.js.map",
+            "archive_sha256": "06f35b72e34fc550adc99285db059af9fbea3c568531a8bd4fc6b39144698f23",
+            "root_sha256": "06f35b72e34fc550adc99285db059af9fbea3c568531a8bd4fc6b39144698f23",
+            "cli_nested_sha256": "06f35b72e34fc550adc99285db059af9fbea3c568531a8bd4fc6b39144698f23",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/http-dispatcher.d.ts",
+            "archive_sha256": "d0a2f111c02c3126178a992a88d4a82b3f2bd99f6ae762a8dbd8336403b0d1e9",
+            "root_sha256": "d0a2f111c02c3126178a992a88d4a82b3f2bd99f6ae762a8dbd8336403b0d1e9",
+            "cli_nested_sha256": "d0a2f111c02c3126178a992a88d4a82b3f2bd99f6ae762a8dbd8336403b0d1e9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/http-dispatcher.d.ts.map",
+            "archive_sha256": "6c2634cc3eb810796accfe826ab5d7e2761b549f1d04652cb091acd27706bd37",
+            "root_sha256": "6c2634cc3eb810796accfe826ab5d7e2761b549f1d04652cb091acd27706bd37",
+            "cli_nested_sha256": "6c2634cc3eb810796accfe826ab5d7e2761b549f1d04652cb091acd27706bd37",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/http-dispatcher.js.map",
+            "archive_sha256": "1dc7e15e6af406885a4eace69c50b8c0b4c530a4e01f3d5469c1cb1b5e10a6c5",
+            "root_sha256": "1dc7e15e6af406885a4eace69c50b8c0b4c530a4e01f3d5469c1cb1b5e10a6c5",
+            "cli_nested_sha256": "1dc7e15e6af406885a4eace69c50b8c0b4c530a4e01f3d5469c1cb1b5e10a6c5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/nested-tool-calls.d.ts",
+            "archive_sha256": "aa9a74c4458655d30a6533d97785ddd62baf865bb6f8f89f9efb7008d5d4bb7c",
+            "root_sha256": "aa9a74c4458655d30a6533d97785ddd62baf865bb6f8f89f9efb7008d5d4bb7c",
+            "cli_nested_sha256": "aa9a74c4458655d30a6533d97785ddd62baf865bb6f8f89f9efb7008d5d4bb7c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/nested-tool-calls.d.ts.map",
+            "archive_sha256": "3bc5e33275b28e276cf0e77d93f115a1c335e7c6a55d94ad832406a8f51b52ea",
+            "root_sha256": "3bc5e33275b28e276cf0e77d93f115a1c335e7c6a55d94ad832406a8f51b52ea",
+            "cli_nested_sha256": "3bc5e33275b28e276cf0e77d93f115a1c335e7c6a55d94ad832406a8f51b52ea",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/nested-tool-calls.js.map",
+            "archive_sha256": "4fa8d3f21fcf8656509ccc826ea2dc8dbe03176d84fa50cb8881080863aefc50",
+            "root_sha256": "4fa8d3f21fcf8656509ccc826ea2dc8dbe03176d84fa50cb8881080863aefc50",
+            "cli_nested_sha256": "4fa8d3f21fcf8656509ccc826ea2dc8dbe03176d84fa50cb8881080863aefc50",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/output-guard.d.ts",
+            "archive_sha256": "666d8e0b29aa4df3eee7cdff633705d4a272e90b24b762fc28c7d505b913f073",
+            "root_sha256": "666d8e0b29aa4df3eee7cdff633705d4a272e90b24b762fc28c7d505b913f073",
+            "cli_nested_sha256": "666d8e0b29aa4df3eee7cdff633705d4a272e90b24b762fc28c7d505b913f073",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/output-guard.d.ts.map",
+            "archive_sha256": "055f5bc5beeea8b9a2cd6f001257ea1eb5ba3f1efc83700d7b6fa880742de02c",
+            "root_sha256": "055f5bc5beeea8b9a2cd6f001257ea1eb5ba3f1efc83700d7b6fa880742de02c",
+            "cli_nested_sha256": "055f5bc5beeea8b9a2cd6f001257ea1eb5ba3f1efc83700d7b6fa880742de02c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/output-guard.js.map",
+            "archive_sha256": "04bc1443970eb52c2c57554238e5a585435ce1e87fd19224a33fc6c565ac9922",
+            "root_sha256": "04bc1443970eb52c2c57554238e5a585435ce1e87fd19224a33fc6c565ac9922",
+            "cli_nested_sha256": "04bc1443970eb52c2c57554238e5a585435ce1e87fd19224a33fc6c565ac9922",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/virtual-models.d.ts",
+            "archive_sha256": "087afba0b7a4eca219e65e8ca28af1ed5e0eefbc289897ddb3ce069c57296651",
+            "root_sha256": "087afba0b7a4eca219e65e8ca28af1ed5e0eefbc289897ddb3ce069c57296651",
+            "cli_nested_sha256": "087afba0b7a4eca219e65e8ca28af1ed5e0eefbc289897ddb3ce069c57296651",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/virtual-models.d.ts.map",
+            "archive_sha256": "599714b0ac83e82ed484b44d2661d57936a550b6051edb647f800fa525ef68ca",
+            "root_sha256": "599714b0ac83e82ed484b44d2661d57936a550b6051edb647f800fa525ef68ca",
+            "cli_nested_sha256": "599714b0ac83e82ed484b44d2661d57936a550b6051edb647f800fa525ef68ca",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/virtual-models.js.map",
+            "archive_sha256": "aea006f803be52c3866d83dd1bfc42814e43a12ddc29cfa1d288b74c86ca52a8",
+            "root_sha256": "aea006f803be52c3866d83dd1bfc42814e43a12ddc29cfa1d288b74c86ca52a8",
+            "cli_nested_sha256": "aea006f803be52c3866d83dd1bfc42814e43a12ddc29cfa1d288b74c86ca52a8",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/components/settings-list.js",
+            "archive_sha256": "ef0ba838df7a8ad0c6f833e9263fe6ac03033008f2283e6106033a8cf5f3af30",
+            "root_sha256": "ef0ba838df7a8ad0c6f833e9263fe6ac03033008f2283e6106033a8cf5f3af30",
+            "cli_nested_sha256": "ef0ba838df7a8ad0c6f833e9263fe6ac03033008f2283e6106033a8cf5f3af30",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 36,
+    "byte_identical_scope_files": 30,
+    "pinned_patch_scope_files": 6,
+    "unresolved_scope_differences": 0
+  }
+}

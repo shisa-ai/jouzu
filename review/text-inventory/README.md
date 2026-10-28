@@ -819,6 +819,18 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-request-support.csv](pi-request-support.csv) records ten qualified HTTP and
+virtual-model definitions across six complete execution/request bodies (703
+lines), with 67 [exclusions](pi-request-support-exclusions.csv) and eleven
+[boundaries](pi-request-support-boundaries.csv). Settings paint the current timeout
+value when its row is visible; localized labels retain raw values. Nested-call
+status tokens control export icons, while capped argument/error payloads can
+render. Final TextGuard handling and optional internal progress events retain
+different routes. Bash cancellation, stdout takeover/backpressure and virtual
+routing failures have separate guards. The [scope](pi-request-support-scope.csv)
+pins foreign support narrowly; Undici metadata identity is not a body or archive
+review. Twenty-one corruption controls pass without executing request code.
+
 [pi-rpc-support.csv](pi-rpc-support.csv) covers four complete JSON event, line
 reader/serializer and RPC client bodies (585 lines): eleven fixed Error messages,
 74 [exclusions](pi-rpc-support-exclusions.csv) and nine
@@ -1869,6 +1881,7 @@ node review/text-inventory/verify-pi-config-discovery.cjs --node-modules <root-n
 node review/text-inventory/verify-pi-provider-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-core-config-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-rpc-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-request-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
