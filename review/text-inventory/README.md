@@ -246,6 +246,16 @@ tool modes are explicitly qualified. The [evidence](pi-tools-evidence.json) ties
 36 files to exact archive bytes and one to the pinned path patch. Imported native,
 HTTP and WASM error text remains a boundary; the wider Pi producer graph is open.
 
+[pi-runtime.csv](pi-runtime.csv) adds 83 runtime/argument/SDK/RPC occurrences and
+31 [payload boundaries](pi-runtime-boundaries.csv). Seven complete source bodies
+are covered in the [scope table](pi-runtime-scope.csv), with 541 lexical
+[exclusions](pi-runtime-exclusions.csv). Explicit `jouzu pi --help` and version
+forwarding can reach inherited English; root help and startup setup have different
+host gates. RPC response data, direct API returns and terminal diagnostics retain
+separate delivery conditions. The [evidence](pi-runtime-evidence.json) verifies
+two archive-identical bodies and five pinned patch outputs. Imported auth,
+session, package, viewer and engine-owned diagnostics remain separate producers.
+
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
 occurrences and eight dynamic boundaries. It includes notices, invalid-command
@@ -356,6 +366,7 @@ python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 node review/text-inventory/verify-pi-tools.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-runtime.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
