@@ -564,6 +564,22 @@ bounded native consumer matches the exact public patch after hash and both
 installed Pi1.4.0 trees; its full body remains pending. Four corruption controls
 pass without product/provider/payload/cache/state execution.
 
+[native-request-transport.csv](native-request-transport.csv) adds 61 request/turn
+records: 46 fixed/protected occurrences, five catalog occurrences and ten payload
+boundaries. Four complete bodies cover 1,023 lines, with 17 pinned sources in the
+[scope](native-request-transport-scope.csv). All 196 lexical occurrences are
+partitioned against 150 [exclusions](native-request-transport-exclusions.csv),
+including two request-only tool-history notices. Thirty-eight Error constructors
+and seven catches retain exact source/forwarding dispositions. The default model
+projection leaves saved transcript messages unchanged. Admission causes take
+precedence over no-admission wrappers; storage/cleanup callbacks can replace
+thrown errors. Conversational and maintenance retention/publication remain
+separate. Pause text has shared equality/prefix classifiers, and settled provider
+pauses honor current-run, enabled and aborted gates. Three qualified native consumer sources
+trace raw failures into assistant error painting and text stderr; no new native body closure is
+claimed. Four corruption controls pass without requests, models, UI or state
+execution.
+
 [session-primitives.csv](session-primitives.csv) adds 26 formatting/boundary
 records: 18 protected frame/spacing/ANSI compositions and eight caller, native,
 callback or forwarding boundaries. The
@@ -896,6 +912,7 @@ node review/text-inventory/verify-flow-tools.cjs
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
 node review/text-inventory/verify-flow-request-policy.cjs
+node review/text-inventory/verify-native-request-transport.cjs
 python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
