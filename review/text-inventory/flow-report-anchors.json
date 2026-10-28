@@ -1,0 +1,908 @@
+[
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-001",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:173:72",
+    "source_expression": "FlowStatusMessageId.senderExtension",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-001",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:200:35",
+    "source_expression": "FlowStatusMessageId.inputContinueAfterCompaction",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-002",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:206:35",
+    "source_expression": "FlowStatusMessageId.inputMultiloopResume",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-003",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:209:75",
+    "source_expression": "FlowStatusMessageId.customMessage",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-004",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:221:61",
+    "source_expression": "FlowStatusMessageId.messageWithNonTextContent",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-005",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:271:31",
+    "source_expression": "FlowStatusMessageId.stageContextPreparation",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-006",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:273:32",
+    "source_expression": "FlowStatusMessageId.stageModelConversion",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-007",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:275:31",
+    "source_expression": "FlowStatusMessageId.stageRequestPreparation",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-008",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:10:26",
+    "source_expression": "Id.ageJustNow",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-009",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:12:27",
+    "source_expression": "Id.ageMinutes",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-010",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:13:27",
+    "source_expression": "Id.ageHoursMinutes",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-011",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:37:29",
+    "source_expression": "Id.showingEntries",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-012",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:42:29",
+    "source_expression": "Id.noEntriesOnPage",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-013",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:55:27",
+    "source_expression": "Id.inputDetailsUnavailable",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-014",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:60:53",
+    "source_expression": "Id.inputLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-015",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:64:49",
+    "source_expression": "Id.blockedOneRequest",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-016",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:64:72",
+    "source_expression": "Id.blockedManyRequests",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-017",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:65:35",
+    "source_expression": "Id.correctCauseThenClear",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-018",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:67:36",
+    "source_expression": "Id.automationAlsoPaused",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-019",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:68:32",
+    "source_expression": "Id.requestsNotSentHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-020",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:75:43",
+    "source_expression": "Id.moreRequiredInputs",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-021",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:76:43",
+    "source_expression": "Id.requiredContextUnlinked",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-022",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:80:45",
+    "source_expression": "Id.requiredInputRemovedDuring",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-023",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:80:77",
+    "source_expression": "Id.requiredContextRemovedDuring",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-024",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:86:10",
+    "source_expression": "Id.requiredInputRemovedBeforeSending",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-025",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:87:10",
+    "source_expression": "Id.requiredContextRemovedBeforeSending",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-026",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:92:35",
+    "source_expression": "Id.requestEndedDuring",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-027",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:93:35",
+    "source_expression": "Id.requestEndedBeforeAdmission",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-028",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:98:32",
+    "source_expression": "Id.reasonLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-029",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:102:33",
+    "source_expression": "Id.failureLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-030",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:107:32",
+    "source_expression": "Id.destinationLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-031",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:107:120",
+    "source_expression": "Id.providerFallback",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-032",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:107:203",
+    "source_expression": "Id.modelFallback",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-033",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:109:41",
+    "source_expression": "Id.requestLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-034",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:110:54",
+    "source_expression": "Id.retryAfterCorrection",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-035",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:112:35",
+    "source_expression": "Id.resetPreservesRecords",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-036",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:114:35",
+    "source_expression": "Id.blockedRecoveryDecision",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-037",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:116:35",
+    "source_expression": "Id.turnInProgress",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-038",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:118:36",
+    "source_expression": "Id.furtherAutomationPaused",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-039",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:120:35",
+    "source_expression": "Id.pausedLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-040",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:121:35",
+    "source_expression": "Id.resumeAutomation",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-041",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:124:32",
+    "source_expression": "Id.otherRecoveryBlockersHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-042",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:128:32",
+    "source_expression": "Id.statusIncompleteHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-043",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:130:35",
+    "source_expression": "Id.unreadableState",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-044",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:133:32",
+    "source_expression": "Id.sentOutcomeUnknownHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-045",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:136:41",
+    "source_expression": "Id.sendAgain",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-046",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:137:41",
+    "source_expression": "Id.doNotResend",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-047",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:144:28",
+    "source_expression": "Id.taskLabel",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-048",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:146:69",
+    "source_expression": "Id.titleUnavailable",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-049",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:148:28",
+    "source_expression": "Id.taskDetailsUnavailable",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-050",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:153:32",
+    "source_expression": "Id.waitingOnJobsHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-051",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:157:86",
+    "source_expression": "Id.workFallback",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-052",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:160:42",
+    "source_expression": "Id.waitingForDependency",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-053",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:162:42",
+    "source_expression": "Id.moreJobDependencies",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-054",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:165:45",
+    "source_expression": "Id.waitUnmetDeadline",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-055",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:165:68",
+    "source_expression": "Id.waitUnmetPastDeadline",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-056",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:167:54",
+    "source_expression": "Id.cancelWaitOnly",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-002",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:172:49",
+    "source_expression": "CatalogMessageId.flowSubmissionUnavailable",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-057",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:180:8",
+    "source_expression": "Id.heldBehindBlocker",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-058",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:181:8",
+    "source_expression": "Id.heldInput",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-003",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:188:44",
+    "source_expression": "CatalogMessageId.flowIngressRecoveryReconciliation",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-059",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:189:56",
+    "source_expression": "Id.waitingForRequestBlock",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-060",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:189:84",
+    "source_expression": "Id.savedStateBlocksInput",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-061",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:196:32",
+    "source_expression": "Id.undeliveredInputHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-062",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:204:9",
+    "source_expression": "Id.commandNotRun",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-063",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:206:10",
+    "source_expression": "Id.extensionNoticeNotDelivered",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-064",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:207:10",
+    "source_expression": "Id.notQueuedForReplay",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-065",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:213:32",
+    "source_expression": "Id.workEligibilityHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-066",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:220:28",
+    "source_expression": "Id.taskDetailsChanged",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-067",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:225:32",
+    "source_expression": "Id.taskCompleted",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-068",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:226:32",
+    "source_expression": "Id.taskState",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-069",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:229:30",
+    "source_expression": "Id.eligibleForAutomationWithStatus",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-070",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:230:30",
+    "source_expression": "Id.eligibleForAutomation",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-071",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:233:42",
+    "source_expression": "Id.workLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-072",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:234:53",
+    "source_expression": "Id.pauseLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-073",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:235:42",
+    "source_expression": "Id.stopLine",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-074",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:240:32",
+    "source_expression": "Id.notAttachedHeading",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-075",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:244:49",
+    "source_expression": "Id.nothingHeld",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-076",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:245:52",
+    "source_expression": "Id.fullIdentifiers",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-077",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:246:52",
+    "source_expression": "Id.moreEntries",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-078",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:247:59",
+    "source_expression": "Id.previousEntries",
+    "kind": "catalog"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-004",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:190:47",
+    "source_expression": "Id.durationUnderMinute",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-005",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:191:48",
+    "source_expression": "Id.durationMinutes",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-006",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:194:26",
+    "source_expression": "Id.durationHours",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-007",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:195:26",
+    "source_expression": "Id.durationHoursMinutes",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-008",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:209:69",
+    "source_expression": "Id.repairCauseClear",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-009",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:209:91",
+    "source_expression": "Id.resumeNow",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-010",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:218:29",
+    "source_expression": "Id.deadlineExpiresIn",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-011",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:219:29",
+    "source_expression": "Id.deadlinePast",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-012",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:245:9",
+    "source_expression": "Id.requiredInputRemovedBeforeSending",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-013",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:246:9",
+    "source_expression": "Id.requiredContextRemovedBeforeSending",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-014",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:269:29",
+    "source_expression": "Id.noLiveWait",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-015",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:270:48",
+    "source_expression": "Id.liveWaitOne",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-016",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:270:65",
+    "source_expression": "Id.liveWaitMany",
+    "kind": "catalog-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-017",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:208",
+    "source_expression": "`Paused: ${status.paused}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-018",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:213",
+    "source_expression": "\"Waiting\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-019",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:220",
+    "source_expression": "`- ${wait.owner ?? \"work\"} ${wait.workId}: ${wait.reason}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-020",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:220",
+    "source_expression": "\"work\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-021",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:221",
+    "source_expression": "`  ${wait.unmet} unmet, ${deadline}, token ${wait.token}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-022",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:226",
+    "source_expression": "\"Held input\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-023",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:232",
+    "source_expression": "`- ${inputs[0].id}: ${reason}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-024",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:232",
+    "source_expression": "`- ${reason}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-025",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:233",
+    "source_expression": "`  ${inputs.length} inputs: ${inputs.map((input) => input.id).join(\", \")}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-026",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:238",
+    "source_expression": "\"Withheld requests\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-027",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:240",
+    "source_expression": "`- ${request.requestId} (${request.reason})`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-028",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:242",
+    "source_expression": "`  ${catalogText(\n\t\t\t\t\tcatalog,\n\t\t\t\t\trequest.reason === \"required-input\"\n\t\t\t\t\t\t? Id.requiredInputRemovedBeforeSending\n\t\t\t\t\t\t: Id.requiredContextRemovedBeforeSending,\n\t\t\t\t)}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-029",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:244",
+    "source_expression": "\"required-input\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-030",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:249",
+    "source_expression": "`  retry with: /flow retry ${request.requestId}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-031",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:251",
+    "source_expression": "\"After repairing the cause, /flow clear releases these holds and keeps their receipts.\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-032",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:255",
+    "source_expression": "\"Interrupted, outcome unknown\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-033",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:257",
+    "source_expression": "`- ${attempt.id}: ${attempt.reason}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-034",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:258",
+    "source_expression": "`  send it again with: /flow resolve ${attempt.id} retry`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-035",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:259",
+    "source_expression": "`  accept it as spent with: /flow resolve ${attempt.id} discard`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-036",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:264",
+    "source_expression": "\"Active work\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-037",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:266",
+    "source_expression": "` (${item.campaign.join(\" \")})`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-038",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:271",
+    "source_expression": "`- ${item.owner} ${item.id}${campaign}: ${waits}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-039",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:273",
+    "source_expression": "`  pause with: /flow pause ${item.id}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-040",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:274",
+    "source_expression": "`  stop with: /flow stop ${item.id}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-041",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:279",
+    "source_expression": "\"Held work\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-042",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:280",
+    "source_expression": "`- ${item.owner} ${item.id}: ${item.state} (${item.reason})`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-043",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:284",
+    "source_expression": "\"Not accounted for in this session\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-044",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:285",
+    "source_expression": "`- ${item.producer}: ${item.description}`",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-045",
+    "source_location": "packages/cli/src/flow-control/flow-status.ts:287",
+    "source_expression": "\"Nothing is held, withheld, waiting, or unresolved.\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-079",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:164",
+    "source_expression": "\"You\"",
+    "kind": "direct"
+  },
+  {
+    "item_id": "FLOW-REPORT-080",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:165",
+    "source_expression": "\"SDK\"",
+    "kind": "direct"
+  },
+  {
+    "item_id": "FLOW-REPORT-081",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:166",
+    "source_expression": "\"Jouzu\"",
+    "kind": "direct"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-046",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:24",
+    "source_expression": "\"Flow report requires source descriptions.\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-EXCLUDED-047",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:222",
+    "source_expression": "\"Producer state changed\"",
+    "kind": "direct-excluded"
+  },
+  {
+    "item_id": "FLOW-REPORT-082",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:171",
+    "source_expression": "return flowDisplayText(parts[0].startsWith(\"@\") ? parts.slice(0, 2).join(\"/\") : parts[0], 64);",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-083",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:173",
+    "source_expression": "return flowDisplayText(path.split(\"/\").at(-1) ?? catalogText(catalog, FlowStatusMessageId.senderExtension), 64);",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-084",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:208",
+    "source_expression": "const content = flowDisplayText(textContent(message.content));",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-085",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:209",
+    "source_expression": "message.customType",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-086",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:221",
+    "source_expression": "flowDisplayText(content)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-087",
+    "source_location": "packages/cli/src/flow-control/flow-status-context.ts:274",
+    "source_expression": "request.failure?.stage.replaceAll(\"-\", \" \")",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-088",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:98",
+    "source_expression": "flowDisplayText(source.failure.message, 300)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-089",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:102",
+    "source_expression": "source.failure.code",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-090",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:107",
+    "source_expression": "source.provider",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-091",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:125",
+    "source_expression": "flowDisplayText(reason, 240)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-092",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:129",
+    "source_expression": "flowDisplayText(warning, 500)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-093",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:135",
+    "source_expression": "flowDisplayText(attempt.reason)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-094",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:145",
+    "source_expression": "id: flowDisplayText(task.taskId)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-095",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:150",
+    "source_expression": "flowDisplayText(work.owner)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-096",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:157",
+    "source_expression": "flowDisplayText(wait.reason)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-097",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:190",
+    "source_expression": "flowDisplayText(input.reason, 240)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-098",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:223",
+    "source_expression": "task.reason",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-099",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:227",
+    "source_expression": "work.reason",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-100",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:229",
+    "source_expression": "task.status",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-101",
+    "source_location": "packages/cli/src/flow-control/flow-status-report.ts:242",
+    "source_expression": "flowDisplayText(item.description, 240)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "FLOW-REPORT-102",
+    "source_location": "packages/cli/src/flow-control/native-request-store.ts:15",
+    "source_expression": "\"provider-preparation\"",
+    "kind": "derived-stage"
+  },
+  {
+    "item_id": "FLOW-REPORT-103",
+    "source_location": "packages/cli/src/flow-control/native-request-store.ts:15",
+    "source_expression": "\"payload-admission\"",
+    "kind": "derived-stage"
+  },
+  {
+    "item_id": "FLOW-REPORT-104",
+    "source_location": "packages/cli/src/flow-control/native-request-store.ts:15",
+    "source_expression": "\"compaction-preparation\"",
+    "kind": "derived-stage"
+  }
+]

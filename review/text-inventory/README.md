@@ -91,6 +91,17 @@ help, failures, recovery and count/plural states. The
 modules and selected supporting paths; report, admission, receipt and store
 producers still need their own wording inventory.
 
+[flow-report.csv](flow-report.csv) adds 104 report/source-description records,
+including 78 catalog occurrences, sender labels, derived failure-stage words
+and 20 payload boundaries. Each records the conditions for withheld requests,
+recovery decisions, read failures, waiting dependencies, held input, task
+metadata and pagination. [flow-report-exclusions.csv](flow-report-exclusions.csv)
+retains 47 comparison-only, defensive or context-free occurrences with their
+source conditions. The production formatter passes source context and bypasses
+the context-free branch. The [scope table](flow-report-scope.csv) records three
+fully read modules and bounded supporting consumers; the underlying diagnostic,
+task and stored-reason producers remain separately in scope.
+
 Counts describe records in each table. Catalog links, repeated wording,
 different consumers and dynamic boundaries overlap; do not add these counts as
 a number of unique messages or translation fixes. `english_location` locates a
@@ -106,6 +117,7 @@ python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-flow.py
+python -B review/text-inventory/verify-flow-report.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```
 
