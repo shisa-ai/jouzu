@@ -180,6 +180,17 @@ fallbacks. `Unbound` is both a formatter result and a caller control sentinel;
 translating its definition alone changes filtering/replacement behavior. Unknown
 counts and missing factories retain their exported-helper activation conditions.
 
+[keybindings.csv](keybindings.csv) records 98 configuration/command occurrences:
+42 catalog occurrences across 34 IDs, 39 fixed or protected values and 17 payload
+boundaries. Two complete bodies are covered in the
+[scope table](keybindings-scope.csv). Conditions distinguish explicit CLI/doctor
+errors, default-English bootstrap payloads, formatted conflict plans, rollback
+replacement and portability warnings rendered again in the active human catalog.
+Private-plan guards and manager descriptions without an owned display consumer
+retain explicit exclusions. The bootstrap conflict summary has a qualified
+external-file race trigger; native loaders and shared filesystem/lock errors
+remain separate producers.
+
 [model-catalog.csv](model-catalog.csv) supplies 490 source/catalog/sync/projection
 records: 116 catalog occurrences across 89 IDs, 344 fixed or protected machine
 occurrences and 30 payload boundaries. The
@@ -483,6 +494,7 @@ python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-model-picker.py
 node review/text-inventory/verify-palette.cjs
+python -B review/text-inventory/verify-keybindings.py
 python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
