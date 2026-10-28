@@ -322,6 +322,15 @@ Tool results, cleaned `/flow` warnings, raw runtime stderr and direct API data
 have separate consumers. Authority, health and producer helper wording remains
 separate; this unit does not close the full wait graph.
 
+[flow-wait-authority.csv](flow-wait-authority.csv) records 30 authority/health
+errors and five payload boundaries across three complete bodies. All 141 lexical
+occurrences are accounted for in the [scope](flow-wait-authority-scope.csv) and
+[exclusions](flow-wait-authority-exclusions.csv). Conditions cover work ownership,
+execution evidence, policy validation and monitor failures. Three returned health
+reason templates have no owned display consumer: the monitor retains only their
+verdict state and schedules the next check. Original producer detail, lifecycle
+reasons, callback errors and native failures retain separate transport boundaries.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -387,6 +396,7 @@ python -B review/text-inventory/verify-flow-report.py
 node review/text-inventory/verify-flow-storage.cjs
 node review/text-inventory/verify-flow-receipts.cjs
 node review/text-inventory/verify-flow-waits.cjs
+node review/text-inventory/verify-flow-wait-authority.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py

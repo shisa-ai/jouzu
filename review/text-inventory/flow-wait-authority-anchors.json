@@ -1,0 +1,1173 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-001",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 1,
+      "column": 35,
+      "expression": "\"node:util\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-002",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 2,
+      "column": 49,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-003",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 3,
+      "column": 41,
+      "expression": "\"./wait-health.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-004",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 4,
+      "column": 58,
+      "expression": "\"./wait-state.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-005",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 6,
+      "column": 30,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-006",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 6,
+      "column": 41,
+      "expression": "\"paused\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-007",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 6,
+      "column": 52,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-008",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 6,
+      "column": 64,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-009",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 39,
+      "column": 58,
+      "expression": "\"state\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-010",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 57,
+      "column": 19,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-011",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 67,
+      "column": 3,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-012",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 67,
+      "column": 14,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-013",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 69,
+      "column": 64,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-014",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 25,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-015",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 36,
+      "expression": "\"satisfied\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-016",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 49,
+      "expression": "\"failed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-017",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 59,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-018",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 72,
+      "expression": "\"missing\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-019",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 83,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-020",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 70,
+      "column": 96,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-021",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 85,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-001",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 85,
+      "column": 39,
+      "expression": "\"Invalid work binding.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-022",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 100,
+      "column": 6,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-023",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 100,
+      "column": 17,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-024",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 100,
+      "column": 64,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-025",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 118,
+      "column": 19,
+      "expression": "\"multiloop\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-026",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 122,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-002",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 122,
+      "column": 40,
+      "expression": "\"Invalid legacy multiloop lane record.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-027",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 123,
+      "column": 30,
+      "expression": "\"multiloop\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-028",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 142,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-003",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 142,
+      "column": 39,
+      "expression": "\"Invalid wait ownership registry.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-029",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 166,
+      "column": 21,
+      "expression": "\"host-user\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-030",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 174,
+      "column": 8,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-031",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 174,
+      "column": 18,
+      "expression": "\"paused\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-032",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 174,
+      "column": 28,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-033",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 174,
+      "column": 39,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-034",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 177,
+      "column": 39,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-035",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 186,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-004",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 186,
+      "column": 42,
+      "expression": "\"Invalid work ownership record.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-036",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 188,
+      "column": 25,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-037",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 188,
+      "column": 36,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-038",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 188,
+      "column": 83,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-039",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 190,
+      "column": 53,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-005",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 190,
+      "column": 65,
+      "expression": "\"Work binding has multiple live campaigns.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-040",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 213,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-006",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 213,
+      "column": 42,
+      "expression": "\"Invalid producer execution record.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-041",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 225,
+      "column": 72,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-007",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 225,
+      "column": 84,
+      "expression": "\"Producer does not own this work.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-042",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 226,
+      "column": 68,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-008",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 226,
+      "column": 77,
+      "expression": "\"Work ownership revision changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-043",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 235,
+      "column": 39,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-009",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 235,
+      "column": 51,
+      "expression": "\"Work identity is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-044",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 239,
+      "column": 32,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-045",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 239,
+      "column": 71,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-046",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 240,
+      "column": 29,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-010",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 240,
+      "column": 43,
+      "expression": "\"Work is retired; create a new work identity for new instructions.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-047",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 253,
+      "column": 54,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-011",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 253,
+      "column": 66,
+      "expression": "\"Only the work owner can change its lifecycle.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-048",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 255,
+      "column": 5,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-049",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 255,
+      "column": 15,
+      "expression": "\"paused\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-050",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 255,
+      "column": 25,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-051",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 255,
+      "column": 36,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-052",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 256,
+      "column": 21,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-053",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 262,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-012",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 262,
+      "column": 39,
+      "expression": "\"Invalid work lifecycle transition.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-054",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 263,
+      "column": 32,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-055",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 275,
+      "column": 33,
+      "expression": "\"userInputs\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-056",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 279,
+      "column": 59,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-013",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 279,
+      "column": 71,
+      "expression": "\"Work already belongs to another owner.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-057",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 282,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-014",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 282,
+      "column": 43,
+      "expression": "\"User work source membership changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-058",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 308,
+      "column": 29,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-015",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 308,
+      "column": 41,
+      "expression": "\"Only the work owner can authorize another producer.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-059",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 317,
+      "column": 38,
+      "expression": "\"observedAt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-060",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 327,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-016",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 327,
+      "column": 42,
+      "expression": "\"Execution identity is already registered with different evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-061",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 336,
+      "column": 31,
+      "expression": "\"until\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-062",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 338,
+      "column": 37,
+      "expression": "\"predicates\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-063",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 345,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-017",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 345,
+      "column": 39,
+      "expression": "\"Invalid execution observation predicates.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-064",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 352,
+      "column": 44,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-018",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 352,
+      "column": 56,
+      "expression": "\"Producer execution is not registered.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-065",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 354,
+      "column": 29,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-019",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 354,
+      "column": 38,
+      "expression": "\"Execution observation is older than retained evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-066",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 357,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-020",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 357,
+      "column": 42,
+      "expression": "\"Execution revision has conflicting evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-067",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 364,
+      "column": 37,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-068",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 367,
+      "column": 29,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-021",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 367,
+      "column": 43,
+      "expression": "\"Execution update changed predicates or terminal evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-069",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 388,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-022",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 388,
+      "column": 42,
+      "expression": "\"Wait dependency has no registered execution predicate for this work.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-070",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 1,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-071",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 34,
+      "column": 9,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-072",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 34,
+      "column": 21,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-073",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 44,
+      "column": 13,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-074",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 45,
+      "column": 13,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-075",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 46,
+      "column": 13,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-076",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 51,
+      "column": 19,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-077",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 62,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-023",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 62,
+      "column": 39,
+      "expression": "\"Invalid health policy definition.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-078",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 66,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-024",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 66,
+      "column": 39,
+      "expression": "\"Health check cadence must not exceed its freshness interval.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-079",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 87,
+      "column": 5,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-080",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 87,
+      "column": 16,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-081",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 89,
+      "column": 65,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-082",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 91,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-025",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 91,
+      "column": 39,
+      "expression": "\"Invalid health evidence.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-083",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 93,
+      "column": 29,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-026",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 93,
+      "column": 41,
+      "expression": "\"Health evidence belongs to another policy.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-084",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 115,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-027",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 115,
+      "column": 39,
+      "expression": "\"Invalid health assessment time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-085",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 117,
+      "column": 29,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-028",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 117,
+      "column": 41,
+      "expression": "\"Health evidence belongs to another policy.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-086",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 119,
+      "column": 26,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-087",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 121,
+      "column": 11,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-088",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 123,
+      "column": 39,
+      "expression": "`${policy.evidence} reported the execution unhealthy`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-089",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 128,
+      "column": 19,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-090",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 132,
+      "column": 11,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-091",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 137,
+      "column": 10,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-092",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 140,
+      "column": 6,
+      "expression": "`${policy.evidence} last reported at ${evidence.observedAt} and its probe went unanswered`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-093",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 141,
+      "column": 6,
+      "expression": "`${policy.evidence} never reported before its probe went unanswered`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-094",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 147,
+      "column": 24,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-095",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 1,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-096",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 2,
+      "column": 45,
+      "expression": "\"./wait-authority.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-097",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 3,
+      "column": 36,
+      "expression": "\"./wait-deadlines.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-098",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 4,
+      "column": 57,
+      "expression": "\"./wait-health.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-099",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 5,
+      "column": 52,
+      "expression": "\"./wait-state.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-100",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 6,
+      "column": 36,
+      "expression": "\"./wait-store.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-101",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 9,
+      "column": 29,
+      "expression": "\"snapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-102",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 9,
+      "column": 42,
+      "expression": "\"authoritySnapshot\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-103",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 9,
+      "column": 64,
+      "expression": "\"observeWaitHealth\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-104",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 94,
+      "column": 37,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-105",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 99,
+      "column": 41,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-106",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 99,
+      "column": 54,
+      "expression": "\"health-unknown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-107",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 105,
+      "column": 49,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-029",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 105,
+      "column": 61,
+      "expression": "\"Monitored dependency has no registered execution.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-108",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 107,
+      "column": 79,
+      "expression": "\"pending\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-030",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 119,
+      "column": 71,
+      "expression": "\"Invalid health clock time.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-109",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 125,
+      "column": 69,
+      "expression": "\"waiting\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-110",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 147,
+      "column": 27,
+      "expression": "\"unhealthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-EX-111",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 155,
+      "column": 27,
+      "expression": "\"healthy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-031",
+      "path": "packages/cli/src/flow-control/wait-authority.ts",
+      "line": 265,
+      "column": 2,
+      "expression": "work.lifecycle = { state, reason, changedAt: now }",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-032",
+      "path": "packages/cli/src/flow-control/wait-health.ts",
+      "line": 95,
+      "column": 2,
+      "expression": "return { ...incoming }",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-033",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 57,
+      "column": 4,
+      "expression": "this.options.onError(error)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-034",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 84,
+      "column": 8,
+      "expression": "this.refresh().catch(this.options.onError)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-WAIT-AUTHORITY-035",
+      "path": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "line": 121,
+      "column": 5,
+      "expression": "this.options.store.snapshot()",
+      "kind": "boundary"
+    }
+  ]
+}
