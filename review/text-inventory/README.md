@@ -62,6 +62,20 @@ excluded or pending; its presence is not a completed file review. Path categorie
 are navigation aids and do not exclude wording from review. Installed dependencies
 and generated outputs need their separate provenance and consumer traces.
 
+[pi-runtime-census.csv](pi-runtime-census.csv) accounts for the exact two-package
+Pi 1.4.0 installed JavaScript runtime universe: 382 canonical bodies and two
+pinned additions. Of the canonical bodies, 358 match npm archive bytes and 24
+match public source patches. Its frozen review baseline links 192 full Pi local
+body reviews and three full checked-in verbatim bodies; 189 bodies remain pending,
+including 24 with bounded support only. All 46 terminal-library bodies have local
+reviews. The pending set contains 81 compiled bundles totaling 9,211,377 bytes;
+physical line counts alone understate that scope. The
+[evidence](pi-runtime-census-evidence.json) pins 102 source/artifact snapshots,
+33 review inputs, canonical archives, both installed trees and 74 patch after
+hashes. Twelve corruption controls reject missing bodies and unsupported review
+promotions. These are local-body review references; resource, native, transitive
+dependency and complete consumer coverage remain open. No audited module is loaded.
+
 The older [Japanese review](../ja-localization/README.md) retains its own source
 pin and translations; its counts must not be added to this inventory.
 
@@ -1077,6 +1091,7 @@ node review/text-inventory/verify-pi-tui-utilities.cjs --node-modules <root-node
 node review/text-inventory/verify-pi-tui-engines.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-tui-input.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-tui-text-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency

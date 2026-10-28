@@ -1,0 +1,1383 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "5bb9983f4a1bcaa656e7aa24b46b984a1c5d1cc2",
+  "inventory_file": "pi-runtime-census.csv",
+  "verification_script": "review/text-inventory/verify-pi-runtime-census.cjs",
+  "runtime_universe": "Canonical npm1.4.0 package/dist/**/*.js plus two pinned installed additions. Exact JS file universe checked in both installed trees; canonical dist mjs/cjs absent. Static HTML/CSS/schema/docs/maps/declarations/native binaries/external packages are separate pending resources, not body-closed by this census.",
+  "coverage_basis": "Full Pi local-body class requires a full source-read scope with matching installed hashes plus an exact whole-body read_lines record from a prior Pi review section. Parent verbatim body class additionally requires exact installed/repo/pin/ledger match and source anchors from copied-bootstrap.csv. Bounded support/hash-only/module re-export/compiled bundle membership never qualifies whole-body review. Counts describe recorded local review, not automated proof of human completeness or whole transitive consumer closure.",
+  "review_inputs": [
+    "review/text-inventory/copied-bootstrap-scope.csv",
+    "review/text-inventory/pi-auth-model-evidence.json",
+    "review/text-inventory/pi-auth-model-scope.csv",
+    "review/text-inventory/pi-compaction-text-evidence.json",
+    "review/text-inventory/pi-compaction-text-scope.csv",
+    "review/text-inventory/pi-evidence.json",
+    "review/text-inventory/pi-export-metadata-evidence.json",
+    "review/text-inventory/pi-export-metadata-scope.csv",
+    "review/text-inventory/pi-export-text-evidence.json",
+    "review/text-inventory/pi-export-text-scope.csv",
+    "review/text-inventory/pi-export-vendor-evidence.json",
+    "review/text-inventory/pi-export-vendor-scope.csv",
+    "review/text-inventory/pi-packages-evidence.json",
+    "review/text-inventory/pi-packages-scope.csv",
+    "review/text-inventory/pi-resource-text-evidence.json",
+    "review/text-inventory/pi-resource-text-scope.csv",
+    "review/text-inventory/pi-runtime-evidence.json",
+    "review/text-inventory/pi-runtime-scope.csv",
+    "review/text-inventory/pi-scope.csv",
+    "review/text-inventory/pi-session-config-evidence.json",
+    "review/text-inventory/pi-session-config-scope.csv",
+    "review/text-inventory/pi-tools-evidence.json",
+    "review/text-inventory/pi-tools-scope.csv",
+    "review/text-inventory/pi-tui-engines-evidence.json",
+    "review/text-inventory/pi-tui-engines-scope.csv",
+    "review/text-inventory/pi-tui-input-evidence.json",
+    "review/text-inventory/pi-tui-input-scope.csv",
+    "review/text-inventory/pi-tui-text-support-evidence.json",
+    "review/text-inventory/pi-tui-text-support-scope.csv",
+    "review/text-inventory/pi-tui-utilities-evidence.json",
+    "review/text-inventory/pi-tui-utilities-scope.csv",
+    "review/text-inventory/pi-ui-adapter-evidence.json",
+    "review/text-inventory/pi-ui-adapter-scope.csv"
+  ],
+  "review_snapshot_sources": [
+    {
+      "source": "package-lock.json",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76"
+    },
+    {
+      "source": "review/text-inventory/copied-bootstrap-scope.csv",
+      "sha256": "3c8bb7c770e5ec065317fcf7b773792f350819ba6a84ce63b92513ae6bed0ae8"
+    },
+    {
+      "source": "review/text-inventory/copied-bootstrap.csv",
+      "sha256": "340c7986949bb49773668c7dd7590442f2a011adb8eabb495f213a14733ea4d3"
+    },
+    {
+      "source": "review/text-inventory/pi-auth-model-boundaries.csv",
+      "sha256": "b79ff028f58c1a81981ab95dd13a82e59ed6567584c661125b5cea28c684e216"
+    },
+    {
+      "source": "review/text-inventory/pi-auth-model-evidence.json",
+      "sha256": "42b531fb6a66fd8ec90de80fbb6328ba107de2c543fe6854f0800c738f102377"
+    },
+    {
+      "source": "review/text-inventory/pi-auth-model-exclusions.csv",
+      "sha256": "c8fe0382cd6302bf2fda3e578352d03781fa14f791ecd2ad734483bead2ec058"
+    },
+    {
+      "source": "review/text-inventory/pi-auth-model-scope.csv",
+      "sha256": "2c9029f4d8e829c0450e0e5babd85ac81e46d727abcb7f66bee22b09a4161d2b"
+    },
+    {
+      "source": "review/text-inventory/pi-auth-model.csv",
+      "sha256": "418d013ca0aeb8e591387af84eecb96a38fe12eb286b8b32683d4d024563b50b"
+    },
+    {
+      "source": "review/text-inventory/pi-boundaries.csv",
+      "sha256": "1e0039b862f05f5b544d88f080ec4344f48d6796652afbb55a4a057a894d214e"
+    },
+    {
+      "source": "review/text-inventory/pi-compaction-text-boundaries.csv",
+      "sha256": "fdaee5eea31c949a4ed5bccafa9cfb68f0598c8f399484b76b0d79fb1ad24ca4"
+    },
+    {
+      "source": "review/text-inventory/pi-compaction-text-evidence.json",
+      "sha256": "2f98600b00d466207cda2fd2312e37c34a3c961ce3a92364f0e0fa019b8338ff"
+    },
+    {
+      "source": "review/text-inventory/pi-compaction-text-exclusions.csv",
+      "sha256": "77160029faf1dc02578392432097a06cf137cb6a8aa0ab0d1b2179331a0fb1ec"
+    },
+    {
+      "source": "review/text-inventory/pi-compaction-text-scope.csv",
+      "sha256": "45e4244e7753613d875b70f56747825009ba04ac3d0e3456ce1b54a5427f17d9"
+    },
+    {
+      "source": "review/text-inventory/pi-compaction-text.csv",
+      "sha256": "29e52d74c849a65f7bc6c2ca28bcd256d1878d67fa9a7e01764dc7eeaa2f546d"
+    },
+    {
+      "source": "review/text-inventory/pi-evidence.json",
+      "sha256": "880ea5aaaf4cd4a27c59f4b692a9284e32b49a7ccf602b85938422f54085e493"
+    },
+    {
+      "source": "review/text-inventory/pi-exclusions.csv",
+      "sha256": "824f5deacf038947ba3009a84c06d6357feae6d547cbfceab3fdf70f9002b144"
+    },
+    {
+      "source": "review/text-inventory/pi-export-metadata-evidence.json",
+      "sha256": "0e7d03dc102d3101a36550b111b465247735f637d9b996af4b363065d5393a6f"
+    },
+    {
+      "source": "review/text-inventory/pi-export-metadata-scope.csv",
+      "sha256": "2f8b42aefa778f7e60972249b77cc46c46cafa01e16d0fe911fad0116e6fdf6d"
+    },
+    {
+      "source": "review/text-inventory/pi-export-metadata.csv",
+      "sha256": "909130c6ca0d0c658d7c245af57d9633dc7b43dca3d9045f0e3ea3c187230c90"
+    },
+    {
+      "source": "review/text-inventory/pi-export-text-boundaries.csv",
+      "sha256": "c932db640234dca1341cefedf66ad3ae96a8bdffcd7e8ed276822573904d3440"
+    },
+    {
+      "source": "review/text-inventory/pi-export-text-evidence.json",
+      "sha256": "530278a5b9369975a6ad66ebe9b400a7e78939b2639446fe54ba12358f9b1ba1"
+    },
+    {
+      "source": "review/text-inventory/pi-export-text-exclusions.csv",
+      "sha256": "0d16a419fd0026ee1199e5fa98e20fed1db694b3ba76f6de3e7eae67f4382d3a"
+    },
+    {
+      "source": "review/text-inventory/pi-export-text-scope.csv",
+      "sha256": "a4172ed835d2e7bfa386b92b7849aaeb248fa9d3d7ff728431e90afda0302a11"
+    },
+    {
+      "source": "review/text-inventory/pi-export-text.csv",
+      "sha256": "edee1276a77e09f6976713b8c88f0911436da1d4e38c40b3c1d1d7564d849e2f"
+    },
+    {
+      "source": "review/text-inventory/pi-export-vendor-boundaries.csv",
+      "sha256": "eead9fecdc0d6612225ccd6b4eed89d90e54bba10816559ffe788247491da083"
+    },
+    {
+      "source": "review/text-inventory/pi-export-vendor-evidence.json",
+      "sha256": "dc1022996c3725bd7428a0266ba3abe73f8b94b8c4e6d0e39b182fb16bbc156f"
+    },
+    {
+      "source": "review/text-inventory/pi-export-vendor-exclusions.csv",
+      "sha256": "472a1cf1f2913f80b4e4ef17169136f3a9fbec7b56edf6f5d962379acec5f219"
+    },
+    {
+      "source": "review/text-inventory/pi-export-vendor-scope.csv",
+      "sha256": "2f4afd5ed0389a7c35c5509e1d02dd693b9a05d6bc1c9b3b97c4bdf72b2af8fe"
+    },
+    {
+      "source": "review/text-inventory/pi-export-vendor.csv",
+      "sha256": "8ec27d8a69df16b622230c31e7a9ecb3742c694d7583566b6e9851a081c36847"
+    },
+    {
+      "source": "review/text-inventory/pi-packages-boundaries.csv",
+      "sha256": "90756ca93089393d3ad4be590188fcd53585cb16fc3034eabb8970cae4165187"
+    },
+    {
+      "source": "review/text-inventory/pi-packages-evidence.json",
+      "sha256": "f8ff4c9cbdc60246416ec225ad518d50e5c601200e599c9cdc57500e2cd1ecd5"
+    },
+    {
+      "source": "review/text-inventory/pi-packages-exclusions.csv",
+      "sha256": "bd8d8debe69a0adeed1b8353cd1fa6363d1ebab3344b2dcff5e49269b4f311c2"
+    },
+    {
+      "source": "review/text-inventory/pi-packages-scope.csv",
+      "sha256": "3d005a2ea5e1808f197dcf60cee9069d936627de2af7c8c5025f022f06ed4418"
+    },
+    {
+      "source": "review/text-inventory/pi-packages.csv",
+      "sha256": "a9819988f74d689bab067b29d87690eed726026b8a77a88dad47625a4a840ec3"
+    },
+    {
+      "source": "review/text-inventory/pi-resource-text-boundaries.csv",
+      "sha256": "a8fb50a11ba7f502c11dcad9d30a7e35a3f030ee9128baf5b1b9de951f24777a"
+    },
+    {
+      "source": "review/text-inventory/pi-resource-text-evidence.json",
+      "sha256": "9e876337f4b44af291206093640c7d625991f5c62562122de33d88d66ac81dd5"
+    },
+    {
+      "source": "review/text-inventory/pi-resource-text-exclusions.csv",
+      "sha256": "16d649d10f067ae26ec6dfb429338d1c6f6e5464530de3d30ea5773824fa39ee"
+    },
+    {
+      "source": "review/text-inventory/pi-resource-text-scope.csv",
+      "sha256": "d3be3ded4a77e3cca991ed3c7f1a338b31c3e70f4eafd0b92a03561f1ec25a9e"
+    },
+    {
+      "source": "review/text-inventory/pi-resource-text.csv",
+      "sha256": "3811d84da6eecef4879a38353bfdcd4131d9f75578183f13fecfd8a1c3676eba"
+    },
+    {
+      "source": "review/text-inventory/pi-runtime-boundaries.csv",
+      "sha256": "a6248fbcc713e51cb850c93d34a59d55b06450e7d03865237731faa7c1bebeaf"
+    },
+    {
+      "source": "review/text-inventory/pi-runtime-evidence.json",
+      "sha256": "bdd3015f5370a5d01713fa06c91dc058117daf9b932a3aa4ab85ba1e5c4fc54b"
+    },
+    {
+      "source": "review/text-inventory/pi-runtime-exclusions.csv",
+      "sha256": "3cb00195a3a319558a36dfca6a22b99ffa273acae1420d0eb1ea445b244c6b57"
+    },
+    {
+      "source": "review/text-inventory/pi-runtime-scope.csv",
+      "sha256": "9e3135d9bfc7ec61218b654ff5c28cdfd965a246ba1c170b872c1485bf5cf5af"
+    },
+    {
+      "source": "review/text-inventory/pi-runtime.csv",
+      "sha256": "e41eb30cabfe35ffe2a026059738f545d4a01fb394c1a0ddf4570c1123d3dcce"
+    },
+    {
+      "source": "review/text-inventory/pi-scope.csv",
+      "sha256": "af14bb4a4d3c4441add3f9e741432df1320fac42055381ab0876e137fbb8fbf8"
+    },
+    {
+      "source": "review/text-inventory/pi-session-config-boundaries.csv",
+      "sha256": "a5d2f6d6dea185e6ccf6d2c4d373331df239324e1099b39e37fc7bd88a1de96b"
+    },
+    {
+      "source": "review/text-inventory/pi-session-config-evidence.json",
+      "sha256": "99b08d64678220881fc791e96e238578c750cab92dfce79f5b37681f5725d508"
+    },
+    {
+      "source": "review/text-inventory/pi-session-config-exclusions.csv",
+      "sha256": "16c25e0fd528447ae49c8ca9a193cb75d875394cf634bc9a9e8f064653fc5f22"
+    },
+    {
+      "source": "review/text-inventory/pi-session-config-scope.csv",
+      "sha256": "d276d92b901c28ebd3c79a6bec1ff6237df191a40a9eb0e22d762fe63c210a5b"
+    },
+    {
+      "source": "review/text-inventory/pi-session-config.csv",
+      "sha256": "35fb27af31e1659504f7e2560367f4a6d385ec98810582e25596b7fc2fbd0585"
+    },
+    {
+      "source": "review/text-inventory/pi-tools-boundaries.csv",
+      "sha256": "858b53c0d80c40e4aa25de3f57d2fd2b5e4b40df0e7dd00e6cb9a37b6f076249"
+    },
+    {
+      "source": "review/text-inventory/pi-tools-evidence.json",
+      "sha256": "00e7f9367d6e8d5e732110b7e2571878ac2a45fd8f01c7b4ea7705df89d1ccf8"
+    },
+    {
+      "source": "review/text-inventory/pi-tools-exclusions.csv",
+      "sha256": "7b21e0ffb68d2c3741ee5fff91f9fd6f96e836f168ce29c847644223082c04d1"
+    },
+    {
+      "source": "review/text-inventory/pi-tools-scope.csv",
+      "sha256": "b30b1e8859726b34e2ff2c502b1fe2543c069a952554f9be119f10f211b38ef5"
+    },
+    {
+      "source": "review/text-inventory/pi-tools.csv",
+      "sha256": "7ff375a0fb4427b03b18cd8d902a3da523f9358031246fcc296d9bef9fc1fa04"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-engines-boundaries.csv",
+      "sha256": "b445e59396662bea16e1ef76c0bf3dd4f97c3d7c4891a6b17391a832ddc61a8a"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-engines-evidence.json",
+      "sha256": "7ba24af6d642822aac3355821acf6794eb4e97ba9d37799dba09532ff37aae65"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-engines-exclusions.csv",
+      "sha256": "21a4236f231ea3e912aae2b08936d849bf9895b36f9d5fc3b33c9a8e774a1e4d"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-engines-scope.csv",
+      "sha256": "95f8aefd1adbc6ddbacf2cf552aa211c0ad6444374ac3a6f18c0e441d383903d"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-engines.csv",
+      "sha256": "b160007b4bf3c1338a25a266c5224b42a9eca276faaecdb3e7ef4af91e69ccae"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-input-boundaries.csv",
+      "sha256": "eff0b31f0fbc57ff74fa2adde73fc5f3e077f8c5381ed5c8d1e0cdf325e9f7ec"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-input-evidence.json",
+      "sha256": "4541c9e9cb677f60a30c84f81bba62711327429ffe135ef3b97181edb9d49c1b"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-input-exclusions.csv",
+      "sha256": "d0b5baca621988e4c373999474aa3333abc265960aff484ad41c3b178b7dde33"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-input-scope.csv",
+      "sha256": "e8b71f0b5e6279586d2b9f93edeba91200b15ed6dc0fe70e59e0d7395c5430c5"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-input.csv",
+      "sha256": "b747c57bf6fcfaf756245895f6a2bd3221f0a4ca352fdfd9f825cfb9d80d0c04"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-text-support-boundaries.csv",
+      "sha256": "6000bbfcfee91c11218343cbe2c1a9ebb65d75b89949b8dcf66ead5305d2b12f"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-text-support-evidence.json",
+      "sha256": "6f24f313a3b66f1d6d46cb00f0ae09936fa989ab04395e9c7cad06c6d72cd8d3"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-text-support-exclusions.csv",
+      "sha256": "4373bbf9073dd6c7070ca0c1b5dd448300aa7a923967e193ee093e15f75552f8"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-text-support-scope.csv",
+      "sha256": "6abd9d23a65d0ef01425da770156f149b4d919b761663899af6121339c48c805"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-text-support.csv",
+      "sha256": "568998d39b8f4a6c17812baea9a2fb9c4816ea15de3eb6a7e9cecbb3a44c640e"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-utilities-boundaries.csv",
+      "sha256": "1dd4f787a4e5d7387e5a536c7c4dd9b9aa7fdb466cce04b33eb29b061b7b6634"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-utilities-evidence.json",
+      "sha256": "d90b1276aca42a0911581746d3347973957cb863a3a396a1303fa2f879c03b13"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-utilities-exclusions.csv",
+      "sha256": "f77b64ac94bb3b05ef0f8eb1d58a70fd37d431ab6df15943ce38af29c2112d1a"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-utilities-scope.csv",
+      "sha256": "e432aa730c7ae92d6b3617fd797f10ea6cc6ac32f500be9e62f57827bf487975"
+    },
+    {
+      "source": "review/text-inventory/pi-tui-utilities.csv",
+      "sha256": "ac3275821225cd3e9e50cbb4ed8e8e279283194657d57a7b5083834727b24055"
+    },
+    {
+      "source": "review/text-inventory/pi-ui-adapter-evidence.json",
+      "sha256": "2de55f98469684a683e11111e2f9f3eb35a8a3462bc0fb903a954058d3544ebf"
+    },
+    {
+      "source": "review/text-inventory/pi-ui-adapter-scope.csv",
+      "sha256": "9193942a55081b49ccd2e1f8cb4050fe10b8b96e9093aa05d752d42619271bb6"
+    },
+    {
+      "source": "review/text-inventory/pi.csv",
+      "sha256": "656a4704a2c5bda2a1bdf376f622b6a7cefbf18da2b5a05ee86861b7616b4447"
+    },
+    {
+      "source": "review/text-inventory/verify-copied-bootstrap.py",
+      "sha256": "6b15f4b53dbd6f388349e581ca53abfd5e2283d810a473a4e2874fbee3c0a5a8"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-auth-model.cjs",
+      "sha256": "cb22d2011b286a5710125e150e02c7d3a1bfbd401366a6e9f51c60bd3b1f3b46"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-compaction-text.cjs",
+      "sha256": "ee8536dd0f9db2a45d8c3698a55ad70fdc7ce2ea7612fc07dd8237a93ecd3b06"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-export-metadata.cjs",
+      "sha256": "ea50137d78db880571bcf2c9199127f2005bb26821a8db41a614875b5168a3e4"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-export-text.cjs",
+      "sha256": "84e4ef13a0d435b3a7e66b92934384b0820120cbf6220ea10855e81ce7607e47"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-export-vendor.cjs",
+      "sha256": "d4795c91f356ef9c02661cddfc2334de65504686d59b537872f49102635b2127"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-packages.cjs",
+      "sha256": "e542604d77da9e597eaf31853a0d54cabc68d2d710c4f93896ff8139e98e296f"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-resource-text.cjs",
+      "sha256": "f08856a975ac0fc72d63741df8c261658538acb782c4d2845d6e284b93284dde"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-runtime.cjs",
+      "sha256": "9d32b7312114a21cc9ec3fb5682deab01f52656efe558115cd7b6e0a55bd7d25"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-session-config.cjs",
+      "sha256": "6fddea4e61e8e29b6e447a113535b195d51321f841f1812a7ad5b4048bcd0d0c"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-tools.cjs",
+      "sha256": "4ab83e2b0ff43095fb5cd5a28296cace2aae343df05feb2928646580d9f815b1"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-tui-engines.cjs",
+      "sha256": "d854d0f73d831303f87618c4b619ac0269747b0784bbb31ce0f20ad30b8c3550"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-tui-input.cjs",
+      "sha256": "45d744f8285feb80d27cddb29b75f8e4bf8c0a340b49a363ed8a2a8c126e8fb9"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-tui-text-support.cjs",
+      "sha256": "384d7c80501cd5a33160d4b5911d4d144ac479828c87d76f68e3d1bd7efee74b"
+    },
+    {
+      "source": "review/text-inventory/verify-pi-tui-utilities.cjs",
+      "sha256": "4da87b0bf71ccd4628ab4e10ddedc69808b51814f1c93b30499cb9e6aff3b89b"
+    },
+    {
+      "source": "review/text-inventory/verify-pi.cjs",
+      "sha256": "46edad8cd782cb5681a7d9202b8ec620b46c0b8da630b312ca5c7222896f78dc"
+    },
+    {
+      "source": "scripts/apply-pi-content-policy.mjs",
+      "sha256": "c321a1a4230fac7688075b4078aa67493cf26b401beaec821955645aa68ca43d"
+    },
+    {
+      "source": "scripts/apply-pi-terminal-clipboard.mjs",
+      "sha256": "7badd334e4f7bf415f27a2ce9c8376f23d6a681ad37e77c88e9b14e43b2d829e"
+    },
+    {
+      "source": "scripts/pi-content-policy-transform.mjs",
+      "sha256": "918041466e3f757153bf84b769845779c974a0c3e9495f3be5b4177db6fd129c"
+    },
+    {
+      "source": "upstream/pi-content-policy/bug-report.js",
+      "sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "source": "upstream/pi-content-policy/flow-ingress.js",
+      "sha256": "429b7485746f6a266310724b8c73d4604e937956d394fffb09e48202fd045d38"
+    },
+    {
+      "source": "upstream/pi-terminal-clipboard/clipboard-tmux.js",
+      "sha256": "ed688a76a83d90afce5d8e0cc63b26c5b806111798be697ef2ab6d3aedb503d4"
+    },
+    {
+      "source": "upstream/pi-terminal-clipboard/patch.mjs",
+      "sha256": "4899da79346b0bbd30f7d6b8be4d8c6bde6a99d1e347e70e7f32e2b36ad46781"
+    },
+    {
+      "source": "upstream/pi.lock.json",
+      "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02"
+    }
+  ],
+  "packages": [
+    {
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+      "integrity_authorities": [
+        "package-lock.json",
+        "upstream/pi.lock.json"
+      ],
+      "archive_lock_records": [
+        {
+          "source": "node_modules/@earendil-works/pi-coding-agent",
+          "version": "1.4.0",
+          "integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+        }
+      ],
+      "canonical_runtime_bodies": 336,
+      "installed_runtime_bodies": 338,
+      "pinned_additions": 2,
+      "canonical_byte_identical": 312,
+      "canonical_patched": 24,
+      "coverage_counts": {
+        "body-review-pending": 165,
+        "full-local-review-record": 146,
+        "bounded-support-body-pending": 24,
+        "parent-verbatim-full-local-review-record": 3
+      },
+      "canonical_bytes": 12033591,
+      "installed_bytes": 12062273,
+      "remaining_bodies": 189,
+      "remaining_lines": 19138,
+      "remaining_bytes": 9885726
+    },
+    {
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+      "integrity_authorities": [
+        "package-lock.json"
+      ],
+      "archive_lock_records": [
+        {
+          "source": "node_modules/@earendil-works/pi-tui",
+          "version": "1.4.0",
+          "integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg=="
+        }
+      ],
+      "canonical_runtime_bodies": 46,
+      "installed_runtime_bodies": 46,
+      "pinned_additions": 0,
+      "canonical_byte_identical": 46,
+      "canonical_patched": 0,
+      "coverage_counts": {
+        "full-local-review-record": 46
+      },
+      "canonical_bytes": 656729,
+      "installed_bytes": 656729,
+      "remaining_bodies": 0,
+      "remaining_lines": 0,
+      "remaining_bytes": 0
+    }
+  ],
+  "package_identities": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "pinned_manifests": [
+    {
+      "source": "upstream/vcc-goals/patch.lock.json",
+      "sha256": "d8092c252e571ce6cc59b02b2d33c748ffab0892c93f3859d1d7df143446c147"
+    },
+    {
+      "source": "upstream/pi-content-policy/patch.lock.json",
+      "sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f"
+    },
+    {
+      "source": "upstream/pi-flow-control/patch.lock.json",
+      "sha256": "debe9e6a8b86f3ff2f92fac0984294826a49d2904c3c7c261c9e1d0b5c84908d"
+    },
+    {
+      "source": "upstream/pi-provider-receipts/patch.lock.json",
+      "sha256": "ad5d0b62372f2445fe1c50b073fcf37eee20c1d2a734639d07056e57f7f36a2c"
+    },
+    {
+      "source": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619"
+    },
+    {
+      "source": "upstream/pi-path-utils/patch.lock.json",
+      "sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f"
+    },
+    {
+      "source": "upstream/background-flow/patch.lock.json",
+      "sha256": "701ffe0a79ad2dd45dbc1a4e3b1a6cddc54a11076916cf7f41d2deee233dfc80"
+    },
+    {
+      "source": "upstream/multiloop-wait-skill/patch.lock.json",
+      "sha256": "93c6496f99524a886e9d27d5a5fef1d5d1cd38e3a92df653f3cf128ec8c9cc0d"
+    },
+    {
+      "source": "upstream/task-flow/patch.lock.json",
+      "sha256": "527b9e1cc2a1d5c9aedffcc59a333a6250a11d55f44ad8b75929127e8ff8a577"
+    },
+    {
+      "source": "upstream/code-previews/patch.lock.json",
+      "sha256": "998be81efca44a32e3a56bcab7fa6c53856bc92419e0f04d00263ad93f28b75e"
+    }
+  ],
+  "pinned_after_hash_checks": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/settings-manager.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/system-prompt.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/cache-warmer.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/main.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/main.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/resource-loader.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/resource-loader.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/sdk.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/sdk.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session-services.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session-services.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session-runtime.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/rpc/rpc-mode.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/loader.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/skills.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/skills.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/session-manager.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/session-manager.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/runner.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/runner.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/messages.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/messages.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/compaction/compaction.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/compaction/branch-summarization.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/compaction/branch-summarization.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/model-runtime.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/model-runtime.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/interactive-mode.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/interactive-mode.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/components/custom-editor.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/slash-commands.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/bug-report.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/types.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/utils/clipboard.js",
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "after_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/tools/path-utils.js",
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "after_sha256": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/settings-manager.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/system-prompt.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/cache-warmer.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/main.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/main.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/resource-loader.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/resource-loader.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/sdk.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/sdk.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session-services.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session-services.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/agent-session-runtime.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/rpc/rpc-mode.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/loader.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/skills.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/skills.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/session-manager.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/session-manager.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/runner.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/runner.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/messages.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/messages.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/compaction/compaction.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/compaction/branch-summarization.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/compaction/branch-summarization.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/model-runtime.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/model-runtime.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/interactive-mode.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/interactive-mode.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/components/custom-editor.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/slash-commands.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/modes/interactive/bug-report.js",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/extensions/types.d.ts",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "after_sha256": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/utils/clipboard.js",
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "after_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "source": "dist/core/tools/path-utils.js",
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "after_sha256": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    }
+  ],
+  "counts": {
+    "canonical_runtime_bodies": 382,
+    "pinned_additions": 2,
+    "installed_runtime_bodies": 384,
+    "remaining_bodies": 189,
+    "remaining_lines": 19138,
+    "remaining_bytes": 9885726,
+    "full_pi_body_records": 192,
+    "full_repo_verbatim_body_records": 3,
+    "bounded_support_body_pending": 24,
+    "no_full_body_review": 165,
+    "full_claim_proof_pending": 0,
+    "bundle_bodies": 81,
+    "bundle_bytes": 9211377,
+    "bundle_physical_lines": 3470,
+    "bundle_remaining_bodies": 81,
+    "after_hash_checks": 74,
+    "parent_copied_source_anchor_checks": 284
+  },
+  "remaining_body_sources": [
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/cli.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/restore-sandbox-env.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/runtime-setup.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bun/sandbox-env-setup.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/anthropic-messages-5FHV3XZG.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/anthropic.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/azure-openai-responses-KLTRI2FU.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/bedrock-converse-stream.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7CBJINYJ.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7ZC4UXSL.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-A45IWOC6.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-CF5GWZHW.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-EGE5YVUM.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-L2ZPNLYD.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LVVZS2NO.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-NFLURVK3.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PGXDEOVV.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PJACZCIR.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PMRZO46Y.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PRRNXB7S.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-QSDU2SDK.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RDZVAGPR.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TEPMHNKQ.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TRERZKRC.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UNXOKDPB.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UTB4DTYQ.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-Z6I32PHA.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/cli-MIMUTM5L.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/cloudflare-workers-ai-system-one-7J6REGDV.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/codemode-worker.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/easter-egg-3d-RMLF7AC4.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/execute-MT7QEDSI.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/github-copilot.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/google-generative-ai-VPNFZDHO.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/google-vertex-ZFM23MQ4.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/https-proxy-agent-LVOO5TPL.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/image-resize-worker.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-loader-GL4HJFAD.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/kimi-coding.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/lib-4AVRLBHM.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/llama-cpp-classify-U4EH6TAM.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/meta.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/mistral-conversations-WCAJTBXO.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/multipart-parser-FMGQ7342.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/node-AUOGOBCN.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/node-KCMANYC2.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-chatgpt.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-codex-responses-JQR3IK2C.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-codex.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-completions-27RKPL37.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-decisions-MJYPUCLX.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-responses-I2TBW7OL.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openrouter-images-WBAVKHHY.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openrouter.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/pi-messages-S7RKCD5K.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/radius.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/src-QKGKDFSU.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/typesafe-system-one-4C7ULOVP.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/xai.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/file-processor.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/initial-message.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/session-picker.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bash-executor.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-stats.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/defaults.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/diagnostics.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/event-bus.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/experimental.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/http-dispatcher.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/radius.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/slash-commands.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/telemetry.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/timings.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/virtual-models.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.lazy.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/renderer.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/tool.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/worker.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/llama/client.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/llama/huggingface.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/llama/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/llama/provider.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/llama/ui.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/cli.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/cli.lazy.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/config.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/log.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/oauth.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/resources.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/runtime.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/runtime.lazy.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/tools.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/ui.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/rpc-entry.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/ansi.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/changelog.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/deprecation.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/exif-orientation.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/git.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/html.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/json.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/text.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/tool-result-images.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/version-check.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/windows-self-update.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/zip.js"
+  ],
+  "parent_verbatim_mappings": [
+    {
+      "installed_source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/jouzu-flow-ingress.js",
+      "repo_source": "upstream/pi-content-policy/flow-ingress.js",
+      "repo_sha256": "429b7485746f6a266310724b8c73d4604e937956d394fffb09e48202fd045d38",
+      "scope_ledger": "review/text-inventory/copied-bootstrap-scope.csv",
+      "status": "fully-read-copied-bootstrap-unit",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "coverage": "Full481-line body; every nonempty JS/TS literal/template/regex occurrence dispositioned; empty literals/comments structurally accounted.",
+      "detail": "Policy lock:148 pins flowIngress; apply-pi-content-policy.mjs:52-67 copies exact body to dist/core/jouzu-flow-ingress.js when absent, mismatch/check-only rejects. transform:704-707 imports/installs binding in AgentSession, :713/813-818 wires disposal/branch callbacks; SDK passes flowIngress and attach at:494-507. main-cli.ts:740-762 builds scrollback-wrapped flowIngressFactory; scrollback-session.ts:10-41 delegates lifecycle/submit; no direct print in this body. No producer/native/patch/runtime execution.",
+      "definition_ledger": "review/text-inventory/copied-bootstrap.csv",
+      "source_occurrences": 71,
+      "manifest": "upstream/pi-content-policy/patch.lock.json"
+    },
+    {
+      "installed_source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/bug-report.js",
+      "repo_source": "upstream/pi-content-policy/bug-report.js",
+      "repo_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+      "scope_ledger": "review/text-inventory/copied-bootstrap-scope.csv",
+      "status": "fully-read-copied-bootstrap-unit",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "coverage": "Full275-line body; every nonempty JS/TS literal/template/regex occurrence dispositioned; empty literals/comments structurally accounted.",
+      "detail": "Policy lock patch.lock.json:138-140 pins full bug-report replacement SHA256. scripts/pi-content-policy-transform.mjs:10-14 reads this body and :399-403 substitutes dist/modes/interactive/bug-report.js after reportBug signature guard; apply-pi-content-policy.mjs:32-39/69-70 validates before/after hashes then writes. Installed handleBugCommand reportBug call enhanced at transform:379-381 with runtime identity and showReport->chat Text/requestRender; input/editor/selector routes in body:198-261. No producer/native/patch/runtime execution.",
+      "definition_ledger": "review/text-inventory/copied-bootstrap.csv",
+      "source_occurrences": 92,
+      "manifest": "upstream/pi-content-policy/patch.lock.json"
+    },
+    {
+      "installed_source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-tmux.js",
+      "repo_source": "upstream/pi-terminal-clipboard/clipboard-tmux.js",
+      "repo_sha256": "ed688a76a83d90afce5d8e0cc63b26c5b806111798be697ef2ab6d3aedb503d4",
+      "scope_ledger": "review/text-inventory/copied-bootstrap-scope.csv",
+      "status": "fully-read-copied-bootstrap-unit",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "coverage": "Full241-line body; every nonempty JS/TS literal/template/regex occurrence dispositioned; empty literals/comments structurally accounted.",
+      "detail": "patch.mjs:15-20 additions maps dist/utils/clipboard-tmux.js to this verbatim source; clipboard patch.lock.json:12-14 pins hash; apply-pi-terminal-clipboard.mjs:48-62 validates and writes absent target only, rejects differing installed/check-only. patch:30-32 imports helper; :61-67 uses status/accepted. Installed copy failure after copied=false/tmuxEnabled throws generated error at patch:81-85; exact external Pi callers beyond this checked-in patch are not asserted. No producer/native/patch/runtime execution.",
+      "definition_ledger": "review/text-inventory/copied-bootstrap.csv",
+      "source_occurrences": 121,
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json"
+    }
+  ],
+  "bundle_scope": {
+    "files": 81,
+    "bytes": 9211377,
+    "physical_lines": 3470,
+    "remaining_bodies": 81,
+    "limit": "81 bundled bodies remain pending despite similarly named unbundled implementations;9.2MB in only3470 physical lines. A future body pass needs finite byte/AST scopes and actual import/caller policies. No minifier/parser/runtime execution performed."
+  },
+  "superseded_scope_statuses": "Old export-text vendor pending rows are superseded for local body coverage only by separate exact full export-vendor source_review records. ShowImagesSelector/ThemeSelector source-read-exported-consumer-pending records close local bodies while preserving exported activation pending.",
+  "partial_owned_source_mapping": [
+    {
+      "installed_source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "repo_transform_source": "upstream/pi-terminal-clipboard/patch.mjs",
+      "source_ledger": "review/text-inventory/copied-bootstrap-scope.csv",
+      "status": "partial-transform-producer-owned-whole-runtime-body-pending",
+      "limit": "Full transform source review covers its own inserted/matched strings, not all178 lines of inherited installed clipboard.js."
+    }
+  ],
+  "limits": [
+    "Coverage is a frozen snapshot of the explicitly listed prior audit units. New units require an explicit census refresh; no automatic promotion from newly appearing files or mutable proof flags.",
+    "All382 canonical bodies checked against archive/installed two-tree bytes,24 canonical patches each have one pinned before/after manifest; two additions independently match exact checked-in sources and pinned addition/source keys. All74 existing patch-after checks repeated.",
+    "195 installed local-body review records consist of192 Pi-owned canonical review records plus3 parent-owned verbatim copies/replacement;189 coding-agent bodies remain pending,24 with bounded support and165 without full local review. Consumer/dependency graph remains open even for reviewed bodies.",
+    "Package/archive/lock provenance qualifies these exact two1.4.0 packages only; core/ai, EAW1.6, runtime parsers/providers, addon/OS/clipboard/browser/body graphs and non-JS resources require independent scope. CLI top-level EAW1.7 lock does not qualify shadowed1.6 runtime.",
+    "A canonical full local review refers to the installed pinned source body. Reading a checked-in transform, reviewing a similarly named module, hashing a compiled bundle or matching its metadata does not qualify another source body.",
+    "No audited module/parser/renderer/addon/terminal/browser/child/provider/model was loaded or executed. Only standard-library source/JSON/archive reads and these audit artifact writes; no product/dependency/shared/git changes."
+  ],
+  "reviewed_artifact_sha256": {
+    "pi-runtime-census.csv": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225"
+  }
+}
