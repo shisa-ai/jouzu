@@ -130,6 +130,7 @@
     "python-dev-build-tests-scope.csv": "810772d490ccb3a8b66335035ff1fcbe52722de880b3403d5e35efa0adfebda9",
     "python-review-helper-tests-scope.csv": "dab7c842729e115f989f0d9f0513c1c5b54f37da1cf36efac1c737e485c3a4fe",
     "test-source-sites-scope.csv": "9e5c0991245c42c4a8620148514b75e3b0c54448cb5089fd3589ba7af3fa0417",
+    "fixture-ipc-text-scope.csv": "c6702916904e4c184ab0a2068d63e9984530cd9fd4474355477090cd1b643cb0",
     "data-fixture-text-scope.csv": "1d5982690a57b9ee9e66dd92f813b6d84e10ac40e010b55985cd7faf3d30fb80",
     "operator-scripts-scope.csv": "a8a0d7fbeb35ef7c96e318e28c0f1940dbf8cb08505051b853227f76825a0c08",
     "build-scripts-scope.csv": "5ad0d49a28d7f9a6df95c8405cb4327e21cdb09f4bfc4f558b7e000eceef2a19",

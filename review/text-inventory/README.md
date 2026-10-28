@@ -236,6 +236,19 @@ excluded or pending; its presence is not a completed file review. Path categorie
 are navigation aids and do not exclude wording from review. Installed dependencies
 and generated outputs need their separate provenance and consumer traces.
 
+[fixture-ipc-text.csv](fixture-ipc-text.csv) records 53 English fixture
+occurrences, eleven protected values, eight protected reply patterns and fifteen
+dynamic/replacement boundaries across two complete IPC fixtures (443 lines).
+The 171 [exclusions](fixture-ipc-text-exclusions.csv) complete the 243-occurrence
+literal/template/comment partition. Retry handling, duplicate replies,
+missing-model checks, captured stderr and voice-error replacement retain their
+actual source conditions. Permission/dialog title and option bytes can also
+control test replies, so their protected couplings remain explicit. The
+[scope](fixture-ipc-text-scope.csv) pins two fixture producers and six bounded
+callers; test clients capture or respond programmatically. Seven corruption
+controls pass. This source inventory does not execute fixtures or establish
+ordinary product rendering.
+
 [data-fixture-text.csv](data-fixture-text.csv) records 25 qualified source/data
 wording entries and two control-data boundaries across five complete fixtures
 (465 lines, 18,949 bytes). The [line export](data-fixture-lines.csv) reconstructs
@@ -1927,6 +1940,7 @@ python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/verify-catalog-disposition-links.py
 python -B review/text-inventory/source-census.py
 node review/text-inventory/verify-test-source-sites.cjs
+node review/text-inventory/verify-fixture-ipc-text.cjs
 python -B review/text-inventory/verify-data-fixture-text.py
 python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-main-update-review-links.py
