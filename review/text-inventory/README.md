@@ -492,6 +492,16 @@ are module/path/glob/alias/bind/type values and a Cargo rebuild directive, with 
 new authored runtime sentence. Compiler, framework, browser and OS messages keep
 their external producer boundaries. No build, config, package or test executes.
 
+[license-source-text.csv](license-source-text.csv) retains eight exact license
+source bodies (744 lines, 41,470 bytes), with per-copy Git provenance and
+[physical line records](license-source-lines.csv) that reconstruct every byte.
+The [scope](license-source-scope.csv) distinguishes complete source exports from
+bounded package declarations, notice-copy conditions and canonical byte-identity
+links. Five distinct byte bodies remain eight source/package routes. Opening a
+notice or extracting a declared/copied package file is separate from terminal
+output; these records establish no default scanner/TUI or installer license page.
+The [snapshot](license-source-snapshot.json) records eight corruption controls.
+
 [resource-config-text.csv](resource-config-text.csv) separates five authored
 annotations and two external boundaries across thirteen complete configuration/
 resource sources (403 lines). The [line export](resource-config-lines.csv)
@@ -1741,6 +1751,7 @@ python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
 python -B review/text-inventory/verify-launcher-config-text.py
 python -B review/text-inventory/verify-resource-config-text.py
+python -B review/text-inventory/verify-license-source-text.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
