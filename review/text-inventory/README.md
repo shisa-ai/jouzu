@@ -798,7 +798,7 @@ view data is distinct from persisted native admission reasons. Result review-not
 English can survive in saved/raw/expanded/exported content while compact summary
 uses a catalog label. Manifest input limits, cursor errors, retention/attachment
 routes and complete-member byte budgets retain their precise guards. Wider
-service and host bodies remain pending; ingress, submission, user-input
+native dispatch/history and lifecycle bodies remain pending; service, ingress, submission, user-input
 and work helpers follow below.
 No controller, queue, tool, model, native or user-state producer was executed.
 
@@ -813,7 +813,7 @@ receipt view. Consumption, cancellation evidence, admission holds and unknown
 states retain exact precedence. Queue/context-only cancellation can evaluate a
 catalog lookup whose text is discarded. Submitted user text has its own guarded
 native/model/saved/export route, separate from receipt text. Wider native,
-service producers remain open; ingress, submission and wait bridges follow below. No grants,
+native/lifecycle producers remain open; service, ingress, submission and wait bridges follow below. No grants,
 input, private state, model, native or tool producer was executed.
 
 [flow-submission-text.csv](flow-submission-text.csv) adds 117 durable-submission
@@ -842,6 +842,19 @@ custom message, while queued guidance is request projection without an automatic
 transcript/export claim. Management, grant, lifecycle and optional reporting routes
 retain their conditions. Artifact digests pin Git LF bytes. No ingress, admission,
 callback, journal, queue, model, native or UI operation was executed.
+
+[flow-session-service.csv](flow-session-service.csv) adds 63 service/host records:
+47 fixed occurrences, two catalog consumers and fourteen payload boundaries. Two
+complete bodies cover 1,080 lines. The [scope](flow-session-service-scope.csv)
+pins 27 sources and accounts for 45 Error constructors, seven catches, fourteen
+helper calls and 266 lexical tokens, with seventeen prior full-body links.
+Auto-retirement can skip busy/stale failures; direct APIs preserve their own
+errors. Resolve reasons are stored after leaving uncertainty, separately from
+immediate success notices. Host quarantine changes model context; composed body,
+queue, saved and expanded/export paths retain their actual guards. Ownership
+lifetime tracking is not treated as a mutex. Revocation before enqueue remains a
+real awaited boundary. No service, host, queue, storage, callback, model or
+native/UI operation was executed.
 
 [flow-wait-bridges.csv](flow-wait-bridges.csv) adds twenty fixed occurrences
 and eight boundaries across the complete 420-line schedule/subagent wait pair.
@@ -1427,6 +1440,7 @@ python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-flow-submission-text.py
 python -B review/text-inventory/verify-flow-ingress-text.py
+python -B review/text-inventory/verify-flow-session-service.py
 node review/text-inventory/verify-flow-wait-bridges.cjs
 node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-web-adapter-text.py

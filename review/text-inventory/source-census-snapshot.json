@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 799,
-  "paths_without_scope_references": 407,
+  "paths_with_scope_references": 802,
+  "paths_without_scope_references": 404,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -82,6 +82,7 @@
     "flow-user-work-scope.csv": "7e7ff507d7272737f19538c92c0cf1ccc1eddb27d5b3857e4b86cc34b8f155e2",
     "flow-submission-text-scope.csv": "495ce2b890fed0dd57d34c113ff5be284ca2aa7cec44d77038bbec456c7de350",
     "flow-ingress-text-scope.csv": "22abe72a1a0b5d23922ca69215251387af3609739ea53b5471d11cf6a6916e0c",
+    "flow-session-service-scope.csv": "853c5018501ddd07ae9dea5ce4cd4c322fc1f6fa289e58b7bf5f5ec5c4526d0c",
     "flow-wait-bridges-scope.csv": "05782a8e2ffd693310cb084f64066d75bfc2ba365e72e6d0f3b036c70fe8eb0f",
     "input-example-text-scope.csv": "19e79b5ba6dbc5ab65b88fe23f3b751f1bf0902a44ee94d970869ff46db7bbc7",
     "context-adjunct-text-scope.csv": "0c84a529730447971bcb26c2508e2495dbe17c488428dc3c623a58ba23c7ae75",
