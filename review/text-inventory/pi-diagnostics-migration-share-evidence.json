@@ -1,0 +1,5144 @@
+{
+  "package": "@earendil-works/pi-coding-agent",
+  "version": "1.4.0",
+  "first_party_authority": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js": 22,
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js": 292,
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js": 140,
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js": 60,
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js": 282,
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js": 195
+  },
+  "full_lines": 991,
+  "lexical_partition": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 1,
+      "start": 31,
+      "end": 48,
+      "kind": "string",
+      "raw": "./bug-report.js",
+      "excluded_index": 1
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 2,
+      "start": 86,
+      "end": 99,
+      "kind": "string",
+      "raw": "./radius.js",
+      "excluded_index": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 3,
+      "start": 101,
+      "end": 194,
+      "kind": "comment",
+      "raw": "/** Upload a report as multipart form data, anonymously or attributed to a Radius account. */",
+      "excluded_index": 3
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 9,
+      "start": 480,
+      "end": 497,
+      "kind": "string",
+      "raw": "/v1/bug-reports",
+      "excluded_index": 4
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 10,
+      "start": 563,
+      "end": 569,
+      "kind": "string",
+      "raw": "POST",
+      "excluded_index": 5
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 11,
+      "start": 621,
+      "end": 646,
+      "kind": "template",
+      "raw": "Bearer ${options.token}",
+      "excluded_index": 6
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 11,
+      "start": 629,
+      "end": 645,
+      "kind": "interpolation",
+      "raw": "${options.token}",
+      "excluded_index": 7
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 16,
+      "start": 851,
+      "end": 859,
+      "kind": "string",
+      "raw": "string",
+      "excluded_index": 8
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 20,
+      "start": 1014,
+      "end": 1093,
+      "kind": "template",
+      "raw": "Bug report upload failed: ${detail || response.statusText || response.status}",
+      "item_id": "PI-DIAGNOSTICS-001"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 20,
+      "start": 1041,
+      "end": 1092,
+      "kind": "interpolation",
+      "raw": "${detail || response.statusText || response.status}",
+      "excluded_index": 9
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 22,
+      "start": 1098,
+      "end": 1143,
+      "kind": "comment",
+      "raw": "//# sourceMappingURL=bug-report-upload.js.map",
+      "excluded_index": 10
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 1,
+      "start": 20,
+      "end": 29,
+      "kind": "string",
+      "raw": "node:os",
+      "excluded_index": 11
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 2,
+      "start": 85,
+      "end": 108,
+      "kind": "string",
+      "raw": "@earendil-works/pi-ai",
+      "excluded_index": 12
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 3,
+      "start": 134,
+      "end": 148,
+      "kind": "string",
+      "raw": "../config.js",
+      "excluded_index": 13
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 4,
+      "start": 181,
+      "end": 208,
+      "kind": "string",
+      "raw": "../utils/pi-user-agent.js",
+      "excluded_index": 14
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 5,
+      "start": 242,
+      "end": 259,
+      "kind": "string",
+      "raw": "../utils/zip.js",
+      "excluded_index": 15
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 6,
+      "start": 340,
+      "end": 368,
+      "kind": "string",
+      "raw": "./compaction/compaction.js",
+      "excluded_index": 16
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 7,
+      "start": 408,
+      "end": 431,
+      "kind": "string",
+      "raw": "./compaction/utils.js",
+      "excluded_index": 17
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 8,
+      "start": 462,
+      "end": 477,
+      "kind": "string",
+      "raw": "./messages.js",
+      "excluded_index": 18
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 9,
+      "start": 523,
+      "end": 538,
+      "kind": "string",
+      "raw": "pi.bug-report",
+      "excluded_index": 19
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 11,
+      "start": 594,
+      "end": 606,
+      "kind": "string",
+      "raw": "<redacted>",
+      "item_id": "PI-DIAGNOSTICS-002"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 12,
+      "start": 630,
+      "end": 727,
+      "kind": "regex",
+      "raw": "/(?:^|[-_])(api[-_]?key|secret|token|password|passwd|credential|authorization|cookie)(?:$|[-_])/i",
+      "excluded_index": 20
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 14,
+      "start": 802,
+      "end": 822,
+      "kind": "regex",
+      "raw": "/([a-z0-9])([A-Z])/g",
+      "excluded_index": 21
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 14,
+      "start": 824,
+      "end": 831,
+      "kind": "string",
+      "raw": "$1_$2",
+      "excluded_index": 22
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 16,
+      "start": 837,
+      "end": 909,
+      "kind": "comment",
+      "raw": "/** Strip credentials and secret-looking query parameters from a URL. */",
+      "excluded_index": 23
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 18,
+      "start": 964,
+      "end": 1015,
+      "kind": "regex",
+      "raw": "/^([a-z][a-z0-9+.-]*:)([a-z][a-z0-9+.-]*:\\/\\/.*)$/i",
+      "excluded_index": 24
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 20,
+      "start": 1060,
+      "end": 1097,
+      "kind": "template",
+      "raw": "${nested[1]}${redactUrl(nested[2])}",
+      "excluded_index": 25
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 20,
+      "start": 1061,
+      "end": 1073,
+      "kind": "interpolation",
+      "raw": "${nested[1]}",
+      "excluded_index": 26
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 20,
+      "start": 1073,
+      "end": 1096,
+      "kind": "interpolation",
+      "raw": "${redactUrl(nested[2])}",
+      "excluded_index": 27
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 25,
+      "start": 1245,
+      "end": 1247,
+      "kind": "string",
+      "raw": "",
+      "excluded_index": 28
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 26,
+      "start": 1276,
+      "end": 1278,
+      "kind": "string",
+      "raw": "",
+      "excluded_index": 29
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 41,
+      "start": 1616,
+      "end": 1692,
+      "kind": "comment",
+      "raw": "/** Copy a JSON value while removing values that may contain credentials. */",
+      "excluded_index": 30
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 48,
+      "start": 1986,
+      "end": 1994,
+      "kind": "string",
+      "raw": "string",
+      "excluded_index": 31
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 60,
+      "start": 2394,
+      "end": 2423,
+      "kind": "template",
+      "raw": "bun/${process.versions.bun}",
+      "excluded_index": 32
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 60,
+      "start": 2399,
+      "end": 2422,
+      "kind": "interpolation",
+      "raw": "${process.versions.bun}",
+      "excluded_index": 33
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 60,
+      "start": 2426,
+      "end": 2451,
+      "kind": "template",
+      "raw": "node/${process.version}",
+      "excluded_index": 34
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 60,
+      "start": 2432,
+      "end": 2450,
+      "kind": "interpolation",
+      "raw": "${process.version}",
+      "excluded_index": 35
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 65,
+      "start": 2623,
+      "end": 2630,
+      "kind": "regex",
+      "raw": "/[\\\\/]/",
+      "excluded_index": 36
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 67,
+      "start": 2689,
+      "end": 2695,
+      "kind": "string",
+      "raw": "TERM",
+      "excluded_index": 37
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 68,
+      "start": 2723,
+      "end": 2737,
+      "kind": "string",
+      "raw": "TERM_PROGRAM",
+      "excluded_index": 38
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 69,
+      "start": 2772,
+      "end": 2794,
+      "kind": "string",
+      "raw": "TERM_PROGRAM_VERSION",
+      "excluded_index": 39
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 70,
+      "start": 2824,
+      "end": 2835,
+      "kind": "string",
+      "raw": "COLORTERM",
+      "excluded_index": 40
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 75,
+      "start": 3046,
+      "end": 3115,
+      "kind": "comment",
+      "raw": "// Names help diagnose configuration; values never leave the machine.",
+      "excluded_index": 41
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 77,
+      "start": 3219,
+      "end": 3224,
+      "kind": "string",
+      "raw": "PI_",
+      "excluded_index": 42
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 101,
+      "start": 4017,
+      "end": 4026,
+      "kind": "string",
+      "raw": "api_key",
+      "excluded_index": 43
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 103,
+      "start": 4081,
+      "end": 4088,
+      "kind": "string",
+      "raw": "oauth",
+      "excluded_index": 44
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 151,
+      "start": 6032,
+      "end": 6110,
+      "kind": "comment",
+      "raw": "/** Collect failed assistant turns without collecting conversation content. */",
+      "excluded_index": 45
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 157,
+      "start": 6359,
+      "end": 6368,
+      "kind": "string",
+      "raw": "message",
+      "excluded_index": 46
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 157,
+      "start": 6395,
+      "end": 6406,
+      "kind": "string",
+      "raw": "assistant",
+      "excluded_index": 47
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 163,
+      "start": 6632,
+      "end": 6639,
+      "kind": "string",
+      "raw": "error",
+      "excluded_index": 48
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 164,
+      "start": 6678,
+      "end": 6687,
+      "kind": "string",
+      "raw": "aborted",
+      "excluded_index": 49
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 189,
+      "start": 7534,
+      "end": 7579,
+      "kind": "comment",
+      "raw": "/** Files shared by upload and zip export. */",
+      "excluded_index": 50
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 192,
+      "start": 7657,
+      "end": 7670,
+      "kind": "string",
+      "raw": "report.json",
+      "excluded_index": 51
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 192,
+      "start": 7685,
+      "end": 7703,
+      "kind": "string",
+      "raw": "application/json",
+      "excluded_index": 52
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 192,
+      "start": 7711,
+      "end": 7758,
+      "kind": "template",
+      "raw": "${JSON.stringify(bundle.metadata, null, 2)}\\n",
+      "excluded_index": 53
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 192,
+      "start": 7712,
+      "end": 7755,
+      "kind": "interpolation",
+      "raw": "${JSON.stringify(bundle.metadata, null, 2)}",
+      "excluded_index": 54
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 194,
+      "start": 7790,
+      "end": 7808,
+      "kind": "string",
+      "raw": "diagnostics.json",
+      "excluded_index": 55
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 195,
+      "start": 7835,
+      "end": 7853,
+      "kind": "string",
+      "raw": "application/json",
+      "excluded_index": 56
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 196,
+      "start": 7873,
+      "end": 7923,
+      "kind": "template",
+      "raw": "${JSON.stringify(bundle.diagnostics, null, 2)}\\n",
+      "excluded_index": 57
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 196,
+      "start": 7874,
+      "end": 7920,
+      "kind": "interpolation",
+      "raw": "${JSON.stringify(bundle.diagnostics, null, 2)}",
+      "excluded_index": 58
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 200,
+      "start": 8015,
+      "end": 8030,
+      "kind": "string",
+      "raw": "session.jsonl",
+      "excluded_index": 59
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 200,
+      "start": 8045,
+      "end": 8067,
+      "kind": "string",
+      "raw": "application/x-ndjson",
+      "excluded_index": 60
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 204,
+      "start": 8184,
+      "end": 8196,
+      "kind": "string",
+      "raw": "summary.md",
+      "excluded_index": 61
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 205,
+      "start": 8223,
+      "end": 8238,
+      "kind": "string",
+      "raw": "text/markdown",
+      "excluded_index": 62
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 206,
+      "start": 8282,
+      "end": 8286,
+      "kind": "string",
+      "raw": "\\n",
+      "excluded_index": 63
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 206,
+      "start": 8307,
+      "end": 8328,
+      "kind": "template",
+      "raw": "${bundle.summary}\\n",
+      "excluded_index": 64
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 206,
+      "start": 8308,
+      "end": 8325,
+      "kind": "interpolation",
+      "raw": "${bundle.summary}",
+      "excluded_index": 65
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 215,
+      "start": 8548,
+      "end": 8573,
+      "kind": "template",
+      "raw": "pi-bug-report-${id}.zip",
+      "excluded_index": 66
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 215,
+      "start": 8563,
+      "end": 8568,
+      "kind": "interpolation",
+      "raw": "${id}",
+      "excluded_index": 67
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 217,
+      "start": 8611,
+      "end": 8953,
+      "kind": "template",
+      "raw": "You are helping a user file a bug report about pi, the coding agent they are talking to. You will be shown the conversation transcript. Write a report for the pi developers describing what the user was doing and what went wrong.\n\nDo NOT continue the conversation. Do NOT respond to any questions in the conversation. ONLY output the report.",
+      "item_id": "PI-DIAGNOSTICS-003"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 220,
+      "start": 8988,
+      "end": 9639,
+      "kind": "template",
+      "raw": "Write the bug report in Markdown with these sections:\n\n## What the user was doing\nOne short paragraph.\n\n## What went wrong\nConcrete description of the failure: wrong output, errors, hangs, tool failures, unexpected behavior. Quote error messages and tool output verbatim where they exist.\n\n## Steps to reproduce\nNumbered list, as specific as the transcript allows.\n\n## Relevant details\nTool calls involved, files touched, model behavior, anything else that helps a developer reproduce or locate the problem.\n\nDo not include file contents, secrets, or credentials from the transcript; refer to files by path only. Keep the report factual and concise.",
+      "item_id": "PI-DIAGNOSTICS-004"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 248,
+      "start": 10065,
+      "end": 10151,
+      "kind": "comment",
+      "raw": "/** Ask the session model for a report when the user does not share the transcript. */",
+      "excluded_index": 68
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 256,
+      "start": 10536,
+      "end": 10626,
+      "kind": "template",
+      "raw": "Note: only the last ${messages.length} of ${options.messages.length} messages are shown.",
+      "item_id": "PI-DIAGNOSTICS-005"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 256,
+      "start": 10557,
+      "end": 10575,
+      "kind": "interpolation",
+      "raw": "${messages.length}",
+      "excluded_index": 69
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 256,
+      "start": 10579,
+      "end": 10605,
+      "kind": "interpolation",
+      "raw": "${options.messages.length}",
+      "excluded_index": 70
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 258,
+      "start": 10660,
+      "end": 10743,
+      "kind": "template",
+      "raw": "<conversation>\\n${serializeConversation(convertToLlm(messages))}\\n</conversation>",
+      "excluded_index": 71
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 258,
+      "start": 10677,
+      "end": 10725,
+      "kind": "interpolation",
+      "raw": "${serializeConversation(convertToLlm(messages))}",
+      "excluded_index": 72
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 259,
+      "start": 10760,
+      "end": 10800,
+      "kind": "template",
+      "raw": "<user-report>\\n${hint}\\n</user-report>",
+      "excluded_index": 73
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 259,
+      "start": 10776,
+      "end": 10783,
+      "kind": "interpolation",
+      "raw": "${hint}",
+      "excluded_index": 74
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 263,
+      "start": 10914,
+      "end": 10920,
+      "kind": "string",
+      "raw": "\\n\\n",
+      "excluded_index": 75
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 271,
+      "start": 11297,
+      "end": 11302,
+      "kind": "string",
+      "raw": "off",
+      "excluded_index": 76
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 277,
+      "start": 11531,
+      "end": 11537,
+      "kind": "string",
+      "raw": "user",
+      "excluded_index": 77
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 277,
+      "start": 11557,
+      "end": 11563,
+      "kind": "string",
+      "raw": "text",
+      "excluded_index": 78
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 279,
+      "start": 11698,
+      "end": 11707,
+      "kind": "string",
+      "raw": "aborted",
+      "excluded_index": 79
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 280,
+      "start": 11733,
+      "end": 11767,
+      "kind": "string",
+      "raw": "Bug report summary was cancelled",
+      "item_id": "PI-DIAGNOSTICS-006"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 281,
+      "start": 11824,
+      "end": 11844,
+      "kind": "string",
+      "raw": "Bug report summary",
+      "item_id": "PI-DIAGNOSTICS-007"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 284,
+      "start": 11954,
+      "end": 11964,
+      "kind": "string",
+      "raw": "toolCall",
+      "excluded_index": 80
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 285,
+      "start": 11993,
+      "end": 12038,
+      "kind": "string",
+      "raw": "Bug report summary attempted to call a tool",
+      "item_id": "PI-DIAGNOSTICS-008"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 289,
+      "start": 12141,
+      "end": 12171,
+      "kind": "string",
+      "raw": "Bug report summary was empty",
+      "item_id": "PI-DIAGNOSTICS-009"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 292,
+      "start": 12193,
+      "end": 12231,
+      "kind": "comment",
+      "raw": "//# sourceMappingURL=bug-report.js.map",
+      "excluded_index": 81
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 1,
+      "start": 63,
+      "end": 72,
+      "kind": "string",
+      "raw": "node:fs",
+      "excluded_index": 82
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 2,
+      "start": 104,
+      "end": 115,
+      "kind": "string",
+      "raw": "node:path",
+      "excluded_index": 83
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 3,
+      "start": 154,
+      "end": 168,
+      "kind": "string",
+      "raw": "../config.js",
+      "excluded_index": 84
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 4,
+      "start": 202,
+      "end": 220,
+      "kind": "string",
+      "raw": "./source-info.js",
+      "excluded_index": 85
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 8,
+      "start": 368,
+      "end": 382,
+      "kind": "string",
+      "raw": "crashes.json",
+      "excluded_index": 86
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 12,
+      "start": 505,
+      "end": 511,
+      "kind": "string",
+      "raw": "utf8",
+      "excluded_index": 87
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 14,
+      "start": 612,
+      "end": 620,
+      "kind": "string",
+      "raw": "object",
+      "excluded_index": 88
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 16,
+      "start": 703,
+      "end": 711,
+      "kind": "string",
+      "raw": "string",
+      "excluded_index": 89
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 17,
+      "start": 757,
+      "end": 765,
+      "kind": "string",
+      "raw": "string",
+      "excluded_index": 90
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 26,
+      "start": 945,
+      "end": 984,
+      "kind": "template",
+      "raw": "${JSON.stringify(records, null, 2)}\\n",
+      "excluded_index": 91
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 26,
+      "start": 946,
+      "end": 981,
+      "kind": "interpolation",
+      "raw": "${JSON.stringify(records, null, 2)}",
+      "excluded_index": 92
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 29,
+      "start": 1051,
+      "end": 1056,
+      "kind": "regex",
+      "raw": "/\\\\/g",
+      "excluded_index": 93
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 29,
+      "start": 1058,
+      "end": 1061,
+      "kind": "string",
+      "raw": "/",
+      "excluded_index": 94
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 29,
+      "start": 1071,
+      "end": 1078,
+      "kind": "regex",
+      "raw": "/\\/+$/u",
+      "excluded_index": 95
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 29,
+      "start": 1080,
+      "end": 1082,
+      "kind": "string",
+      "raw": "",
+      "excluded_index": 96
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 35,
+      "start": 1300,
+      "end": 1313,
+      "kind": "regex",
+      "raw": "/^[a-z]:\\//iu",
+      "excluded_index": 97
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 39,
+      "start": 1525,
+      "end": 1537,
+      "kind": "template",
+      "raw": "${needle}/",
+      "excluded_index": 98
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 39,
+      "start": 1526,
+      "end": 1535,
+      "kind": "interpolation",
+      "raw": "${needle}",
+      "excluded_index": 99
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 43,
+      "start": 1706,
+      "end": 1709,
+      "kind": "string",
+      "raw": ":",
+      "excluded_index": 100
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 43,
+      "start": 1722,
+      "end": 1725,
+      "kind": "string",
+      "raw": ")",
+      "excluded_index": 101
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 43,
+      "start": 1729,
+      "end": 1734,
+      "kind": "regex",
+      "raw": "/\\s/u",
+      "excluded_index": 102
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 49,
+      "start": 1863,
+      "end": 1928,
+      "kind": "comment",
+      "raw": "/** Find loaded extensions with source files in a stack trace. */",
+      "excluded_index": 103
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 54,
+      "start": 2076,
+      "end": 2080,
+      "kind": "string",
+      "raw": "\\n",
+      "excluded_index": 104
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 56,
+      "start": 2126,
+      "end": 2137,
+      "kind": "regex",
+      "raw": "/^\\s+at\\s/u",
+      "excluded_index": 105
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 65,
+      "start": 2307,
+      "end": 2311,
+      "kind": "string",
+      "raw": "\\n",
+      "excluded_index": 106
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 66,
+      "start": 2330,
+      "end": 2335,
+      "kind": "regex",
+      "raw": "/\\\\/g",
+      "excluded_index": 107
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 66,
+      "start": 2337,
+      "end": 2340,
+      "kind": "string",
+      "raw": "/",
+      "excluded_index": 108
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 71,
+      "start": 2576,
+      "end": 2585,
+      "kind": "string",
+      "raw": "package",
+      "excluded_index": 109
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 72,
+      "start": 2602,
+      "end": 2640,
+      "kind": "regex",
+      "raw": "/^(?:npm:|git:|https?:\\/\\/|ssh:\\/\\/)/u",
+      "excluded_index": 110
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 73,
+      "start": 2690,
+      "end": 2706,
+      "kind": "regex",
+      "raw": "/\\.[cm]?[jt]s$/u",
+      "excluded_index": 111
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 74,
+      "start": 2802,
+      "end": 2811,
+      "kind": "string",
+      "raw": "package",
+      "excluded_index": 112
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 77,
+      "start": 2986,
+      "end": 2989,
+      "kind": "string",
+      "raw": "/",
+      "excluded_index": 113
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 78,
+      "start": 3023,
+      "end": 3046,
+      "kind": "regex",
+      "raw": "/\\/index\\.[cm]?[jt]s$/u",
+      "excluded_index": 114
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 86,
+      "start": 3488,
+      "end": 3497,
+      "kind": "string",
+      "raw": "package",
+      "excluded_index": 115
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 96,
+      "start": 3733,
+      "end": 3802,
+      "kind": "comment",
+      "raw": "/** Best-effort persistence for callers that are already crashing. */",
+      "excluded_index": 116
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 116,
+      "start": 4464,
+      "end": 4540,
+      "kind": "comment",
+      "raw": "/** Return the newest recent crash, marking pending records as announced. */",
+      "excluded_index": 117
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 128,
+      "start": 4996,
+      "end": 5036,
+      "kind": "comment",
+      "raw": "// Showing the notice again is harmless.",
+      "excluded_index": 118
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 137,
+      "start": 5193,
+      "end": 5247,
+      "kind": "comment",
+      "raw": "// The records can be attached again if cleanup fails.",
+      "excluded_index": 119
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 140,
+      "start": 5256,
+      "end": 5293,
+      "kind": "comment",
+      "raw": "//# sourceMappingURL=crash-log.js.map",
+      "excluded_index": 120
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 1,
+      "start": 42,
+      "end": 56,
+      "kind": "string",
+      "raw": "../config.js",
+      "excluded_index": 121
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 2,
+      "start": 96,
+      "end": 120,
+      "kind": "string",
+      "raw": "./extensions/runner.js",
+      "excluded_index": 122
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 3,
+      "start": 156,
+      "end": 180,
+      "kind": "string",
+      "raw": "./settings-defaults.js",
+      "excluded_index": 123
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 4,
+      "start": 257,
+      "end": 277,
+      "kind": "string",
+      "raw": "./trust-manager.js",
+      "excluded_index": 124
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 6,
+      "start": 331,
+      "end": 506,
+      "kind": "template",
+      "raw": "Trust project folder?\\n${cwd}\\n\\nThis allows ${APP_NAME} to load ${CONFIG_DIR_NAME} settings and resources, install missing project packages, and execute project extensions.",
+      "item_id": "PI-DIAGNOSTICS-012"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 6,
+      "start": 355,
+      "end": 361,
+      "kind": "interpolation",
+      "raw": "${cwd}",
+      "excluded_index": 125
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 6,
+      "start": 377,
+      "end": 388,
+      "kind": "interpolation",
+      "raw": "${APP_NAME}",
+      "excluded_index": 126
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 6,
+      "start": 397,
+      "end": 415,
+      "kind": "interpolation",
+      "raw": "${CONFIG_DIR_NAME}",
+      "excluded_index": 127
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 26,
+      "start": 1333,
+      "end": 1348,
+      "kind": "string",
+      "raw": "project_trust",
+      "excluded_index": 128
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 28,
+      "start": 1477,
+      "end": 1549,
+      "kind": "template",
+      "raw": "Extension \"${error.extensionPath}\" project_trust error: ${error.error}",
+      "item_id": "PI-DIAGNOSTICS-013"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 28,
+      "start": 1489,
+      "end": 1511,
+      "kind": "interpolation",
+      "raw": "${error.extensionPath}",
+      "excluded_index": 129
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 28,
+      "start": 1534,
+      "end": 1548,
+      "kind": "interpolation",
+      "raw": "${error.error}",
+      "excluded_index": 130
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 31,
+      "start": 1631,
+      "end": 1636,
+      "kind": "string",
+      "raw": "yes",
+      "excluded_index": 131
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 43,
+      "start": 2017,
+      "end": 2025,
+      "kind": "string",
+      "raw": "always",
+      "excluded_index": 132
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 45,
+      "start": 2065,
+      "end": 2072,
+      "kind": "string",
+      "raw": "never",
+      "excluded_index": 133
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 47,
+      "start": 2113,
+      "end": 2118,
+      "kind": "string",
+      "raw": "ask",
+      "excluded_index": 134
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 60,
+      "start": 2475,
+      "end": 2516,
+      "kind": "comment",
+      "raw": "//# sourceMappingURL=project-trust.js.map",
+      "excluded_index": 135
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 1,
+      "start": 0,
+      "end": 51,
+      "kind": "comment",
+      "raw": "/**\n * One-time migrations that run on startup.\n */",
+      "excluded_index": 136
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 4,
+      "start": 70,
+      "end": 77,
+      "kind": "string",
+      "raw": "chalk",
+      "excluded_index": 137
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 5,
+      "start": 179,
+      "end": 183,
+      "kind": "string",
+      "raw": "fs",
+      "excluded_index": 138
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 6,
+      "start": 215,
+      "end": 221,
+      "kind": "string",
+      "raw": "path",
+      "excluded_index": 139
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 7,
+      "start": 279,
+      "end": 292,
+      "kind": "string",
+      "raw": "./config.js",
+      "excluded_index": 140
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 8,
+      "start": 335,
+      "end": 358,
+      "kind": "string",
+      "raw": "./core/keybindings.js",
+      "excluded_index": 141
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 9,
+      "start": 385,
+      "end": 402,
+      "kind": "string",
+      "raw": "./utils/text.js",
+      "excluded_index": 142
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 10,
+      "start": 432,
+      "end": 536,
+      "kind": "string",
+      "raw": "https://github.com/earendil-works/pi/blob/main/packages/coding-agent/CHANGELOG.md#extensions-migration",
+      "excluded_index": 143
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 11,
+      "start": 565,
+      "end": 654,
+      "kind": "string",
+      "raw": "https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/extensions.md",
+      "excluded_index": 144
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 12,
+      "start": 656,
+      "end": 790,
+      "kind": "comment",
+      "raw": "/**\n * Migrate legacy oauth.json and settings.json apiKeys to auth.json.\n *\n * @returns Array of provider names that were migrated\n */",
+      "excluded_index": 145
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 19,
+      "start": 905,
+      "end": 916,
+      "kind": "string",
+      "raw": "auth.json",
+      "excluded_index": 146
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 20,
+      "start": 956,
+      "end": 968,
+      "kind": "string",
+      "raw": "oauth.json",
+      "excluded_index": 147
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 21,
+      "start": 1011,
+      "end": 1026,
+      "kind": "string",
+      "raw": "settings.json",
+      "excluded_index": 148
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 22,
+      "start": 1033,
+      "end": 1068,
+      "kind": "comment",
+      "raw": "// Skip if auth.json already exists",
+      "excluded_index": 149
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 27,
+      "start": 1173,
+      "end": 1194,
+      "kind": "comment",
+      "raw": "// Migrate oauth.json",
+      "excluded_index": 150
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 30,
+      "start": 1312,
+      "end": 1319,
+      "kind": "string",
+      "raw": "utf-8",
+      "excluded_index": 151
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 32,
+      "start": 1437,
+      "end": 1444,
+      "kind": "string",
+      "raw": "oauth",
+      "excluded_index": 152
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 35,
+      "start": 1547,
+      "end": 1570,
+      "kind": "template",
+      "raw": "${oauthPath}.migrated",
+      "excluded_index": 153
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 35,
+      "start": 1548,
+      "end": 1560,
+      "kind": "interpolation",
+      "raw": "${oauthPath}",
+      "excluded_index": 154
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 38,
+      "start": 1611,
+      "end": 1627,
+      "kind": "comment",
+      "raw": "// Skip on error",
+      "excluded_index": 155
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 41,
+      "start": 1648,
+      "end": 1680,
+      "kind": "comment",
+      "raw": "// Migrate settings.json apiKeys",
+      "excluded_index": 156
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 44,
+      "start": 1786,
+      "end": 1793,
+      "kind": "string",
+      "raw": "utf-8",
+      "excluded_index": 157
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 46,
+      "start": 1920,
+      "end": 1928,
+      "kind": "string",
+      "raw": "object",
+      "excluded_index": 158
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 48,
+      "start": 2076,
+      "end": 2084,
+      "kind": "string",
+      "raw": "string",
+      "excluded_index": 159
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 49,
+      "start": 2141,
+      "end": 2150,
+      "kind": "string",
+      "raw": "api_key",
+      "excluded_index": 160
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 58,
+      "start": 2422,
+      "end": 2438,
+      "kind": "comment",
+      "raw": "// Skip on error",
+      "excluded_index": 161
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 67,
+      "start": 2673,
+      "end": 3024,
+      "kind": "comment",
+      "raw": "/**\n * Migrate sessions from ~/.pi/agent/*.jsonl to proper session directories.\n *\n * Bug in v0.30.0: Sessions were saved to ~/.pi/agent/ instead of\n * ~/.pi/agent/sessions/<encoded-cwd>/. This migration moves them\n * to the correct location based on the cwd in their session header.\n *\n * See: https://github.com/earendil-works/pi-mono/issues/320\n */",
+      "excluded_index": 162
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 78,
+      "start": 3114,
+      "end": 3183,
+      "kind": "comment",
+      "raw": "// Find all .jsonl files directly in agentDir (not in subdirectories)",
+      "excluded_index": 163
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 82,
+      "start": 3285,
+      "end": 3293,
+      "kind": "string",
+      "raw": ".jsonl",
+      "excluded_index": 164
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 92,
+      "start": 3482,
+      "end": 3522,
+      "kind": "comment",
+      "raw": "// Read first line to get session header",
+      "excluded_index": 165
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 93,
+      "start": 3570,
+      "end": 3576,
+      "kind": "string",
+      "raw": "utf8",
+      "excluded_index": 166
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 94,
+      "start": 3623,
+      "end": 3627,
+      "kind": "string",
+      "raw": "\\n",
+      "excluded_index": 167
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 98,
+      "start": 3777,
+      "end": 3786,
+      "kind": "string",
+      "raw": "session",
+      "excluded_index": 168
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 101,
+      "start": 3877,
+      "end": 3955,
+      "kind": "comment",
+      "raw": "// Compute the correct session directory (same encoding as session-manager.ts)",
+      "excluded_index": 169
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 102,
+      "start": 3985,
+      "end": 4043,
+      "kind": "template",
+      "raw": "--${cwd.replace(/^[/\\\\]/, \"\").replace(/[/\\\\:]/g, \"-\")}--",
+      "excluded_index": 170
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 102,
+      "start": 3988,
+      "end": 4040,
+      "kind": "interpolation",
+      "raw": "${cwd.replace(/^[/\\\\]/, \"\").replace(/[/\\\\:]/g, \"-\")}",
+      "excluded_index": 171
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 102,
+      "start": 4002,
+      "end": 4010,
+      "kind": "regex",
+      "raw": "/^[/\\\\]/",
+      "excluded_index": 172
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 102,
+      "start": 4012,
+      "end": 4014,
+      "kind": "string",
+      "raw": "",
+      "excluded_index": 173
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 102,
+      "start": 4024,
+      "end": 4033,
+      "kind": "regex",
+      "raw": "/[/\\\\:]/g",
+      "excluded_index": 174
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 102,
+      "start": 4035,
+      "end": 4038,
+      "kind": "string",
+      "raw": "-",
+      "excluded_index": 175
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 103,
+      "start": 4091,
+      "end": 4101,
+      "kind": "string",
+      "raw": "sessions",
+      "excluded_index": 176
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 104,
+      "start": 4126,
+      "end": 4155,
+      "kind": "comment",
+      "raw": "// Create directory if needed",
+      "excluded_index": 177
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 108,
+      "start": 4285,
+      "end": 4301,
+      "kind": "comment",
+      "raw": "// Move the file",
+      "excluded_index": 178
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 109,
+      "start": 4342,
+      "end": 4345,
+      "kind": "string",
+      "raw": "/",
+      "excluded_index": 179
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 109,
+      "start": 4367,
+      "end": 4371,
+      "kind": "string",
+      "raw": "\\\\",
+      "excluded_index": 180
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 112,
+      "start": 4499,
+      "end": 4523,
+      "kind": "comment",
+      "raw": "// Skip if target exists",
+      "excluded_index": 181
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 116,
+      "start": 4601,
+      "end": 4637,
+      "kind": "comment",
+      "raw": "// Skip files that can't be migrated",
+      "excluded_index": 182
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 120,
+      "start": 4656,
+      "end": 4759,
+      "kind": "comment",
+      "raw": "/**\n * Migrate commands/ to prompts/ if needed.\n * Works for both regular directories and symlinks.\n */",
+      "excluded_index": 183
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 125,
+      "start": 4850,
+      "end": 4860,
+      "kind": "string",
+      "raw": "commands",
+      "excluded_index": 184
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 126,
+      "start": 4900,
+      "end": 4909,
+      "kind": "string",
+      "raw": "prompts",
+      "excluded_index": 185
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 130,
+      "start": 5073,
+      "end": 5113,
+      "kind": "template",
+      "raw": "Migrated ${label} commands/ \u2192 prompts/",
+      "item_id": "PI-DIAGNOSTICS-014"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 130,
+      "start": 5083,
+      "end": 5091,
+      "kind": "interpolation",
+      "raw": "${label}",
+      "excluded_index": 186
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 134,
+      "start": 5211,
+      "end": 5315,
+      "kind": "template",
+      "raw": "Warning: Could not migrate ${label} commands/ to prompts/: ${err instanceof Error ? err.message : err}",
+      "item_id": "PI-DIAGNOSTICS-015"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 134,
+      "start": 5239,
+      "end": 5247,
+      "kind": "interpolation",
+      "raw": "${label}",
+      "excluded_index": 187
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 134,
+      "start": 5271,
+      "end": 5314,
+      "kind": "interpolation",
+      "raw": "${err instanceof Error ? err.message : err}",
+      "excluded_index": 188
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 140,
+      "start": 5440,
+      "end": 5458,
+      "kind": "string",
+      "raw": "keybindings.json",
+      "excluded_index": 189
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 144,
+      "start": 5588,
+      "end": 5595,
+      "kind": "string",
+      "raw": "utf-8",
+      "excluded_index": 190
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 145,
+      "start": 5630,
+      "end": 5638,
+      "kind": "string",
+      "raw": "object",
+      "excluded_index": 191
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 151,
+      "start": 5864,
+      "end": 5902,
+      "kind": "template",
+      "raw": "${JSON.stringify(config, null, 2)}\\n",
+      "excluded_index": 192
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 151,
+      "start": 5865,
+      "end": 5899,
+      "kind": "interpolation",
+      "raw": "${JSON.stringify(config, null, 2)}",
+      "excluded_index": 193
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 151,
+      "start": 5904,
+      "end": 5911,
+      "kind": "string",
+      "raw": "utf-8",
+      "excluded_index": 194
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 154,
+      "start": 5940,
+      "end": 5982,
+      "kind": "comment",
+      "raw": "// Ignore malformed files during migration",
+      "excluded_index": 195
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 157,
+      "start": 5991,
+      "end": 6056,
+      "kind": "comment",
+      "raw": "/**\n * Move fd/rg binaries from tools/ to bin/ if they exist.\n */",
+      "excluded_index": 196
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 162,
+      "start": 6160,
+      "end": 6167,
+      "kind": "string",
+      "raw": "tools",
+      "excluded_index": 197
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 166,
+      "start": 6271,
+      "end": 6275,
+      "kind": "string",
+      "raw": "fd",
+      "excluded_index": 198
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 166,
+      "start": 6277,
+      "end": 6281,
+      "kind": "string",
+      "raw": "rg",
+      "excluded_index": 199
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 166,
+      "start": 6283,
+      "end": 6291,
+      "kind": "string",
+      "raw": "fd.exe",
+      "excluded_index": 200
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 166,
+      "start": 6293,
+      "end": 6301,
+      "kind": "string",
+      "raw": "rg.exe",
+      "excluded_index": 201
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 181,
+      "start": 6807,
+      "end": 6823,
+      "kind": "comment",
+      "raw": "// Ignore errors",
+      "excluded_index": 202
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 185,
+      "start": 6891,
+      "end": 6932,
+      "kind": "comment",
+      "raw": "// Target exists, just delete the old one",
+      "excluded_index": 203
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 190,
+      "start": 7073,
+      "end": 7082,
+      "kind": "comment",
+      "raw": "// Ignore",
+      "excluded_index": 204
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 196,
+      "start": 7183,
+      "end": 7224,
+      "kind": "template",
+      "raw": "Migrated managed binaries tools/ \u2192 bin/",
+      "item_id": "PI-DIAGNOSTICS-016"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 199,
+      "start": 7236,
+      "end": 7394,
+      "kind": "comment",
+      "raw": "/**\n * Check for deprecated hooks/ and tools/ directories.\n * Note: tools/ may contain fd/rg binaries extracted by pi, so only warn if it has other files.\n */",
+      "excluded_index": 205
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 204,
+      "start": 7486,
+      "end": 7493,
+      "kind": "string",
+      "raw": "hooks",
+      "excluded_index": 206
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 205,
+      "start": 7531,
+      "end": 7538,
+      "kind": "string",
+      "raw": "tools",
+      "excluded_index": 207
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 208,
+      "start": 7620,
+      "end": 7693,
+      "kind": "template",
+      "raw": "${label} hooks/ directory found. Hooks have been renamed to extensions.",
+      "item_id": "PI-DIAGNOSTICS-017"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 208,
+      "start": 7621,
+      "end": 7629,
+      "kind": "interpolation",
+      "raw": "${label}",
+      "excluded_index": 208
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 211,
+      "start": 7742,
+      "end": 7831,
+      "kind": "comment",
+      "raw": "// Check if tools/ contains anything other than fd/rg (which are auto-extracted binaries)",
+      "excluded_index": 209
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 216,
+      "start": 8034,
+      "end": 8038,
+      "kind": "string",
+      "raw": "fd",
+      "excluded_index": 210
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 216,
+      "start": 8052,
+      "end": 8056,
+      "kind": "string",
+      "raw": "rg",
+      "excluded_index": 211
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 216,
+      "start": 8070,
+      "end": 8078,
+      "kind": "string",
+      "raw": "fd.exe",
+      "excluded_index": 212
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 216,
+      "start": 8092,
+      "end": 8100,
+      "kind": "string",
+      "raw": "rg.exe",
+      "excluded_index": 213
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 216,
+      "start": 8118,
+      "end": 8121,
+      "kind": "string",
+      "raw": ".",
+      "excluded_index": 214
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 216,
+      "start": 8123,
+      "end": 8165,
+      "kind": "comment",
+      "raw": "// Ignore .DS_Store and other hidden files",
+      "excluded_index": 215
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 220,
+      "start": 8273,
+      "end": 8370,
+      "kind": "template",
+      "raw": "${label} tools/ directory contains custom tools. Custom tools have been merged into extensions.",
+      "item_id": "PI-DIAGNOSTICS-018"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 220,
+      "start": 8274,
+      "end": 8282,
+      "kind": "interpolation",
+      "raw": "${label}",
+      "excluded_index": 216
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 224,
+      "start": 8425,
+      "end": 8446,
+      "kind": "comment",
+      "raw": "// Ignore read errors",
+      "excluded_index": 217
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 229,
+      "start": 8486,
+      "end": 8598,
+      "kind": "comment",
+      "raw": "/**\n * Run extension system migrations (commands\u2192prompts) and collect warnings about deprecated directories.\n */",
+      "excluded_index": 218
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 235,
+      "start": 8729,
+      "end": 8761,
+      "kind": "comment",
+      "raw": "// Migrate commands/ to prompts/",
+      "excluded_index": 219
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 236,
+      "start": 8801,
+      "end": 8809,
+      "kind": "string",
+      "raw": "Global",
+      "item_id": "PI-DIAGNOSTICS-024"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 237,
+      "start": 8853,
+      "end": 8862,
+      "kind": "string",
+      "raw": "Project",
+      "item_id": "PI-DIAGNOSTICS-025"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 238,
+      "start": 8869,
+      "end": 8904,
+      "kind": "comment",
+      "raw": "// Check for deprecated directories",
+      "excluded_index": 220
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 240,
+      "start": 8978,
+      "end": 8986,
+      "kind": "string",
+      "raw": "Global",
+      "item_id": "PI-DIAGNOSTICS-026"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 241,
+      "start": 9041,
+      "end": 9050,
+      "kind": "string",
+      "raw": "Project",
+      "item_id": "PI-DIAGNOSTICS-027"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 245,
+      "start": 9083,
+      "end": 9143,
+      "kind": "comment",
+      "raw": "/**\n * Print deprecation warnings and wait for keypress.\n */",
+      "excluded_index": 221
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 252,
+      "start": 9320,
+      "end": 9341,
+      "kind": "template",
+      "raw": "Warning: ${warning}",
+      "item_id": "PI-DIAGNOSTICS-019"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 252,
+      "start": 9330,
+      "end": 9340,
+      "kind": "interpolation",
+      "raw": "${warning}",
+      "excluded_index": 222
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 254,
+      "start": 9380,
+      "end": 9434,
+      "kind": "template",
+      "raw": "\\nMove your extensions to the extensions/ directory.",
+      "item_id": "PI-DIAGNOSTICS-020"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 255,
+      "start": 9467,
+      "end": 9508,
+      "kind": "template",
+      "raw": "Migration guide: ${MIGRATION_GUIDE_URL}",
+      "item_id": "PI-DIAGNOSTICS-021"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 255,
+      "start": 9485,
+      "end": 9507,
+      "kind": "interpolation",
+      "raw": "${MIGRATION_GUIDE_URL}",
+      "excluded_index": 223
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 256,
+      "start": 9541,
+      "end": 9579,
+      "kind": "template",
+      "raw": "Documentation: ${EXTENSIONS_DOC_URL}",
+      "item_id": "PI-DIAGNOSTICS-022"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 256,
+      "start": 9557,
+      "end": 9578,
+      "kind": "interpolation",
+      "raw": "${EXTENSIONS_DOC_URL}",
+      "excluded_index": 224
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 257,
+      "start": 9609,
+      "end": 9641,
+      "kind": "template",
+      "raw": "\\nPress any key to continue...",
+      "item_id": "PI-DIAGNOSTICS-023"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 261,
+      "start": 9783,
+      "end": 9789,
+      "kind": "string",
+      "raw": "data",
+      "excluded_index": 225
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 269,
+      "start": 9945,
+      "end": 10069,
+      "kind": "comment",
+      "raw": "/**\n * Run all migrations. Called once on startup.\n *\n * @returns Object with migration results and deprecation warnings\n */",
+      "excluded_index": 226
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 282,
+      "start": 10385,
+      "end": 10423,
+      "kind": "comment",
+      "raw": "//# sourceMappingURL=migrations.js.map",
+      "excluded_index": 227
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 1,
+      "start": 33,
+      "end": 53,
+      "kind": "string",
+      "raw": "node:child_process",
+      "excluded_index": 228
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 2,
+      "start": 79,
+      "end": 92,
+      "kind": "string",
+      "raw": "node:crypto",
+      "excluded_index": 229
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 3,
+      "start": 114,
+      "end": 123,
+      "kind": "string",
+      "raw": "node:fs",
+      "excluded_index": 230
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 4,
+      "start": 145,
+      "end": 154,
+      "kind": "string",
+      "raw": "node:os",
+      "excluded_index": 231
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 5,
+      "start": 178,
+      "end": 189,
+      "kind": "string",
+      "raw": "node:path",
+      "excluded_index": 232
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 6,
+      "start": 230,
+      "end": 277,
+      "kind": "string",
+      "raw": "@earendil-works/pi-ai/providers/radius-config",
+      "excluded_index": 233
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 7,
+      "start": 305,
+      "end": 329,
+      "kind": "string",
+      "raw": "@earendil-works/pi-tui",
+      "excluded_index": 234
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 8,
+      "start": 365,
+      "end": 392,
+      "kind": "string",
+      "raw": "../../cli/auth-command.js",
+      "excluded_index": 235
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 9,
+      "start": 428,
+      "end": 445,
+      "kind": "string",
+      "raw": "../../config.js",
+      "excluded_index": 236
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 10,
+      "start": 484,
+      "end": 514,
+      "kind": "string",
+      "raw": "../../core/session-export.js",
+      "excluded_index": 237
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 11,
+      "start": 547,
+      "end": 580,
+      "kind": "string",
+      "raw": "./components/bordered-loader.js",
+      "excluded_index": 238
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 12,
+      "start": 604,
+      "end": 622,
+      "kind": "string",
+      "raw": "./theme/theme.js",
+      "excluded_index": 239
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 13,
+      "start": 624,
+      "end": 724,
+      "kind": "comment",
+      "raw": "/** Trailing `pi.share` entry carrying the system prompt and tool schemas for the session viewer. */",
+      "excluded_index": 240
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 17,
+      "start": 841,
+      "end": 849,
+      "kind": "string",
+      "raw": "custom",
+      "excluded_index": 241
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 18,
+      "start": 875,
+      "end": 885,
+      "kind": "string",
+      "raw": "pi.share",
+      "excluded_index": 242
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 33,
+      "start": 1312,
+      "end": 1383,
+      "kind": "comment",
+      "raw": "/** Export the current branch with presentation metadata for Radius. */",
+      "excluded_index": 243
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 37,
+      "start": 1588,
+      "end": 1668,
+      "kind": "comment",
+      "raw": "/** Share the current session through Radius, falling back to a private gist. */",
+      "excluded_index": 244
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 39,
+      "start": 1773,
+      "end": 1784,
+      "kind": "string",
+      "raw": "pi-share-",
+      "excluded_index": 245
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 40,
+      "start": 1829,
+      "end": 1844,
+      "kind": "string",
+      "raw": "session.jsonl",
+      "excluded_index": 246
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 41,
+      "start": 1887,
+      "end": 1901,
+      "kind": "string",
+      "raw": "session.html",
+      "excluded_index": 247
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 47,
+      "start": 2055,
+      "end": 2142,
+      "kind": "template",
+      "raw": "Failed to export session: ${error instanceof Error ? error.message : \"Unknown error\"}",
+      "item_id": "PI-DIAGNOSTICS-028"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 47,
+      "start": 2082,
+      "end": 2141,
+      "kind": "interpolation",
+      "raw": "${error instanceof Error ? error.message : \"Unknown error\"}",
+      "excluded_index": 248
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 47,
+      "start": 2125,
+      "end": 2140,
+      "kind": "string",
+      "raw": "Unknown error",
+      "item_id": "PI-DIAGNOSTICS-045"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 51,
+      "start": 2293,
+      "end": 2299,
+      "kind": "string",
+      "raw": "gist",
+      "excluded_index": 249
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 54,
+      "start": 2420,
+      "end": 2428,
+      "kind": "string",
+      "raw": "radius",
+      "excluded_index": 250
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 55,
+      "start": 2466,
+      "end": 2535,
+      "kind": "string",
+      "raw": "Radius authentication is not configured. Run '/login radius' first.",
+      "item_id": "PI-DIAGNOSTICS-029"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 60,
+      "start": 2641,
+      "end": 2645,
+      "kind": "string",
+      "raw": "gh",
+      "excluded_index": 251
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 60,
+      "start": 2648,
+      "end": 2654,
+      "kind": "string",
+      "raw": "auth",
+      "excluded_index": 252
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 60,
+      "start": 2656,
+      "end": 2664,
+      "kind": "string",
+      "raw": "status",
+      "excluded_index": 253
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 60,
+      "start": 2679,
+      "end": 2686,
+      "kind": "string",
+      "raw": "utf-8",
+      "excluded_index": 254
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 62,
+      "start": 2768,
+      "end": 2825,
+      "kind": "string",
+      "raw": "GitHub CLI is not logged in. Run 'gh auth login' first.",
+      "item_id": "PI-DIAGNOSTICS-030"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 67,
+      "start": 2922,
+      "end": 2997,
+      "kind": "string",
+      "raw": "GitHub CLI (gh) is not installed. Install it from https://cli.github.com/",
+      "item_id": "PI-DIAGNOSTICS-031"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 74,
+      "start": 3193,
+      "end": 3280,
+      "kind": "template",
+      "raw": "Failed to export session: ${error instanceof Error ? error.message : \"Unknown error\"}",
+      "item_id": "PI-DIAGNOSTICS-032"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 74,
+      "start": 3220,
+      "end": 3279,
+      "kind": "interpolation",
+      "raw": "${error instanceof Error ? error.message : \"Unknown error\"}",
+      "excluded_index": 255
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 74,
+      "start": 3263,
+      "end": 3278,
+      "kind": "string",
+      "raw": "Unknown error",
+      "item_id": "PI-DIAGNOSTICS-046"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 84,
+      "start": 3498,
+      "end": 3522,
+      "kind": "comment",
+      "raw": "// Ignore cleanup errors",
+      "excluded_index": 256
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 89,
+      "start": 3656,
+      "end": 3664,
+      "kind": "string",
+      "raw": "radius",
+      "excluded_index": 257
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 92,
+      "start": 3787,
+      "end": 3795,
+      "kind": "string",
+      "raw": "radius",
+      "excluded_index": 258
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 95,
+      "start": 3930,
+      "end": 3954,
+      "kind": "string",
+      "raw": "Uploading to Radius...",
+      "item_id": "PI-DIAGNOSTICS-033"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 102,
+      "start": 4201,
+      "end": 4218,
+      "kind": "string",
+      "raw": "Share cancelled",
+      "item_id": "PI-DIAGNOSTICS-034"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 106,
+      "start": 4313,
+      "end": 4328,
+      "kind": "string",
+      "raw": "/v1/artifacts",
+      "excluded_index": 259
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 107,
+      "start": 4384,
+      "end": 4396,
+      "kind": "string",
+      "raw": "visibility",
+      "excluded_index": 260
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 107,
+      "start": 4398,
+      "end": 4412,
+      "kind": "string",
+      "raw": "organization",
+      "excluded_index": 261
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 108,
+      "start": 4444,
+      "end": 4451,
+      "kind": "string",
+      "raw": "title",
+      "excluded_index": 262
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 108,
+      "start": 4453,
+      "end": 4465,
+      "kind": "string",
+      "raw": "Pi session",
+      "item_id": "PI-DIAGNOSTICS-035"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 110,
+      "start": 4532,
+      "end": 4538,
+      "kind": "string",
+      "raw": "POST",
+      "excluded_index": 263
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 112,
+      "start": 4594,
+      "end": 4611,
+      "kind": "template",
+      "raw": "Bearer ${token}",
+      "excluded_index": 264
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 112,
+      "start": 4602,
+      "end": 4610,
+      "kind": "interpolation",
+      "raw": "${token}",
+      "excluded_index": 265
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 113,
+      "start": 4629,
+      "end": 4643,
+      "kind": "string",
+      "raw": "Content-Type",
+      "excluded_index": 266
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 113,
+      "start": 4645,
+      "end": 4667,
+      "kind": "string",
+      "raw": "application/x-ndjson",
+      "excluded_index": 267
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 114,
+      "start": 4685,
+      "end": 4701,
+      "kind": "string",
+      "raw": "Content-Length",
+      "excluded_index": 268
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 126,
+      "start": 5109,
+      "end": 5201,
+      "kind": "template",
+      "raw": "Failed to upload Radius artifact: ${json?.error || response.statusText || response.status}",
+      "item_id": "PI-DIAGNOSTICS-036"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 126,
+      "start": 5144,
+      "end": 5200,
+      "kind": "interpolation",
+      "raw": "${json?.error || response.statusText || response.status}",
+      "excluded_index": 269
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 130,
+      "start": 5320,
+      "end": 5365,
+      "kind": "template",
+      "raw": "Share URL: ${hyperlink(shareUrl, shareUrl)}",
+      "item_id": "PI-DIAGNOSTICS-037"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 130,
+      "start": 5332,
+      "end": 5364,
+      "kind": "interpolation",
+      "raw": "${hyperlink(shareUrl, shareUrl)}",
+      "excluded_index": 270
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 136,
+      "start": 5527,
+      "end": 5622,
+      "kind": "template",
+      "raw": "Failed to upload Radius artifact: ${error instanceof Error ? error.message : \"Unknown error\"}",
+      "item_id": "PI-DIAGNOSTICS-038"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 136,
+      "start": 5562,
+      "end": 5621,
+      "kind": "interpolation",
+      "raw": "${error instanceof Error ? error.message : \"Unknown error\"}",
+      "excluded_index": 271
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 136,
+      "start": 5605,
+      "end": 5620,
+      "kind": "string",
+      "raw": "Unknown error",
+      "item_id": "PI-DIAGNOSTICS-047"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 142,
+      "start": 5769,
+      "end": 5787,
+      "kind": "string",
+      "raw": "Creating gist...",
+      "item_id": "PI-DIAGNOSTICS-039"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 151,
+      "start": 6077,
+      "end": 6094,
+      "kind": "string",
+      "raw": "Share cancelled",
+      "item_id": "PI-DIAGNOSTICS-040"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 155,
+      "start": 6195,
+      "end": 6199,
+      "kind": "string",
+      "raw": "gh",
+      "excluded_index": 272
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 155,
+      "start": 6202,
+      "end": 6208,
+      "kind": "string",
+      "raw": "gist",
+      "excluded_index": 273
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 155,
+      "start": 6210,
+      "end": 6218,
+      "kind": "string",
+      "raw": "create",
+      "excluded_index": 274
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 155,
+      "start": 6220,
+      "end": 6236,
+      "kind": "string",
+      "raw": "--public=false",
+      "excluded_index": 275
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 156,
+      "start": 6274,
+      "end": 6276,
+      "kind": "string",
+      "raw": "",
+      "excluded_index": 276
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 157,
+      "start": 6303,
+      "end": 6305,
+      "kind": "string",
+      "raw": "",
+      "excluded_index": 277
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 158,
+      "start": 6335,
+      "end": 6341,
+      "kind": "string",
+      "raw": "data",
+      "excluded_index": 278
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 161,
+      "start": 6442,
+      "end": 6448,
+      "kind": "string",
+      "raw": "data",
+      "excluded_index": 279
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 164,
+      "start": 6541,
+      "end": 6548,
+      "kind": "string",
+      "raw": "close",
+      "excluded_index": 280
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 170,
+      "start": 6766,
+      "end": 6834,
+      "kind": "template",
+      "raw": "Failed to create gist: ${result.stderr?.trim() || \"Unknown error\"}",
+      "item_id": "PI-DIAGNOSTICS-041"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 170,
+      "start": 6790,
+      "end": 6833,
+      "kind": "interpolation",
+      "raw": "${result.stderr?.trim() || \"Unknown error\"}",
+      "excluded_index": 281
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 170,
+      "start": 6817,
+      "end": 6832,
+      "kind": "string",
+      "raw": "Unknown error",
+      "item_id": "PI-DIAGNOSTICS-048"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 174,
+      "start": 6952,
+      "end": 6955,
+      "kind": "string",
+      "raw": "/",
+      "excluded_index": 282
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 176,
+      "start": 7017,
+      "end": 7057,
+      "kind": "string",
+      "raw": "Failed to parse gist ID from gh output",
+      "item_id": "PI-DIAGNOSTICS-042"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 180,
+      "start": 7171,
+      "end": 7258,
+      "kind": "template",
+      "raw": "Share URL: ${hyperlink(previewUrl, previewUrl)}\\nGist: ${hyperlink(gistUrl, gistUrl)}",
+      "item_id": "PI-DIAGNOSTICS-043"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 180,
+      "start": 7183,
+      "end": 7219,
+      "kind": "interpolation",
+      "raw": "${hyperlink(previewUrl, previewUrl)}",
+      "excluded_index": 283
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 180,
+      "start": 7227,
+      "end": 7257,
+      "kind": "interpolation",
+      "raw": "${hyperlink(gistUrl, gistUrl)}",
+      "excluded_index": 284
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 185,
+      "start": 7399,
+      "end": 7483,
+      "kind": "template",
+      "raw": "Failed to create gist: ${error instanceof Error ? error.message : \"Unknown error\"}",
+      "item_id": "PI-DIAGNOSTICS-044"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 185,
+      "start": 7423,
+      "end": 7482,
+      "kind": "interpolation",
+      "raw": "${error instanceof Error ? error.message : \"Unknown error\"}",
+      "excluded_index": 285
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 185,
+      "start": 7466,
+      "end": 7481,
+      "kind": "string",
+      "raw": "Unknown error",
+      "item_id": "PI-DIAGNOSTICS-049"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 195,
+      "start": 7702,
+      "end": 7743,
+      "kind": "comment",
+      "raw": "//# sourceMappingURL=session-share.js.map",
+      "excluded_index": 286
+    }
+  ],
+  "constructors": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 20,
+      "raw": "throw new Error(`Bug report upload failed: ${detail || response.statusText || response.status}`);",
+      "fixed_rows": [
+        "PI-DIAGNOSTICS-001"
+      ],
+      "dynamic_boundaries": []
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 280,
+      "raw": "throw new Error(\"Bug report summary was cancelled\");",
+      "fixed_rows": [
+        "PI-DIAGNOSTICS-006"
+      ],
+      "dynamic_boundaries": []
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 283,
+      "raw": "throw new Error(failure);",
+      "fixed_rows": [],
+      "dynamic_boundaries": [
+        "PI-DIAGNOSTICS-BOUNDARY-004"
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 285,
+      "raw": "throw new Error(\"Bug report summary attempted to call a tool\");",
+      "fixed_rows": [
+        "PI-DIAGNOSTICS-008"
+      ],
+      "dynamic_boundaries": []
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 289,
+      "raw": "throw new Error(\"Bug report summary was empty\");",
+      "fixed_rows": [
+        "PI-DIAGNOSTICS-009"
+      ],
+      "dynamic_boundaries": []
+    }
+  ],
+  "catches": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 15,
+      "raw": "const json = (await response.json().catch(() => null));",
+      "disposition": "JSON parse rejection ->null; original discarded before own fallback Error20."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 37,
+      "raw": "catch {",
+      "disposition": "URL parse/transformation exception ->original value unchanged; no diagnostic."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 20,
+      "raw": "catch {",
+      "disposition": "Read/JSON/filter error ->empty array."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 61,
+      "raw": "catch {",
+      "disposition": "decodeURI failure ->original stack line."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 112,
+      "raw": "catch {",
+      "disposition": "recordCrash inner failure ->undefined; default path evaluated before try."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 127,
+      "raw": "catch {",
+      "disposition": "Mark-notified write failure ignored; selected crash still returned and may notify again."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 136,
+      "raw": "catch {",
+      "disposition": "Crash removal failure ignored; data may remain."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 37,
+      "raw": "catch {",
+      "disposition": "OAuth read/parse/rename failure ignored; accumulated providers retained."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 57,
+      "raw": "catch {",
+      "disposition": "Settings API-key read/parse/write failure ignored; accumulated providers retained; final auth write outside catch."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 85,
+      "raw": "catch {",
+      "disposition": "Root session readdir failure ->return."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 115,
+      "raw": "catch {",
+      "disposition": "Per-file session parse/mkdir/move failure ignored; partial side effects not reverted."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 133,
+      "raw": "catch (err) {",
+      "disposition": "Rename/chalk/success log failure ->yellow Warning template; move may already have occurred."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 153,
+      "raw": "catch {",
+      "disposition": "Keybindings read/parse/transform/write failure ignored."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 180,
+      "raw": "catch {",
+      "disposition": "Individual binary rename failure ignored."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 189,
+      "raw": "catch {",
+      "disposition": "Old binary removal failure ignored."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 223,
+      "raw": "catch {",
+      "disposition": "Custom-tools directory scan/filter failure ignored, so no tools warning."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 46,
+      "raw": "catch (error) {",
+      "disposition": "JSONL export error ->own showError47 then return; callback can itself reject."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 66,
+      "raw": "catch {",
+      "disposition": "Actual synchronous gh auth probe/showError throw ->installed headline67; ordinary result.status null reaches62."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 73,
+      "raw": "catch (error) {",
+      "disposition": "HTML export failure ->own showError74 then return."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 83,
+      "raw": "catch {",
+      "disposition": "Temporary cleanup error ignored; earlier completion/cause preserved through this catch."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 121,
+      "raw": "const json = (await response.json().catch(() => null));",
+      "disposition": "Radius response JSON parse rejection ->null before second abort gate."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 133,
+      "raw": "catch (error) {",
+      "disposition": "Nonaborted Radius upload exception ->restore/showError; returntrue even error, no gist fallback; aborted suppresses output."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 182,
+      "raw": "catch (error) {",
+      "disposition": "Nonaborted gist try rejection ->restore/showError; async child error has no listener and is not guaranteed to enter this catch."
+    }
+  ],
+  "helper_call_lines": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 6,
+      "raw": "for (const file of bugReportFiles(bundle)) {",
+      "matches": [
+        "bugReportFiles("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 20,
+      "raw": "return `${nested[1]}${redactUrl(nested[2])}`;",
+      "matches": [
+        "redactUrl("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 48,
+      "raw": "return typeof child === \"string\" ? redactUrl(child) : child;",
+      "matches": [
+        "redactUrl("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 53,
+      "raw": "return redactJsonValue(rest);",
+      "matches": [
+        "redactJsonValue("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 87,
+      "raw": "baseUrl: redactUrl(model.baseUrl),",
+      "matches": [
+        "redactUrl("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 92,
+      "raw": "samplingParams: model.samplingParams ? redactJsonValue(model.samplingParams) : null,",
+      "matches": [
+        "redactJsonValue("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 93,
+      "raw": "compat: model.compat ? redactJsonValue(model.compat) : null,",
+      "matches": [
+        "redactJsonValue("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 107,
+      "raw": "baseUrl: provider.baseUrl ? redactUrl(provider.baseUrl) : null,",
+      "matches": [
+        "redactUrl("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 118,
+      "raw": "source: redactUrl(extension.sourceInfo.source),",
+      "matches": [
+        "redactUrl("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 132,
+      "raw": "environment: collectEnvironment(),",
+      "matches": [
+        "collectEnvironment("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 140,
+      "raw": "model: options.model ? describeModel(options.model) : null,",
+      "matches": [
+        "describeModel("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 141,
+      "raw": "provider: provider ? describeProvider(options.modelRuntime, provider) : null,",
+      "matches": [
+        "describeProvider("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 146,
+      "raw": "global: redactSettings(options.globalSettings),",
+      "matches": [
+        "redactSettings("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 147,
+      "raw": "project: redactSettings(options.projectSettings),",
+      "matches": [
+        "redactSettings("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 212,
+      "raw": "return writeZipArchive(filePath, bugReportFiles(bundle));",
+      "matches": [
+        "bugReportFiles("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 240,
+      "raw": "const next = estimateTokens(message);",
+      "matches": [
+        "estimateTokens("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 252,
+      "raw": "const messages = selectMessages(options.messages, Math.floor(contextWindow * 0.6));",
+      "matches": [
+        "selectMessages("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 258,
+      "raw": "`<conversation>\\n${serializeConversation(convertToLlm(messages))}\\n</conversation>`,",
+      "matches": [
+        "serializeConversation(",
+        "convertToLlm("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 275,
+      "raw": "const response = await completeSummarization(model, normalizeContext({",
+      "matches": [
+        "completeSummarization("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 281,
+      "raw": "const failure = getSummarizationFailure(response, \"Bug report summary\");",
+      "matches": [
+        "getSummarizationFailure("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 287,
+      "raw": "const text = contentText(response.content).trim();",
+      "matches": [
+        "contentText("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 32,
+      "raw": "const target = normalizeStackPath(targetPath);",
+      "matches": [
+        "normalizeStackPath("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 70,
+      "raw": "const resolvedPath = normalizeStackPath(extension.resolvedPath);",
+      "matches": [
+        "normalizeStackPath("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 80,
+      "raw": "? stackContainsPath(normalizedStack, packageRoot, true)",
+      "matches": [
+        "stackContainsPath("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 82,
+      "raw": "? stackContainsPath(normalizedStack, resolvedPath.slice(0, slashIndex), true)",
+      "matches": [
+        "stackContainsPath("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 83,
+      "raw": ": stackContainsPath(normalizedStack, resolvedPath, false);",
+      "matches": [
+        "stackContainsPath("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 109,
+      "raw": "writeCrashLog([...readCrashLog(path), record].slice(-MAX_CRASH_RECORDS), path);",
+      "matches": [
+        "writeCrashLog(",
+        "readCrashLog("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 118,
+      "raw": "const records = readCrashLog(path);",
+      "matches": [
+        "readCrashLog("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 125,
+      "raw": "writeCrashLog(records.map((record) => (record.notified ? record : { ...record, notified: true })), path);",
+      "matches": [
+        "writeCrashLog("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 10,
+      "raw": "const selected = await ctx.ui.select(formatProjectTrustPrompt(cwd), options.map((option) => option.label));",
+      "matches": [
+        "formatProjectTrustPrompt("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 22,
+      "raw": "if (!hasTrustRequiringProjectResources(options.cwd)) {",
+      "matches": [
+        "hasTrustRequiringProjectResources("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 26,
+      "raw": "const { result, errors } = await emitProjectTrustEvent(options.extensionsResult, { type: \"project_trust\", cwd: options.cwd }, options.projectTrustContext);",
+      "matches": [
+        "emitProjectTrustEvent("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 53,
+      "raw": "const selected = await selectProjectTrustOption(options.cwd, options.projectTrustContext);",
+      "matches": [
+        "selectProjectTrustOption("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "line": 55,
+      "raw": "saveProjectTrustPromptResult(options.trustStore, selected);",
+      "matches": [
+        "saveProjectTrustPromptResult("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 236,
+      "raw": "migrateCommandsToPrompts(agentDir, \"Global\");",
+      "matches": [
+        "migrateCommandsToPrompts("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 237,
+      "raw": "migrateCommandsToPrompts(projectDir, \"Project\");",
+      "matches": [
+        "migrateCommandsToPrompts("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 240,
+      "raw": "...checkDeprecatedExtensionDirs(agentDir, \"Global\"),",
+      "matches": [
+        "checkDeprecatedExtensionDirs("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 241,
+      "raw": "...checkDeprecatedExtensionDirs(projectDir, \"Project\"),",
+      "matches": [
+        "checkDeprecatedExtensionDirs("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 275,
+      "raw": "const migratedAuthProviders = migrateAuthToAuthJson();",
+      "matches": [
+        "migrateAuthToAuthJson("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 276,
+      "raw": "migrateSessionsFromAgentRoot();",
+      "matches": [
+        "migrateSessionsFromAgentRoot("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 277,
+      "raw": "migrateToolsToBin();",
+      "matches": [
+        "migrateToolsToBin("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 278,
+      "raw": "migrateKeybindingsConfigFile();",
+      "matches": [
+        "migrateKeybindingsConfigFile("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "line": 279,
+      "raw": "const deprecationWarnings = migrateExtensionSystem(cwd);",
+      "matches": [
+        "migrateExtensionSystem("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 44,
+      "raw": "exportSessionForShare(jsonlFile, context.session);",
+      "matches": [
+        "exportSessionForShare("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 52,
+      "raw": "if (await tryShareViaRadius(jsonlFile, context))",
+      "matches": [
+        "tryShareViaRadius("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 77,
+      "raw": "await shareViaGist(htmlFile, context);",
+      "matches": [
+        "shareViaGist("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 92,
+      "raw": "const token = getAuthCredential(await context.session.modelRuntime.getAuth(\"radius\", { minOAuthValidityMs: 5 * 60_000 }));",
+      "matches": [
+        "getAuthCredential("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 101,
+      "raw": "restoreEditor(loader, context);",
+      "matches": [
+        "restoreEditor("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 124,
+      "raw": "restoreEditor(loader, context);",
+      "matches": [
+        "restoreEditor("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 135,
+      "raw": "restoreEditor(loader, context);",
+      "matches": [
+        "restoreEditor("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 150,
+      "raw": "restoreEditor(loader, context);",
+      "matches": [
+        "restoreEditor("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 168,
+      "raw": "restoreEditor(loader, context);",
+      "matches": [
+        "restoreEditor("
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "line": 184,
+      "raw": "restoreEditor(loader, context);",
+      "matches": [
+        "restoreEditor("
+      ]
+    }
+  ],
+  "supporting_anchors": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/compaction/compaction.js",
+      "sha256": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9",
+      "ranges": [
+        [
+          454,
+          461
+        ]
+      ],
+      "lines": [
+        {
+          "number": 454,
+          "raw": "export function getSummarizationFailure(response, label) {"
+        },
+        {
+          "number": 455,
+          "raw": "    if (response.stopReason === \"error\") {"
+        },
+        {
+          "number": 456,
+          "raw": "        return `${label} failed: ${response.errorMessage || \"Unknown error\"}`;"
+        },
+        {
+          "number": 457,
+          "raw": "    }"
+        },
+        {
+          "number": 458,
+          "raw": "    if (response.stopReason === \"length\") {"
+        },
+        {
+          "number": 459,
+          "raw": "        return `${label} failed: generation hit the token cap and the summary is incomplete`;"
+        },
+        {
+          "number": 460,
+          "raw": "    }"
+        },
+        {
+          "number": 461,
+          "raw": "    return undefined;"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "ranges": [
+        [
+          3749,
+          3763
+        ]
+      ],
+      "lines": [
+        {
+          "number": 3749,
+          "raw": "    async summarizeForBugReport(options) {"
+        },
+        {
+          "number": 3750,
+          "raw": "        const model = this.model;"
+        },
+        {
+          "number": 3751,
+          "raw": "        if (!model) {"
+        },
+        {
+          "number": 3752,
+          "raw": "            throw new Error(\"No model selected\");"
+        },
+        {
+          "number": 3753,
+          "raw": "        }"
+        },
+        {
+          "number": 3754,
+          "raw": "        return generateBugReportSummary({"
+        },
+        {
+          "number": 3755,
+          "raw": "            ...(await this._getSummarizationRequestAuth(model, options.signal)),"
+        },
+        {
+          "number": 3756,
+          "raw": "            messages: this.messages,"
+        },
+        {
+          "number": 3757,
+          "raw": "            hint: options.hint,"
+        },
+        {
+          "number": 3758,
+          "raw": "            signal: options.signal,"
+        },
+        {
+          "number": 3759,
+          "raw": "            streamFn: this.agent.streamFunction,"
+        },
+        {
+          "number": 3760,
+          "raw": "            retry: this.settingsManager.getRetrySettings(),"
+        },
+        {
+          "number": 3761,
+          "raw": "            sessionId: this.sessionId,"
+        },
+        {
+          "number": 3762,
+          "raw": "        });"
+        },
+        {
+          "number": 3763,
+          "raw": "    }"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "ranges": [
+        [
+          929,
+          933
+        ],
+        [
+          1652,
+          1696
+        ],
+        [
+          3116,
+          3123
+        ],
+        [
+          3797,
+          3805
+        ],
+        [
+          5531,
+          5555
+        ]
+      ],
+      "lines": [
+        {
+          "number": 929,
+          "raw": "        const crash = takeUnnotifiedCrash();"
+        },
+        {
+          "number": 930,
+          "raw": "        if (crash) {"
+        },
+        {
+          "number": 931,
+          "raw": "            const when = new Date(crash.timestamp).toLocaleString();"
+        },
+        {
+          "number": 932,
+          "raw": "            this.showWarning(`${APP_NAME} crashed on ${when} (${crash.message}). Run /bug to draft a report for the Jouzu issue tracker.`);"
+        },
+        {
+          "number": 933,
+          "raw": "        }"
+        },
+        {
+          "number": 1652,
+          "raw": "        const message = error instanceof Error ? error.message : String(error);"
+        },
+        {
+          "number": 1653,
+          "raw": "        this.showError(`${prefix}: ${message}`);"
+        },
+        {
+          "number": 1654,
+          "raw": "        const extensionHint = this.getCrashExtensionHint(error);"
+        },
+        {
+          "number": 1655,
+          "raw": "        if (extensionHint) {"
+        },
+        {
+          "number": 1656,
+          "raw": "            this.chatContainer.addChild(new ThemedText(() => theme.fg(\"warning\", extensionHint), this.outputPad, 0));"
+        },
+        {
+          "number": 1657,
+          "raw": "        }"
+        },
+        {
+          "number": 1658,
+          "raw": "        if (this.recordCrash(\"fatal_error\", error)) {"
+        },
+        {
+          "number": 1659,
+          "raw": "            const instructions = this.crashReportInstructions();"
+        },
+        {
+          "number": 1660,
+          "raw": "            this.chatContainer.addChild(new ThemedText(() => theme.fg(\"muted\", instructions), this.outputPad, 0));"
+        },
+        {
+          "number": 1661,
+          "raw": "        }"
+        },
+        {
+          "number": 1662,
+          "raw": "        stopThemeWatcher();"
+        },
+        {
+          "number": 1663,
+          "raw": "        this.stop(\"transcript\");"
+        },
+        {
+          "number": 1664,
+          "raw": "        process.exit(1);"
+        },
+        {
+          "number": 1665,
+          "raw": "    }"
+        },
+        {
+          "number": 1666,
+          "raw": "    getCrashExtensionHint(error) {"
+        },
+        {
+          "number": 1667,
+          "raw": "        try {"
+        },
+        {
+          "number": 1668,
+          "raw": "            return formatCrashExtensionHint(findExtensionStackMatches(error instanceof Error ? error.stack : undefined, this.session.resourceLoader.getExtensions().extensions));"
+        },
+        {
+          "number": 1669,
+          "raw": "        }"
+        },
+        {
+          "number": 1670,
+          "raw": "        catch {"
+        },
+        {
+          "number": 1671,
+          "raw": "            return undefined;"
+        },
+        {
+          "number": 1672,
+          "raw": "        }"
+        },
+        {
+          "number": 1673,
+          "raw": "    }"
+        },
+        {
+          "number": 1674,
+          "raw": "    /** Persist a crash so the next start can point the user at `/bug`. Returns false when nothing was written. */"
+        },
+        {
+          "number": 1675,
+          "raw": "    recordCrash(kind, error) {"
+        },
+        {
+          "number": 1676,
+          "raw": "        try {"
+        },
+        {
+          "number": 1677,
+          "raw": "            return (recordCrash({"
+        },
+        {
+          "number": 1678,
+          "raw": "                kind,"
+        },
+        {
+          "number": 1679,
+          "raw": "                error,"
+        },
+        {
+          "number": 1680,
+          "raw": "                sessionFile: this.session.sessionFile,"
+        },
+        {
+          "number": 1681,
+          "raw": "                cwd: this.session.sessionManager.getCwd(),"
+        },
+        {
+          "number": 1682,
+          "raw": "            }) !== undefined);"
+        },
+        {
+          "number": 1683,
+          "raw": "        }"
+        },
+        {
+          "number": 1684,
+          "raw": "        catch {"
+        },
+        {
+          "number": 1685,
+          "raw": "            return false;"
+        },
+        {
+          "number": 1686,
+          "raw": "        }"
+        },
+        {
+          "number": 1687,
+          "raw": "    }"
+        },
+        {
+          "number": 1688,
+          "raw": "    crashReportInstructions() {"
+        },
+        {
+          "number": 1689,
+          "raw": "        const resume = this.session.sessionFile ? `run \\`${APP_NAME} -r\\` to resume the session, then` : \"start pi and\";"
+        },
+        {
+          "number": 1690,
+          "raw": "        return `To draft a report for this crash: ${resume} run /bug.`;"
+        },
+        {
+          "number": 1691,
+          "raw": "    }"
+        },
+        {
+          "number": 1692,
+          "raw": "    suggestBugReport() {"
+        },
+        {
+          "number": 1693,
+          "raw": "        if (this.bugReportHintShown)"
+        },
+        {
+          "number": 1694,
+          "raw": "            return;"
+        },
+        {
+          "number": 1695,
+          "raw": "        this.bugReportHintShown = true;"
+        },
+        {
+          "number": 1696,
+          "raw": "        this.chatContainer.addChild(new ThemedText(() => theme.fg(\"muted\", `If this looks like a ${APP_NAME} bug, /bug drafts a report you can review before posting.`), this.outputPad, 0));"
+        },
+        {
+          "number": 3116,
+          "raw": "    showStatus(message) {"
+        },
+        {
+          "number": 3117,
+          "raw": "        const children = this.chatContainer.children;"
+        },
+        {
+          "number": 3118,
+          "raw": "        const last = children.length > 0 ? children[children.length - 1] : undefined;"
+        },
+        {
+          "number": 3119,
+          "raw": "        const secondLast = children.length > 1 ? children[children.length - 2] : undefined;"
+        },
+        {
+          "number": 3120,
+          "raw": "        if (last && secondLast && last === this.lastStatusText && secondLast === this.lastStatusSpacer) {"
+        },
+        {
+          "number": 3121,
+          "raw": "            this.lastStatusMessage = message;"
+        },
+        {
+          "number": 3122,
+          "raw": "            this.lastStatusText.invalidate();"
+        },
+        {
+          "number": 3123,
+          "raw": "            this.ui.requestRender();"
+        },
+        {
+          "number": 3797,
+          "raw": "    showError(errorMessage) {"
+        },
+        {
+          "number": 3798,
+          "raw": "        this.chatContainer.addChild(new Spacer(1));"
+        },
+        {
+          "number": 3799,
+          "raw": "        this.chatContainer.addChild(new ThemedText(() => theme.fg(\"error\", `Error: ${errorMessage}`), this.outputPad, 0));"
+        },
+        {
+          "number": 3800,
+          "raw": "        this.ui.requestRender();"
+        },
+        {
+          "number": 3801,
+          "raw": "    }"
+        },
+        {
+          "number": 3802,
+          "raw": "    showWarning(warningMessage) {"
+        },
+        {
+          "number": 3803,
+          "raw": "        this.chatContainer.addChild(new Spacer(1));"
+        },
+        {
+          "number": 3804,
+          "raw": "        this.chatContainer.addChild(new ThemedText(() => theme.fg(\"warning\", `Warning: ${warningMessage}`), 1, 0));"
+        },
+        {
+          "number": 3805,
+          "raw": "        this.ui.requestRender();"
+        },
+        {
+          "number": 5531,
+          "raw": "    async handleShareCommand() {"
+        },
+        {
+          "number": 5532,
+          "raw": "        await shareSession({"
+        },
+        {
+          "number": 5533,
+          "raw": "            session: this.session,"
+        },
+        {
+          "number": 5534,
+          "raw": "            ui: this.ui,"
+        },
+        {
+          "number": 5535,
+          "raw": "            editorContainer: this.editorContainer,"
+        },
+        {
+          "number": 5536,
+          "raw": "            editor: this.editor,"
+        },
+        {
+          "number": 5537,
+          "raw": "            showStatus: (message) => this.showStatus(message),"
+        },
+        {
+          "number": 5538,
+          "raw": "            showError: (message) => this.showError(message),"
+        },
+        {
+          "number": 5539,
+          "raw": "        });"
+        },
+        {
+          "number": 5540,
+          "raw": "    }"
+        },
+        {
+          "number": 5541,
+          "raw": "    async handleBugCommand(hint) {"
+        },
+        {
+          "number": 5542,
+          "raw": "        await reportBug({"
+        },
+        {
+          "number": 5543,
+          "raw": "            session: this.session,"
+        },
+        {
+          "number": 5544,
+          "raw": "            runtimeIdentity: this.options.sessionInfoFooter?.(),"
+        },
+        {
+          "number": 5545,
+          "raw": "            showReport: (markdown) => {"
+        },
+        {
+          "number": 5546,
+          "raw": "                this.chatContainer.addChild(new Text(markdown, this.outputPad, 1));"
+        },
+        {
+          "number": 5547,
+          "raw": "                this.ui.requestRender();"
+        },
+        {
+          "number": 5548,
+          "raw": "            },"
+        },
+        {
+          "number": 5549,
+          "raw": "            ui: this.ui,"
+        },
+        {
+          "number": 5550,
+          "raw": "            editorContainer: this.editorContainer,"
+        },
+        {
+          "number": 5551,
+          "raw": "            editor: this.editor,"
+        },
+        {
+          "number": 5552,
+          "raw": "            keybindings: this.keybindings,"
+        },
+        {
+          "number": 5553,
+          "raw": "            showStatus: (message) => this.showStatus(message),"
+        },
+        {
+          "number": 5554,
+          "raw": "            showError: (message) => this.showError(message),"
+        },
+        {
+          "number": 5555,
+          "raw": "        }, hint);"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "ranges": [
+        [
+          521,
+          534
+        ],
+        [
+          608,
+          625
+        ],
+        [
+          744,
+          760
+        ]
+      ],
+      "lines": [
+        {
+          "number": 521,
+          "raw": "    let appMode = resolveAppMode(parsed, process.stdin.isTTY, process.stdout.isTTY);"
+        },
+        {
+          "number": 522,
+          "raw": "    const shouldTakeOverStdout = appMode !== \"interactive\" && !isPlainRuntimeMetadataCommand(parsed);"
+        },
+        {
+          "number": 523,
+          "raw": "    if (shouldTakeOverStdout) {"
+        },
+        {
+          "number": 524,
+          "raw": "        takeOverStdout();"
+        },
+        {
+          "number": 525,
+          "raw": "    }"
+        },
+        {
+          "number": 526,
+          "raw": "    if (parsed.mode === \"rpc\" && parsed.fileArgs.length > 0) {"
+        },
+        {
+          "number": 527,
+          "raw": "        console.error(chalk.red(\"Error: @file arguments are not supported in RPC mode\"));"
+        },
+        {
+          "number": 528,
+          "raw": "        process.exit(1);"
+        },
+        {
+          "number": 529,
+          "raw": "    }"
+        },
+        {
+          "number": 530,
+          "raw": "    validateForkFlags(parsed);"
+        },
+        {
+          "number": 531,
+          "raw": "    validateSessionIdFlags(parsed);"
+        },
+        {
+          "number": 532,
+          "raw": "    // Run migrations (pass cwd for project-local migrations)"
+        },
+        {
+          "number": 533,
+          "raw": "    const { migratedAuthProviders: migratedProviders, deprecationWarnings } = runMigrations(cwd);"
+        },
+        {
+          "number": 534,
+          "raw": "    time(\"runMigrations\");"
+        },
+        {
+          "number": 608,
+          "raw": "            resourceLoaderReloadOptions: shouldResolveProjectTrust"
+        },
+        {
+          "number": 609,
+          "raw": "                ? {"
+        },
+        {
+          "number": 610,
+          "raw": "                    resolveProjectTrust: async ({ extensionsResult }) => {"
+        },
+        {
+          "number": 611,
+          "raw": "                        const trusted = await resolveProjectTrusted({"
+        },
+        {
+          "number": 612,
+          "raw": "                            cwd,"
+        },
+        {
+          "number": 613,
+          "raw": "                            trustStore,"
+        },
+        {
+          "number": 614,
+          "raw": "                            trustOverride: parsed.projectTrustOverride,"
+        },
+        {
+          "number": 615,
+          "raw": "                            defaultProjectTrust: startupSettingsManager.getDefaultProjectTrust(),"
+        },
+        {
+          "number": 616,
+          "raw": "                            extensionsResult,"
+        },
+        {
+          "number": 617,
+          "raw": "                            projectTrustContext: projectTrustContext ??"
+        },
+        {
+          "number": 618,
+          "raw": "                                createProjectTrustContext({"
+        },
+        {
+          "number": 619,
+          "raw": "                                    cwd,"
+        },
+        {
+          "number": 620,
+          "raw": "                                    mode: isInitialRuntime ? trustPromptMode : appMode,"
+        },
+        {
+          "number": 621,
+          "raw": "                                    settingsManager: startupSettingsManager,"
+        },
+        {
+          "number": 622,
+          "raw": "                                    hasUI: isInitialRuntime && trustPromptMode === \"interactive\","
+        },
+        {
+          "number": 623,
+          "raw": "                                }),"
+        },
+        {
+          "number": 624,
+          "raw": "                            onExtensionError: (message) => projectTrustDiagnostics.push({ type: \"warning\", message }),"
+        },
+        {
+          "number": 625,
+          "raw": "                        });"
+        },
+        {
+          "number": 744,
+          "raw": "    // Show deprecation warnings in interactive mode"
+        },
+        {
+          "number": 745,
+          "raw": "    if (appMode === \"interactive\" && deprecationWarnings.length > 0) {"
+        },
+        {
+          "number": 746,
+          "raw": "        await showDeprecationWarnings(deprecationWarnings);"
+        },
+        {
+          "number": 747,
+          "raw": "    }"
+        },
+        {
+          "number": 748,
+          "raw": "    time(\"resolveModelScope\");"
+        },
+        {
+          "number": 749,
+          "raw": "    const startupDiagnostics = deduplicateDiagnostics([...startupSettingsDiagnostics, ...runtime.diagnostics]);"
+        },
+        {
+          "number": 750,
+          "raw": "    const hasRuntimeErrors = runtime.diagnostics.some((diagnostic) => diagnostic.type === \"error\");"
+        },
+        {
+          "number": 751,
+          "raw": "    if (appMode !== \"interactive\" || hasRuntimeErrors) {"
+        },
+        {
+          "number": 752,
+          "raw": "        reportDiagnostics(startupDiagnostics);"
+        },
+        {
+          "number": 753,
+          "raw": "    }"
+        },
+        {
+          "number": 754,
+          "raw": "    if (hasRuntimeErrors) {"
+        },
+        {
+          "number": 755,
+          "raw": "        if (runtime.diagnostics.some((diagnostic) => diagnostic.message.includes(\"Failed to load extension\"))) {"
+        },
+        {
+          "number": 756,
+          "raw": "            console.error(chalk.yellow(EXTENSION_LOAD_FAILURE_HINT));"
+        },
+        {
+          "number": 757,
+          "raw": "        }"
+        },
+        {
+          "number": 758,
+          "raw": "        if (options?.flowIngressFactory) await runtime.session.dispose();"
+        },
+        {
+          "number": 759,
+          "raw": "        process.exit(1);"
+        },
+        {
+          "number": 760,
+          "raw": "    }"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js",
+      "sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "ranges": [
+        [
+          661,
+          665
+        ],
+        [
+          687,
+          702
+        ],
+        [
+          740,
+          747
+        ],
+        [
+          830,
+          838
+        ]
+      ],
+      "lines": [
+        {
+          "number": 661,
+          "raw": "function reportProjectTrustWarnings(warnings) {"
+        },
+        {
+          "number": 662,
+          "raw": "    for (const warning of warnings) {"
+        },
+        {
+          "number": 663,
+          "raw": "        console.error(chalk.yellow(`Warning: ${warning}`));"
+        },
+        {
+          "number": 664,
+          "raw": "    }"
+        },
+        {
+          "number": 665,
+          "raw": "}"
+        },
+        {
+          "number": 687,
+          "raw": "    const projectTrusted = await resolveProjectTrusted({"
+        },
+        {
+          "number": 688,
+          "raw": "        cwd: options.cwd,"
+        },
+        {
+          "number": 689,
+          "raw": "        trustStore,"
+        },
+        {
+          "number": 690,
+          "raw": "        trustOverride: options.projectTrustOverride,"
+        },
+        {
+          "number": 691,
+          "raw": "        defaultProjectTrust: settingsManager.getDefaultProjectTrust(),"
+        },
+        {
+          "number": 692,
+          "raw": "        extensionsResult,"
+        },
+        {
+          "number": 693,
+          "raw": "        projectTrustContext: createProjectTrustContext({"
+        },
+        {
+          "number": 694,
+          "raw": "            cwd: options.cwd,"
+        },
+        {
+          "number": 695,
+          "raw": "            mode: appMode,"
+        },
+        {
+          "number": 696,
+          "raw": "            settingsManager,"
+        },
+        {
+          "number": 697,
+          "raw": "            hasUI: appMode === \"interactive\","
+        },
+        {
+          "number": 698,
+          "raw": "        }),"
+        },
+        {
+          "number": 699,
+          "raw": "        onExtensionError: (message) => projectTrustWarnings.push(message),"
+        },
+        {
+          "number": 700,
+          "raw": "    });"
+        },
+        {
+          "number": 701,
+          "raw": "    settingsManager.setProjectTrusted(projectTrusted);"
+        },
+        {
+          "number": 702,
+          "raw": "    return { settingsManager, projectTrustWarnings };"
+        },
+        {
+          "number": 740,
+          "raw": "    const { settingsManager, projectTrustWarnings } = await createCommandSettingsManager({"
+        },
+        {
+          "number": 741,
+          "raw": "        cwd,"
+        },
+        {
+          "number": 742,
+          "raw": "        agentDir,"
+        },
+        {
+          "number": 743,
+          "raw": "        projectTrustOverride,"
+        },
+        {
+          "number": 744,
+          "raw": "        extensionFactories: runtimeOptions.extensionFactories,"
+        },
+        {
+          "number": 745,
+          "raw": "    });"
+        },
+        {
+          "number": 746,
+          "raw": "    reportProjectTrustWarnings(projectTrustWarnings);"
+        },
+        {
+          "number": 747,
+          "raw": "    if (local && !settingsManager.isProjectTrusted()) {"
+        },
+        {
+          "number": 830,
+          "raw": "    const { settingsManager, projectTrustWarnings } = await createCommandSettingsManager({"
+        },
+        {
+          "number": 831,
+          "raw": "        cwd,"
+        },
+        {
+          "number": 832,
+          "raw": "        agentDir,"
+        },
+        {
+          "number": 833,
+          "raw": "        projectTrustOverride: options.projectTrustOverride,"
+        },
+        {
+          "number": 834,
+          "raw": "        useSavedProjectTrustOnly: options.command === \"update\","
+        },
+        {
+          "number": 835,
+          "raw": "        extensionFactories: runtimeOptions.extensionFactories,"
+        },
+        {
+          "number": 836,
+          "raw": "    });"
+        },
+        {
+          "number": 837,
+          "raw": "    reportProjectTrustWarnings(projectTrustWarnings);"
+        },
+        {
+          "number": 838,
+          "raw": "    if (!settingsManager.isProjectTrusted() && writesProjectPackageConfig) {"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.js",
+      "sha256": "a71e512d81e49cb6f8e20b78677dce4b4ca19ee2c4b4c6f14a00411fb52bd3cc",
+      "ranges": [
+        [
+          3,
+          18
+        ]
+      ],
+      "lines": [
+        {
+          "number": 3,
+          "raw": "export function createProjectTrustContext(options) {"
+        },
+        {
+          "number": 4,
+          "raw": "    return {"
+        },
+        {
+          "number": 5,
+          "raw": "        cwd: options.cwd,"
+        },
+        {
+          "number": 6,
+          "raw": "        mode: options.mode === \"interactive\" ? \"tui\" : options.mode,"
+        },
+        {
+          "number": 7,
+          "raw": "        hasUI: options.hasUI,"
+        },
+        {
+          "number": 8,
+          "raw": "        ui: {"
+        },
+        {
+          "number": 9,
+          "raw": "            select: async (title, selectOptions) => {"
+        },
+        {
+          "number": 10,
+          "raw": "                if (!options.hasUI) {"
+        },
+        {
+          "number": 11,
+          "raw": "                    return undefined;"
+        },
+        {
+          "number": 12,
+          "raw": "                }"
+        },
+        {
+          "number": 13,
+          "raw": "                if (options.mode !== \"interactive\") {"
+        },
+        {
+          "number": 14,
+          "raw": "                    return undefined;"
+        },
+        {
+          "number": 15,
+          "raw": "                }"
+        },
+        {
+          "number": 16,
+          "raw": "                return showStartupSelector(options.settingsManager, title, selectOptions.map((option) => ({ label: option, value: option })));"
+        },
+        {
+          "number": 17,
+          "raw": "            },"
+        },
+        {
+          "number": 18,
+          "raw": "            confirm: async (title, message) => {"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js",
+      "sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+      "ranges": [
+        [
+          114,
+          131
+        ]
+      ],
+      "lines": [
+        {
+          "number": 114,
+          "raw": "export async function showStartupSelector(settingsManager, title, options) {"
+        },
+        {
+          "number": 115,
+          "raw": "    const ui = await createStartupTui(settingsManager);"
+        },
+        {
+          "number": 116,
+          "raw": "    return new Promise((resolve) => {"
+        },
+        {
+          "number": 117,
+          "raw": "        let settled = false;"
+        },
+        {
+          "number": 118,
+          "raw": "        const finish = async (result) => {"
+        },
+        {
+          "number": 119,
+          "raw": "            if (settled) {"
+        },
+        {
+          "number": 120,
+          "raw": "                return;"
+        },
+        {
+          "number": 121,
+          "raw": "            }"
+        },
+        {
+          "number": 122,
+          "raw": "            settled = true;"
+        },
+        {
+          "number": 123,
+          "raw": "            await clearStartupTui(ui);"
+        },
+        {
+          "number": 124,
+          "raw": "            ui.stop();"
+        },
+        {
+          "number": 125,
+          "raw": "            resolve(result);"
+        },
+        {
+          "number": 126,
+          "raw": "        };"
+        },
+        {
+          "number": 127,
+          "raw": "        const selector = new ExtensionSelectorComponent(title, options.map((option) => option.label), (option) => void finish(options.find((entry) => entry.label === option)?.value), () => void finish(undefined), { tui: ui });"
+        },
+        {
+          "number": 128,
+          "raw": "        ui.addChild(selector);"
+        },
+        {
+          "number": 129,
+          "raw": "        ui.setFocus(selector);"
+        },
+        {
+          "number": 130,
+          "raw": "        startStartupTui(ui, settingsManager);"
+        },
+        {
+          "number": 131,
+          "raw": "    });"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js",
+      "sha256": "ce8644574983b5f8a04059545305b63463557cdf8d09049c35590cb937a70c76",
+      "ranges": [
+        [
+          40,
+          69
+        ]
+      ],
+      "lines": [
+        {
+          "number": 40,
+          "raw": "export function getProjectTrustOptions(cwd, options) {"
+        },
+        {
+          "number": 41,
+          "raw": "    const trustPath = normalizeCwd(cwd);"
+        },
+        {
+          "number": 42,
+          "raw": "    const trustOptions = ["
+        },
+        {
+          "number": 43,
+          "raw": "        { label: \"Trust\", trusted: true, updates: [{ path: trustPath, decision: true }], savedPath: trustPath },"
+        },
+        {
+          "number": 44,
+          "raw": "    ];"
+        },
+        {
+          "number": 45,
+          "raw": "    const parentPath = getProjectTrustParentPath(cwd);"
+        },
+        {
+          "number": 46,
+          "raw": "    if (parentPath !== undefined) {"
+        },
+        {
+          "number": 47,
+          "raw": "        trustOptions.push({"
+        },
+        {
+          "number": 48,
+          "raw": "            label: `Trust parent folder (${parentPath})`,"
+        },
+        {
+          "number": 49,
+          "raw": "            trusted: true,"
+        },
+        {
+          "number": 50,
+          "raw": "            updates: ["
+        },
+        {
+          "number": 51,
+          "raw": "                { path: parentPath, decision: true },"
+        },
+        {
+          "number": 52,
+          "raw": "                { path: trustPath, decision: null },"
+        },
+        {
+          "number": 53,
+          "raw": "            ],"
+        },
+        {
+          "number": 54,
+          "raw": "            savedPath: parentPath,"
+        },
+        {
+          "number": 55,
+          "raw": "        });"
+        },
+        {
+          "number": 56,
+          "raw": "    }"
+        },
+        {
+          "number": 57,
+          "raw": "    if (options?.includeSessionOnly) {"
+        },
+        {
+          "number": 58,
+          "raw": "        trustOptions.push({ label: \"Trust (this session only)\", trusted: true, updates: [] });"
+        },
+        {
+          "number": 59,
+          "raw": "    }"
+        },
+        {
+          "number": 60,
+          "raw": "    trustOptions.push({"
+        },
+        {
+          "number": 61,
+          "raw": "        label: \"Do not trust\","
+        },
+        {
+          "number": 62,
+          "raw": "        trusted: false,"
+        },
+        {
+          "number": 63,
+          "raw": "        updates: [{ path: trustPath, decision: false }],"
+        },
+        {
+          "number": 64,
+          "raw": "        savedPath: trustPath,"
+        },
+        {
+          "number": 65,
+          "raw": "    });"
+        },
+        {
+          "number": 66,
+          "raw": "    if (options?.includeSessionOnly) {"
+        },
+        {
+          "number": 67,
+          "raw": "        trustOptions.push({ label: \"Do not trust (this session only)\", trusted: false, updates: [] });"
+        },
+        {
+          "number": 68,
+          "raw": "    }"
+        },
+        {
+          "number": 69,
+          "raw": "    return trustOptions;"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js",
+      "sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+      "ranges": [
+        [
+          37,
+          57
+        ]
+      ],
+      "lines": [
+        {
+          "number": 37,
+          "raw": "}"
+        },
+        {
+          "number": 38,
+          "raw": "export function takeOverStdout() {"
+        },
+        {
+          "number": 39,
+          "raw": "    if (stdoutTakeoverState) {"
+        },
+        {
+          "number": 40,
+          "raw": "        return;"
+        },
+        {
+          "number": 41,
+          "raw": "    }"
+        },
+        {
+          "number": 42,
+          "raw": "    const rawStdoutWrite = process.stdout.write.bind(process.stdout);"
+        },
+        {
+          "number": 43,
+          "raw": "    const rawStderrWrite = process.stderr.write.bind(process.stderr);"
+        },
+        {
+          "number": 44,
+          "raw": "    const originalStdoutWrite = process.stdout.write;"
+        },
+        {
+          "number": 45,
+          "raw": "    process.stdout.write = ((chunk, encodingOrCallback, callback) => {"
+        },
+        {
+          "number": 46,
+          "raw": "        if (typeof encodingOrCallback === \"function\") {"
+        },
+        {
+          "number": 47,
+          "raw": "            return rawStderrWrite(String(chunk), encodingOrCallback);"
+        },
+        {
+          "number": 48,
+          "raw": "        }"
+        },
+        {
+          "number": 49,
+          "raw": "        return rawStderrWrite(String(chunk), callback);"
+        },
+        {
+          "number": 50,
+          "raw": "    });"
+        },
+        {
+          "number": 51,
+          "raw": "    stdoutTakeoverState = {"
+        },
+        {
+          "number": 52,
+          "raw": "        rawStdoutWrite,"
+        },
+        {
+          "number": 53,
+          "raw": "        rawStderrWrite,"
+        },
+        {
+          "number": 54,
+          "raw": "        originalStdoutWrite,"
+        },
+        {
+          "number": 55,
+          "raw": "    };"
+        },
+        {
+          "number": 56,
+          "raw": "}"
+        },
+        {
+          "number": 57,
+          "raw": "export function restoreStdout() {"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/bug-report.js",
+      "sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+      "ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "lines": [
+        {
+          "number": 1,
+          "raw": "import { execFile } from \"node:child_process\";"
+        },
+        {
+          "number": 2,
+          "raw": "import { getKeybindings, stripTerminalSequences } from \"@earendil-works/pi-tui\";"
+        },
+        {
+          "number": 3,
+          "raw": "import { VERSION } from \"../../config.js\";"
+        },
+        {
+          "number": 4,
+          "raw": "import { ExtensionEditorComponent } from \"./components/extension-editor.js\";"
+        },
+        {
+          "number": 5,
+          "raw": "import { ExtensionInputComponent } from \"./components/extension-input.js\";"
+        },
+        {
+          "number": 6,
+          "raw": "import { ExtensionSelectorComponent } from \"./components/extension-selector.js\";"
+        },
+        {
+          "number": 7,
+          "raw": "export const ISSUE_NEW_URL = \"https://github.com/shisa-ai/jouzu/issues/new\";"
+        },
+        {
+          "number": 8,
+          "raw": "export const ISSUES_URL = \"https://github.com/shisa-ai/jouzu/issues\";"
+        },
+        {
+          "number": 9,
+          "raw": "const ISSUE_REPOSITORY = \"shisa-ai/jouzu\";"
+        },
+        {
+          "number": 10,
+          "raw": "const ISSUE_REPOSITORY_URL = \"https://github.com/shisa-ai/jouzu\";"
+        },
+        {
+          "number": 11,
+          "raw": "const GITHUB_HOSTNAME = \"github.com\";"
+        },
+        {
+          "number": 12,
+          "raw": "const ISSUE_URL_PATTERN = /^https:\\/\\/github\\.com\\/shisa-ai\\/jouzu\\/issues\\/\\d+$/;"
+        },
+        {
+          "number": 13,
+          "raw": "const GH_TIMEOUT_MS = 10_000;"
+        },
+        {
+          "number": 14,
+          "raw": "const GH_MAX_OUTPUT_BYTES = 64 * 1024;"
+        },
+        {
+          "number": 15,
+          "raw": "const TITLE_MAX_LENGTH = 80;"
+        },
+        {
+          "number": 16,
+          "raw": "const NOT_PROVIDED = \"Not provided.\";"
+        },
+        {
+          "number": 17,
+          "raw": "const INTRO = `This drafts a public GitHub issue for ${ISSUE_REPOSITORY}. Nothing is posted without your review, and the draft is never sent to a model. Submission with gh is offered only when an authenticated gh account is available. New issue form: ${ISSUE_NEW_URL}`;"
+        },
+        {
+          "number": 18,
+          "raw": "/** Build the deterministic Markdown draft shown for review and posted only on consent. */"
+        },
+        {
+          "number": 19,
+          "raw": "export function buildBugReportDraft(options) {"
+        }
+      ]
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482",
+      "ranges": [
+        [
+          1188,
+          1193
+        ]
+      ],
+      "lines": [
+        {
+          "number": 1188,
+          "raw": "\tconst originalShowError = prototype.showError;"
+        },
+        {
+          "number": 1189,
+          "raw": "\tconst restoreErrors = patchMethod(prototype, \"showError\", function (this: ErrorHost, message: string): void {"
+        },
+        {
+          "number": 1190,
+          "raw": "\t\tif (message !== \"Compaction failed: Nothing to compact (session too small)\") {"
+        },
+        {
+          "number": 1191,
+          "raw": "\t\t\toriginalShowError.call(this, message);"
+        },
+        {
+          "number": 1192,
+          "raw": "\t\t\treturn;"
+        },
+        {
+          "number": 1193,
+          "raw": "\t\t}"
+        }
+      ]
+    }
+  ],
+  "archive_sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+  "frozen_census_links": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "item_id": "pi.runtime-census.0106",
+      "sha256": "418fe5448f98c8f1effdf8c4de6772dcdf26a0290ad86b4732b2785903a3e518"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "item_id": "pi.runtime-census.0107",
+      "sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "item_id": "pi.runtime-census.0115",
+      "sha256": "c525de3ccfff300a096ad25f4709fb9c2be9c73e06805bf924af7937d5624fa5"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+      "item_id": "pi.runtime-census.0154",
+      "sha256": "da26783cf1b0c7d3024eb013d4912e77e88f08ea882df2772837133d4ffac469"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/migrations.js",
+      "item_id": "pi.runtime-census.0230",
+      "sha256": "8514d2573b028baeba60635498a1c5f129a602abd203ea5c37a63df2eea3fb6b"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/session-share.js",
+      "item_id": "pi.runtime-census.0287",
+      "sha256": "025a451021f6f97e9494e7952b02e1ede8d643fa2b6b3ce4410d448238b4e3cc"
+    }
+  ],
+  "bounded_unbundled_symbol_search": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "line": 3749,
+      "symbol": "summarizeForBugReport",
+      "raw": "async summarizeForBugReport(options) {"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report-upload.js",
+      "line": 4,
+      "symbol": "uploadBugReport",
+      "raw": "export async function uploadBugReport(bundle, options = {}) {"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 124,
+      "symbol": "collectBugReportMetadata",
+      "raw": "export function collectBugReportMetadata(options) {"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 152,
+      "symbol": "collectBugReportDiagnostics",
+      "raw": "export function collectBugReportDiagnostics(sessionManager, crashes = []) {"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "line": 211,
+      "symbol": "writeBugReportArchive",
+      "raw": "export function writeBugReportArchive(bundle, filePath) {"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/crash-log.js",
+      "line": 132,
+      "symbol": "clearCrashLog",
+      "raw": "export function clearCrashLog(path = crashLogPath()) {"
+    }
+  ],
+  "symbol_search_qualification": "Installed coding-agent dist/**/*.js excluding bundle/** and source maps only; definitions and API refs do not prove default callers. Bundled copies/foreign/custom code not universally excluded.",
+  "counts": {
+    "fixed_rows": 49,
+    "boundaries": 19,
+    "lexical_tokens": 333,
+    "lexical_exclusions": 286,
+    "constructors": 5,
+    "catches": 23,
+    "helper_call_lines": 53
+  },
+  "route_facts": {
+    "radius_handled_upload_failure_gist_fallback": false,
+    "gist_async_error_listener": false,
+    "gh_nonzero_status_uses_logged_in_headline": true,
+    "share_temp_creation_precedes_try": true,
+    "radius_auth_and_loader_setup_precede_try": true,
+    "summary_is_current_interactive_bug_draft": false,
+    "migration_direct_logs_can_run_noninteractive": true,
+    "main_deprecation_prompt_requires_interactive": true
+  },
+  "interpretation": "Six full canonical native bodies only; native English/API/request-only fragments distinct from default user display. Current interactive bug draft is separate patched producer. No native upload/report/model/trust/migration/share/state/gh/child/network/UI operation executed.",
+  "artifact_sha256_utf8_lf": {
+    "pi-diagnostics-migration-share.csv": "0c5b05f4cc402b515c8678f06dad650a9bf5570f7d4d7568b5e0111aa37593d2",
+    "pi-diagnostics-migration-share-boundaries.csv": "0172b8b85a78b3989337259eb5def3134d34b63f7923930fb711671cc53972c2",
+    "pi-diagnostics-migration-share-exclusions.csv": "8380a8cd6d3b582b098305da8db6b0d9ffb0ec27376ccc652adc98197972b954",
+    "pi-diagnostics-migration-share-scope.csv": "b4d93760cd051628ff7be8e2acf6afb82da6bc78909cdac948bd67b1c50ea8be"
+  }
+}

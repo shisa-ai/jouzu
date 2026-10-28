@@ -823,6 +823,20 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-diagnostics-migration-share.csv](pi-diagnostics-migration-share.csv) records
+49 qualified definitions across six complete diagnostic, trust, migration and
+share bodies (991 lines), with nineteen
+[boundaries](pi-diagnostics-migration-share-boundaries.csv). The
+[exclusions](pi-diagnostics-migration-share-exclusions.csv) complete the 333-token
+source partition, including comments and interpolation syntax. SDK bug-summary
+prompts and results retain separate routes from the current interactive bug draft.
+Migration logs can precede interactive-only warnings and use redirected stderr.
+Share metadata includes the current system prompt and tool declarations in JSONL;
+server response fields and child stderr remain dynamic. The
+[scope](pi-diagnostics-migration-share-scope.csv) pins six full and eleven bounded
+sources, retaining caught, replaced and escaping failure paths. Ten corruption
+controls pass with exact archive/root/nested body identity.
+
 [pi-codemode-support.csv](pi-codemode-support.csv) records 121 qualified raw
 source occurrences across six complete codemode bodies (1,214 lines), including
 message fragments, API descriptions, formatting and renderer values. The 251
@@ -1915,6 +1929,7 @@ node review/text-inventory/verify-pi-rpc-support.cjs --node-modules <root-node-m
 node review/text-inventory/verify-pi-request-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
+python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
