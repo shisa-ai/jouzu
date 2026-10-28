@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 716,
-  "paths_without_scope_references": 490,
+  "paths_with_scope_references": 726,
+  "paths_without_scope_references": 480,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -71,6 +71,7 @@
     "cli-command-support-scope.csv": "6b51d0d0fd78795a78d2ab95afd21b34fc97bce328a127d2a57c3edf94e8be16",
     "localization-ops-text-scope.csv": "6c9d25bcbdaa9858f8580daf110c10bf7465e284a9745a7ae3387efc6d0930f2",
     "pi-import-message-api-scope.csv": "20f8158c0c618059a99c1f4638565a922ab4abd57605a098807d8a7122c24f31",
+    "web-adapter-text-scope.csv": "22486254b0ea2f9328e965138eacd9fd5aac1df36ec767c381f08222e2e93067",
     "cli-startup-support-scope.csv": "102a1ad7b4fcc478cb5510f91517a3d52672caa3650fae7914d9b893c13fc2d2",
     "file-state-support-scope.csv": "e27d528dc3fad07be954dddde396194025e766766b8029b4ccaa1d8855551600",
     "release-surface-text-scope.csv": "16bcbefd5ba773c26533728e8483b06d560e4cbfe5b7c8bd4b788d08e1db3e1b",

@@ -818,6 +818,21 @@ retain their exact conditions. Custom callback failures are separate from host
 receipt text. Five corruption controls pass. No example, transport, authentication,
 client, callback, native/UI or user-state operation was executed.
 
+[web-adapter-text.csv](web-adapter-text.csv) adds 311 browser/MCP adapter
+records across two complete bodies totaling 1,072 lines: 232 nonempty lexical
+occurrences, two generated-code strings, four catalog consumers, 32 control
+records and 41 boundaries. The [scope](web-adapter-text-scope.csv) pins 24 public
+and seventeen qualified native sources. The default browser factory supplies no
+catalog, so its labels/result captions use English; native fallback captions can
+instead use raw tool names. Installation polling, captured npm diagnostics,
+cleanup replacement, screenshot comparisons and result projection retain exact
+guards. Schema descriptions, snippets and guidelines have distinct selected-tool,
+current/persisted prompt and live-export routes; nested schema metadata is not
+promoted to a top-level browser caption. MCP introduces no own adapter prose.
+Seven exact browser dependency bodies and broader native MCP producers remain
+pending. No browser, MCP server, install, download, configuration, credential,
+model, native/UI or user-state operation was executed.
+
 [pi-import-message-api.csv](pi-import-message-api.csv) adds 1,268 source/API
 records across two complete bodies totaling 1,616 lines: 1,212 lexical
 occurrences, seventeen bare field keys, ten catalog consumers and 29 boundaries.
@@ -1357,6 +1372,7 @@ python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-flow-submission-text.py
 node review/text-inventory/verify-flow-wait-bridges.cjs
 node review/text-inventory/verify-input-example-text.cjs
+python -B review/text-inventory/verify-web-adapter-text.py
 python -B review/text-inventory/verify-pi-import-message-api.py
 python -B review/text-inventory/verify-localization-ops-text.py
 node review/text-inventory/verify-context-adjunct-text.cjs
