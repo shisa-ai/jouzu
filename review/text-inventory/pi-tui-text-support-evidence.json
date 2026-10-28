@@ -1,0 +1,2029 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "d5d47ce399492feb0f9a327b196b722520d0bb04",
+  "inventory_file": "pi-tui-text-support.csv",
+  "scope_file": "pi-tui-text-support-scope.csv",
+  "boundary_file": "pi-tui-text-support-boundaries.csv",
+  "exclusion_file": "pi-tui-text-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/pi-prose-wrapping.ts",
+      "sha256": "41d9ea2d5f046fa6a97b955989e63a07932605db4745269625b37639d4c305bb"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/markdown.js",
+      "sha256": "d28861821607aefa7d8399507595fbe2f23b602bfa7f215986f3f8774762fe71",
+      "cli_nested_sha256": "d28861821607aefa7d8399507595fbe2f23b602bfa7f215986f3f8774762fe71",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          22,
+          136
+        ],
+        [
+          203,
+          275
+        ],
+        [
+          399,
+          410
+        ],
+        [
+          512,
+          528
+        ]
+      ],
+      "purpose": "Bounded already-reviewed native consumer route; completed LaTeX rendering/fallback, autocomplete freshness/layout/apply and state payload delivery only."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/editor.js",
+      "sha256": "838ebf6af4d1b0161959a0914c59aa65b0537b099fb358402356a51894db8075",
+      "cli_nested_sha256": "838ebf6af4d1b0161959a0914c59aa65b0537b099fb358402356a51894db8075",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1666,
+          1670
+        ],
+        [
+          1772,
+          1787
+        ],
+        [
+          1828,
+          1832
+        ],
+        [
+          1875,
+          2006
+        ],
+        [
+          2008,
+          2034
+        ]
+      ],
+      "purpose": "Bounded already-reviewed native consumer route; completed LaTeX rendering/fallback, autocomplete freshness/layout/apply and state payload delivery only."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/input.js",
+      "sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+      "cli_nested_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          284,
+          329
+        ]
+      ],
+      "purpose": "Bounded already-reviewed native consumer route; completed LaTeX rendering/fallback, autocomplete freshness/layout/apply and state payload delivery only."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/select-list.js",
+      "sha256": "4c8fe79d053ce465454c55bbeb7e61d84ea875f0b9bce8c6e238f3d7721c7f42",
+      "cli_nested_sha256": "4c8fe79d053ce465454c55bbeb7e61d84ea875f0b9bce8c6e238f3d7721c7f42",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          137,
+          162
+        ]
+      ],
+      "purpose": "Bounded already-reviewed native consumer route; completed LaTeX rendering/fallback, autocomplete freshness/layout/apply and state payload delivery only."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          507,
+          601
+        ]
+      ],
+      "purpose": "Bounded native command/Markdown/export route. Raw session entries remain distinct from generated TUI render lines. Prior full body inventories independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/user-message.js",
+      "sha256": "a333be7aee4aa9e767644c5f3783f55352a78816316abd3301b7b98e985e53ab",
+      "cli_nested_sha256": "a333be7aee4aa9e767644c5f3783f55352a78816316abd3301b7b98e985e53ab",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          15,
+          40
+        ]
+      ],
+      "purpose": "Bounded native command/Markdown/export route. Raw session entries remain distinct from generated TUI render lines. Prior full body inventories independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js",
+      "sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          75,
+          124
+        ]
+      ],
+      "purpose": "Bounded native command/Markdown/export route. Raw session entries remain distinct from generated TUI render lines. Prior full body inventories independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          162,
+          192
+        ]
+      ],
+      "purpose": "Bounded native command/Markdown/export route. Raw session entries remain distinct from generated TUI render lines. Prior full body inventories independent."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.d.ts",
+      "sha256": "9b2ef1e47796f5ac4739c9a3195d6266eafa81c0452477ef396effdf85b15acd",
+      "cli_nested_sha256": "9b2ef1e47796f5ac4739c9a3195d6266eafa81c0452477ef396effdf85b15acd",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.d.ts.map",
+      "sha256": "833bea9c664d73ce77a6e2fc6b6ee994fce7b47981eff5fa40f0d35c6c0362d6",
+      "cli_nested_sha256": "833bea9c664d73ce77a6e2fc6b6ee994fce7b47981eff5fa40f0d35c6c0362d6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.js.map",
+      "sha256": "396a2551fc68782a168f207b096aca12621b79ad2bf4758acb60309b8daac3af",
+      "cli_nested_sha256": "396a2551fc68782a168f207b096aca12621b79ad2bf4758acb60309b8daac3af",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.d.ts",
+      "sha256": "07adbe256c88b62d597b527d9f659a6b346a6a3ac7bfaea1a8e04c1d985581b2",
+      "cli_nested_sha256": "07adbe256c88b62d597b527d9f659a6b346a6a3ac7bfaea1a8e04c1d985581b2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.d.ts.map",
+      "sha256": "b5a082dbe019fc140c07f892be6dc7562fce31b9a2e289ff4b6a86c9c5c3b72f",
+      "cli_nested_sha256": "b5a082dbe019fc140c07f892be6dc7562fce31b9a2e289ff4b6a86c9c5c3b72f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.js.map",
+      "sha256": "10d2901f6414da2d41fe739344272a093a22c8f471ef0ac4a0ac8a69ad7525c1",
+      "cli_nested_sha256": "10d2901f6414da2d41fe739344272a093a22c8f471ef0ac4a0ac8a69ad7525c1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.d.ts",
+      "sha256": "76a3bda961e678e859bf8749d68b40a4ce20a08a701329e92758dedda79812f8",
+      "cli_nested_sha256": "76a3bda961e678e859bf8749d68b40a4ce20a08a701329e92758dedda79812f8",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.d.ts.map",
+      "sha256": "16e041aa6f656a6fe442a1f23576dd51906a2288d0382951f832893a3428c4ad",
+      "cli_nested_sha256": "16e041aa6f656a6fe442a1f23576dd51906a2288d0382951f832893a3428c4ad",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js.map",
+      "sha256": "54599fb626d3bdfda4faf5c4eaa5fa6a5352cf722e0cd04abf4b0039344811ab",
+      "cli_nested_sha256": "54599fb626d3bdfda4faf5c4eaa5fa6a5352cf722e0cd04abf4b0039344811ab",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.d.ts",
+      "sha256": "0009efe1311c980ba44176671584a736b9aaeb7a14b3e9c11b808cd6493d3e1f",
+      "cli_nested_sha256": "0009efe1311c980ba44176671584a736b9aaeb7a14b3e9c11b808cd6493d3e1f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.d.ts.map",
+      "sha256": "8068614d85f7c38f922f765bd83397c8f041f27f28da11c86002efd6f4106396",
+      "cli_nested_sha256": "8068614d85f7c38f922f765bd83397c8f041f27f28da11c86002efd6f4106396",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.js.map",
+      "sha256": "6d57bef794acc64b5d4b8402942ffd35b02cdfcc267230d163c55fd5d8fc7431",
+      "cli_nested_sha256": "6d57bef794acc64b5d4b8402942ffd35b02cdfcc267230d163c55fd5d8fc7431",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.d.ts",
+      "sha256": "5137901f13c82934749da9abff631e7cd6afaf987d8625def54d1d0f1d3e6e23",
+      "cli_nested_sha256": "5137901f13c82934749da9abff631e7cd6afaf987d8625def54d1d0f1d3e6e23",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.d.ts.map",
+      "sha256": "e25defe52d46e6039879a5b6b7d42c6c923e5100e8251420c0f0a205bb2b053b",
+      "cli_nested_sha256": "e25defe52d46e6039879a5b6b7d42c6c923e5100e8251420c0f0a205bb2b053b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.js.map",
+      "sha256": "8ea3b910aab8010ac70a00796eeab61afcb5998932cb0f20920d5f47bf9ad6d0",
+      "cli_nested_sha256": "8ea3b910aab8010ac70a00796eeab61afcb5998932cb0f20920d5f47bf9ad6d0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.d.ts",
+      "sha256": "56287c28fd2cb38d71188f42cb44637685aaf9a756837ae910c1304f430dc553",
+      "cli_nested_sha256": "56287c28fd2cb38d71188f42cb44637685aaf9a756837ae910c1304f430dc553",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.d.ts.map",
+      "sha256": "4fd6791f870647846b966f1700b678cd4a0551f394811a6ed03d657f09d68c4f",
+      "cli_nested_sha256": "4fd6791f870647846b966f1700b678cd4a0551f394811a6ed03d657f09d68c4f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.js.map",
+      "sha256": "95a142f4b48777e1556a8dc82063d058415c5322fa93b6c8f3405481503fa345",
+      "cli_nested_sha256": "95a142f4b48777e1556a8dc82063d058415c5322fa93b6c8f3405481503fa345",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.d.ts",
+      "sha256": "5de081a8879f096e0bb0f7efb1f4751bab259b1a77663be041938758d22e50c6",
+      "cli_nested_sha256": "5de081a8879f096e0bb0f7efb1f4751bab259b1a77663be041938758d22e50c6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.d.ts.map",
+      "sha256": "06e98ae8372363dec7c86e3fcbbb34ee8fb8e1e9dcab0b67594df11106cb049c",
+      "cli_nested_sha256": "06e98ae8372363dec7c86e3fcbbb34ee8fb8e1e9dcab0b67594df11106cb049c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.js.map",
+      "sha256": "73df1a7c00d1c06ed948377cd902d68b5d830018df0808de970302751d852acb",
+      "cli_nested_sha256": "73df1a7c00d1c06ed948377cd902d68b5d830018df0808de970302751d852acb",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.d.ts",
+      "sha256": "f40c60938829dac067e7d5229217781c44e235d0ace7b4e4f32f7564a07dea60",
+      "cli_nested_sha256": "f40c60938829dac067e7d5229217781c44e235d0ace7b4e4f32f7564a07dea60",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.d.ts.map",
+      "sha256": "dd01e2e23be97b25d0f140c742d249d9cf7df7e79b25eb467477c5864a9f3a3a",
+      "cli_nested_sha256": "dd01e2e23be97b25d0f140c742d249d9cf7df7e79b25eb467477c5864a9f3a3a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.js.map",
+      "sha256": "5e6ed1ef96aedc684b9897adbaa1616c31abad873166440ba51a535d2f4e0f08",
+      "cli_nested_sha256": "5e6ed1ef96aedc684b9897adbaa1616c31abad873166440ba51a535d2f4e0f08",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/markdown.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/editor.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/input.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/select-list.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/user-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.js.map"
+    }
+  ],
+  "external_dependency_resolution": [
+    {
+      "tree": "root",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "get-east-asian-width/index.js",
+      "package_json_sha256": "d263e50dd1a43aee9acda4d7f066e66b0d0bde1f2852ea6e7153750a5e3a3e52",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "node_modules/get-east-asian-width",
+      "exact_path_lock_record": {
+        "source": "node_modules/get-east-asian-width",
+        "version": "1.6.0",
+        "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+      },
+      "path_lock_disposition": "resolved package path/version matches this main-lock record"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "@earendil-works/pi-tui/node_modules/get-east-asian-width/index.js",
+      "package_json_sha256": "61f4c4194938a9dd225d1871d743e5266c63fb4faad133802579f21bbaead41a",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "packages/cli/node_modules/@earendil-works/pi-tui/node_modules/get-east-asian-width",
+      "exact_path_lock_record": null,
+      "path_lock_disposition": "shadowed pi-tui-local1.6.0 path has no exact main-lock entry; CLI top-level1.7.0 record is not the import resolution target"
+    }
+  ],
+  "counts": {
+    "rows": 4,
+    "proofs": 4,
+    "scopes": 8,
+    "external_boundaries": 10,
+    "excluded_occurrences": 1156,
+    "dispositioned_source_files": 8,
+    "string_template_occurrences": 1160,
+    "protected_regex_literals": 39,
+    "error_constructors": 0,
+    "catch_clauses": 4,
+    "throw_statements": 0,
+    "all_new_expressions": 18,
+    "protected_control_occurrences": 6,
+    "full_runtime_lines": 2396,
+    "runtime_source_bytes": 84190,
+    "nonruntime_assets": 24,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 8
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.tui-text-support.latex.1055.20",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js",
+      "line": 1055,
+      "column": 20,
+      "kind": "template-expression",
+      "english": "(${this.parseRequiredArgument()} choose ${this.parseRequiredArgument()})",
+      "evidence": "`(${this.parseRequiredArgument()} choose ${this.parseRequiredArgument()})`"
+    },
+    {
+      "item_id": "pi.tui-text-support.latex.1075.20",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js",
+      "line": 1075,
+      "column": 20,
+      "kind": "string-literal",
+      "english": " mod ",
+      "evidence": "\" mod \""
+    },
+    {
+      "item_id": "pi.tui-text-support.latex.1079.41",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js",
+      "line": 1079,
+      "column": 41,
+      "kind": "template-expression",
+      "english": " (mod ${value})",
+      "evidence": "` (mod ${value})`"
+    },
+    {
+      "item_id": "pi.tui-text-support.latex.1291.93",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js",
+      "line": 1291,
+      "column": 93,
+      "kind": "string-literal",
+      "english": " if ",
+      "evidence": "\" if \""
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/autocomplete.js",
+        "read_lines": [
+          1,
+          690
+        ],
+        "string_template_occurrences": 171,
+        "fixed_rows": 0,
+        "excluded_occurrences": 171,
+        "protected_regex_literals": 3,
+        "regex_census_sha256": "a274ffaf583183bb1dc3091c9a1ce2352cf32b372332713e308300552724f5eb",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 7,
+            "column": 25,
+            "callee": "Set",
+            "source": "new Set([\" \", \"\\t\", '\"', \"'\", \"=\"])"
+          },
+          {
+            "line": 8,
+            "column": 25,
+            "callee": "RegExp",
+            "source": "new RegExp(`${autocompleteBoundaryRegex.source}$`, \"u\")"
+          },
+          {
+            "line": 149,
+            "column": 18,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n        if (signal.aborted) {\n            resolve([]);\n            return;\n        }\n        const child = spawn(fdPath, args, {\n            stdio: [\"ignore\", \"pipe\", \"pipe\"],\n        });\n        let stdout = \"\";\n        let resolved = false;\n        const finish = (results) => {\n            if (resolved)\n                return;\n            resolved = true;\n            signal.removeEventListener(\"abort\", onAbort);\n            resolve(results);\n        };\n        const onAbort = () => {\n            if (child.exitCode === null) {\n                child.kill(\"SIGKILL\");\n            }\n        };\n        signal.addEventListener(\"abort\", onAbort, { once: true });\n        child.stdout.setEncoding(\"utf-8\");\n        child.stdout.on(\"data\", (chunk) => {\n            stdout += chunk;\n        });\n        child.on(\"error\", () => {\n            finish([]);\n        });\n        child.on(\"close\", (code) => {\n            if (signal.aborted || code !== 0 || !stdout) {\n                finish([]);\n                return;\n            }\n            const lines = stdout.trim().split(\"\\n\").filter(Boolean);\n            const results = [];\n            for (const line of lines) {\n                const displayLine = toDisplayPath(line);\n                const hasTrailingSeparator = displayLine.endsWith(\"/\");\n                const normalizedPath = hasTrailingSeparator ? displayLine.slice(0, -1) : displayLine;\n                if (normalizedPath === \".git\" || normalizedPath.startsWith(\".git/\") || normalizedPath.includes(\"/.git/\")) {\n                    continue;\n                }\n                results.push({\n                    path: displayLine,\n                    isDirectory: hasTrailingSeparator,\n                });\n            }\n            finish(results);\n        });\n    })"
+          },
+          {
+            "line": 246,
+            "column": 42,
+            "callee": "Set",
+            "source": "new Set(bareNameMatches)"
+          },
+          {
+            "line": 620,
+            "column": 31,
+            "callee": "Set",
+            "source": "new Set(baseDirEntries.map((entry) => entry.path))"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 430,
+            "column": 9,
+            "source": "catch {\n            return null;\n        }"
+          },
+          {
+            "line": 505,
+            "column": 21,
+            "source": "catch {\n                        // Broken symlink or permission error - treat as file\n                    }"
+          },
+          {
+            "line": 574,
+            "column": 9,
+            "source": "catch (_e) {\n            // Directory doesn't exist or not accessible\n            return [];\n        }"
+          },
+          {
+            "line": 675,
+            "column": 9,
+            "source": "catch {\n            return [];\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "child_process"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "fs"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "os"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "path"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./fuzzy.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 154,
+            "column": 23,
+            "callee": "spawn",
+            "arguments": [
+              "fdPath",
+              "args",
+              "{\n            stdio: [\"ignore\", \"pipe\", \"pipe\"],\n        }"
+            ]
+          },
+          {
+            "line": 168,
+            "column": 17,
+            "callee": "child.kill",
+            "arguments": [
+              "\"SIGKILL\""
+            ]
+          },
+          {
+            "line": 172,
+            "column": 9,
+            "callee": "child.stdout.setEncoding",
+            "arguments": [
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 173,
+            "column": 9,
+            "callee": "child.stdout.on",
+            "arguments": [
+              "\"data\"",
+              "(chunk) => {\n            stdout += chunk;\n        }"
+            ]
+          },
+          {
+            "line": 176,
+            "column": 9,
+            "callee": "child.on",
+            "arguments": [
+              "\"error\"",
+              "() => {\n            finish([]);\n        }"
+            ]
+          },
+          {
+            "line": 179,
+            "column": 9,
+            "callee": "child.on",
+            "arguments": [
+              "\"close\"",
+              "(code) => {\n            if (signal.aborted || code !== 0 || !stdout) {\n                finish([]);\n                return;\n            }\n            const lines = stdout.trim().split(\"\\n\").filter(Boolean);\n            const results = [];\n            for (const line of lines) {\n                const displayLine = toDisplayPath(line);\n                const hasTrailingSeparator = displayLine.endsWith(\"/\");\n                const normalizedPath = hasTrailingSeparator ? displayLine.slice(0, -1) : displayLine;\n                if (normalizedPath === \".git\" || normalizedPath.startsWith(\".git/\") || normalizedPath.includes(\"/.git/\")) {\n                    continue;\n                }\n                results.push({\n                    path: displayLine,\n                    isDirectory: hasTrailingSeparator,\n                });\n            }\n            finish(results);\n        }"
+            ]
+          },
+          {
+            "line": 245,
+            "column": 41,
+            "callee": "fuzzyFilter",
+            "arguments": [
+              "commandItems",
+              "prefix",
+              "(item) => item.name.startsWith(\"skill:\") ? item.name.slice(\"skill:\".length) : item.name"
+            ]
+          },
+          {
+            "line": 247,
+            "column": 45,
+            "callee": "fuzzyFilter",
+            "arguments": [
+              "commandItems.filter((item) => item.name.startsWith(\"skill:\") && !bareNameMatchSet.has(item))",
+              "prefix",
+              "(item) => item.name"
+            ]
+          },
+          {
+            "line": 269,
+            "column": 47,
+            "callee": "command.getArgumentCompletions",
+            "arguments": [
+              "argumentText"
+            ]
+          },
+          {
+            "line": 398,
+            "column": 39,
+            "callee": "homedir",
+            "arguments": []
+          },
+          {
+            "line": 403,
+            "column": 20,
+            "callee": "homedir",
+            "arguments": []
+          },
+          {
+            "line": 426,
+            "column": 18,
+            "callee": "statSync",
+            "arguments": [
+              "baseDir"
+            ]
+          },
+          {
+            "line": 492,
+            "column": 29,
+            "callee": "readdirSync",
+            "arguments": [
+              "searchDir",
+              "{ withFileTypes: true }"
+            ]
+          },
+          {
+            "line": 503,
+            "column": 39,
+            "callee": "statSync",
+            "arguments": [
+              "fullPath"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full690 lines read. No fixed human English caption/Error/throw. Slash command names, argument hints/descriptions and callback completions are external payload; nonforce slash command branch has no-space versus argument branch. Path/fs/fd outputs use quoted/@/directory syntax, not prose. Four catches suppress scoped stat, symlink stat, directory listing and fuzzy-lookup failures. Child error callback resolves[]; close rejects aborted/nonzero/empty stdout; stderr is piped, not forwarded here. Optional argument callback rejection and invalid API data outside catches can propagate; fd/OS/native implementations pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/fuzzy.js",
+        "read_lines": [
+          1,
+          111
+        ],
+        "string_template_occurrences": 7,
+        "fixed_rows": 0,
+        "excluded_occurrences": 7,
+        "protected_regex_literals": 4,
+        "regex_census_sha256": "89918ca033fbfe3109ee8bb460d626aad6ad42bf0b959c47e9c0fee66aef29d5",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full111 lines read. Query/text token matching/scoring and alternate alpha-numeric token order preserve caller items. Seven string/template nodes are empty or normalized caller-group composition; four regex patterns protected. No own error/catch/prose. getText callback/type/runtime failures remain external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/latex.js",
+        "read_lines": [
+          1,
+          1378
+        ],
+        "string_template_occurrences": 942,
+        "fixed_rows": 4,
+        "excluded_occurrences": 938,
+        "protected_regex_literals": 32,
+        "regex_census_sha256": "f8aab635262e95b10af227e62bc791ce569a9e9bd6428d3289464597bfb74b7b",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 228,
+            "column": 25,
+            "callee": "Set",
+            "source": "new Set([\n    \"arccos\",\n    \"arcsin\",\n    \"arctan\",\n    \"arg\",\n    \"cos\",\n    \"cosh\",\n    \"cot\",\n    \"coth\",\n    \"csc\",\n    \"deg\",\n    \"det\",\n    \"dim\",\n    \"exp\",\n    \"gcd\",\n    \"hom\",\n    \"inf\",\n    \"ker\",\n    \"lg\",\n    \"lim\",\n    \"liminf\",\n    \"limsup\",\n    \"ln\",\n    \"log\",\n    \"max\",\n    \"min\",\n    \"Pr\",\n    \"sec\",\n    \"sin\",\n    \"sinh\",\n    \"sup\",\n    \"tan\",\n    \"tanh\",\n])"
+          },
+          {
+            "line": 262,
+            "column": 25,
+            "callee": "Set",
+            "source": "new Set([\n    \"argmax\",\n    \"argmin\",\n    \"inf\",\n    \"injlim\",\n    \"lim\",\n    \"liminf\",\n    \"limsup\",\n    \"max\",\n    \"min\",\n    \"projlim\",\n    \"sup\",\n])"
+          },
+          {
+            "line": 275,
+            "column": 31,
+            "callee": "Set",
+            "source": "new Set([\n    \"bigcap\",\n    \"bigcup\",\n    \"bigodot\",\n    \"bigoplus\",\n    \"bigotimes\",\n    \"bigsqcup\",\n    \"biguplus\",\n    \"bigvee\",\n    \"bigwedge\",\n    \"coprod\",\n    \"int\",\n    \"iint\",\n    \"iiint\",\n    \"oint\",\n    \"prod\",\n    \"sum\",\n])"
+          },
+          {
+            "line": 293,
+            "column": 27,
+            "callee": "Set",
+            "source": "new Set([\n    \"Leftarrow\",\n    \"Leftrightarrow\",\n    \"Longleftarrow\",\n    \"Longleftrightarrow\",\n    \"Longrightarrow\",\n    \"Rightarrow\",\n    \"Join\",\n    \"Vdash\",\n    \"Vvdash\",\n    \"approx\",\n    \"asymp\",\n    \"bowtie\",\n    \"cong\",\n    \"dashv\",\n    \"fullouterjoin\",\n    \"doteq\",\n    \"downarrow\",\n    \"equiv\",\n    \"ge\",\n    \"geq\",\n    \"geqslant\",\n    \"gets\",\n    \"gg\",\n    \"hookleftarrow\",\n    \"hookrightarrow\",\n    \"iff\",\n    \"implies\",\n    \"in\",\n    \"leadsto\",\n    \"le\",\n    \"leftarrow\",\n    \"leftharpoondown\",\n    \"leftharpoonup\",\n    \"leftrightarrow\",\n    \"leftrightharpoons\",\n    \"leftouterjoin\",\n    \"leq\",\n    \"leqslant\",\n    \"ll\",\n    \"longleftarrow\",\n    \"longleftrightarrow\",\n    \"longmapsto\",\n    \"longrightarrow\",\n    \"ltimes\",\n    \"mapsto\",\n    \"mid\",\n    \"models\",\n    \"ne\",\n    \"nearrow\",\n    \"neq\",\n    \"ni\",\n    \"notin\",\n    \"nvdash\",\n    \"nvDash\",\n    \"nwarrow\",\n    \"parallel\",\n    \"perp\",\n    \"prec\",\n    \"preceq\",\n    \"propto\",\n    \"rightharpoondown\",\n    \"rightharpoonup\",\n    \"rightleftharpoons\",\n    \"rightouterjoin\",\n    \"rightarrow\",\n    \"rightsquigarrow\",\n    \"rtimes\",\n    \"searrow\",\n    \"sim\",\n    \"simeq\",\n    \"sqsubset\",\n    \"sqsubseteq\",\n    \"sqsupset\",\n    \"sqsupseteq\",\n    \"subset\",\n    \"subseteq\",\n    \"succ\",\n    \"succeq\",\n    \"supset\",\n    \"supseteq\",\n    \"swarrow\",\n    \"to\",\n    \"triangleleft\",\n    \"triangleright\",\n    \"twoheadleftarrow\",\n    \"twoheadrightarrow\",\n    \"uparrow\",\n    \"vdash\",\n])"
+          },
+          {
+            "line": 500,
+            "column": 26,
+            "callee": "Set",
+            "source": "new Set([\n    \",\",\n    \":\",\n    \";\",\n    \" \",\n    \">\",\n    \"enspace\",\n    \"enskip\",\n    \"medspace\",\n    \"quad\",\n    \"qquad\",\n    \"thickspace\",\n    \"thinspace\",\n])"
+          },
+          {
+            "line": 514,
+            "column": 35,
+            "callee": "Set",
+            "source": "new Set([\"!\", \"negmedspace\", \"negthickspace\", \"negthinspace\"])"
+          },
+          {
+            "line": 516,
+            "column": 30,
+            "callee": "Set",
+            "source": "new Set([\"bf\", \"cal\", \"it\", \"rm\", \"sf\", \"sl\", \"tt\"])"
+          },
+          {
+            "line": 517,
+            "column": 26,
+            "callee": "Set",
+            "source": "new Set([\n    \"displaystyle\",\n    \"limits\",\n    \"nolimits\",\n    \"scriptstyle\",\n    \"scriptscriptstyle\",\n    \"textstyle\",\n])"
+          },
+          {
+            "line": 525,
+            "column": 23,
+            "callee": "Set",
+            "source": "new Set([\n    \"big\",\n    \"Big\",\n    \"bigg\",\n    \"Bigg\",\n    \"bigl\",\n    \"Bigl\",\n    \"biggl\",\n    \"Biggl\",\n    \"bigr\",\n    \"Bigr\",\n    \"biggr\",\n    \"Biggr\",\n])"
+          },
+          {
+            "line": 539,
+            "column": 24,
+            "callee": "Set",
+            "source": "new Set([\n    \"emph\",\n    \"mathcal\",\n    \"mathbf\",\n    \"mathfrak\",\n    \"mathit\",\n    \"mathrm\",\n    \"mathnormal\",\n    \"mathscr\",\n    \"mathsf\",\n    \"mathtt\",\n    \"mathup\",\n    \"mbox\",\n    \"overbrace\",\n    \"pmb\",\n    \"smash\",\n    \"substack\",\n    \"text\",\n    \"textbf\",\n    \"textit\",\n    \"textmd\",\n    \"textnormal\",\n    \"textrm\",\n    \"textsc\",\n    \"textsf\",\n    \"textsl\",\n    \"texttt\",\n    \"textup\",\n    \"underbrace\",\n    \"bm\",\n    \"boldsymbol\",\n])"
+          },
+          {
+            "line": 1349,
+            "column": 26,
+            "callee": "LatexParser",
+            "source": "new LatexParser(source, this.layoutNodes, this.display && stackFractions)"
+          },
+          {
+            "line": 1363,
+            "column": 22,
+            "callee": "LatexParser",
+            "source": "new LatexParser(source, layoutNodes, options.display === true)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 653,
+            "column": 41,
+            "callee": "visibleWidth",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 704,
+            "column": 54,
+            "callee": "visibleWidth",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 722,
+            "column": 47,
+            "callee": "visibleWidth",
+            "arguments": [
+              "node.operator"
+            ]
+          },
+          {
+            "line": 722,
+            "column": 107,
+            "callee": "visibleWidth",
+            "arguments": [
+              "node.lower"
+            ]
+          },
+          {
+            "line": 722,
+            "column": 164,
+            "callee": "visibleWidth",
+            "arguments": [
+              "node.upper"
+            ]
+          },
+          {
+            "line": 752,
+            "column": 71,
+            "callee": "visibleWidth",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 766,
+            "column": 50,
+            "callee": "visibleWidth",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 776,
+            "column": 59,
+            "callee": "visibleWidth",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 885,
+            "column": 33,
+            "callee": "this.parseRequiredArgument",
+            "arguments": [
+              "false"
+            ]
+          },
+          {
+            "line": 989,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": [
+              "false"
+            ]
+          },
+          {
+            "line": 1002,
+            "column": 20,
+            "callee": "this.parseOperator",
+            "arguments": [
+              "command",
+              "\"bracket\"",
+              "true",
+              "true"
+            ]
+          },
+          {
+            "line": 1007,
+            "column": 24,
+            "callee": "this.parseOperator",
+            "arguments": [
+              "symbol",
+              "\"script\"",
+              "true"
+            ]
+          },
+          {
+            "line": 1025,
+            "column": 31,
+            "callee": "this.parseRequiredArgument",
+            "arguments": [
+              "!shouldStack"
+            ]
+          },
+          {
+            "line": 1026,
+            "column": 33,
+            "callee": "this.parseRequiredArgument",
+            "arguments": [
+              "!shouldStack"
+            ]
+          },
+          {
+            "line": 1039,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1052,
+            "column": 24,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1055,
+            "column": 24,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1055,
+            "column": 63,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1059,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1063,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1071,
+            "column": 46,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1072,
+            "column": 20,
+            "callee": "this.parseOperator",
+            "arguments": [
+              "operator",
+              "\"bracket\"",
+              "starred",
+              "true"
+            ]
+          },
+          {
+            "line": 1078,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1082,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1083,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1087,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1088,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1092,
+            "column": 27,
+            "callee": "this.parseRequiredArgument",
+            "arguments": []
+          },
+          {
+            "line": 1128,
+            "column": 43,
+            "callee": "this.parseRequiredArgument",
+            "arguments": [
+              "false"
+            ]
+          },
+          {
+            "line": 1195,
+            "column": 16,
+            "callee": "this.renderNested",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 1244,
+            "column": 20,
+            "callee": "this.renderNested",
+            "arguments": [
+              "body"
+            ]
+          },
+          {
+            "line": 1265,
+            "column": 24,
+            "callee": "this.renderNested",
+            "arguments": [
+              "source"
+            ]
+          },
+          {
+            "line": 1282,
+            "column": 56,
+            "callee": "this.renderNested",
+            "arguments": [
+              "cell",
+              "false"
+            ]
+          },
+          {
+            "line": 1284,
+            "column": 61,
+            "callee": "visibleWidth",
+            "arguments": [
+              "(row[0] ?? \"\").replace(/,\\s*$/, \"\")"
+            ]
+          },
+          {
+            "line": 1292,
+            "column": 67,
+            "callee": "visibleWidth",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 1311,
+            "column": 56,
+            "callee": "this.renderNested",
+            "arguments": [
+              "cell",
+              "false"
+            ]
+          },
+          {
+            "line": 1314,
+            "column": 116,
+            "callee": "visibleWidth",
+            "arguments": [
+              "row[column] ?? \"\""
+            ]
+          },
+          {
+            "line": 1317,
+            "column": 95,
+            "callee": "visibleWidth",
+            "arguments": [
+              "cell"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 515,
+            "column": 24,
+            "kind": "string-literal",
+            "text": "\u0000"
+          },
+          {
+            "line": 631,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "󰀄"
+          },
+          {
+            "line": 632,
+            "column": 28,
+            "kind": "string-literal",
+            "text": "󰀅"
+          },
+          {
+            "line": 647,
+            "column": 29,
+            "kind": "string-literal",
+            "text": "󰀀"
+          },
+          {
+            "line": 648,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "󰀁"
+          },
+          {
+            "line": 651,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "󰀂"
+          }
+        ],
+        "review": "Full1378 lines read, including every math table and parser/layout branch. Four generated choose/if/mod fragments have positive display conditions. Symbol/glyph tables, canonical command/operator/environment IDs, grammar regex and layout/private-use/NUL markers are protected technical math/rendering identities, not English captions. Unknown/unbalanced/unsupported syntax flags supported=false and public renderLatex returns undefined; normal Markdown falls back to raw source. No own Error/throw/catch. Parser/width/runtime/stack failures remain external, not converted to a local headline."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/word-navigation.js",
+        "read_lines": [
+          1,
+          96
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 33,
+            "column": 46,
+            "callee": "RegExp",
+            "source": "new RegExp(PUNCTUATION_REGEX, \"g\")"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 15,
+            "column": 38,
+            "callee": "segmentFn",
+            "arguments": [
+              "textBeforeCursor"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 73,
+            "callee": "wordSegmenter.segment",
+            "arguments": [
+              "textBeforeCursor"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 34,
+            "callee": "segmentFn",
+            "arguments": [
+              "textAfterCursor"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 63,
+            "callee": "wordSegmenter.segment",
+            "arguments": [
+              "textAfterCursor"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full96 lines read. Uses default Intl word segmenter or optional caller segment/isAtomicSegment callbacks to compute cursor positions, including whitespace and ASCII punctuation boundaries. Six literals are empty fallback/regex flag/import; no local human label/error/throw/catch. Cursor movement does not itself paint new text; input/editor callers preserve/render their state. Intl/callback/type errors remain external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/kill-ring.js",
+        "read_lines": [
+          1,
+          44
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full44 lines read. No string/template/regex/error/catch/new expressions. push accumulates/prepends/appends only caller deleted text, peek/rotate returns raw ring entries; Editor/Input yank restores payload without adding prose. No-prose mechanism, not an independent text producer."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/undo-stack.js",
+        "read_lines": [
+          1,
+          25
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 11,
+            "column": 25,
+            "callee": "structuredClone",
+            "arguments": [
+              "state"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full25 lines read. No string/template/regex/error/catch/new expressions. structuredClone snapshots arbitrary caller state; pop/clear returns/removes that data without captions. Native structuredClone DataCloneError may propagate; not locally authored Error text and not assumed impossible for exported API callers."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/editor-component.js",
+        "read_lines": [
+          1,
+          2
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": null,
+            "source": "export {};"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full2 lines read. Empty runtime export plus source-map comment, no runtime literal/output/diagnostic. Declaration/interface and map assets separately metadata-censused, not promoted to runtime producers."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.js",
+        "read_lines": [
+          1,
+          50
+        ],
+        "string_template_occurrences": 34,
+        "fixed_rows": 0,
+        "excluded_occurrences": 34,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "marked",
+            "source": "export { Marked } from \"marked\";"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./autocomplete.js",
+            "source": "export { CombinedAutocompleteProvider, } from \"./autocomplete.js\";"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./colors.js",
+            "source": "export { backgroundAnsi, colorToHex, colorToOkhsl, colorToOklch, colorToRgb, foregroundAnsi, indexedColor, mixColors, okhslColor, oklchColor, parseColor, rgbColor, styleText, styleTextWithAnsi, } from \"./colors.js\";"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./components/box.js",
+            "source": "export { Box } from \"./components/box.js\";"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./components/cancellable-loader.js",
+            "source": "export { CancellableLoader } from \"./components/cancellable-loader.js\";"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "./components/editor.js",
+            "source": "export { Editor } from \"./components/editor.js\";"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./components/h-stack.js",
+            "source": "export { HStack } from \"./components/h-stack.js\";"
+          },
+          {
+            "line": 12,
+            "column": 1,
+            "specifier": "./components/image.js",
+            "source": "export { Image, setImageTranscoder, } from \"./components/image.js\";"
+          },
+          {
+            "line": 13,
+            "column": 1,
+            "specifier": "./components/input.js",
+            "source": "export { Input } from \"./components/input.js\";"
+          },
+          {
+            "line": 14,
+            "column": 1,
+            "specifier": "./components/loader.js",
+            "source": "export { Loader } from \"./components/loader.js\";"
+          },
+          {
+            "line": 15,
+            "column": 1,
+            "specifier": "./components/markdown.js",
+            "source": "export { Markdown } from \"./components/markdown.js\";"
+          },
+          {
+            "line": 16,
+            "column": 1,
+            "specifier": "./components/mouse-region.js",
+            "source": "export { MouseRegion } from \"./components/mouse-region.js\";"
+          },
+          {
+            "line": 17,
+            "column": 1,
+            "specifier": "./components/scroll-view.js",
+            "source": "export { ScrollView, } from \"./components/scroll-view.js\";"
+          },
+          {
+            "line": 18,
+            "column": 1,
+            "specifier": "./components/select-list.js",
+            "source": "export { SelectList, } from \"./components/select-list.js\";"
+          },
+          {
+            "line": 19,
+            "column": 1,
+            "specifier": "./components/settings-list.js",
+            "source": "export { SettingsList } from \"./components/settings-list.js\";"
+          },
+          {
+            "line": 20,
+            "column": 1,
+            "specifier": "./components/spacer.js",
+            "source": "export { Spacer } from \"./components/spacer.js\";"
+          },
+          {
+            "line": 21,
+            "column": 1,
+            "specifier": "./components/text.js",
+            "source": "export { Text } from \"./components/text.js\";"
+          },
+          {
+            "line": 22,
+            "column": 1,
+            "specifier": "./components/truncated-text.js",
+            "source": "export { TruncatedText } from \"./components/truncated-text.js\";"
+          },
+          {
+            "line": 23,
+            "column": 1,
+            "specifier": "./components/v-stack.js",
+            "source": "export { VStack, } from \"./components/v-stack.js\";"
+          },
+          {
+            "line": 25,
+            "column": 1,
+            "specifier": "./fuzzy.js",
+            "source": "export { fuzzyFilter, fuzzyMatch } from \"./fuzzy.js\";"
+          },
+          {
+            "line": 27,
+            "column": 1,
+            "specifier": "./keybindings.js",
+            "source": "export { getKeybindings, KeybindingsManager, setKeybindings, TUI_KEYBINDINGS, } from \"./keybindings.js\";"
+          },
+          {
+            "line": 29,
+            "column": 1,
+            "specifier": "./keys.js",
+            "source": "export { decodeKittyPrintable, isKeyRelease, isKeyRepeat, isKittyProtocolActive, Key, matchesKey, parseKey, setKittyProtocolActive, } from \"./keys.js\";"
+          },
+          {
+            "line": 31,
+            "column": 1,
+            "specifier": "./latex.js",
+            "source": "export { renderLatex } from \"./latex.js\";"
+          },
+          {
+            "line": 33,
+            "column": 1,
+            "specifier": "./native-platform.js",
+            "source": "export { getNativeClipboard } from \"./native-platform.js\";"
+          },
+          {
+            "line": 34,
+            "column": 1,
+            "specifier": "./oklab.js",
+            "source": "export { oklabToOkhslLightness } from \"./oklab.js\";"
+          },
+          {
+            "line": 36,
+            "column": 1,
+            "specifier": "./program-status.js",
+            "source": "export { formatProgramStatus } from \"./program-status.js\";"
+          },
+          {
+            "line": 38,
+            "column": 1,
+            "specifier": "./stdin-buffer.js",
+            "source": "export { StdinBuffer } from \"./stdin-buffer.js\";"
+          },
+          {
+            "line": 40,
+            "column": 1,
+            "specifier": "./terminal.js",
+            "source": "export { isAppleTerminalSession, ProcessTerminal } from \"./terminal.js\";"
+          },
+          {
+            "line": 42,
+            "column": 1,
+            "specifier": "./terminal-colors.js",
+            "source": "export { parseTerminalColorSchemeReport, } from \"./terminal-colors.js\";"
+          },
+          {
+            "line": 44,
+            "column": 1,
+            "specifier": "./terminal-image.js",
+            "source": "export { allocateImageId, calculateImageRows, deleteAllKittyImages, deleteKittyImage, detectCapabilities, encodeITerm2, encodeKitty, getCapabilities, getCellDimensions, getGifDimensions, getImageDimensions, getJpegDimensions, getPngDimensions, getTerminalColorMode, getWebpDimensions, hyperlink, imageFallback, renderImage, resetCapabilitiesCache, setCapabilities, setCapabilityOverrides, setCellDimensions, } from \"./terminal-image.js\";"
+          },
+          {
+            "line": 45,
+            "column": 1,
+            "specifier": "./tui.js",
+            "source": "export { Container, CURSOR_MARKER, compositeTuiLine, isFocusable, isViewportTUI, renderFakeCursor, } from \"./tui.js\";"
+          },
+          {
+            "line": 46,
+            "column": 1,
+            "specifier": "./tui-alt-screen.js",
+            "source": "export { TuiAltScreen } from \"./tui-alt-screen.js\";"
+          },
+          {
+            "line": 47,
+            "column": 1,
+            "specifier": "./tui-main-screen.js",
+            "source": "export { TuiMainScreen } from \"./tui-main-screen.js\";"
+          },
+          {
+            "line": 49,
+            "column": 1,
+            "specifier": "./utils.js",
+            "source": "export { getOsc8LinkAtColumn, sliceByColumn, stripTerminalSequences, truncateToWidth, visibleWidth, wrapTextWithAnsi, } from \"./utils.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full50 lines read. Barrel exports only34 module specifier strings, including external marked and internal native/TUI/render helpers; no local rendering/prose/Error. Re-export initialization can transitively fail/emit dependency diagnostics, not closed by barrel read or support hashes. Full package graph census remains separate."
+      }
+    ],
+    "method": "All eight local runtime bodies fully read without evaluation, including complete LaTeX tables/parser/layout and autocomplete callbacks/catches. Exact string/template partition plus regex/new/Error/throw/catch/import/re-export/selected output/native callback/nonprinting-marker census. Positive conditional generated math words distinct from raw payload/math code identities. No product/native/module/render/parser/model/network/child execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-tui",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/autocomplete.js",
+      "dist/editor-component.js",
+      "dist/fuzzy.js",
+      "dist/index.js",
+      "dist/kill-ring.js",
+      "dist/latex.js",
+      "dist/undo-stack.js",
+      "dist/word-navigation.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/autocomplete.d.ts",
+      "dist/autocomplete.d.ts.map",
+      "dist/autocomplete.js.map",
+      "dist/editor-component.d.ts",
+      "dist/editor-component.d.ts.map",
+      "dist/editor-component.js.map",
+      "dist/fuzzy.d.ts",
+      "dist/fuzzy.d.ts.map",
+      "dist/fuzzy.js.map",
+      "dist/index.d.ts",
+      "dist/index.d.ts.map",
+      "dist/index.js.map",
+      "dist/kill-ring.d.ts",
+      "dist/kill-ring.d.ts.map",
+      "dist/kill-ring.js.map",
+      "dist/latex.d.ts",
+      "dist/latex.d.ts.map",
+      "dist/latex.js.map",
+      "dist/undo-stack.d.ts",
+      "dist/undo-stack.d.ts.map",
+      "dist/undo-stack.js.map",
+      "dist/word-navigation.d.ts",
+      "dist/word-navigation.d.ts.map",
+      "dist/word-navigation.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "external:fd-node-fs-path-os-child-process-stream-structuredClone-intl-regexp",
+      "status": "external-native-or-callback-implementation-pending",
+      "reason": "Source guards/suppression/classification do not qualify fd/OS/runtime message bodies, native stdout/stderr side effects or arbitrary callback failures."
+    },
+    {
+      "source": "npm:get-east-asian-width@1.6.0/index.js",
+      "status": "metadata-resolution-only-pending",
+      "reason": "Actual1.6.0 both trees; nested shadowed path has no main-lock record. No archive/body closure or1.7 equivalence."
+    },
+    {
+      "source": "npm:marked@18.0.11/lib/marked.esm.js",
+      "status": "runtime-external-parser-pending",
+      "reason": "Index re-export/Markdown consumer import is bounded only. Export-viewer bundled marked minifier was separately reviewed but does not qualify installed runtime entry package."
+    },
+    {
+      "source": "npm:marked-cjk-friendly@0.1.2",
+      "status": "runtime-external-parser-extension-pending",
+      "reason": "Bounded Markdown consumer only, runtime parser module not evaluated or fully read here."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native",
+      "status": "native-build-addon-source-binary-graph-pending",
+      "reason": "Public barrel/native helper graph remains separate; no addons loaded."
+    },
+    {
+      "source": "repo:packages/cli/src/pi-prose-wrapping.ts",
+      "status": "bounded-reuse-install-call-route-only",
+      "reason": "Only relevant resolver/options/latex layout and original-first wrapper/startup route read. Full owned prose producer text belongs to parent review; no whole file closure inferred."
+    },
+    {
+      "source": "external:optional-autocomplete-renderer-api-consumers",
+      "status": "caller-payload-and-consumer-activation-pending",
+      "reason": "Optional wrappers/getArgumentCompletions/runtime/custom renderers can replace or display arbitrary payload. Native/JSON/RPC/export conditions not generalized to all callers."
+    }
+  ],
+  "limits": [
+    "Eight finite TUI runtime bodies locally closed, not entire Pi dependency graph; canonical runtime census proposal separately prepared read-only after this unit freezes.",
+    "Four generated choose/if/mod display fragments are conditional on successful recognized enabled math rendering; pending/disabled/malformed math preserves raw source. Templates preserve exact source interpolation spelling; normal string values are TypeScript-decoded and exact exclusions JSON-encoded.",
+    "Greek/symbol/operator/script/accent/environment/command identifiers and mathematical notation remain protected even when painted. Arbitrary math text/conditions/operator names retain producer boundaries.",
+    "Jouzu prose wrapping calls native renderToken first and may reuse renderLatex for inline literal layout; generated TUI output is distinct from persisted raw session/HTML data. No model-only/HTML/RPC promotion from rendering alone.",
+    "Autocomplete inserts no local English prose. Names/hints/descriptions/files/command completions are payload, with exact no-space/argument/force/@/path/current-request/list-width conditions and guarded errors. fd stderr is not forwarded by this body, optional callback/native errors outside catches remain external.",
+    "No own Error/throw source definitions in these eight modules; native errors may propagate where not caught. Empty runtime editor-component and no-string kill/undo sources explicitly dispositioned, not hidden by an empty fixed table.",
+    "EAW1.6 exact resolution limitation preserved without claiming CLI-top-level1.7 lock qualifies shadowed1.6 package. Other installed runtime parser/native package bodies pending despite barrel/support metadata hashes.",
+    "Only source/JSON/metadata/archive reads and own audit artifact writes performed; no audited module/render/parser/native/terminal/browser/fd/child/model/state operations executed."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-tui-text-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-tui-text-support.csv": "568998d39b8f4a6c17812baea9a2fb9c4816ea15de3eb6a7e9cecbb3a44c640e",
+    "pi-tui-text-support-boundaries.csv": "6000bbfcfee91c11218343cbe2c1a9ebb65d75b89949b8dcf66ead5305d2b12f",
+    "pi-tui-text-support-scope.csv": "6abd9d23a65d0ef01425da770156f149b4d919b761663899af6121339c48c805",
+    "pi-tui-text-support-exclusions.csv": "4373bbf9073dd6c7070ca0c1b5dd448300aa7a923967e193ee093e15f75552f8"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/user-message.js",
+            "archive_sha256": "a333be7aee4aa9e767644c5f3783f55352a78816316abd3301b7b98e985e53ab",
+            "root_sha256": "a333be7aee4aa9e767644c5f3783f55352a78816316abd3301b7b98e985e53ab",
+            "cli_nested_sha256": "a333be7aee4aa9e767644c5f3783f55352a78816316abd3301b7b98e985e53ab",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/assistant-message.js",
+            "archive_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "root_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/autocomplete.js",
+            "archive_sha256": "bf0d3ffea23e7f214d2fe0a3dc7e3ee789b4090f84f231e32e3b96b5e0dc78f8",
+            "root_sha256": "bf0d3ffea23e7f214d2fe0a3dc7e3ee789b4090f84f231e32e3b96b5e0dc78f8",
+            "cli_nested_sha256": "bf0d3ffea23e7f214d2fe0a3dc7e3ee789b4090f84f231e32e3b96b5e0dc78f8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/fuzzy.js",
+            "archive_sha256": "f873c8e2d808d215e57942ac325b9e635bde9632526d25b56b4eef253362b91b",
+            "root_sha256": "f873c8e2d808d215e57942ac325b9e635bde9632526d25b56b4eef253362b91b",
+            "cli_nested_sha256": "f873c8e2d808d215e57942ac325b9e635bde9632526d25b56b4eef253362b91b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/latex.js",
+            "archive_sha256": "9a2055efaee483b038b2f0f663588eb4128153bedaa3c8c314248da00807c5bf",
+            "root_sha256": "9a2055efaee483b038b2f0f663588eb4128153bedaa3c8c314248da00807c5bf",
+            "cli_nested_sha256": "9a2055efaee483b038b2f0f663588eb4128153bedaa3c8c314248da00807c5bf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/word-navigation.js",
+            "archive_sha256": "72618be2d05d6c20d9987d0d74de487335056fa0a00a145687f6106a6ae6b9d0",
+            "root_sha256": "72618be2d05d6c20d9987d0d74de487335056fa0a00a145687f6106a6ae6b9d0",
+            "cli_nested_sha256": "72618be2d05d6c20d9987d0d74de487335056fa0a00a145687f6106a6ae6b9d0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/kill-ring.js",
+            "archive_sha256": "52212d532f2c5b85ed8977b0f4431f43998c6dc7746d26efc81eb7975b119122",
+            "root_sha256": "52212d532f2c5b85ed8977b0f4431f43998c6dc7746d26efc81eb7975b119122",
+            "cli_nested_sha256": "52212d532f2c5b85ed8977b0f4431f43998c6dc7746d26efc81eb7975b119122",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/undo-stack.js",
+            "archive_sha256": "7fbb318db3521aa1fa6804ffe50245c18d9e9f210a85a48e175fae6a629259cb",
+            "root_sha256": "7fbb318db3521aa1fa6804ffe50245c18d9e9f210a85a48e175fae6a629259cb",
+            "cli_nested_sha256": "7fbb318db3521aa1fa6804ffe50245c18d9e9f210a85a48e175fae6a629259cb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/editor-component.js",
+            "archive_sha256": "c7de5310f2b75b7c4be8897662a585d25544a6d929ade3626b8ef5ea6f446a3e",
+            "root_sha256": "c7de5310f2b75b7c4be8897662a585d25544a6d929ade3626b8ef5ea6f446a3e",
+            "cli_nested_sha256": "c7de5310f2b75b7c4be8897662a585d25544a6d929ade3626b8ef5ea6f446a3e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+            "root_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+            "cli_nested_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/markdown.js",
+            "archive_sha256": "d28861821607aefa7d8399507595fbe2f23b602bfa7f215986f3f8774762fe71",
+            "root_sha256": "d28861821607aefa7d8399507595fbe2f23b602bfa7f215986f3f8774762fe71",
+            "cli_nested_sha256": "d28861821607aefa7d8399507595fbe2f23b602bfa7f215986f3f8774762fe71",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/editor.js",
+            "archive_sha256": "838ebf6af4d1b0161959a0914c59aa65b0537b099fb358402356a51894db8075",
+            "root_sha256": "838ebf6af4d1b0161959a0914c59aa65b0537b099fb358402356a51894db8075",
+            "cli_nested_sha256": "838ebf6af4d1b0161959a0914c59aa65b0537b099fb358402356a51894db8075",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/input.js",
+            "archive_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+            "root_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+            "cli_nested_sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/select-list.js",
+            "archive_sha256": "4c8fe79d053ce465454c55bbeb7e61d84ea875f0b9bce8c6e238f3d7721c7f42",
+            "root_sha256": "4c8fe79d053ce465454c55bbeb7e61d84ea875f0b9bce8c6e238f3d7721c7f42",
+            "cli_nested_sha256": "4c8fe79d053ce465454c55bbeb7e61d84ea875f0b9bce8c6e238f3d7721c7f42",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/autocomplete.d.ts",
+            "archive_sha256": "9b2ef1e47796f5ac4739c9a3195d6266eafa81c0452477ef396effdf85b15acd",
+            "root_sha256": "9b2ef1e47796f5ac4739c9a3195d6266eafa81c0452477ef396effdf85b15acd",
+            "cli_nested_sha256": "9b2ef1e47796f5ac4739c9a3195d6266eafa81c0452477ef396effdf85b15acd",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/autocomplete.d.ts.map",
+            "archive_sha256": "833bea9c664d73ce77a6e2fc6b6ee994fce7b47981eff5fa40f0d35c6c0362d6",
+            "root_sha256": "833bea9c664d73ce77a6e2fc6b6ee994fce7b47981eff5fa40f0d35c6c0362d6",
+            "cli_nested_sha256": "833bea9c664d73ce77a6e2fc6b6ee994fce7b47981eff5fa40f0d35c6c0362d6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/autocomplete.js.map",
+            "archive_sha256": "396a2551fc68782a168f207b096aca12621b79ad2bf4758acb60309b8daac3af",
+            "root_sha256": "396a2551fc68782a168f207b096aca12621b79ad2bf4758acb60309b8daac3af",
+            "cli_nested_sha256": "396a2551fc68782a168f207b096aca12621b79ad2bf4758acb60309b8daac3af",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/fuzzy.d.ts",
+            "archive_sha256": "07adbe256c88b62d597b527d9f659a6b346a6a3ac7bfaea1a8e04c1d985581b2",
+            "root_sha256": "07adbe256c88b62d597b527d9f659a6b346a6a3ac7bfaea1a8e04c1d985581b2",
+            "cli_nested_sha256": "07adbe256c88b62d597b527d9f659a6b346a6a3ac7bfaea1a8e04c1d985581b2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/fuzzy.d.ts.map",
+            "archive_sha256": "b5a082dbe019fc140c07f892be6dc7562fce31b9a2e289ff4b6a86c9c5c3b72f",
+            "root_sha256": "b5a082dbe019fc140c07f892be6dc7562fce31b9a2e289ff4b6a86c9c5c3b72f",
+            "cli_nested_sha256": "b5a082dbe019fc140c07f892be6dc7562fce31b9a2e289ff4b6a86c9c5c3b72f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/fuzzy.js.map",
+            "archive_sha256": "10d2901f6414da2d41fe739344272a093a22c8f471ef0ac4a0ac8a69ad7525c1",
+            "root_sha256": "10d2901f6414da2d41fe739344272a093a22c8f471ef0ac4a0ac8a69ad7525c1",
+            "cli_nested_sha256": "10d2901f6414da2d41fe739344272a093a22c8f471ef0ac4a0ac8a69ad7525c1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/latex.d.ts",
+            "archive_sha256": "76a3bda961e678e859bf8749d68b40a4ce20a08a701329e92758dedda79812f8",
+            "root_sha256": "76a3bda961e678e859bf8749d68b40a4ce20a08a701329e92758dedda79812f8",
+            "cli_nested_sha256": "76a3bda961e678e859bf8749d68b40a4ce20a08a701329e92758dedda79812f8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/latex.d.ts.map",
+            "archive_sha256": "16e041aa6f656a6fe442a1f23576dd51906a2288d0382951f832893a3428c4ad",
+            "root_sha256": "16e041aa6f656a6fe442a1f23576dd51906a2288d0382951f832893a3428c4ad",
+            "cli_nested_sha256": "16e041aa6f656a6fe442a1f23576dd51906a2288d0382951f832893a3428c4ad",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/latex.js.map",
+            "archive_sha256": "54599fb626d3bdfda4faf5c4eaa5fa6a5352cf722e0cd04abf4b0039344811ab",
+            "root_sha256": "54599fb626d3bdfda4faf5c4eaa5fa6a5352cf722e0cd04abf4b0039344811ab",
+            "cli_nested_sha256": "54599fb626d3bdfda4faf5c4eaa5fa6a5352cf722e0cd04abf4b0039344811ab",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/word-navigation.d.ts",
+            "archive_sha256": "0009efe1311c980ba44176671584a736b9aaeb7a14b3e9c11b808cd6493d3e1f",
+            "root_sha256": "0009efe1311c980ba44176671584a736b9aaeb7a14b3e9c11b808cd6493d3e1f",
+            "cli_nested_sha256": "0009efe1311c980ba44176671584a736b9aaeb7a14b3e9c11b808cd6493d3e1f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/word-navigation.d.ts.map",
+            "archive_sha256": "8068614d85f7c38f922f765bd83397c8f041f27f28da11c86002efd6f4106396",
+            "root_sha256": "8068614d85f7c38f922f765bd83397c8f041f27f28da11c86002efd6f4106396",
+            "cli_nested_sha256": "8068614d85f7c38f922f765bd83397c8f041f27f28da11c86002efd6f4106396",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/word-navigation.js.map",
+            "archive_sha256": "6d57bef794acc64b5d4b8402942ffd35b02cdfcc267230d163c55fd5d8fc7431",
+            "root_sha256": "6d57bef794acc64b5d4b8402942ffd35b02cdfcc267230d163c55fd5d8fc7431",
+            "cli_nested_sha256": "6d57bef794acc64b5d4b8402942ffd35b02cdfcc267230d163c55fd5d8fc7431",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/kill-ring.d.ts",
+            "archive_sha256": "5137901f13c82934749da9abff631e7cd6afaf987d8625def54d1d0f1d3e6e23",
+            "root_sha256": "5137901f13c82934749da9abff631e7cd6afaf987d8625def54d1d0f1d3e6e23",
+            "cli_nested_sha256": "5137901f13c82934749da9abff631e7cd6afaf987d8625def54d1d0f1d3e6e23",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/kill-ring.d.ts.map",
+            "archive_sha256": "e25defe52d46e6039879a5b6b7d42c6c923e5100e8251420c0f0a205bb2b053b",
+            "root_sha256": "e25defe52d46e6039879a5b6b7d42c6c923e5100e8251420c0f0a205bb2b053b",
+            "cli_nested_sha256": "e25defe52d46e6039879a5b6b7d42c6c923e5100e8251420c0f0a205bb2b053b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/kill-ring.js.map",
+            "archive_sha256": "8ea3b910aab8010ac70a00796eeab61afcb5998932cb0f20920d5f47bf9ad6d0",
+            "root_sha256": "8ea3b910aab8010ac70a00796eeab61afcb5998932cb0f20920d5f47bf9ad6d0",
+            "cli_nested_sha256": "8ea3b910aab8010ac70a00796eeab61afcb5998932cb0f20920d5f47bf9ad6d0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/undo-stack.d.ts",
+            "archive_sha256": "56287c28fd2cb38d71188f42cb44637685aaf9a756837ae910c1304f430dc553",
+            "root_sha256": "56287c28fd2cb38d71188f42cb44637685aaf9a756837ae910c1304f430dc553",
+            "cli_nested_sha256": "56287c28fd2cb38d71188f42cb44637685aaf9a756837ae910c1304f430dc553",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/undo-stack.d.ts.map",
+            "archive_sha256": "4fd6791f870647846b966f1700b678cd4a0551f394811a6ed03d657f09d68c4f",
+            "root_sha256": "4fd6791f870647846b966f1700b678cd4a0551f394811a6ed03d657f09d68c4f",
+            "cli_nested_sha256": "4fd6791f870647846b966f1700b678cd4a0551f394811a6ed03d657f09d68c4f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/undo-stack.js.map",
+            "archive_sha256": "95a142f4b48777e1556a8dc82063d058415c5322fa93b6c8f3405481503fa345",
+            "root_sha256": "95a142f4b48777e1556a8dc82063d058415c5322fa93b6c8f3405481503fa345",
+            "cli_nested_sha256": "95a142f4b48777e1556a8dc82063d058415c5322fa93b6c8f3405481503fa345",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/editor-component.d.ts",
+            "archive_sha256": "5de081a8879f096e0bb0f7efb1f4751bab259b1a77663be041938758d22e50c6",
+            "root_sha256": "5de081a8879f096e0bb0f7efb1f4751bab259b1a77663be041938758d22e50c6",
+            "cli_nested_sha256": "5de081a8879f096e0bb0f7efb1f4751bab259b1a77663be041938758d22e50c6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/editor-component.d.ts.map",
+            "archive_sha256": "06e98ae8372363dec7c86e3fcbbb34ee8fb8e1e9dcab0b67594df11106cb049c",
+            "root_sha256": "06e98ae8372363dec7c86e3fcbbb34ee8fb8e1e9dcab0b67594df11106cb049c",
+            "cli_nested_sha256": "06e98ae8372363dec7c86e3fcbbb34ee8fb8e1e9dcab0b67594df11106cb049c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/editor-component.js.map",
+            "archive_sha256": "73df1a7c00d1c06ed948377cd902d68b5d830018df0808de970302751d852acb",
+            "root_sha256": "73df1a7c00d1c06ed948377cd902d68b5d830018df0808de970302751d852acb",
+            "cli_nested_sha256": "73df1a7c00d1c06ed948377cd902d68b5d830018df0808de970302751d852acb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.d.ts",
+            "archive_sha256": "f40c60938829dac067e7d5229217781c44e235d0ace7b4e4f32f7564a07dea60",
+            "root_sha256": "f40c60938829dac067e7d5229217781c44e235d0ace7b4e4f32f7564a07dea60",
+            "cli_nested_sha256": "f40c60938829dac067e7d5229217781c44e235d0ace7b4e4f32f7564a07dea60",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.d.ts.map",
+            "archive_sha256": "dd01e2e23be97b25d0f140c742d249d9cf7df7e79b25eb467477c5864a9f3a3a",
+            "root_sha256": "dd01e2e23be97b25d0f140c742d249d9cf7df7e79b25eb467477c5864a9f3a3a",
+            "cli_nested_sha256": "dd01e2e23be97b25d0f140c742d249d9cf7df7e79b25eb467477c5864a9f3a3a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js.map",
+            "archive_sha256": "5e6ed1ef96aedc684b9897adbaa1616c31abad873166440ba51a535d2f4e0f08",
+            "root_sha256": "5e6ed1ef96aedc684b9897adbaa1616c31abad873166440ba51a535d2f4e0f08",
+            "cli_nested_sha256": "5e6ed1ef96aedc684b9897adbaa1616c31abad873166440ba51a535d2f4e0f08",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 40,
+    "byte_identical_scope_files": 39,
+    "pinned_patch_scope_files": 1,
+    "unresolved_scope_differences": 0
+  }
+}
