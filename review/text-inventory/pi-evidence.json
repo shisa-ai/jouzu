@@ -5,17 +5,22 @@
   "scope_file": "pi-scope.csv",
   "boundary_file": "pi-boundaries.csv",
   "counts": {
-    "rows": 542,
+    "rows": 615,
     "scopes": 69,
-    "proofs": 542,
+    "proofs": 615,
     "statusCounts": {
       "partial": 12,
-      "uninspected": 38,
-      "finite-subset-reviewed": 19
+      "source-read-text-dispositioned": 11,
+      "finite-subset-reviewed": 19,
+      "source-read-no-local-prose": 25,
+      "source-read-native-startup-gated": 1,
+      "source-read-conditional-errors": 1
     },
     "sourceAnchorsVerified": true,
     "catalog_linked_rows": 155,
-    "distinct_catalog_ids": 146
+    "distinct_catalog_ids": 146,
+    "external_boundaries": 51,
+    "excluded_occurrences": 990
   },
   "pin": {
     "source": "upstream/pi.lock.json",
@@ -711,17 +716,20 @@
     "Both installed agent 1.4.0 trees match every after hash from applicable content-policy, terminal-clipboard and path-utils manifests.",
     "Native model and scoped-model selectors are recorded as native fallback text; Jouzu model routes install hooks in main-cli.ts:724 and :726.",
     "Both exact 1.4.0 npm archives pass recomputed SHA512 integrity against package-lock.json; agent archive also matches upstream/pi.lock.json.",
-    "All 69 scoped source files compared byte-for-byte between canonical archives and both installed trees: 66 unchanged, 3 differences exactly match pinned content-policy before/after hashes, zero unresolved differences."
+    "All 69 scoped source files compared byte-for-byte between canonical archives and both installed trees: 66 unchanged, 3 differences exactly match pinned content-policy before/after hashes, zero unresolved differences.",
+    "Read and dispositioned all 38 initially uninspected files; exact lexical exclusions, source triggers, caller routes and payload boundaries added.",
+    "All 1063 string/template occurrences across the 38 fully read source bodies partition into 73 new fixed source occurrences and 990 exact-line/column exclusions; omission negative control is rejected by verifier."
   ],
   "limits": [
-    "Finite source inventory: 19 finite subsets reviewed, 12 partial files, 38 uninspected files individually listed. Reviewed status names only recorded source occurrence lines and does not claim whole-file string or runtime-trigger completeness.",
+    "Initial 38 uninspected files have full local source-text dispositions. Original 19 finite-subset and 12 partial files retain their limits. No package-wide/whole-runtime completeness claim.",
     "Only two explicitly traced source error sentences from core/agent-session.js are inventoried. Remaining core errors and transitive dependency messages are pending.",
     "Fresh exact archives were verified against lockfile SHA512 integrity and compared with every scoped installed file in both trees. This establishes provenance for the 69 scoped files and dispositions their three pinned-patch differences. No full installed-package comparison or online git tag verification was performed.",
     "No runtime screenshots, locale rendering tests, cross-platform behavior tests or installations were performed. Native constructor and wrapper callsites establish conditional consumers; host policy can intercept routes.",
     "Catalog-linked row means a related existing ID was identified. translation_boundary states whether the scoped consumer actually receives adapter localization.",
     "A row represents a source occurrence; repeated English and nested fixed template fragments can have separate source rows. Numeric counters, punctuation-only layout, style/key identifiers and variable-only payloads are outside the fixed-human-text rows.",
     "Trigger fields name per-occurrence enclosing source method and exact enclosing if/conditional/switch branch conditions. Rows marked trigger pending require caller activation-policy tracing; their files have partial scope status. Constructors and helpers can have additional callsite guards outside their source body.",
-    "English string literals use the TypeScript-decoded literal value. Template expressions preserve their exact source body without backticks, including source escape spellings such as \\n or \\u00b7 and the original interpolation expressions. Evidence snippets preserve source notation and compact whitespace; they are not rendered screenshots."
+    "English string literals use the TypeScript-decoded literal value. Template expressions preserve their exact source body without backticks, including source escape spellings such as \\n or \\u00b7 and the original interpolation expressions. Evidence snippets preserve source notation and compact whitespace; they are not rendered screenshots.",
+    "Local-source dispositions distinguish non-displayed parser errors, payload widgets, structural glyphs and code constants. Imported formatter text and raster contents remain explicit producer boundaries outside this finite set."
   ],
   "verification_script": "review/text-inventory/verify-pi.cjs",
   "archive_provenance": {
@@ -1248,5 +1256,524 @@
       "name": "@earendil-works/pi-tui",
       "archive": "test-results/earendil-works-pi-tui-1.4.0.tgz"
     }
+  ],
+  "revision_source_commit": "d48f86a14924366b8eb0d236118507d1b8dde6c8",
+  "exclusion_file": "pi-exclusions.csv",
+  "additional_source_review": {
+    "finite_set": "38 files initially marked uninspected in 69-file scope",
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/armin.js",
+        "sha256": "1bd9393c24fab3ce80d976caa416d30b4a2095dd3bf9548c1455ab6976462a94",
+        "read_lines": [
+          1,
+          335
+        ],
+        "string_template_occurrences": 45,
+        "fixed_rows": 1,
+        "excluded_occurrences": 44,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read bitmap tables and all animation methods; only human caption ARMIN SAYS HI; effect names are dispatch tags and remaining glyphs art."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/bordered-loader.js",
+        "sha256": "2f85321883ecdbfded929b565542393c13b26361f0d02a6e239ea63f211222d8",
+        "read_lines": [
+          1,
+          54
+        ],
+        "string_template_occurrences": 14,
+        "fixed_rows": 1,
+        "excluded_occurrences": 13,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read constructor/signal/input/dispose; caller message payload; local cancel action gated by cancellable."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/config-selector.js",
+        "sha256": "f2322efaa4c2cee047a8254473a3569e92b35e1b71827c9ad6447083aed53a18",
+        "read_lines": [
+          1,
+          771
+        ],
+        "string_template_occurrences": 258,
+        "fixed_rows": 28,
+        "excluded_occurrences": 230,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read helpers/header/list/search/override persistence/mode switching; fixed titles/actions/groups/suffixes/path captions recorded; resource identities and paths data; persistence/filter tags code."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/countdown-timer.js",
+        "sha256": "d488a8ab9f258038e8d6b1dd221067aafa741660b65967f0195caadb31f9e8c6",
+        "read_lines": [
+          1,
+          33
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read constructor/tick/dispose; no string/template literals or renderer; callbacks own display text."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/custom-editor.js",
+        "sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113",
+        "read_lines": [
+          1,
+          119
+        ],
+        "string_template_occurrences": 21,
+        "fixed_rows": 1,
+        "excluded_occurrences": 20,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read full patched editor; local more overflow label; status delegated; key identifiers and slash replacement are code."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/custom-message.js",
+        "sha256": "60eff1fc82a72e4997862af808ca7d03a62f8cefd6342ac44b07ab35d5950ec4",
+        "read_lines": [
+          1,
+          88
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read custom/default rendering and silent catch; type identifier/content payload; no local human prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/diff.js",
+        "sha256": "4d4d8accd933bda88cbbd34440ddfdc1160d8eaebdd42a8033cafba8cadf27a9",
+        "read_lines": [
+          1,
+          133
+        ],
+        "string_template_occurrences": 26,
+        "fixed_rows": 0,
+        "excluded_occurrences": 26,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read diff parsing/tab replacement/intra-line/all result branches; source content data and prefixes/numbers structural; no local human prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/dynamic-border.js",
+        "sha256": "bf7d221ef1c6f2334a6a6b247a1554ebad018931417c651065689802ab7fd2e9",
+        "read_lines": [
+          1,
+          21
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read full component; repeats graphical border, no prose/errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/earendil-announcement.js",
+        "sha256": "4cad6d3b911979f13e6cf8cee0e495726f0e947b988c18554b8d263e02ca5eef",
+        "read_lines": [
+          1,
+          40
+        ],
+        "string_template_occurrences": 17,
+        "fixed_rows": 5,
+        "excluded_occurrences": 12,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read asset loader and constructor; title/caption/URL/filename/MIME recorded; image read failure silent; raster content not text-audited."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/easter-egg-3d.js",
+        "sha256": "7b4359a79a1c7993f9b3f68e4f363a42484f077d0a1855dc749a4db00930be27",
+        "read_lines": [
+          1,
+          1139
+        ],
+        "string_template_occurrences": 43,
+        "fixed_rows": 2,
+        "excluded_occurrences": 41,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read all 1139 lines: model/math/raster/screen parsing/puzzle/overlay/animation/hint. Local to-return and escape fallback recorded; pixel tags/controls/placement code/graphics; captured screen payload."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/easter-egg-3d.lazy.js",
+        "sha256": "92daf5cec1f63702b8d216b14ff793b29cee942148bd3ded97be2e0ddb60f3b6",
+        "read_lines": [
+          1,
+          23
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read fullscreen/overlay/import gates; no local prose/errors; import failure swallowed; egg kinds code."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/first-time-setup.js",
+        "sha256": "7e68d672519dfdffd672982540ddb7b06f7e095fbf0d54a9ecd71bf04c69c00d",
+        "read_lines": [
+          1,
+          109
+        ],
+        "string_template_occurrences": 55,
+        "fixed_rows": 13,
+        "excluded_occurrences": 42,
+        "disposition": "source-read-native-startup-gated",
+        "source_review": "Read options/both steps/input; every local label/paragraph/hint recorded; native startup gate explicit, automatic Jouzu route suppressed by configured agent dir."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/footer.js",
+        "sha256": "55b8492fb4ccda5e8f53a3a1882f091157dd85e08c9577db2f05e36020b22b88",
+        "read_lines": [
+          1,
+          265
+        ],
+        "string_template_occurrences": 70,
+        "fixed_rows": 12,
+        "excluded_occurrences": 58,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read cwd formatting, usage/cache accumulation and every stats/width/provider/status branch; fixed badges/fallbacks/unit templates recorded; numbers/symbol-only notation and caller data separated."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/index.js",
+        "sha256": "bc203c853c4b60da341d8902e3c7f7141de7a9f8b86f6c4e301977573b2ec9c3",
+        "read_lines": [
+          1,
+          34
+        ],
+        "string_template_occurrences": 32,
+        "fixed_rows": 0,
+        "excluded_occurrences": 32,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read re-exports; module paths only, no renderer/prose/errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/keybinding-hints.js",
+        "sha256": "8f9fa24a06f2cb234d5a91967129c2a415b17a2c42229afe6f24b1b75ba7dd56",
+        "read_lines": [
+          1,
+          36
+        ],
+        "string_template_occurrences": 17,
+        "fixed_rows": 1,
+        "excluded_occurrences": 16,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read all formatters; local macOS option mapping recorded; resolved keys/descriptions caller data."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/markdown-transform.js",
+        "sha256": "31ad2245189328104a31bb9b12f58b0a12e4af9c7924775a242c9dcd526d2c1a",
+        "read_lines": [
+          1,
+          19
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read all invocation/type/catch paths; transformer exception silent; no local prose/errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/mermaid.js",
+        "sha256": "da9ebc988b4fbda381f886acda210e4efeb0a894701fe630e1cbd7f0b5bd8bb7",
+        "read_lines": [
+          1,
+          75
+        ],
+        "string_template_occurrences": 34,
+        "fixed_rows": 2,
+        "excluded_occurrences": 32,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read token checks/codeSpan/style mapping and all mode/stream/width/warning paths; local diagnostic wrapper/suffix recorded; diagram and warning bodies delegated."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/pi-logo.js",
+        "sha256": "10b6164c7a4bf4d94bb9a3975f82131ab02f294b3d60ed7ee225c7c5bf3bdae2",
+        "read_lines": [
+          1,
+          37
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 1,
+        "excluded_occurrences": 5,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read graphical logo, Apple Terminal gate and wordmark; Pi template recorded, blocks/colors art."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/radius-login-selector.js",
+        "sha256": "89dd826572f4905bab65e83fea6ed77605963344a6680152bab046fe9a4bcc1a",
+        "read_lines": [
+          1,
+          85
+        ],
+        "string_template_occurrences": 16,
+        "fixed_rows": 0,
+        "excluded_occurrences": 16,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read shimmer/color/timer/selected-line replacement/dispose; title/options/Radius label caller data; no local human prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector-search.js",
+        "sha256": "a0a0304be2dff6e4f0e3296635b529d3b0cd3005212277259883755f49d5277a",
+        "read_lines": [
+          1,
+          155
+        ],
+        "string_template_occurrences": 28,
+        "fixed_rows": 0,
+        "excluded_occurrences": 28,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read parser/phrase/fuzzy/regex/sort; Empty regex is validation-only: filterAndSortSessions returns [] for parsed.error; session UI does not render error field."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/themed-text.js",
+        "sha256": "575d5d432ebc394903dcfb148b2a7ac96d0bae5c2324dde10691f2413466d5e8",
+        "read_lines": [
+          1,
+          29
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 0,
+        "excluded_occurrences": 2,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read full widget; caller build function supplies content, no local human sentence."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js",
+        "sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+        "read_lines": [
+          1,
+          324
+        ],
+        "string_template_occurrences": 35,
+        "fixed_rows": 2,
+        "excluded_occurrences": 33,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read constructor/renderer/error fallback/generic formatting/images/mouse/expansion; both local collapsed-output hint parts recorded; outputs/arguments/components and imported formatters payload/delegated."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/user-message.js",
+        "sha256": "a333be7aee4aa9e767644c5f3783f55352a78816316abd3301b7b98e985e53ab",
+        "read_lines": [
+          1,
+          50
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read constructor/rebuild/render; user Markdown payload, role/OSC control metadata, no local prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/visual-truncate.js",
+        "sha256": "280fdcf2d05589fd3eba7a69b6d11f3fca310237ad5646833984303dae13ae29",
+        "read_lines": [
+          1,
+          66
+        ],
+        "string_template_occurrences": 5,
+        "fixed_rows": 0,
+        "excluded_occurrences": 5,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read utility and preview/cache; no local hint sentence, caller formatHint owns it."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/alt-screen-flash.js",
+        "sha256": "6ca2016101ca570a94fdaa18bfe8edbc6734243cb5363d21110e809fcd47db12",
+        "read_lines": [
+          1,
+          37
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read timer/dispose/render; message caller data, only local padding/control."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/box.js",
+        "sha256": "a9a91d74c6109f455f3a709ab509ccdeef5855760e544eef2bfffea18740e3b8",
+        "read_lines": [
+          1,
+          138
+        ],
+        "string_template_occurrences": 7,
+        "fixed_rows": 0,
+        "excluded_occurrences": 7,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read cache/mouse/background/layout; no local prose/errors; test is an unrendered background-function probe."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/cancellable-loader.js",
+        "sha256": "9fcffa6a7faeafe4686d1b78f375d3b03c465552faaf308ee9a44169580b3467",
+        "read_lines": [
+          1,
+          35
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read signal/input/dispose; Working... is documentation comment only; parent Loader owns default text; cancel binding code."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/h-stack.js",
+        "sha256": "b4cf1819879bcbbf20f2cfd3a5d5960b92c7f69308310d2ad44f0dbae4ed9c0f",
+        "read_lines": [
+          1,
+          43
+        ],
+        "string_template_occurrences": 7,
+        "fixed_rows": 0,
+        "excluded_occurrences": 7,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read all allocation/alignment/composition; child output only, layout tags code."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/image.js",
+        "sha256": "918d93b63767fd67543dc23c20709da6a621cd627b52f43e2f87d3b73ab0a9f2",
+        "read_lines": [
+          1,
+          123
+        ],
+        "string_template_occurrences": 10,
+        "fixed_rows": 0,
+        "excluded_occurrences": 10,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read conversion/cache/protocol/render/fallback; no local human sentence; two delegated imageFallback sinks tracked."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/input.js",
+        "sha256": "2962cbaae94876aee9d838a5eb28287323c06ac7d47277c801500a660eb738b9",
+        "read_lines": [
+          1,
+          417
+        ],
+        "string_template_occurrences": 66,
+        "fixed_rows": 0,
+        "excluded_occurrences": 66,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read every key/paste/edit/mouse/undo/kill-ring/scroll/render path; caller prompt/placeholder/value; default prompt/glyphs/control/action-state strings structural/code, no local prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/markdown.js",
+        "sha256": "d28861821607aefa7d8399507595fbe2f23b602bfa7f215986f3f8774762fe71",
+        "read_lines": [
+          1,
+          841
+        ],
+        "string_template_occurrences": 163,
+        "fixed_rows": 0,
+        "excluded_occurrences": 163,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read all tokenization/math/cache/block/inline/list/table paths; no local human sentence/errors; token names/parser keys code; Markdown glyphs/checkbox/ANSI structural; content/URLs/languages payload."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/mouse-region.js",
+        "sha256": "944855dfb436b93905056157deb5c056e25a838529cc60d4987654aefa47cd26",
+        "read_lines": [
+          1,
+          21
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read full mouse/render delegation; no local string/template/prose; child output only."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/scroll-view.js",
+        "sha256": "601b994d4700c9825b178bbdbc32344dc090be01e2f372282d0e4b67e8aa87cf",
+        "read_lines": [
+          1,
+          195
+        ],
+        "string_template_occurrences": 20,
+        "fixed_rows": 4,
+        "excluded_occurrences": 16,
+        "disposition": "source-read-conditional-errors",
+        "source_review": "Read all follow/layout/scrollbar/movement/mutator/render; four exact API errors recorded with invalid-call conditions and conditional extension reporting; built-in calls avoid them."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/spacer.js",
+        "sha256": "72b1bc30e7f2b34ca548b0e5f3a4b596d47538d53be02877fb1686595a107bc3",
+        "read_lines": [
+          1,
+          23
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read full component; empty lines only, no prose/errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/stack.js",
+        "sha256": "02b4dafebc728f1c0e8d01b5cc330f82eb760c58bc71c5cc9bff6d98bf34dbf3",
+        "read_lines": [
+          1,
+          111
+        ],
+        "string_template_occurrences": 12,
+        "fixed_rows": 0,
+        "excluded_occurrences": 12,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read normalization/visibility/sizing/grow/shrink; no prose/errors; property/alignment/mode/layout tags code."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/text.js",
+        "sha256": "89adac5c6e2be6afcdf99ca015943901bc676938fd0115326da5af78c930803c",
+        "read_lines": [
+          1,
+          95
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read setters/cache/tabs/wrapping/padding/background; caller text, blank padding; no local prose/errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/truncated-text.js",
+        "sha256": "32c182d7faf44306d4e6937a0324a1f88b1acabbbe3fa8f385ef99ed9d9e090d",
+        "read_lines": [
+          1,
+          51
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read all rendering; caller text first-line/width truncation; whitespace/newline structure, no local prose/errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/v-stack.js",
+        "sha256": "7b6e6f6e1fbb037f33a8238ab02ec9e6e5f65fe49029bb430acd59c40148bfa4",
+        "read_lines": [
+          1,
+          26
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "disposition": "source-read-no-local-prose",
+        "source_review": "Read full layout; child output/blank gaps only, vstack code tag, no prose/errors."
+      }
+    ],
+    "new_fixed_rows": 73,
+    "new_payload_boundaries": 29,
+    "excluded_occurrences": 990,
+    "review_method": "Read each complete source body and traced display/error/caller paths. Literal enumeration cross-checks disposition coverage; syntax detection alone does not establish semantic completeness."
+  },
+  "remaining_partial_sources": [
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/settings-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/theme-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tree-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+    "npm:@earendil-works/pi-tui@1.4.0/dist/components/editor.js"
   ]
 }

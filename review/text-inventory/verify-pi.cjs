@@ -37,6 +37,8 @@ const inventoryDir = path.join(repo, 'review/text-inventory');
 const rows = csv(read(path.join(inventoryDir, 'pi.csv')));
 const scopes = csv(read(path.join(inventoryDir, 'pi-scope.csv')));
 const boundaries = csv(read(path.join(inventoryDir, 'pi-boundaries.csv')));
+const exclusionsPath = path.join(inventoryDir, 'pi-exclusions.csv');
+const exclusions = fs.existsSync(exclusionsPath) ? csv(read(exclusionsPath)) : [];
 const evidence = JSON.parse(read(path.join(inventoryDir, 'pi-evidence.json')));
 const pin = JSON.parse(read(path.join(repo, 'upstream/pi.lock.json')));
 assert(sha(path.join(repo, 'upstream/pi.lock.json')) === evidence.pin.sha256, 'Pi pin snapshot drift');
@@ -85,6 +87,8 @@ function source(location) {
     function walk(node) {
       if (ts.isStringLiteralLike(node) || ts.isTemplateExpression(node)) nodes.push({
         line: ast.getLineAndCharacterOfPosition(node.getStart(ast)).line + 1,
+        column: ast.getLineAndCharacterOfPosition(node.getStart(ast)).character + 1,
+        kind: ts.isTemplateExpression(node) ? 'template-expression' : 'string-literal',
         english: ts.isTemplateExpression(node) ? node.getText(ast).slice(1, -1) : node.text,
       });
       ts.forEachChild(node, walk);
@@ -101,9 +105,41 @@ for (const row of rows) {
   assert(row.trigger.length > 0 && row.consumer_evidence.length > 0, `Missing trigger/consumer: ${row.item_id}`);
 }
 for (const row of boundaries) {
-  const parsed = source(row.source_location), index = parsed.body.indexOf(row.evidence);
-  assert(index >= 0 && parsed.body.slice(0, index).split('\n').length === parsed.line, `Boundary source anchor mismatch: ${row.item_id}`);
+  const parsed = source(row.source_location);
+  assert(parsed.body.split('\n')[parsed.line - 1]?.includes(row.evidence), `Boundary source anchor mismatch: ${row.item_id}`);
 }
+
+assert(new Set(exclusions.map((row) => row.item_id)).size === exclusions.length, 'Duplicate exclusion item IDs');
+for (const row of exclusions) {
+  const parsed = source(row.source_location);
+  assert(parsed.nodes.some((node) => node.line === parsed.line && node.column === Number(row.source_column) && node.english === JSON.parse(row.source_text_json) && node.kind === row.source_kind), 'Exclusion source anchor mismatch: ' + row.item_id);
+  assert(row.disposition && row.reason && row.evidence, 'Missing exclusion disposition: ' + row.item_id);
+}
+const dispositionedFiles = evidence.additional_source_review?.files || [];
+for (const record of dispositionedFiles) {
+  const parsed = source(record.source), sourceScope = scopes.find((row) => row.source === record.source);
+  assert(sourceScope && record.sha256 === sourceScope.sha256, 'Reviewed source snapshot mismatch: ' + record.source);
+  assert(record.read_lines[0] === 1 && record.read_lines[1] === parsed.body.split('\n').length, 'Reviewed source range mismatch: ' + record.source);
+  const fileRows = rows.filter((row) => row.english_location.startsWith(record.source + ':'));
+  const fileExclusions = exclusions.filter((row) => row.source_location.startsWith(record.source + ':'));
+  assert(fileRows.length === record.fixed_rows && fileExclusions.length === record.excluded_occurrences && parsed.nodes.length === record.string_template_occurrences, 'Source-disposition count mismatch: ' + record.source);
+  const inventory = new Map();
+  for (const row of fileRows) {
+    const key = row.english_location + '\0' + row.english;
+    inventory.set(key, (inventory.get(key) || 0) + 1);
+  }
+  const excluded = new Map(fileExclusions.map((row) => [row.source_location + ':' + row.source_column, row]));
+  for (const node of parsed.nodes) {
+    const location = record.source + ':' + node.line, exclusion = excluded.get(location + ':' + node.column);
+    if (exclusion) { assert(JSON.parse(exclusion.source_text_json) === node.english, 'Exclusion text drift'); continue; }
+    const key = location + '\0' + node.english, remaining = inventory.get(key) || 0;
+    assert(remaining > 0, 'Undispositioned string/template occurrence: ' + location + ':' + node.column);
+    inventory.set(key, remaining - 1);
+  }
+  assert([...inventory.values()].every((count) => count === 0), 'Unmatched fixed-text occurrence in reviewed file: ' + record.source);
+}
+assert(!dispositionedFiles.length || dispositionedFiles.length === 38, 'Finite source-review set changed unexpectedly');
+
 for (const row of scopes) {
   const parsed = parseLocation(row.source);
   const rootHash = sha(path.join(nodeModules, parsed.packageName, parsed.source));
@@ -112,8 +148,8 @@ for (const row of scopes) {
   assert((rootHash === nestedHash).toString() === row.root_nested_equal, `Tree equality mismatch: ${row.source}`);
   assert(rows.filter((r) => r.english_location.startsWith(row.source + ':')).length === Number(row.rows), `Scope row count mismatch: ${row.source}`);
 }
-for (const file of ['pi.csv', 'pi-scope.csv', 'pi-boundaries.csv', 'pi-evidence.json']) {
-  assert(!/[A-Za-z]:[\\/]/.test(read(path.join(inventoryDir, file))), `Absolute filesystem path found in ${file}`);
+for (const file of ['pi.csv', 'pi-scope.csv', 'pi-boundaries.csv', 'pi-evidence.json', ...(exclusions.length ? ['pi-exclusions.csv'] : [])]) {
+  assert(!/(?:^|[\s"'(<])[A-Za-z]:[\\/]/m.test(read(path.join(inventoryDir, file))), `Absolute filesystem path found in ${file}`);
 }
 
 function tarEntries(archivePath) {
@@ -201,7 +237,7 @@ function verifyArchiveProvenance() {
 const archiveProvenance = flags['agent-archive'] || flags['tui-archive'] ? verifyArchiveProvenance() : undefined;
 
 console.log(JSON.stringify({ fixed_text_rows: rows.length, external_boundaries: boundaries.length,
-  scope_files: scopes.length, archive_provenance: archiveProvenance ? {
+  scope_files: scopes.length, dispositioned_source_files: dispositionedFiles.length, excluded_occurrences: exclusions.length, archive_provenance: archiveProvenance ? {
     scoped_file_count: archiveProvenance.scoped_file_count,
     byte_identical_scope_files: archiveProvenance.byte_identical_scope_files,
     pinned_patch_scope_files: archiveProvenance.pinned_patch_scope_files,

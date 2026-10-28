@@ -72,12 +72,17 @@ generated dependency boundaries still lack an exact English definition; their
 English field is blank. [launcher-scope.csv](launcher-scope.csv) distinguishes
 inspected source from pending helper messages, support logging and report facts.
 
-[pi.csv](pi.csv) records 542 inherited Pi source occurrences, with per-occurrence
+[pi.csv](pi.csv) records 615 inherited Pi source occurrences, with per-occurrence
 conditions and 155 links to Jouzu catalog IDs.
-[pi-boundaries.csv](pi-boundaries.csv) records 22 dynamic content boundaries.
+[pi-boundaries.csv](pi-boundaries.csv) records 51 dynamic content boundaries.
 [pi-scope.csv](pi-scope.csv) covers 69 candidate files: 19 finite inspected
-subsets, 12 partial files, and 38 uninspected files. No status implies whole-file
-or whole-product completeness. [pi-evidence.json](pi-evidence.json) records the
+subsets, 12 partial files, and 38 fully read source bodies with explicit text,
+no-prose, startup-gated or conditional-error dispositions.
+[pi-exclusions.csv](pi-exclusions.csv) accounts for 990 exact lexical occurrences
+in those 38 bodies, including imports, code tokens, layout and native output
+suppressed by Jouzu's startup configuration. These dispositions do not establish
+whole-product or runtime coverage. `source_text_json` preserves source whitespace
+and control characters as a JSON string. [pi-evidence.json](pi-evidence.json) records the
 exact Pi 1.4.0 archive integrity and comparisons with both installed trees:
 66 scoped files match archive bytes and three match the pinned patch outputs.
 Canonical English used by Jouzu's adapter is distinguished from untranslated
