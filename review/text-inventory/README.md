@@ -15,6 +15,15 @@ slash-command autocomplete descriptions. Other messages explicitly retain
 `jouzu.cli.classicHost.mcpUnavailable`. Its presence in a catalog does not prove
 it can appear.
 
+[catalog-links.csv](catalog-links.csv) joins every catalog ID to its primary
+context count and matching occurrence-table row IDs, so the detailed trigger
+records can be found without searching every file. Currently 712 IDs have at
+least one primary context or occurrence record; 1,092 have neither. The linked
+records include guarded, inactive, API-only and canonical adapter occurrences.
+Presence in this index does not certify complete caller coverage or visibility.
+[catalog-links-snapshot.json](catalog-links-snapshot.json) pins the inputs and
+records the overlap counts; these are navigation counts, not unique fixes.
+
 [catalog-contexts.json](catalog-contexts.json) supplies the traced display
 locations, trigger conditions, consumer anchors and translation boundaries.
 [catalog-references.jsonl](catalog-references.jsonl) contains **3,506 source
@@ -203,6 +212,7 @@ Recheck this catalog snapshot from the repository root:
 ```sh
 node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
+python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
@@ -225,6 +235,10 @@ regenerates them after source and context review. The independent verifier uses
 the earlier lossless Python Fluent parser and checks exact values, attributes,
 source anchors, source hashes and accounting. These checks validate the recorded
 data, not complete semantic or runtime coverage.
+
+After adding a reviewed occurrence table, include it in `catalog-links.py` and
+regenerate the navigation index with `python -B review/text-inventory/catalog-links.py --write`.
+Its default operation checks the stored index and input hashes without writing.
 
 The ACP verifier also needs the exact `@agentclientprotocol/sdk` `2.0.2` source
 package. Its default is the root `node_modules`; `--sdk-root <package-directory>`
