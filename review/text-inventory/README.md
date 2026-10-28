@@ -54,6 +54,14 @@ finite English wording list: their source-defined wrappers and delivery
 conditions need explicit boundary records. Current tables do not close those
 areas or certify runtime layout or translation quality.
 
+[source-census.csv](source-census.csv) lists all 1,206 tracked blobs at the source
+pin, their immutable Git object IDs and references into the reviewed scope
+tables or English catalog export. It includes source, commands, tests, resources,
+documentation and vendored files. A scope reference may be partial, supporting,
+excluded or pending; its presence is not a completed file review. Path categories
+are navigation aids and do not exclude wording from review. Installed dependencies
+and generated outputs need their separate provenance and consumer traces.
+
 The older [Japanese review](../ja-localization/README.md) retains its own source
 pin and translations; its counts must not be added to this inventory.
 
@@ -224,6 +232,7 @@ Recheck this catalog snapshot from the repository root:
 node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
+python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
@@ -251,6 +260,8 @@ data, not complete semantic or runtime coverage.
 After adding a reviewed occurrence table, include it in `catalog-links.py` and
 regenerate the navigation index with `python -B review/text-inventory/catalog-links.py --write`.
 Its default operation checks the stored index and input hashes without writing.
+Update `source-census.py`'s scope list and regenerate it with `--write` when a new
+scope table is added. Its source tree remains the stated immutable Git pin.
 
 The ACP verifier also needs the exact `@agentclientprotocol/sdk` `2.0.2` source
 package. Its default is the root `node_modules`; `--sdk-root <package-directory>`

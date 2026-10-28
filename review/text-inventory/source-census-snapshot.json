@@ -1,0 +1,33 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "tracked_blobs": 1206,
+  "paths_with_scope_references": 234,
+  "paths_without_scope_references": 972,
+  "path_categories": {
+    "configuration-lock-resource-or-other": 79,
+    "ci-workflow": 10,
+    "documentation-or-instructions": 87,
+    "test-fixture-or-evaluation": 453,
+    "source-or-command": 479,
+    "locale-catalog": 40,
+    "prior-review-artifact": 14,
+    "vendored-source-or-resource": 44
+  },
+  "scope_inputs_sha256_utf8_lf": {
+    "acp-scope.csv": "63e50f684c02f9c9af94b067924cfd750676887df35a6d1079e80a167ff08495",
+    "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
+    "cli-entry-scope.csv": "57552b89d44273a3f1ad9a49b9ce66d72d5fd8ec04ba6ac5c733b4ce08d05ce5",
+    "doctor-scope.csv": "83c51d8d37ac12a738a58f9b2e43078b066e434c54e13793c2072a62dc41d24d",
+    "updater-scope.csv": "ed02a5bbdcc0b577c944126c5e8890f1543cd31975c1bb6c91a71ed8a299827c",
+    "flow-display-scope.csv": "c796f103bdae2dfc628a4a2522f09ecd1d9303b2f813496372021bbc63a277b4",
+    "flow-report-scope.csv": "71a0b3952ddf31780c4bbbb6ceaa3255d08aad9b8886642e320e9db57ad71196",
+    "flow-storage-scope.csv": "a0069bc0317ffc0360b6541490d8f48b3b851d872982d8c1e0dc55c18bd4fc30",
+    "launcher-scope.csv": "fb455a291626a6e037f891b012f1e7d06425cdda7e4ea16c63ac2f0ada0f6e7d",
+    "launcher-helpers-scope.csv": "8199e90f089627e9671adc53aa6055407e4290c4982fd33f6619d9d5668dc3f0",
+    "launcher-support-scope.csv": "bbc05ce3aa8842966efeb0b2dda5796e0cce70cfc05ce99c631b8b9d3c051f40",
+    "installer-dependencies-scope.csv": "d7029caef18c55372665644dd50a938b96aba6c103821edd99d0bd87fe246316",
+    "python-console-scope.csv": "b33435dd93a5da7d140fe862d6330faa8bfbc11d83e1b0b322e4e9982326132e",
+    "catalog-snapshot.json": "2ead66b940219e429137498a54fa692d914079b558c376ce34e38bbddae0dd79"
+  },
+  "interpretation": "Navigation only. Scope references can be partial, supporting, excluded or pending. Path categories do not exclude text from review. External installed dependencies and generated outputs require separate scope records."
+}
