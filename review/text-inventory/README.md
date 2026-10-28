@@ -776,6 +776,17 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-rpc-support.csv](pi-rpc-support.csv) covers four complete JSON event, line
+reader/serializer and RPC client bodies (585 lines): eleven fixed Error messages,
+74 [exclusions](pi-rpc-support-exclusions.csv) and nine
+[boundaries](pi-rpc-support-boundaries.csv). The exported client has no literal
+owned-source caller in the bounded [scope](pi-rpc-support-scope.csv); its API
+errors are not established default TUI copy. Child stderr is nevertheless
+forwarded raw and retained across restarts. Request, response, settled-event and
+process-exit timing differ; protocol failure responses become exceptions only in
+methods that consume them through the data helper. JSON/UTF-8/native/process
+errors and arbitrary listener or child payloads remain separate producers.
+
 [pi-core-config-support.csv](pi-core-config-support.csv) records 78 qualified
 native config, command, event and timing definitions across nine complete bodies
 (664 lines), with 200 [exclusions](pi-core-config-support-exclusions.csv) and
@@ -1810,6 +1821,7 @@ node review/text-inventory/verify-pi-mcp-interface.cjs --node-modules <root-node
 node review/text-inventory/verify-pi-config-discovery.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-provider-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-core-config-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-rpc-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 

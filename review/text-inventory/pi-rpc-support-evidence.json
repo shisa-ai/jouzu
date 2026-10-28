@@ -1,0 +1,2230 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "7007146aee75eaa406d25e329ca5cf0a569ed37a",
+  "inventory_file": "pi-rpc-support.csv",
+  "scope_file": "pi-rpc-support-scope.csv",
+  "boundary_file": "pi-rpc-support-boundaries.csv",
+  "exclusion_file": "pi-rpc-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/interactive-startup.ts",
+      "sha256": "8f03c3a6b7c94247fd1036d543255b4b20c5d0a920e9e115fa2f468fc6f2fb04"
+    },
+    {
+      "source": "packages/cli/src/runtime-output.ts",
+      "sha256": "b7c16e4afb28b45a3293d630fe48880a3c23d20d34bbc3fb8d3b5cf8092f0ae6"
+    }
+  ],
+  "owned_client_caller_census": {
+    "scope": "packages/*/src/**/*.ts excluding *.test.ts; literal RpcClient token scan only, not full body review or dynamic/alias/compiled consumer closure",
+    "file_count": 247,
+    "corpus_sha256": "6a2fec8035a1ae08285c56052134a8f61d08cdb896091901c8d3b825c58fae21",
+    "matches": []
+  },
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+      "sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "cli_nested_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          40,
+          42
+        ]
+      ],
+      "purpose": "Bounded actual export/serializer/listener/print/RPC/request-error/protocol consumer support, not duplicate full-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js",
+      "sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+      "cli_nested_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "purpose": "Bounded actual export/serializer/listener/print/RPC/request-error/protocol consumer support, not duplicate full-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          690,
+          695
+        ]
+      ],
+      "purpose": "Bounded actual export/serializer/listener/print/RPC/request-error/protocol consumer support, not duplicate full-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          84,
+          94
+        ],
+        [
+          110,
+          136
+        ]
+      ],
+      "purpose": "Bounded actual export/serializer/listener/print/RPC/request-error/protocol consumer support, not duplicate full-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          24,
+          39
+        ],
+        [
+          288,
+          291
+        ],
+        [
+          361,
+          402
+        ],
+        [
+          734,
+          790
+        ],
+        [
+          839,
+          851
+        ]
+      ],
+      "purpose": "Bounded actual export/serializer/listener/print/RPC/request-error/protocol consumer support, not duplicate full-body ownership."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.d.ts",
+      "sha256": "8ed959fe14cf0ce76f47309cf0a503d3e21a0ab86793b22e5759dd4d6f747e65",
+      "cli_nested_sha256": "8ed959fe14cf0ce76f47309cf0a503d3e21a0ab86793b22e5759dd4d6f747e65",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.d.ts.map",
+      "sha256": "cc5580ed3ec5f4907238fc0ea1da1d040608c0fc15610342aae1d0c91ab20a07",
+      "cli_nested_sha256": "cc5580ed3ec5f4907238fc0ea1da1d040608c0fc15610342aae1d0c91ab20a07",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js.map",
+      "sha256": "d8725b721872fa1080bba40d23af962dc6032af2723b22dfbf6ca8937968ea86",
+      "cli_nested_sha256": "d8725b721872fa1080bba40d23af962dc6032af2723b22dfbf6ca8937968ea86",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.d.ts",
+      "sha256": "21733fb8506c4b88ce392352521260608a904a5c54dadfa7fd181be25712e4fe",
+      "cli_nested_sha256": "21733fb8506c4b88ce392352521260608a904a5c54dadfa7fd181be25712e4fe",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.d.ts.map",
+      "sha256": "bdcbd16ea3627f690c946588b716a2cdff695c530abeb619e06ef78a81d3e550",
+      "cli_nested_sha256": "bdcbd16ea3627f690c946588b716a2cdff695c530abeb619e06ef78a81d3e550",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.js.map",
+      "sha256": "0fc89bf8693980693b1e91a6b1245addc03ce3655bbf4ce993efb131ea387658",
+      "cli_nested_sha256": "0fc89bf8693980693b1e91a6b1245addc03ce3655bbf4ce993efb131ea387658",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.d.ts",
+      "sha256": "85ec53b3f019e0176bdbb8f843a213d8ae8aa0bba937dce40291e1315b762b1b",
+      "cli_nested_sha256": "85ec53b3f019e0176bdbb8f843a213d8ae8aa0bba937dce40291e1315b762b1b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.d.ts.map",
+      "sha256": "e21b059a4b594cd9287cdff8cb54de39d95a5292ed6e45bbc93673b6111cfd6d",
+      "cli_nested_sha256": "e21b059a4b594cd9287cdff8cb54de39d95a5292ed6e45bbc93673b6111cfd6d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js.map",
+      "sha256": "966f80c1cbffcdc0ff3b53e81ecb1d7e152c6363aa35038da2b94377fc6c9387",
+      "cli_nested_sha256": "966f80c1cbffcdc0ff3b53e81ecb1d7e152c6363aa35038da2b94377fc6c9387",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.d.ts",
+      "sha256": "68b6dc2e47a3969c09c961a40d0462473407b6786f3bd02715fa035e816e2af1",
+      "cli_nested_sha256": "68b6dc2e47a3969c09c961a40d0462473407b6786f3bd02715fa035e816e2af1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.d.ts.map",
+      "sha256": "303f6efc19c328471673504a0a71e9c4281b775faa9b6ed3ba3833df227245f4",
+      "cli_nested_sha256": "303f6efc19c328471673504a0a71e9c4281b775faa9b6ed3ba3833df227245f4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.js.map",
+      "sha256": "bd333166b84415461456511a71406fedc234f6534f46a6f27c4915386f16c11b",
+      "cli_nested_sha256": "bd333166b84415461456511a71406fedc234f6534f46a6f27c4915386f16c11b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 11,
+    "proofs": 11,
+    "scopes": 4,
+    "external_boundaries": 9,
+    "excluded_occurrences": 74,
+    "dispositioned_source_files": 4,
+    "string_template_occurrences": 85,
+    "protected_regex_literals": 0,
+    "error_constructors": 13,
+    "catch_clauses": 2,
+    "throw_statements": 9,
+    "all_new_expressions": 20,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 585,
+    "runtime_source_bytes": 20031,
+    "nonruntime_assets": 12,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 4
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.rpc-support.event.5.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+      "line": 5,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "toolcall_start content at index ${event.contentIndex} is not a tool call",
+      "evidence": "`toolcall_start content at index ${event.contentIndex} is not a tool call`"
+    },
+    {
+      "item_id": "pi.rpc-support.event.21.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+      "line": 21,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "message_update message is not an assistant message",
+      "evidence": "\"message_update message is not an assistant message\""
+    },
+    {
+      "item_id": "pi.rpc-support.client.28.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 28,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "Client already started",
+      "evidence": "\"Client already started\""
+    },
+    {
+      "item_id": "pi.rpc-support.client.63.44",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 63,
+      "column": 44,
+      "kind": "template-expression",
+      "english": "Agent process error: ${error.message}. Stderr: ${this.stderr}",
+      "evidence": "`Agent process error: ${error.message}. Stderr: ${this.stderr}`"
+    },
+    {
+      "item_id": "pi.rpc-support.client.70.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 70,
+      "column": 60,
+      "kind": "template-expression",
+      "english": "Agent process stdin error: ${error.message}. Stderr: ${this.stderr}",
+      "evidence": "`Agent process stdin error: ${error.message}. Stderr: ${this.stderr}`"
+    },
+    {
+      "item_id": "pi.rpc-support.client.370.34",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 370,
+      "column": 34,
+      "kind": "template-expression",
+      "english": "Timeout waiting for agent to become idle. Stderr: ${this.stderr}",
+      "evidence": "`Timeout waiting for agent to become idle. Stderr: ${this.stderr}`"
+    },
+    {
+      "item_id": "pi.rpc-support.client.389.34",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 389,
+      "column": 34,
+      "kind": "template-expression",
+      "english": "Timeout collecting events. Stderr: ${this.stderr}",
+      "evidence": "`Timeout collecting events. Stderr: ${this.stderr}`"
+    },
+    {
+      "item_id": "pi.rpc-support.client.433.26",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 433,
+      "column": 26,
+      "kind": "template-expression",
+      "english": "Agent process exited (code=${code} signal=${signal}). Stderr: ${this.stderr}",
+      "evidence": "`Agent process exited (code=${code} signal=${signal}). Stderr: ${this.stderr}`"
+    },
+    {
+      "item_id": "pi.rpc-support.client.445.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 445,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "Client not started",
+      "evidence": "\"Client not started\""
+    },
+    {
+      "item_id": "pi.rpc-support.client.456.37",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 456,
+      "column": 37,
+      "kind": "template-expression",
+      "english": "Agent process stdin is not writable. Stderr: ${this.stderr}",
+      "evidence": "`Agent process stdin is not writable. Stderr: ${this.stderr}`"
+    },
+    {
+      "item_id": "pi.rpc-support.client.465.34",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "line": 465,
+      "column": 34,
+      "kind": "template-expression",
+      "english": "Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}",
+      "evidence": "`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+        "read_lines": [
+          1,
+          29
+        ],
+        "string_template_occurrences": 8,
+        "fixed_rows": 2,
+        "excluded_occurrences": 6,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 5,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`toolcall_start content at index ${event.contentIndex} is not a tool call`"
+          },
+          {
+            "line": 21,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"message_update message is not an assistant message\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 5,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`toolcall_start content at index ${event.contentIndex} is not a tool call`)"
+          },
+          {
+            "line": 21,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(\"message_update message is not an assistant message\")"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 5,
+            "column": 13,
+            "expression": "new Error(`toolcall_start content at index ${event.contentIndex} is not a tool call`)"
+          },
+          {
+            "line": 21,
+            "column": 9,
+            "expression": "new Error(\"message_update message is not an assistant message\")"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 26,
+            "column": 32,
+            "callee": "toJsonAssistantMessageEvent",
+            "arguments": [
+              "event.assistantMessageEvent"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full29 lines. Two defensive Error definitions; valid assistant message_update drops partial and outer message but retains usage/delta, toolcall_start adds id/toolName. All other events same object. Native JSON/RPC listener throw can propagate, TUI not consumer; malformed missing fields can TypeError first. External event producer/agent callback propagation pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.js",
+        "read_lines": [
+          1,
+          49
+        ],
+        "string_template_occurrences": 12,
+        "fixed_rows": 0,
+        "excluded_occurrences": 12,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 19,
+            "column": 21,
+            "callee": "StringDecoder",
+            "source": "new StringDecoder(\"utf8\")"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:string_decoder"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 9,
+            "column": 15,
+            "callee": "JSON.stringify",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 9,
+            "callee": "onLine",
+            "arguments": [
+              "line.endsWith(\"\\r\") ? line.slice(0, -1) : line"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 16,
+            "callee": "line.endsWith",
+            "arguments": [
+              "\"\\r\""
+            ]
+          },
+          {
+            "line": 22,
+            "column": 38,
+            "callee": "line.slice",
+            "arguments": [
+              "0",
+              "-1"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 55,
+            "callee": "decoder.write",
+            "arguments": [
+              "chunk"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 34,
+            "callee": "buffer.indexOf",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 31,
+            "column": 13,
+            "callee": "emitLine",
+            "arguments": [
+              "buffer.slice(0, newlineIndex)"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 22,
+            "callee": "buffer.slice",
+            "arguments": [
+              "0",
+              "newlineIndex"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 22,
+            "callee": "buffer.slice",
+            "arguments": [
+              "newlineIndex + 1"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 19,
+            "callee": "decoder.end",
+            "arguments": []
+          },
+          {
+            "line": 38,
+            "column": 13,
+            "callee": "emitLine",
+            "arguments": [
+              "buffer"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 5,
+            "callee": "stream.on",
+            "arguments": [
+              "\"data\"",
+              "onData"
+            ]
+          },
+          {
+            "line": 43,
+            "column": 5,
+            "callee": "stream.on",
+            "arguments": [
+              "\"end\"",
+              "onEnd"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 9,
+            "callee": "stream.off",
+            "arguments": [
+              "\"data\"",
+              "onData"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 9,
+            "callee": "stream.off",
+            "arguments": [
+              "\"end\"",
+              "onEnd"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full49 lines. Strict LF delimiter, strip one terminal CR, StringDecoder UTF8 byte chunks, direct string chunks, flush nonempty remainder on end, detach listeners only. JSON.stringify serializer no validation/catch, undefined root becomes undefined LF; circular/BigInt/getters/native failures pending. No own human prose/Error. Callback sync throw not caught; buffer advancement occurs after emit, not finally."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+        "read_lines": [
+          1,
+          499
+        ],
+        "string_template_occurrences": 65,
+        "fixed_rows": 9,
+        "excluded_occurrences": 56,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 28,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Client already started\""
+          },
+          {
+            "line": 63,
+            "column": 34,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Agent process error: ${error.message}. Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 70,
+            "column": 50,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Agent process stdin error: ${error.message}. Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 370,
+            "column": 24,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Timeout waiting for agent to become idle. Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 389,
+            "column": 24,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Timeout collecting events. Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 433,
+            "column": 16,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Agent process exited (code=${code} signal=${signal}). Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 445,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Client not started\""
+          },
+          {
+            "line": 456,
+            "column": 27,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Agent process stdin is not writable. Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 465,
+            "column": 24,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`"
+          },
+          {
+            "line": 481,
+            "column": 69,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "String(error)"
+          },
+          {
+            "line": 491,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "errorResponse.error"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 15,
+            "column": 23,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 28,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"Client already started\")"
+          },
+          {
+            "line": 63,
+            "column": 34,
+            "callee": "Error",
+            "source": "new Error(`Agent process error: ${error.message}. Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 70,
+            "column": 50,
+            "callee": "Error",
+            "source": "new Error(`Agent process stdin error: ${error.message}. Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 79,
+            "column": 15,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => setTimeout(resolve, 100))"
+          },
+          {
+            "line": 96,
+            "column": 15,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n            const timeout = setTimeout(() => {\n                this.process?.kill(\"SIGKILL\");\n                resolve();\n            }, 1000);\n            this.process?.on(\"exit\", () => {\n                clearTimeout(timeout);\n                resolve();\n            });\n        })"
+          },
+          {
+            "line": 367,
+            "column": 16,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n            const timer = setTimeout(() => {\n                unsubscribe();\n                reject(new Error(`Timeout waiting for agent to become idle. Stderr: ${this.stderr}`));\n            }, timeout);\n            const unsubscribe = this.onEvent((event) => {\n                if (event.type === \"agent_settled\") {\n                    clearTimeout(timer);\n                    unsubscribe();\n                    resolve();\n                }\n            });\n        })"
+          },
+          {
+            "line": 370,
+            "column": 24,
+            "callee": "Error",
+            "source": "new Error(`Timeout waiting for agent to become idle. Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 385,
+            "column": 16,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n            const events = [];\n            const timer = setTimeout(() => {\n                unsubscribe();\n                reject(new Error(`Timeout collecting events. Stderr: ${this.stderr}`));\n            }, timeout);\n            const unsubscribe = this.onEvent((event) => {\n                events.push(event);\n                if (event.type === \"agent_settled\") {\n                    clearTimeout(timer);\n                    unsubscribe();\n                    resolve(events);\n                }\n            });\n        })"
+          },
+          {
+            "line": 389,
+            "column": 24,
+            "callee": "Error",
+            "source": "new Error(`Timeout collecting events. Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 433,
+            "column": 16,
+            "callee": "Error",
+            "source": "new Error(`Agent process exited (code=${code} signal=${signal}). Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 445,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"Client not started\")"
+          },
+          {
+            "line": 456,
+            "column": 27,
+            "callee": "Error",
+            "source": "new Error(`Agent process stdin is not writable. Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 462,
+            "column": 16,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n            const timeout = setTimeout(() => {\n                this.pendingRequests.delete(id);\n                reject(new Error(`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`));\n            }, 30000);\n            this.pendingRequests.set(id, {\n                resolve: (response) => {\n                    clearTimeout(timeout);\n                    resolve(response);\n                },\n                reject: (error) => {\n                    clearTimeout(timeout);\n                    reject(error);\n                },\n            });\n            try {\n                stdin.write(serializeJsonLine(fullCommand));\n            }\n            catch (error) {\n                const writeError = error instanceof Error ? error : new Error(String(error));\n                const pending = this.pendingRequests.get(id);\n                this.pendingRequests.delete(id);\n                pending?.reject(writeError);\n            }\n        })"
+          },
+          {
+            "line": 465,
+            "column": 24,
+            "callee": "Error",
+            "source": "new Error(`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`)"
+          },
+          {
+            "line": 481,
+            "column": 69,
+            "callee": "Error",
+            "source": "new Error(String(error))"
+          },
+          {
+            "line": 491,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(errorResponse.error)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 28,
+            "column": 13,
+            "expression": "new Error(\"Client already started\")"
+          },
+          {
+            "line": 83,
+            "column": 13,
+            "expression": "error"
+          },
+          {
+            "line": 445,
+            "column": 13,
+            "expression": "new Error(\"Client not started\")"
+          },
+          {
+            "line": 448,
+            "column": 13,
+            "expression": "this.exitError"
+          },
+          {
+            "line": 453,
+            "column": 13,
+            "expression": "error"
+          },
+          {
+            "line": 458,
+            "column": 13,
+            "expression": "error"
+          },
+          {
+            "line": 491,
+            "column": 13,
+            "expression": "new Error(errorResponse.error)"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 428,
+            "column": 9,
+            "source": "catch {\n            // Ignore non-JSON lines\n        }"
+          },
+          {
+            "line": 480,
+            "column": 13,
+            "source": "catch (error) {\n                const writeError = error instanceof Error ? error : new Error(String(error));\n                const pending = this.pendingRequests.get(id);\n                this.pendingRequests.delete(id);\n                pending?.reject(writeError);\n            }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "node:child_process"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./jsonl.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 34,
+            "column": 13,
+            "callee": "args.push",
+            "arguments": [
+              "\"--provider\"",
+              "this.options.provider"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 13,
+            "callee": "args.push",
+            "arguments": [
+              "\"--model\"",
+              "this.options.model"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 13,
+            "callee": "args.push",
+            "arguments": [
+              "...this.options.args"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 30,
+            "callee": "spawn",
+            "arguments": [
+              "\"node\"",
+              "[cliPath, ...args]",
+              "{\n            cwd: this.options.cwd,\n            env: { ...process.env, ...this.options.env },\n            stdio: [\"pipe\", \"pipe\", \"pipe\"],\n        }"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 9,
+            "callee": "childProcess.stderr?.on",
+            "arguments": [
+              "\"data\"",
+              "(data) => {\n            this.stderr += data.toString();\n            process.stderr.write(data);\n        }"
+            ]
+          },
+          {
+            "line": 50,
+            "column": 28,
+            "callee": "data.toString",
+            "arguments": []
+          },
+          {
+            "line": 51,
+            "column": 13,
+            "callee": "process.stderr.write",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 53,
+            "column": 9,
+            "callee": "childProcess.once",
+            "arguments": [
+              "\"exit\"",
+              "(code, signal) => {\n            if (this.process !== childProcess)\n                return;\n            const error = this.createProcessExitError(code, signal);\n            this.exitError = error;\n            this.rejectPendingRequests(error);\n        }"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 27,
+            "callee": "this.createProcessExitError",
+            "arguments": [
+              "code",
+              "signal"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 13,
+            "callee": "this.rejectPendingRequests",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 9,
+            "callee": "childProcess.once",
+            "arguments": [
+              "\"error\"",
+              "(error) => {\n            if (this.process !== childProcess)\n                return;\n            const processError = new Error(`Agent process error: ${error.message}. Stderr: ${this.stderr}`);\n            this.exitError = processError;\n            this.rejectPendingRequests(processError);\n        }"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 13,
+            "callee": "this.rejectPendingRequests",
+            "arguments": [
+              "processError"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 9,
+            "callee": "childProcess.stdin?.on",
+            "arguments": [
+              "\"error\"",
+              "(error) => {\n            if (this.process !== childProcess)\n                return;\n            const stdinError = this.exitError ?? new Error(`Agent process stdin error: ${error.message}. Stderr: ${this.stderr}`);\n            this.exitError = stdinError;\n            this.rejectPendingRequests(stdinError);\n        }"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 13,
+            "callee": "this.rejectPendingRequests",
+            "arguments": [
+              "stdinError"
+            ]
+          },
+          {
+            "line": 75,
+            "column": 34,
+            "callee": "attachJsonlLineReader",
+            "arguments": [
+              "childProcess.stdout",
+              "(line) => {\n            this.handleLine(line);\n        }"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 13,
+            "callee": "this.handleLine",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 40,
+            "callee": "setTimeout",
+            "arguments": [
+              "resolve",
+              "100"
+            ]
+          },
+          {
+            "line": 81,
+            "column": 45,
+            "callee": "this.createProcessExitError",
+            "arguments": [
+              "this.process.exitCode",
+              "this.process.signalCode"
+            ]
+          },
+          {
+            "line": 92,
+            "column": 9,
+            "callee": "this.stopReadingStdout",
+            "arguments": []
+          },
+          {
+            "line": 94,
+            "column": 9,
+            "callee": "this.process.kill",
+            "arguments": [
+              "\"SIGTERM\""
+            ]
+          },
+          {
+            "line": 97,
+            "column": 29,
+            "callee": "setTimeout",
+            "arguments": [
+              "() => {\n                this.process?.kill(\"SIGKILL\");\n                resolve();\n            }",
+              "1000"
+            ]
+          },
+          {
+            "line": 98,
+            "column": 17,
+            "callee": "this.process?.kill",
+            "arguments": [
+              "\"SIGKILL\""
+            ]
+          },
+          {
+            "line": 99,
+            "column": 17,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 101,
+            "column": 13,
+            "callee": "this.process?.on",
+            "arguments": [
+              "\"exit\"",
+              "() => {\n                clearTimeout(timeout);\n                resolve();\n            }"
+            ]
+          },
+          {
+            "line": 102,
+            "column": 17,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timeout"
+            ]
+          },
+          {
+            "line": 103,
+            "column": 17,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 107,
+            "column": 9,
+            "callee": "this.pendingRequests.clear",
+            "arguments": []
+          },
+          {
+            "line": 113,
+            "column": 9,
+            "callee": "this.eventListeners.push",
+            "arguments": [
+              "listener"
+            ]
+          },
+          {
+            "line": 115,
+            "column": 27,
+            "callee": "this.eventListeners.indexOf",
+            "arguments": [
+              "listener"
+            ]
+          },
+          {
+            "line": 117,
+            "column": 17,
+            "callee": "this.eventListeners.splice",
+            "arguments": [
+              "index",
+              "1"
+            ]
+          },
+          {
+            "line": 136,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"prompt\", message, images, streamingBehavior }"
+            ]
+          },
+          {
+            "line": 137,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 143,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"steer\", message, images }"
+            ]
+          },
+          {
+            "line": 144,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"follow_up\", message, images }"
+            ]
+          },
+          {
+            "line": 151,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 157,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"abort\" }"
+            ]
+          },
+          {
+            "line": 163,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"clear_queue\" }"
+            ]
+          },
+          {
+            "line": 164,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 172,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"new_session\", parentSession }"
+            ]
+          },
+          {
+            "line": 173,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 179,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_state\" }"
+            ]
+          },
+          {
+            "line": 180,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 186,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_model\", provider, modelId }"
+            ]
+          },
+          {
+            "line": 187,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 193,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"cycle_model\" }"
+            ]
+          },
+          {
+            "line": 194,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 200,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_available_models\" }"
+            ]
+          },
+          {
+            "line": 201,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 207,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_thinking_level\", level }"
+            ]
+          },
+          {
+            "line": 213,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"cycle_thinking_level\" }"
+            ]
+          },
+          {
+            "line": 214,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 220,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_available_thinking_levels\" }"
+            ]
+          },
+          {
+            "line": 221,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 227,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_steering_mode\", mode }"
+            ]
+          },
+          {
+            "line": 233,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_follow_up_mode\", mode }"
+            ]
+          },
+          {
+            "line": 239,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"compact\", customInstructions }"
+            ]
+          },
+          {
+            "line": 240,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 246,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_auto_compaction\", enabled }"
+            ]
+          },
+          {
+            "line": 252,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_auto_retry\", enabled }"
+            ]
+          },
+          {
+            "line": 258,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"abort_retry\" }"
+            ]
+          },
+          {
+            "line": 264,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"bash\", command }"
+            ]
+          },
+          {
+            "line": 265,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 271,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"abort_bash\" }"
+            ]
+          },
+          {
+            "line": 277,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_session_stats\" }"
+            ]
+          },
+          {
+            "line": 278,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 284,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"export_html\", outputPath }"
+            ]
+          },
+          {
+            "line": 285,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 292,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"switch_session\", sessionPath }"
+            ]
+          },
+          {
+            "line": 293,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 300,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"fork\", entryId }"
+            ]
+          },
+          {
+            "line": 301,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 308,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"clone\" }"
+            ]
+          },
+          {
+            "line": 309,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 315,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_fork_messages\" }"
+            ]
+          },
+          {
+            "line": 316,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 322,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_entries\", since }"
+            ]
+          },
+          {
+            "line": 323,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 329,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_tree\" }"
+            ]
+          },
+          {
+            "line": 330,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 336,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_last_assistant_text\" }"
+            ]
+          },
+          {
+            "line": 337,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 343,
+            "column": 15,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"set_session_name\", name }"
+            ]
+          },
+          {
+            "line": 349,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_messages\" }"
+            ]
+          },
+          {
+            "line": 350,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 356,
+            "column": 32,
+            "callee": "this.send",
+            "arguments": [
+              "{ type: \"get_commands\" }"
+            ]
+          },
+          {
+            "line": 357,
+            "column": 16,
+            "callee": "this.getData",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 368,
+            "column": 27,
+            "callee": "setTimeout",
+            "arguments": [
+              "() => {\n                unsubscribe();\n                reject(new Error(`Timeout waiting for agent to become idle. Stderr: ${this.stderr}`));\n            }",
+              "timeout"
+            ]
+          },
+          {
+            "line": 369,
+            "column": 17,
+            "callee": "unsubscribe",
+            "arguments": []
+          },
+          {
+            "line": 370,
+            "column": 17,
+            "callee": "reject",
+            "arguments": [
+              "new Error(`Timeout waiting for agent to become idle. Stderr: ${this.stderr}`)"
+            ]
+          },
+          {
+            "line": 372,
+            "column": 33,
+            "callee": "this.onEvent",
+            "arguments": [
+              "(event) => {\n                if (event.type === \"agent_settled\") {\n                    clearTimeout(timer);\n                    unsubscribe();\n                    resolve();\n                }\n            }"
+            ]
+          },
+          {
+            "line": 374,
+            "column": 21,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timer"
+            ]
+          },
+          {
+            "line": 375,
+            "column": 21,
+            "callee": "unsubscribe",
+            "arguments": []
+          },
+          {
+            "line": 376,
+            "column": 21,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 387,
+            "column": 27,
+            "callee": "setTimeout",
+            "arguments": [
+              "() => {\n                unsubscribe();\n                reject(new Error(`Timeout collecting events. Stderr: ${this.stderr}`));\n            }",
+              "timeout"
+            ]
+          },
+          {
+            "line": 388,
+            "column": 17,
+            "callee": "unsubscribe",
+            "arguments": []
+          },
+          {
+            "line": 389,
+            "column": 17,
+            "callee": "reject",
+            "arguments": [
+              "new Error(`Timeout collecting events. Stderr: ${this.stderr}`)"
+            ]
+          },
+          {
+            "line": 391,
+            "column": 33,
+            "callee": "this.onEvent",
+            "arguments": [
+              "(event) => {\n                events.push(event);\n                if (event.type === \"agent_settled\") {\n                    clearTimeout(timer);\n                    unsubscribe();\n                    resolve(events);\n                }\n            }"
+            ]
+          },
+          {
+            "line": 392,
+            "column": 17,
+            "callee": "events.push",
+            "arguments": [
+              "event"
+            ]
+          },
+          {
+            "line": 394,
+            "column": 21,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timer"
+            ]
+          },
+          {
+            "line": 395,
+            "column": 21,
+            "callee": "unsubscribe",
+            "arguments": []
+          },
+          {
+            "line": 396,
+            "column": 21,
+            "callee": "resolve",
+            "arguments": [
+              "events"
+            ]
+          },
+          {
+            "line": 405,
+            "column": 31,
+            "callee": "this.collectEvents",
+            "arguments": [
+              "timeout"
+            ]
+          },
+          {
+            "line": 406,
+            "column": 15,
+            "callee": "this.prompt",
+            "arguments": [
+              "message",
+              "images"
+            ]
+          },
+          {
+            "line": 414,
+            "column": 26,
+            "callee": "JSON.parse",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 416,
+            "column": 56,
+            "callee": "this.pendingRequests.has",
+            "arguments": [
+              "data.id"
+            ]
+          },
+          {
+            "line": 417,
+            "column": 33,
+            "callee": "this.pendingRequests.get",
+            "arguments": [
+              "data.id"
+            ]
+          },
+          {
+            "line": 418,
+            "column": 17,
+            "callee": "this.pendingRequests.delete",
+            "arguments": [
+              "data.id"
+            ]
+          },
+          {
+            "line": 419,
+            "column": 17,
+            "callee": "pending.resolve",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 425,
+            "column": 17,
+            "callee": "listener",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 436,
+            "column": 31,
+            "callee": "this.pendingRequests.values",
+            "arguments": []
+          },
+          {
+            "line": 437,
+            "column": 13,
+            "callee": "pending.reject",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 439,
+            "column": 9,
+            "callee": "this.pendingRequests.clear",
+            "arguments": []
+          },
+          {
+            "line": 451,
+            "column": 27,
+            "callee": "this.createProcessExitError",
+            "arguments": [
+              "childProcess.exitCode",
+              "childProcess.signalCode"
+            ]
+          },
+          {
+            "line": 463,
+            "column": 29,
+            "callee": "setTimeout",
+            "arguments": [
+              "() => {\n                this.pendingRequests.delete(id);\n                reject(new Error(`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`));\n            }",
+              "30000"
+            ]
+          },
+          {
+            "line": 464,
+            "column": 17,
+            "callee": "this.pendingRequests.delete",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 465,
+            "column": 17,
+            "callee": "reject",
+            "arguments": [
+              "new Error(`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`)"
+            ]
+          },
+          {
+            "line": 467,
+            "column": 13,
+            "callee": "this.pendingRequests.set",
+            "arguments": [
+              "id",
+              "{\n                resolve: (response) => {\n                    clearTimeout(timeout);\n                    resolve(response);\n                },\n                reject: (error) => {\n                    clearTimeout(timeout);\n                    reject(error);\n                },\n            }"
+            ]
+          },
+          {
+            "line": 469,
+            "column": 21,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timeout"
+            ]
+          },
+          {
+            "line": 470,
+            "column": 21,
+            "callee": "resolve",
+            "arguments": [
+              "response"
+            ]
+          },
+          {
+            "line": 473,
+            "column": 21,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timeout"
+            ]
+          },
+          {
+            "line": 474,
+            "column": 21,
+            "callee": "reject",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 478,
+            "column": 17,
+            "callee": "stdin.write",
+            "arguments": [
+              "serializeJsonLine(fullCommand)"
+            ]
+          },
+          {
+            "line": 478,
+            "column": 29,
+            "callee": "serializeJsonLine",
+            "arguments": [
+              "fullCommand"
+            ]
+          },
+          {
+            "line": 481,
+            "column": 79,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 482,
+            "column": 33,
+            "callee": "this.pendingRequests.get",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 483,
+            "column": 17,
+            "callee": "this.pendingRequests.delete",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 484,
+            "column": 17,
+            "callee": "pending?.reject",
+            "arguments": [
+              "writeError"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full499 lines. Nine own fixed Error definitions plus dynamic Error(String(error))/Error(response.error) boundaries. Exported SDK client with no owned active invocation established by bounded literal scan. Child stderr forwarded raw/accumulated across restarts; exit not close; pending response and agent-settled timeouts distinct. Listener errors swallowed synchronously by handleLine, async rejections not awaited. Some void command methods ignore response.success; getData rejects other false responses. No process, timers, command or line parser executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.js",
+        "read_lines": [
+          1,
+          8
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": null,
+            "source": "export {};"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full8 lines, compiled protocol type-only export{}; no runtime string/Error/catch/import/call/prose. Declaration/map schema is associated nonruntime census only, not serializer runtime producer."
+      }
+    ],
+    "method": "Full4 finite local runtime bodies585 lines read; all literal/template occurrences partitioned plus Error/new/throw/catch/regex/import/export/control/all-call census. Actual JSON/RPC/print/API/child stderr/stdout/framing/cancellation/timeout/exit/close/native-event/Error suppression routes qualified. Source/metadata only; no audited modules/child/process/line parser/stream/native/protocol commands/JSON model payload/timers executed."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/modes/json-event.js",
+      "dist/modes/rpc/jsonl.js",
+      "dist/modes/rpc/rpc-client.js",
+      "dist/modes/rpc/rpc-types.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/modes/json-event.d.ts",
+      "dist/modes/json-event.d.ts.map",
+      "dist/modes/json-event.js.map",
+      "dist/modes/rpc/jsonl.d.ts",
+      "dist/modes/rpc/jsonl.d.ts.map",
+      "dist/modes/rpc/jsonl.js.map",
+      "dist/modes/rpc/rpc-client.d.ts",
+      "dist/modes/rpc/rpc-client.d.ts.map",
+      "dist/modes/rpc/rpc-client.js.map",
+      "dist/modes/rpc/rpc-types.d.ts",
+      "dist/modes/rpc/rpc-types.d.ts.map",
+      "dist/modes/rpc/rpc-types.js.map"
+    ]
+  },
+  "prior_ownership": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0294",
+      "new_full_body_owner": "pi-rpc-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/jsonl.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0296",
+      "new_full_body_owner": "pi-rpc-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-client.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0297",
+      "new_full_body_owner": "pi-rpc-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-types.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0299",
+      "new_full_body_owner": "pi-rpc-support-scope.csv",
+      "prior_full_body_claim": false
+    }
+  ],
+  "prior_full_body_claims": [],
+  "historical_ownership_census": {
+    "source": "review/text-inventory/pi-runtime-census.csv",
+    "sha256": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225",
+    "status": "historical pending snapshot frozen; follow-on full owners checked independently"
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "external:Node-child-process-OS-signals-streams-StringDecoder-JSON-Error-native",
+      "status": "implementation/native-error/payload/external-client-rendering-body-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "status": "prior-full-owner-pi-runtime-scope.csv-bounded-support-only-no-duplicate-body-claim"
+    },
+    {
+      "source": "external:agent-provider-event-callback-propagation-and-optional-programmatic-client-host",
+      "status": "extra-async-error-propagation/native-client-display-routes-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "status": "compiled-bundle-full-body-pending-unbundled-client-and-protocol-not-bundle-closure"
+    }
+  ],
+  "limits": [
+    "Four full local runtime bodies585 lines20031 bytes immutable BASE346 exact1.4.0, root/nested/canonical/pinned patch sources unchanged. RpcMode/AgentSession/print bodies bounded prior owners only; package/SDK/provider/session/compiled/foreign/native graph remains open.",
+    "Eleven own fixed Error definitions, including two malformed-event guards. RpcClient SDK exported but no literal RpcClient match in bounded owned packages/*/src TypeScript excluding tests; compiled/dynamic/alias/other caller closure not inferred. Client default relative dist/cli.js differs shipped manifest bin dist/bundle/cli.js; no successful default launch claimed.",
+    "Client stderr rawforwarded and retained across starts/stops, old-child stderr handler lacks identity check; error snapshots at construction may omit later bytes and perchunk toString may differ from raw UTF8 bytes. Child stdout is parsed as protocol, not terminal printed by client. No native output/text producers silently closed.",
+    "Strict LF reader strips one terminal CR, preserves Unicode separators, flushes nonempty remainder before RPC EOF drain; detach no flush, callback sync throw occurs before buffer advance, no catch/error/close handling. JSON.stringify may throw native or serialize undefined into invalid JSONL undefined LF, API does not validate.",
+    "Response correlation not schema/command/success validation; dynamic server error becomes Error only getData consumers. Void commands await send without checking success. handleLine catch covers sync JSON/shape/listener errors and skips later listeners; async listener promises unawaited, no blanket swallow.",
+    "start100ms is no readiness handshake; error event can set exitError while startresolves, stop uses exit not close and1s SIGKILL fallback; no general immediate waiter rejection. Pending response30s and future-settled60s timers distinct; timeout sends no abort; promptAndWait failure leaves collection promise.",
+    "Malformed JSON event guard native propagation is callback/async-context dependent; listener throws local, print catch only when rejection reaches awaited path, RPC prompt afterpreflight suppresses error response and other command caught only unreported. No unconditional TUI/RPC headline paint.",
+    "No audit module/process/child/server/parser/line protocol/native/stdin/stdout/state/config/worker/timer execution, no old/shared/product/census/index/git modifications. Audit parses source and its own evidence only; code/protocol/command/ID/role/framing and external payload protected."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-rpc-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-rpc-support.csv": "dde1c95fbfb73c1ce3eff2b66a49e0c376c894988337560885468bbbf1b5cd30",
+    "pi-rpc-support-boundaries.csv": "45b77fc7d899e3583749903b6379c35ac524fcb7cbc975be511920854d4d728e",
+    "pi-rpc-support-scope.csv": "0fe0b20a3e5f83a673d836221c39fe1cf0464104bafbfee53dc2c76ee9c00081",
+    "pi-rpc-support-exclusions.csv": "65265eeede9731f139ac88b4f34224b4e52206c4ab05a99a7341d67af7e72446"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/modes/json-event.js",
+            "archive_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+            "root_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+            "cli_nested_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/jsonl.js",
+            "archive_sha256": "049a9f8ca4242c79f1911ed977949e8d8906b4561f424c2729687f426fabaacf",
+            "root_sha256": "049a9f8ca4242c79f1911ed977949e8d8906b4561f424c2729687f426fabaacf",
+            "cli_nested_sha256": "049a9f8ca4242c79f1911ed977949e8d8906b4561f424c2729687f426fabaacf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-client.js",
+            "archive_sha256": "6cbb7d183db13468af61af733013a97ee6f5547ccd44edb1f85647f8bd6f218c",
+            "root_sha256": "6cbb7d183db13468af61af733013a97ee6f5547ccd44edb1f85647f8bd6f218c",
+            "cli_nested_sha256": "6cbb7d183db13468af61af733013a97ee6f5547ccd44edb1f85647f8bd6f218c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-types.js",
+            "archive_sha256": "bda239004694b7a087b3d9984e417d1cb4decf0da4483f1604881385240ff374",
+            "root_sha256": "bda239004694b7a087b3d9984e417d1cb4decf0da4483f1604881385240ff374",
+            "cli_nested_sha256": "bda239004694b7a087b3d9984e417d1cb4decf0da4483f1604881385240ff374",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+            "root_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+            "cli_nested_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/index.js",
+            "archive_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+            "root_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+            "cli_nested_sha256": "42bd65ff8aee4f60dfcfcfb9db66772219281585cdbef845df747c8846618a87",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/json-event.d.ts",
+            "archive_sha256": "8ed959fe14cf0ce76f47309cf0a503d3e21a0ab86793b22e5759dd4d6f747e65",
+            "root_sha256": "8ed959fe14cf0ce76f47309cf0a503d3e21a0ab86793b22e5759dd4d6f747e65",
+            "cli_nested_sha256": "8ed959fe14cf0ce76f47309cf0a503d3e21a0ab86793b22e5759dd4d6f747e65",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/json-event.d.ts.map",
+            "archive_sha256": "cc5580ed3ec5f4907238fc0ea1da1d040608c0fc15610342aae1d0c91ab20a07",
+            "root_sha256": "cc5580ed3ec5f4907238fc0ea1da1d040608c0fc15610342aae1d0c91ab20a07",
+            "cli_nested_sha256": "cc5580ed3ec5f4907238fc0ea1da1d040608c0fc15610342aae1d0c91ab20a07",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/json-event.js.map",
+            "archive_sha256": "d8725b721872fa1080bba40d23af962dc6032af2723b22dfbf6ca8937968ea86",
+            "root_sha256": "d8725b721872fa1080bba40d23af962dc6032af2723b22dfbf6ca8937968ea86",
+            "cli_nested_sha256": "d8725b721872fa1080bba40d23af962dc6032af2723b22dfbf6ca8937968ea86",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/jsonl.d.ts",
+            "archive_sha256": "21733fb8506c4b88ce392352521260608a904a5c54dadfa7fd181be25712e4fe",
+            "root_sha256": "21733fb8506c4b88ce392352521260608a904a5c54dadfa7fd181be25712e4fe",
+            "cli_nested_sha256": "21733fb8506c4b88ce392352521260608a904a5c54dadfa7fd181be25712e4fe",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/jsonl.d.ts.map",
+            "archive_sha256": "bdcbd16ea3627f690c946588b716a2cdff695c530abeb619e06ef78a81d3e550",
+            "root_sha256": "bdcbd16ea3627f690c946588b716a2cdff695c530abeb619e06ef78a81d3e550",
+            "cli_nested_sha256": "bdcbd16ea3627f690c946588b716a2cdff695c530abeb619e06ef78a81d3e550",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/jsonl.js.map",
+            "archive_sha256": "0fc89bf8693980693b1e91a6b1245addc03ce3655bbf4ce993efb131ea387658",
+            "root_sha256": "0fc89bf8693980693b1e91a6b1245addc03ce3655bbf4ce993efb131ea387658",
+            "cli_nested_sha256": "0fc89bf8693980693b1e91a6b1245addc03ce3655bbf4ce993efb131ea387658",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-client.d.ts",
+            "archive_sha256": "85ec53b3f019e0176bdbb8f843a213d8ae8aa0bba937dce40291e1315b762b1b",
+            "root_sha256": "85ec53b3f019e0176bdbb8f843a213d8ae8aa0bba937dce40291e1315b762b1b",
+            "cli_nested_sha256": "85ec53b3f019e0176bdbb8f843a213d8ae8aa0bba937dce40291e1315b762b1b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-client.d.ts.map",
+            "archive_sha256": "e21b059a4b594cd9287cdff8cb54de39d95a5292ed6e45bbc93673b6111cfd6d",
+            "root_sha256": "e21b059a4b594cd9287cdff8cb54de39d95a5292ed6e45bbc93673b6111cfd6d",
+            "cli_nested_sha256": "e21b059a4b594cd9287cdff8cb54de39d95a5292ed6e45bbc93673b6111cfd6d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-client.js.map",
+            "archive_sha256": "966f80c1cbffcdc0ff3b53e81ecb1d7e152c6363aa35038da2b94377fc6c9387",
+            "root_sha256": "966f80c1cbffcdc0ff3b53e81ecb1d7e152c6363aa35038da2b94377fc6c9387",
+            "cli_nested_sha256": "966f80c1cbffcdc0ff3b53e81ecb1d7e152c6363aa35038da2b94377fc6c9387",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-types.d.ts",
+            "archive_sha256": "68b6dc2e47a3969c09c961a40d0462473407b6786f3bd02715fa035e816e2af1",
+            "root_sha256": "68b6dc2e47a3969c09c961a40d0462473407b6786f3bd02715fa035e816e2af1",
+            "cli_nested_sha256": "68b6dc2e47a3969c09c961a40d0462473407b6786f3bd02715fa035e816e2af1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-types.d.ts.map",
+            "archive_sha256": "303f6efc19c328471673504a0a71e9c4281b775faa9b6ed3ba3833df227245f4",
+            "root_sha256": "303f6efc19c328471673504a0a71e9c4281b775faa9b6ed3ba3833df227245f4",
+            "cli_nested_sha256": "303f6efc19c328471673504a0a71e9c4281b775faa9b6ed3ba3833df227245f4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-types.js.map",
+            "archive_sha256": "bd333166b84415461456511a71406fedc234f6534f46a6f27c4915386f16c11b",
+            "root_sha256": "bd333166b84415461456511a71406fedc234f6534f46a6f27c4915386f16c11b",
+            "cli_nested_sha256": "bd333166b84415461456511a71406fedc234f6534f46a6f27c4915386f16c11b",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 21,
+    "byte_identical_scope_files": 19,
+    "pinned_patch_scope_files": 2,
+    "unresolved_scope_differences": 0
+  }
+}
