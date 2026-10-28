@@ -72,6 +72,7 @@
     "build-integration.csv": 0,
     "validation-scripts.csv": 0,
     "qualification-scripts.csv": 0,
+    "dev-build-text.csv": 0,
     "textguard-native.csv": 0,
     "textguard-dependencies.csv": 0
   },
@@ -144,6 +145,7 @@
     "build-integration.csv": "bfc2cd486579e3d04392d373846e4fdeceae68688440652477514528490c2998",
     "validation-scripts.csv": "327eb3880fc9104bbfb12ba20c8e306a962d48599001e85ae5c6bef64cd6ba13",
     "qualification-scripts.csv": "028014611fc5c84613196288c1b1180db687cde6161816c59e41b3f0a4d1501c",
+    "dev-build-text.csv": "6c625b4a41359c634b7a253e5c1d686964e4c365e1cc034b9b0247de8dbc2b01",
     "textguard-native.csv": "08467f86575d3192cfceb3dd8bd2b656708b74c4f3ca385e8ddeeab8501a57ed",
     "textguard-dependencies.csv": "d4c96fa7aa75e2f90566abace6eea342d42519bdc9a0c3bb2c5dc79da4ef3d19"
   },

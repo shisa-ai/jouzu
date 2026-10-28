@@ -854,10 +854,22 @@ fragment and 36 other delivery boundaries. The
 and 131 pinned source hashes/Git blob identities. Records distinguish emitted
 reports, fixture/model inputs, generated code, streamed/captured child output,
 retry/cleanup replacement and native assertions. This root-script snapshot has
-80 covered bodies and one pending body, the 656-line dev-build.sh. Six copied
+80 covered bodies and one pending body, the 656-line dev-build.sh continued below. Six copied
 upstream bodies retain separate pending boundaries. Verification reads source and
 frozen blob metadata without running Git, scripts, models, children, network or
 product producers.
+
+[dev-build-text.csv](dev-build-text.csv) adds 1,515 bootstrap records: 1,492 exact
+shell/nested lexical occurrences and 23 delivery/native boundaries. Its
+[scope](dev-build-text-scope.csv) covers all 656 lines and 33 functions, with 131
+source SHA256/Git blob identities. Sixty echo occurrences, the quoted help
+heredoc, Node dependency-probe templates and parameter fallbacks retain raw source
+spelling and branch conditions. Hook return status, successful receipt warnings,
+lock status 75, argument return 2, unresolved generated quoting and redirection
+order have separate dispositions. The finite root-script census now accounts
+for all 81 bodies: eighty prior plus this one, with zero root bodies pending.
+Six copied upstream bodies remain separate. Verification executes no Bash,
+Node producer, Git, build, hook, install, native or network operation.
 
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
@@ -945,6 +957,7 @@ python -B review/text-inventory/verify-release-scripts.py
 python -B review/text-inventory/verify-build-integration.py
 python -B review/text-inventory/verify-validation-scripts.py
 python -B review/text-inventory/verify-qualification-scripts.py
+python -B review/text-inventory/verify-dev-build-text.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>

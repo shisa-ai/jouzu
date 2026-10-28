@@ -78,6 +78,7 @@
     "build-integration-scope.csv": "83caed6ae103f3f3bd8ca392ebc211a801cd469197a38ee594c62cc9f2ac54c8",
     "validation-scripts-scope.csv": "b20b35b944eab2d6547f2009ccb2b13b77cc546f35f89ddd4203489ccc9890c8",
     "qualification-scripts-scope.csv": "d27944342dcf4900b4b6477ce460f48027c64134a6fe77b562f339e1e7ec995a",
+    "dev-build-text-scope.csv": "3e0fc08495eed96f67fda96affaf087a01e1c0aed6654fbb016baeb8f5c321db",
     "textguard-native-scope.csv": "6391a10548dcfbd36c11ebeb9fe5e1b8e43dd85afa2a1c804392a918803d0c6a",
     "textguard-dependencies-scope.csv": "34233fa2246a5ce90a43203dc608f05d92833f8296f293f7af9d92f3d7851770",
     "catalog-snapshot.json": "2ead66b940219e429137498a54fa692d914079b558c376ce34e38bbddae0dd79"
