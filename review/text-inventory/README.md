@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 30 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 61 compiled bodies;
-20 compiled bodies remain pending. The
+universe with 31 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 63 compiled bodies;
+18 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1084,6 +1084,22 @@ separate path. The [scope](pi-ai-google-adapters-scope.csv) grants complete loca
 review to eight bodies without claiming SDK or external-error completeness.
 Four archives, installed copies, exact public patches and nineteen corruption
 controls pass without running providers, authentication, requests or native UI.
+
+[pi-bundle-execution-runtime.csv](pi-bundle-execution-runtime.csv) records 95
+qualified contexts across the complete compiled executor and worker bodies
+(129,604 bytes). The 719 [exclusions](pi-bundle-execution-runtime-exclusions.csv)
+complete the 814-node partition: 554 outer tokens and 260 statically mapped
+prelude tokens. Ninety-four
+[boundaries](pi-bundle-execution-runtime-boundaries.csv) retain guest/host bridge
+validation, script completion, approval, cancellation, worker failure, output
+rendering and caller activation. The host's duplicate prelude is initialized
+and hashed but unused; the worker uses its own copy. Private wrapper messages
+retain the fixed serializer's validity conditions. The
+[scope](pi-bundle-execution-runtime-scope.csv) grants complete local review to
+two bodies and keeps VM/native/model/caller dependencies bounded. Canonical
+archive, both installed trees and 31 corruption controls pass. Jouzu's inspected
+classic override is empty; native tool routes require their own activation.
+No script, worker, tool, model, VM or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2450,6 +2466,7 @@ node review/text-inventory/verify-pi-mcp-runtime-text.cjs
 node review/text-inventory/verify-pi-telemetry-runtime-text.cjs
 node review/text-inventory/verify-pi-server-protocol-text.cjs
 python -B review/text-inventory/verify-pi-ai-google-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-bundle-execution-runtime.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
