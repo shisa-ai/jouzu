@@ -3380,12 +3380,12 @@
   "offset_units": "ASCII source, byte offsets equal UTF16 units; half-open ranges, 1-based source lines/columns. Shell substitutions and printf escapes preserved as unexpanded source spelling.",
   "checker": {
     "source": "review/text-inventory/verify-pi-native-clipboard-text.py",
-    "sha256": "f3e273061bae2cd8766a3337d6872b6ba1bcfee352ab6d23b0190053e7ec1599",
+    "sha256": "7046871d17310cff48eeff3f417513df1c27d5c06205231792e0896db66bd82d",
     "audited_execution": false
   },
   "artifact_sha256_utf8_lf": {
-    "pi-native-clipboard-text.csv": "45b953ec24d64dd418baf5a192a65f31008177489c2822224bd803405a2f95f8",
-    "pi-native-clipboard-text-boundaries.csv": "3b9ce22ca6207d8b05869e9e75412cc423c0cb618cb1da5c6c499b1f8e470296",
+    "pi-native-clipboard-text.csv": "75b0a6b181879ff72862db73b2fefee45c3a0cbac4b601504be8333bf254f468",
+    "pi-native-clipboard-text-boundaries.csv": "9172e949d4340713b07e832df8fa54e203fa012ae4d27f26d7471f8ee4cf8134",
     "pi-native-clipboard-text-scope.csv": "8384c7fa8dbfe02ca06234413c1212fbdfc189eef9a44c745c0d3d001d5b2635",
     "pi-native-clipboard-text-exclusions.csv": "7e9f521c32626fde61e1a5e114b2f28017e18e53bd5e08e168c7147937124810"
   }

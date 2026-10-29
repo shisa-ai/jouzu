@@ -56,7 +56,7 @@ def source(name,rel):
     prove(a,b,c,patches.get((name,rel)))
     return a,dict(source='npm:'+name+'@1.4.0/'+rel,bytes=len(a),root_sha256=sha(a),cli_nested_sha256=sha(b),canonical_sha256=sha(c),relation='public manifest before/after' if (name,rel) in patches else 'exact archive/root/CLI bytes')
 
-NATIVE_PRIMARY_SHA='45b953ec24d64dd418baf5a192a65f31008177489c2822224bd803405a2f95f8'
+NATIVE_PRIMARY_SHA='75b0a6b181879ff72862db73b2fefee45c3a0cbac4b601504be8333bf254f468'
 import struct
 FILES=['native/darwin/prebuilds/darwin-arm64/darwin-platform.node','native/darwin/prebuilds/darwin-x64/darwin-platform.node','native/linux/prebuilds/linux-arm64/linux-platform-x11.node','native/linux/prebuilds/linux-x64/linux-platform-x11.node','native/win32/prebuilds/win32-arm64/win32-platform.node','native/win32/prebuilds/win32-x64/win32-platform.node']
 def span(b,a,n):assert a>=0 and n>=0 and a+n<=len(b);return b[a:a+n]

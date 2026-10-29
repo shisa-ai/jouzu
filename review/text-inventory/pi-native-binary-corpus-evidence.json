@@ -16945,7 +16945,7 @@
         "path": "native/linux/src/linux-platform-x11.c",
         "token_id": "native/linux/src/linux-platform-x11.c:10434:10464"
       },
-      "source_trigger": "Private read worker successfully open_clipboard (connection/window/atoms) but read_selection fails: preferred target discovery/selection/property/incremental buffer/read/deadline failure. Worker result must finish and be copied within outer3second wait to reach completion; failed open, busy/unready worker and expired outer wait return unavailable without this text.",
+      "source_trigger": "Private read worker successfully open_clipboard (connection/window/atoms) but read_selection fails: preferred target discovery/selection/property/incremental buffer/read/deadline failure. Worker result reaches completion only if worker_finished is true at the post-wait check and its result is copied. The outer wait requests a monotonic deadline three seconds ahead; an expired/nonzero wait leaves unavailable only when worker_finished is still false. There is no separate copy-deadline check. Failed open or busy/unready worker returns unavailable without this text.",
       "source_consumer": "getNativeClipboard exported by pi-tui/dist/index.js:33 ->native-platform.js:7-40 caches validated helper (getText/getImage functions). x64/arm64 only; Darwin/Win32 platform helper or Linux DISPLAY +x11 addon. Actual selected addon must implement reviewed source; binary equivalence remains unproved. queue_clipboard returns Promise, completion creates Error(job.error) and rejects deferred; fail(env,message) synchronously calls napi_throw_error iff resolved, otherwise returns undefined. Direct API caller can inspect error. pi-coding-agent clipboard.js:75-81 catches getText rejection ->null;99-107 catches setText ->command fallback;85 file-path await has no local catch. clipboard-image.js:170-211 native image rejection propagates. InteractiveMode:2500-2540 paste catch calls showError with prefix; prior command/UI localization owner handles prefix, native reason is dynamic diagnostic. No automatic default terminal paint of every native error."
     },
     {
@@ -18229,14 +18229,14 @@
   ],
   "source_inventory_snapshot": {
     "file": "pi-native-clipboard-text.csv",
-    "sha256": "45b953ec24d64dd418baf5a192a65f31008177489c2822224bd803405a2f95f8",
+    "sha256": "75b0a6b181879ff72862db73b2fefee45c3a0cbac4b601504be8333bf254f468",
     "qualification": "Frozen source text/guards only; exact canonical native literal anchors independently checked, no source-to-binary equivalence."
   },
   "extraction": "Maximal contiguous printable ASCII bytes0x20..0x7e, minimum3 characters; maximal UTF16 LE/BE runs of that ASCII subset at both byte phases, min3 decoded characters. Overlapping endian/phase observations intentional. Offsets half-open on-disk bytes; no memory addresses/runtime decoding claimed. Source diagnostic exact-byte presence also checked regardless corpus minimum.",
   "interpretation": "Static binary corpus only, not full semantic English, source linkage, compiler proof, instructions, ABI, native runtime, reachability or external OS/loader producer closure. Protected-looking and unmatched runs remain unclosed behavioral boundaries. No addon loaded or tool/compiler/disassembler/program/native operation executed.",
   "checker": {
     "source": "review/text-inventory/verify-pi-native-binary-corpus.py",
-    "sha256": "4e840a37c15927f574bd08fda49b1a7e170b134628c81eff8e96cab3ee9bf0e7",
+    "sha256": "16f808a509c3695bc23ea0988445496a7deef70386cb46667f649342c1814331",
     "audited_execution": false
   },
   "artifact_sha256_utf8_lf": {

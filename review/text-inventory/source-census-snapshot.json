@@ -138,6 +138,8 @@
     "pi-published-json-metadata-scope.csv": "1a2d3404a250e66745f9b75bce969fcfb48bc5aba66ea79eaa4dc7d1d2827f57",
     "pi-optional-sdk-examples-scope.csv": "db2176f78bff2a36fc3a46ebeaca749966b77404d38cd86370ae0c2c19d0b164",
     "locale-review-boundary-census-scope.csv": "d5624683979258ff235cea8de0baddaf853c9e1a9cc26dd2f760632770f749da",
+    "pi-published-markdown-text-scope.csv": "a38d0d6e616e04c44e40a2ca4c6f2ad62bb076978bef25df79d5512fa435ed68",
+    "pi-optional-ui-examples-scope.csv": "9252472eaaac396871cc82cd2ba2076e723ded897ca15539231fa29553740930",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",

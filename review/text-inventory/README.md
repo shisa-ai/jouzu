@@ -2288,6 +2288,10 @@ operation runs; whole main-host and wider caller coverage remain open.
 
 [locale-review-boundary-census-scope.csv](locale-review-boundary-census-scope.csv) reconciles the remaining 44 BASE Git paths: thirty non-English catalog counterparts and fourteen archived/proposed review artifacts. Fluent IDs, retained Latin fragments and archived fields are linked to their exact source identities and qualified current counterparts. This navigation creates no new English definitions, active producer owners, proposal-adoption claims or translation-quality conclusions.
 
+[pi-published-markdown-text.csv](pi-published-markdown-text.csv) exports all 78 packaged Markdown source documents (1,493,112 canonical bytes): 290 changelog parser sections and 77 other complete document records. The [line export](pi-published-markdown-text-asset-lines.csv) reconstructs 22,415 projected lines. Two upstream absolute-home-path spans are replaced by protected markers; original hashes and coordinates retain provenance, while the projection is 1,493,088 bytes. Source documents, historical changelog claims, code and commands retain their roles rather than becoming automatic runtime UI or translation directives. Explicit changelog display, guarded startup notes, discovered subagents/prompts and loaded dynamic resources have separate source-backed conditions. No audited parser, renderer, model, tool or native operation runs.
+
+[pi-optional-ui-examples.csv](pi-optional-ui-examples.csv) inventories 529 qualified primary records across 41 fully read optional UI, tool, RPC and rendering TypeScript examples (246,187 bytes). All 3,147 AST tokens and twelve nested shell spans are partitioned against 2,630 exclusions. Fifty boundaries preserve explicit extension/standalone/SDK activation, UI-mode and renderer conditions, cancellation and fallback behavior, model/export routes and protected control fields. Two upstream absolute-path fixture spans are projected to protected markers with original hashes and coordinates retained. These source examples do not establish default Jouzu activation or turn every record into a translation directive. Thirty-two corruption controls and independent all-row/source/privacy checks pass without audited execution.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -3772,6 +3776,8 @@ python -B review/text-inventory/verify-pi-native-binary-corpus.py
 python -B review/text-inventory/verify-pi-published-json-metadata.py
 node review/text-inventory/verify-pi-optional-sdk-examples.cjs
 python -B review/text-inventory/verify-locale-review-boundary-census.py
+python -B review/text-inventory/verify-pi-published-markdown-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-optional-ui-examples.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
