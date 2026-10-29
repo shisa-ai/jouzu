@@ -352,6 +352,24 @@ promotions. These are local-body review references; resource, native, transitive
 dependency and complete consumer coverage remain open. No audited module is loaded.
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
+[pi-package-source-census.csv](pi-package-source-census.csv) records the finite
+JavaScript source universe across all ten locked Pi namespace packages:
+687 runtime bodies (14,508,095 bytes) and two published auxiliary bodies
+(71,775 bytes), the Doom example loader and Windows native-build script.
+All 689 sources match their actual root and CLI dependency copies: 645 equal
+canonical archives, 42 equal exact public patch after-hashes and two equal
+public verbatim additions. The [entry table](pi-package-entry-census.csv)
+retains exact lock keys, manifest entry declarations and metadata transforms;
+Chord and protocol use the CLI server's local dependencies. Entry declarations
+do not prove activation or named-export compatibility. The
+[snapshot](pi-package-source-census-snapshot.json) also hashes all 2,075 other
+published assets without granting text review. Ten corruption controls, three
+physical-line regression cases and an independent join against the existing
+384-file and 200-file censuses pass.
+This source-provenance index adds zero semantic reviews; body, resource, native,
+foreign dependency and consumer coverage retain their separate qualifications.
+No audited module, native build or example runs.
+
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
 universe with 33 qualified scope tables. All 303 noncompiled bodies now
 have local source review owners, alongside 66 compiled bodies;
@@ -2399,6 +2417,7 @@ python -B review/text-inventory/verify-license-source-text.py
 python -B review/text-inventory/verify-package-asset-text.py
 python -B review/text-inventory/verify-resource-control-assets.py
 python -B review/text-inventory/verify-icon-visual-observation.py
+python -B review/text-inventory/verify-pi-package-source-census.py
 python -B review/text-inventory/verify-pi-runtime-review-links.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
