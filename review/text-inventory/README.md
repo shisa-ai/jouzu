@@ -1023,6 +1023,20 @@ through a constrained static representation without evaluating JavaScript.
 Canonical archive, installed copies and fourteen corruption controls pass.
 This package is separate from both runtime censuses; no guest, tool or VM runs.
 
+[pi-mcp-runtime-text.csv](pi-mcp-runtime-text.csv) records 115 qualified contexts
+across all eighteen MCP runtime bodies (95,768 bytes). Its 110 primary components
+and 477 [exclusions](pi-mcp-runtime-text-exclusions.csv) partition 587 text, regex
+and comment nodes. Forty [boundaries](pi-mcp-runtime-text-boundaries.csv) retain
+configured-server activation, trust/exposure gates, transport state, request
+timeouts, close/error routing, OAuth and resource conversion. The inspected native
+client has no error-event subscriber: report-only transport diagnostics keep
+SDK-only conditions, distinct from request failure routes. Native content filters
+can remove resource links and non-image blobs before conversion. The
+[scope](pi-mcp-runtime-text-scope.csv) pins complete local bodies and bounded
+consumer evidence. Canonical archive, installed copies and twelve corruption
+controls pass. This package is separate from both runtime censuses; no server,
+transport, authentication, browser or native UI operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2384,6 +2398,7 @@ python -B review/text-inventory/verify-pi-ai-catalog-data.py --node-modules <roo
 python -B review/text-inventory/verify-pi-bundle-chat-adapters.py
 python -B review/text-inventory/verify-pi-bundle-utility-runtime.py
 node review/text-inventory/verify-pi-codemode-runtime-text.cjs
+node review/text-inventory/verify-pi-mcp-runtime-text.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
