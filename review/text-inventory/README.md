@@ -3046,7 +3046,7 @@ python -B review/text-inventory/verify-pi-bundle-schema-tools.py
 python -B review/text-inventory/verify-pi-ai-validation-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-terminal-theme.py
 python -B review/text-inventory/verify-pi-bundle-highlight-languages.py
-python -B review/text-inventory/verify-pi-bundle-anthropic-client.py
+python -B review/text-inventory/verify-pi-bundle-anthropic-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-bundle-main-host-entry.cjs
 node review/text-inventory/verify-pi-bundle-main-host-catalog-tables.cjs
 node review/text-inventory/verify-pi-bundle-main-host-extension-loading.cjs
