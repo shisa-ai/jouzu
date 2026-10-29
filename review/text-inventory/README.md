@@ -1249,6 +1249,23 @@ checks, byte-preserving artifact comparison and fourteen corruption controls pas
 No utility, parser, stream, timer, crypto, environment, model or native UI operation
 runs beyond static parsing by the audit's TypeScript parser.
 
+[pi-ai-anthropic-adapter.csv](pi-ai-anthropic-adapter.csv) records twelve qualified
+definitions across the complete Anthropic adapter, lazy entry and Copilot header
+helper (1,388 lines; 62,763 bytes). The 307
+[exclusions](pi-ai-anthropic-adapter-exclusions.csv) complete the 319-string/template
+partition; one regex remains protected. Seven
+[boundaries](pi-ai-anthropic-adapter-boundaries.csv) retain auth/header selection,
+strict downgrade, callbacks, request metadata, thinking markers, cancellation and
+error consumers. Strict-prefer downgrade can invoke the payload callback again;
+the inspected Jouzu Flow admission guard rejects that second attempt. Successful
+downgrade therefore requires a caller that accepts repeated admission. Thinking
+marker visibility depends on renderer expansion, while text print omits it.
+The [scope](pi-ai-anthropic-adapter-scope.csv) grants complete local review to three
+bodies: one exact public patch after-hash and two canonical matches. Four archives,
+both installed copies, metadata transforms and 22 corruption controls pass.
+Foreign SDK bodies and consumer graphs remain bounded; no request, authentication,
+thinking renderer, provider or native UI operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -1329,8 +1346,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. There are 141
-files with explicit complete local review owners; 59 files (406,690 bytes)
+authority, public patch manifest and nested package-list transform. There are 144
+files with explicit complete local review owners; 56 files (343,927 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -2624,6 +2641,7 @@ python -B review/text-inventory/verify-pi-ai-openai-adapters.py --node-modules <
 node review/text-inventory/verify-pi-published-auxiliary-text.cjs
 python -B review/text-inventory/verify-pi-models-schema-data.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-data-utilities.py
+python -B review/text-inventory/verify-pi-ai-anthropic-adapter.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
