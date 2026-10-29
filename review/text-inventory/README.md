@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 40 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 75 compiled bodies;
-6 compiled bodies remain pending. The
+universe with 41 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 76 compiled bodies;
+5 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1514,6 +1514,21 @@ The [scope](pi-bundle-terminal-theme-scope.csv) grants one complete local body a
 bounded import/caller proofs. Canonical archive and both installed copies match;
 31 corruption controls and four physical-LF regressions pass. No terminal,
 renderer, watcher, filesystem, theme, schema, clipboard or native UI operation runs.
+
+[pi-bundle-highlight-languages.csv](pi-bundle-highlight-languages.csv) records one
+API-qualified diagnostic in the complete compiled syntax-language registry
+(966,765 bytes). Its 16,091
+[exclusions](pi-bundle-highlight-languages-exclusions.csv) complete the 16,092-node
+partition; grammar keywords, names, scopes and regex data retain structural roles.
+The 244 [boundaries](pi-bundle-highlight-languages-boundaries.csv) cover all 171
+factory wrappers, 191 registrations and operational callbacks. The R compiler
+extension guard is preempted by the ordinary checked-in mode; exported mutable
+grammar/custom callback access can trigger it, while terminal consumers can
+replace highlighting failures with raw source. The
+[scope](pi-bundle-highlight-languages-scope.csv) grants one complete local body and
+bounded core/terminal consumer proofs. Canonical archive and installed copies
+match; 31 corruption controls and four physical-LF regressions pass. No grammar,
+regex, highlighter, import or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2907,6 +2922,7 @@ python -B review/text-inventory/verify-pi-bundle-jiti-loader.py
 python -B review/text-inventory/verify-pi-bundle-schema-tools.py
 python -B review/text-inventory/verify-pi-ai-validation-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-terminal-theme.py
+python -B review/text-inventory/verify-pi-bundle-highlight-languages.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
