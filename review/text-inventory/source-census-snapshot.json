@@ -121,6 +121,7 @@
     "pi-bundle-main-host-http-fetch-runtime-scope.csv": "74fbe07cf7cee676200b18d8a949d01197c50b345288cfdd33bbe9c72f70cf1b",
     "pi-bundle-main-host-http-websocket-scope.csv": "2b008a8253ed633e1ae3e4d1978302537503045f3ecc94dbdd788fd3cd7551c9",
     "pi-bundle-main-host-http-eventsource-index-scope.csv": "b7caa27b12da18e3157a73bed2535403c1b270211722e67870e0b33c5d91923f",
+    "pi-bundle-main-host-http-api-mocks-scope.csv": "fc6397b4b01cde69060bf8b2d2adbf2ddda2d3d522c89466d00740a0a0eb75ce",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",

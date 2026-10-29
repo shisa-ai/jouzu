@@ -1579,12 +1579,12 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The registered partial main-host units cover 152 disjoint ranges totaling
-3,241,367 of the body's 3,536,719 bytes. The 3 remaining gaps total 295,352
+The registered partial main-host units cover 153 disjoint ranges totaling
+3,321,627 of the body's 3,536,719 bytes. The 3 remaining gaps total 215,092
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The [range census](pi-main-host-review-census.csv) and
-[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 66
+[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 67
 registered scope tables, reject overlap and keep every frozen literal/template/
 regex occurrence assigned to a reviewed range or a pending gap. This accounting
 does not independently approve each semantic classification or promote a whole
@@ -2193,6 +2193,8 @@ The [exclusions](pi-bundle-main-host-http-eventsource-index-exclusions.csv),
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-api-mocks.csv](pi-bundle-main-host-http-api-mocks.csv) records 33 qualified definitions in the complete 80,260-byte dispatcher API, mock/snapshot and global-bridge range. Published instance request/stream/pipeline/upgrade/connect and returned BodyReadable paths retain exact callback, Promise, stream and lifecycle conditions. Normal transport and explicit custom composition remain distinct. The 477 frozen exclusions complete all 510 literal/template/regex occurrences; six additional identifier Console.table headings are separately retained as private display producers. Its [boundaries](pi-bundle-main-host-http-api-mocks-boundaries.csv) and [scope](pi-bundle-main-host-http-api-mocks-scope.csv) preserve private factory, native and cross-package bridge limits. Eleven corruption controls and independent full-source/role review pass; no audited runtime runs or whole host is promoted.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3661,6 +3663,7 @@ node review/text-inventory/verify-pi-bundle-main-host-session-storage.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-fetch-runtime.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-websocket.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-eventsource-index.cjs
+python -B review/text-inventory/verify-pi-bundle-main-host-http-api-mocks.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

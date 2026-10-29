@@ -2,14 +2,14 @@
   "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
   "source_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
   "whole_bytes": 3536719,
-  "registered_scope_units": 66,
-  "registered_review_ranges": 152,
-  "registered_review_bytes": 3241367,
-  "pending_bytes": 295352,
+  "registered_scope_units": 67,
+  "registered_review_ranges": 153,
+  "registered_review_bytes": 3321627,
+  "pending_bytes": 215092,
   "pending_ranges": 3,
   "frozen_occurrences": 38913,
-  "registered_range_occurrences": 37166,
-  "pending_range_occurrences": 1747,
+  "registered_range_occurrences": 37676,
+  "pending_range_occurrences": 1237,
   "whole_host_owner_promoted": false,
   "audited_execution": false,
   "coverage_boundary": "A range ledger is local source-review accounting, not independent verification of each semantic classification, runtime reachability, whole dependency/native behavior or ordinary Jouzu activation. Bounded caller snippets and historical pending rows never acquire ownership. Whole-host promotion requires no gaps plus a separate final semantic/caller review. No audited code runs.",
@@ -79,13 +79,14 @@
     "pi-bundle-main-host-session-storage-scope.csv": "199af64bfd081c69e2b185ad304281ba33b1f0c5b9547c9c414c65d83de8ddec",
     "pi-bundle-main-host-http-fetch-runtime-scope.csv": "74fbe07cf7cee676200b18d8a949d01197c50b345288cfdd33bbe9c72f70cf1b",
     "pi-bundle-main-host-http-websocket-scope.csv": "2b008a8253ed633e1ae3e4d1978302537503045f3ecc94dbdd788fd3cd7551c9",
-    "pi-bundle-main-host-http-eventsource-index-scope.csv": "b7caa27b12da18e3157a73bed2535403c1b270211722e67870e0b33c5d91923f"
+    "pi-bundle-main-host-http-eventsource-index-scope.csv": "b7caa27b12da18e3157a73bed2535403c1b270211722e67870e0b33c5d91923f",
+    "pi-bundle-main-host-http-api-mocks-scope.csv": "fc6397b4b01cde69060bf8b2d2adbf2ddda2d3d522c89466d00740a0a0eb75ce"
   },
   "lexical_sha256": {
     "pi-bundle-lexical.csv": "65280154bde01f7ae08b9b54a6c59914933030803a58ec32ec82aaa203c96fa7",
     "pi-bundle-lexical-regex.csv": "450b2cf3c96b9dc5885cc31b234e89efa9808fa2ad54ce9b2451522f89a77051"
   },
-  "registry_sha256": "d9d2ffca457dc60f6c590cdf7b8224b4f724958e928b3f7f9fdce0fb114cfd9c",
+  "registry_sha256": "91737a03ca1407c5850021985d3bc2f0b49cf5c6053e8d06e77a236a9741fc81",
   "verifier_sha256": "1a35e8f7c946c881256cc6409d69c3922283728003f81a9d13b3d576aee50b9b",
-  "csv_sha256": "d3910f9737bb87b4eb332008fa42a9262d38eaaf67ce15483e1719043f687750"
+  "csv_sha256": "83c764ef0f90e7141503c0bb3f5d5edf49a49f60c74c5abda8fde92a70416673"
 }
