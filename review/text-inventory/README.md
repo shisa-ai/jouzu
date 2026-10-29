@@ -403,9 +403,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 44 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 79 compiled bodies;
-2 compiled bodies remain pending. The
+universe with 45 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 80 compiled bodies;
+1 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1788,6 +1788,24 @@ errors are not promoted merely because bundled code exists. The
 public/private declaration proofs. Canonical and installed copies match; 29
 corruption controls pass. No package resolution, debug logging, environment,
 filesystem or native UI operation runs; whole main-host coverage remains open.
+
+[pi-bundle-google-client.csv](pi-bundle-google-client.csv) records 558 qualified
+definitions across the complete compiled Google client body (949,901 bytes).
+Its 7,879 [exclusions](pi-bundle-google-client-exclusions.csv) complete the
+8,437-node partition. Ten
+[boundaries](pi-bundle-google-client-boundaries.csv) retain exported SDK/resource
+APIs, native generateContentStream callers, API-key versus Vertex credential
+paths, request/stream error wrapping, optional Live/NextGen transports and model
+context. The native adapters read candidate parts directly, bypassing convenience
+getter warnings. Optional SDK methods, callbacks, debug/file outputs and internal
+credential/websocket helpers retain their own activation and catch conditions.
+Some English cells explicitly use JSON-string encoding to preserve embedded
+control/trailing characters. The [scope](pi-bundle-google-client-scope.csv)
+grants one complete local body with bounded import/caller proofs. Canonical and
+installed copies match; 126 public after-hashes and 25 corruption controls pass.
+No SDK, auth, credential, transport, request, model, environment, filesystem or
+native UI operation runs. The main host remains the only whole-body runtime
+review pending in the coding-agent/TUI census.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3204,6 +3222,7 @@ node review/text-inventory/verify-pi-bundle-main-host-ignore.cjs
 python -B review/text-inventory/verify-pi-bundle-bedrock-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-main-host-llhttp.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-bundle-main-host-semver.cjs
+python -B review/text-inventory/verify-pi-bundle-google-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

@@ -70,6 +70,7 @@
     "pi-bundle-bedrock-client-scope.csv": "d0a000593abf1bf5933cc204fe8030e22311f76a3edb0c6eb1a3c7514bd1eaf8",
     "pi-bundle-main-host-llhttp-scope.csv": "325f995fec275b8b0a298bc6e2429ce0263ffdbd9c2147f67b3e591f71888bc2",
     "pi-bundle-main-host-semver-scope.csv": "fcd7fc13e332b855fae72313ad418125d02d4a110b974ad054265f7abc999f7d",
+    "pi-bundle-google-client-scope.csv": "c6cb154309e2fced6fb888deee8846cd59315399c8961fdb0d6f78e78558c875",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
