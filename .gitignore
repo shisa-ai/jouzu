@@ -23,3 +23,6 @@ __pycache__/
 
 test-results/
 playwright-report/
+
+# Large generated inventory input; regenerate locally (see review/text-inventory/README.md).
+review/text-inventory/translation-worklist.csv

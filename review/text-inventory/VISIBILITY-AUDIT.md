@@ -96,3 +96,6 @@ map that names the invoking entry point per table, not a broader rule.
   artifacts under `test-results/`.
 - Rule counts are derived from the pinned worklist and the rule files. Changing
   either requires rerunning `integrate.py`; the snapshot check fails otherwise.
+- `translation-worklist.csv` is not tracked on this branch. The classifier needs
+  it in `review/text-inventory/` to run; without it the script stops with a
+  message rather than producing a partial result.

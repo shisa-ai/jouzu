@@ -9,8 +9,11 @@ The pinned source/text inventory contains **48,933 worklist records**, **23,476 
 
 All 689 locked JavaScript/auxiliary source bodies have qualified complete local review owners. Packaged text coverage additionally includes 102 optional TypeScript examples, 78 Markdown documents, 26 further JSON assets, eight native source/build files and six native binary byte corpora. Optional DOOM build/source/WASM and the shipped SDK license have separate qualified records. Previously reviewed resource owners remain linked separately. All 1,206 BASE Git paths have scope navigation. A scope reference can describe a boundary or archived material; it does not grant active producer ownership. Dynamic external/service/user wording, native instruction behavior and complete fetched-target caller equivalence retain their explicit boundaries. No translation or product behavior changes are included.
 
-[translation-worklist.csv](translation-worklist.csv) combines the fetched-target
-catalog definitions with the detailed source records in one filterable CSV.
+`translation-worklist.csv` combines the fetched-target catalog definitions with
+the detailed source records in one filterable CSV. It is 59 MB, so it is not
+tracked on this branch: regenerate it with the inventory scripts, or copy it from
+a worktree that has it, before running the classifier. The
+[snapshot](translation-worklist-snapshot.json) still pins its hash and counts.
 Use `record_kind=catalog-definition` for the 1,808 catalog entries; attributes
 and variables retain their separate JSON fields. Reference and source records
 preserve exact English, source/display locations, triggers and translation

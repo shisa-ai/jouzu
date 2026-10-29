@@ -619,6 +619,10 @@ def classify(row, target_callers, traced_base):
 
 
 def generate():
+    if not WORKLIST.exists():
+        raise SystemExit(
+            'translation-worklist.csv is not tracked on this branch; copy or '
+            'regenerate it in review/text-inventory/ before running this script.')
     raw = WORKLIST.read_bytes()
     rows = list(csv.DictReader(io.StringIO(raw.decode('utf8'))))
     caller_raw = (HERE / 'main-update-model-text.csv').read_bytes()
