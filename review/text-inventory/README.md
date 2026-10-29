@@ -1547,6 +1547,93 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
+The following nine partial main-host units cover 94 disjoint ranges totaling
+1,252,296 of the body's 3,536,719 bytes. The six remaining gaps total 2,284,423
+bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
+bounded support snippets outside the owned ranges do not increase that union.
+The whole main-host body remains pending in the 384-source census.
+
+[pi-bundle-main-host-entry.csv](pi-bundle-main-host-entry.csv) records 124 qualified contexts in the final 54,781-byte entry range, including command errors, optional timing, authentication status and extension-prefix matching. Technical command identities and credential payloads remain protected.
+Its [exclusions](pi-bundle-main-host-entry-exclusions.csv),
+[boundaries](pi-bundle-main-host-entry-boundaries.csv) and
+[scope](pi-bundle-main-host-entry-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-catalog-tables.csv](pi-bundle-main-host-catalog-tables.csv) records 1,794 catalog name/provider/brand occurrences in 42 disjoint pure-data declarations (872,514 bytes). A strict static AST decoder matches the prior shipped JSON tables without evaluating JavaScript. Keys, scalar types, model identities and table roles do not establish ordinary activation or per-name display.
+Its [exclusions](pi-bundle-main-host-catalog-tables-exclusions.csv),
+[boundaries](pi-bundle-main-host-catalog-tables-boundaries.csv) and
+[scope](pi-bundle-main-host-catalog-tables-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-extension-loading.csv](pi-bundle-main-host-extension-loading.csv) records 21 qualified definitions in the complete 23,192-byte extension-loading and registry-adapter range. The fixed bundled-runtime selector preempts the regular Jiti branch. Error replacement, cause selection, exec/timing and error-array routes retain their exact guards.
+Its [exclusions](pi-bundle-main-host-extension-loading-exclusions.csv),
+[boundaries](pi-bundle-main-host-extension-loading-boundaries.csv) and
+[scope](pi-bundle-main-host-extension-loading-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-shell-edit.csv](pi-bundle-main-host-shell-edit.csv) records 91 qualified contexts in the complete 58,476-byte shell/edit range. Preview versus actual changes, abort timing, custom operations, duplicate suppression and structured-versus-display truncation remain distinct.
+Its [exclusions](pi-bundle-main-host-shell-edit-exclusions.csv),
+[boundaries](pi-bundle-main-host-shell-edit-boundaries.csv) and
+[scope](pi-bundle-main-host-shell-edit-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-file-tools.csv](pi-bundle-main-host-file-tools.csv) records 131 qualified contexts in the complete 48,318-byte file-tool range. Find/grep/list/read/write, image and binary-manager routes retain callback, abort, parse and size conditions. Binary download errors can reach managed-tool status when the interactive caller supplies its callback; suppression is not global.
+Its [exclusions](pi-bundle-main-host-file-tools-exclusions.csv),
+[boundaries](pi-bundle-main-host-file-tools-boundaries.csv) and
+[scope](pi-bundle-main-host-file-tools-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-report-helpers.csv](pi-bundle-main-host-report-helpers.csv) records 31 qualified contexts across two disjoint report/summary helper ranges (14,000 bytes). The compiled bug-report flow can invoke summarization, include its result in summary.md and upload the bundle. Session bookkeeping records manifest flags separately from the report body; temporary request text is not a global privacy guarantee.
+Its [exclusions](pi-bundle-main-host-report-helpers-exclusions.csv),
+[boundaries](pi-bundle-main-host-report-helpers-boundaries.csv) and
+[scope](pi-bundle-main-host-report-helpers-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-provider-registry.csv](pi-bundle-main-host-provider-registry.csv) records 147 qualified definitions across the 43 provider/auth/compat registry ranges between the static catalog declarations (74,034 bytes). Selector labels, refresh maps, catalog fallback and API errors retain their own consumers, abort behavior and truncation limits.
+Its [exclusions](pi-bundle-main-host-provider-registry-exclusions.csv),
+[boundaries](pi-bundle-main-host-provider-registry-boundaries.csv) and
+[scope](pi-bundle-main-host-provider-registry-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-model-runtime.csv](pi-bundle-main-host-model-runtime.csv) records 69 qualified contexts in the complete 85,941-byte model-runtime range. Private schema descriptions and overridden schema-key guards are excluded with explicit consumer evidence. Credential-synchronization replacement and unawaited registry refresh outcomes remain qualified.
+Its [exclusions](pi-bundle-main-host-model-runtime-exclusions.csv),
+[boundaries](pi-bundle-main-host-model-runtime-boundaries.csv) and
+[scope](pi-bundle-main-host-model-runtime-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
+[pi-bundle-main-host-model-selectors.csv](pi-bundle-main-host-model-selectors.csv) records 53 qualified contexts across the public login/model/OAuth selectors and private authentication URL helper (21,040 bytes). Public constructors preserve API-qualified empty-list/cancellation routes even where current CLI guards or completion handlers suppress them. Cancellation, secret fields, URL/clipboard payloads and width conditions retain their exact limits.
+Its [exclusions](pi-bundle-main-host-model-selectors-exclusions.csv),
+[boundaries](pi-bundle-main-host-model-selectors-boundaries.csv) and
+[scope](pi-bundle-main-host-model-selectors-scope.csv) qualify only the named source ranges and
+bounded caller evidence. Canonical and both installed sources match; the
+unit corruption controls pass without importing audited code. The rest of
+the main host remains pending; this partial review does not promote its
+whole-file status or establish default Jouzu/native UI activation.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2941,6 +3028,15 @@ python -B review/text-inventory/verify-pi-ai-validation-text.py --node-modules <
 python -B review/text-inventory/verify-pi-bundle-terminal-theme.py
 python -B review/text-inventory/verify-pi-bundle-highlight-languages.py
 python -B review/text-inventory/verify-pi-bundle-anthropic-client.py
+node review/text-inventory/verify-pi-bundle-main-host-entry.cjs
+node review/text-inventory/verify-pi-bundle-main-host-catalog-tables.cjs
+node review/text-inventory/verify-pi-bundle-main-host-extension-loading.cjs
+node review/text-inventory/verify-pi-bundle-main-host-shell-edit.cjs
+node review/text-inventory/verify-pi-bundle-main-host-file-tools.cjs
+node review/text-inventory/verify-pi-bundle-main-host-report-helpers.cjs
+node review/text-inventory/verify-pi-bundle-main-host-provider-registry.cjs
+node review/text-inventory/verify-pi-bundle-main-host-model-runtime.cjs
+node review/text-inventory/verify-pi-bundle-main-host-model-selectors.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
