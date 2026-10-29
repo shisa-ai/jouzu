@@ -103,6 +103,7 @@
     "pi-bundle-main-host-yaml-compose-scope.csv": "408dfd6d79aca462a7477c2437e03ab5d7e864b6338dcd365feb0d493d6a3063",
     "pi-bundle-main-host-yaml-nodes-scope.csv": "9cd3482a2fdacfba9f028a2cf952bcc7f5db0c7aacb9242235b08a7b6c1472d1",
     "pi-bundle-main-host-yaml-parser-scope.csv": "d28c6316795f748a546df48e015a5c77980b5c750d3b201e7c3ca7d08f817f5e",
+    "pi-bundle-main-host-ui-components-scope.csv": "bc465cdb099ee1e22d2e0ec0d915357714f250565aa815b85441ea08fa86a7ef",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
