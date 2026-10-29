@@ -1547,8 +1547,8 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The following nine partial main-host units cover 94 disjoint ranges totaling
-1,252,296 of the body's 3,536,719 bytes. The six remaining gaps total 2,284,423
+The following twelve partial main-host units cover 97 disjoint ranges totaling
+1,357,306 of the body's 3,536,719 bytes. The seven remaining gaps total 2,179,413
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The whole main-host body remains pending in the 384-source census.
@@ -1668,6 +1668,30 @@ The [scope](pi-bundle-openai-client-scope.csv) grants one full local body with
 bounded importer/current Flow evidence. Exact canonical and installed sources
 match; 126 public after-hashes and 25 corruption controls pass. No SDK, credential,
 crypto, request, environment, filesystem or native UI operation runs.
+
+[pi-bundle-main-host-ai-runtime-helpers.csv](pi-bundle-main-host-ai-runtime-helpers.csv) records 13 qualified definitions across the complete 23,162-byte AI runtime-helper range. API-key handling, lazy OAuth, faux responses, overflow matching, StringEnum and argument validation preserve exact error/sentinel/catch behavior. Primitive root coercion can return invalid original arguments before the final formatted error. The 178 exclusions complete 191 lexical nodes; 15 boundaries and 28 corruption controls pass.
+The [exclusions](pi-bundle-main-host-ai-runtime-helpers-exclusions.csv),
+[boundaries](pi-bundle-main-host-ai-runtime-helpers-boundaries.csv) and
+[scope](pi-bundle-main-host-ai-runtime-helpers-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-mcp.csv](pi-bundle-main-host-mcp.csv) records 144 qualified contexts across the complete 34,249-byte MCP manager/extension range. TUI, RPC and no-op receivers remain distinct. MCP model clauses can persist in system-role sections while direct chat painting suppresses system messages. Cancellation severity matching, background reconnect return suppression, stale notifications and credentials saved before a later reconnect failure retain exact conditions. The 193 exclusions complete 314 lexical nodes; 21 boundaries and 18 corruption controls pass.
+The [exclusions](pi-bundle-main-host-mcp-exclusions.csv),
+[boundaries](pi-bundle-main-host-mcp-boundaries.csv) and
+[scope](pi-bundle-main-host-mcp-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-settings-cli.csv](pi-bundle-main-host-settings-cli.csv) records 25 qualified definitions across the complete 47,599-byte settings/argument/help range. Queued settings persistence and drained error reporting retain original-message/stack and lock/release behavior. Parser warning, fatal error, unknown flag and help paths remain distinct; configuration failures can preempt help. The 284 exclusions complete 309 lexical nodes; ten boundaries and 27 corruption controls pass.
+The [exclusions](pi-bundle-main-host-settings-cli-exclusions.csv),
+[boundaries](pi-bundle-main-host-settings-cli-boundaries.csv) and
+[scope](pi-bundle-main-host-settings-cli-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3074,6 +3098,9 @@ node review/text-inventory/verify-pi-bundle-main-host-model-runtime.cjs
 node review/text-inventory/verify-pi-bundle-main-host-model-selectors.cjs
 python -B review/text-inventory/verify-pi-ai-entry-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-openai-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-bundle-main-host-ai-runtime-helpers.cjs
+node review/text-inventory/verify-pi-bundle-main-host-mcp.cjs
+node review/text-inventory/verify-pi-bundle-main-host-settings-cli.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
