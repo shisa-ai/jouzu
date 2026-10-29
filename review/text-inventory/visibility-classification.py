@@ -64,14 +64,26 @@ def generate():
     rows = list(csv.DictReader(io.StringIO(raw.decode('utf8'))))
     caller_raw = (HERE / 'main-update-model-text.csv').read_bytes()
     launcher_raw = (HERE / 'launcher.csv').read_bytes()
+    reviewed_raw = (HERE / 'visibility-reviewed-sample.csv').read_bytes()
+    catalog_reviewed_raw = (HERE / 'visibility-reviewed-catalog-sample.csv').read_bytes()
+    reviewed_rows = (list(csv.DictReader(io.StringIO(reviewed_raw.decode('utf8')))) +
+                     list(csv.DictReader(io.StringIO(catalog_reviewed_raw.decode('utf8')))))
+    reviewed = {row['worklist_id']: row for row in reviewed_rows}
+    assert len(reviewed) == len(reviewed_rows)
     target_callers = {row['item_id']: row for row in csv.DictReader(io.StringIO(caller_raw.decode('utf8')))}
     result = []
     for row in rows:
         category, rule, evidence = classify(row, target_callers)
+        if row['worklist_id'] in reviewed:
+            item = reviewed[row['worklist_id']]
+            assert category == 'unresolved' and item['classification'] in ('always', 'optional', 'never')
+            assert all(item[key] == row[key] for key in ('source_revision', 'english_location', 'english_group_sha256'))
+            category, rule, evidence = item['classification'], 'individually-reviewed-sample', item['evidence']
         result.append(dict(worklist_id=row['worklist_id'], classification=category,
             rule=rule, evidence=evidence, english_group_sha256=row['english_group_sha256']))
     assert len(rows) == len(result) == 48933
     assert len({row['worklist_id'] for row in result}) == len(result)
+    assert set(reviewed) <= {row['worklist_id'] for row in rows}
     out = io.StringIO(newline='')
     writer = csv.DictWriter(out, FIELDS, lineterminator='\n')
     writer.writeheader()
@@ -84,10 +96,12 @@ def generate():
     snapshot = dict(worklist_sha256=hashlib.sha256(raw).hexdigest(),
         target_callers_sha256=hashlib.sha256(caller_raw).hexdigest(),
         launcher_source_table_sha256=hashlib.sha256(launcher_raw).hexdigest(),
+        reviewed_sample_sha256=hashlib.sha256(reviewed_raw).hexdigest(),
+        reviewed_catalog_sample_sha256=hashlib.sha256(catalog_reviewed_raw).hexdigest(),
         records=len(result), record_counts=dict(classes), rule_counts=dict(rules),
         distinct_exact_english_values_by_occurrence_class={k: len(v) for k, v in groups.items()},
         interpretation='Conservative first pass; unresolved is not never. Counts are source occurrences. Exact English values may occur in multiple classes, and matching English does not imply identical translation semantics.',
-        scope='Six target catalog definitions with specific model-picker callers, default Jouzu human doctor reports, optional Pi custom example renderers excluding raw interpolation and plural-control suffixes, and BASE launcher dictionary entries with explicitly absent frontend consumers. All other cases need individual evidence review.',
+        scope='Six target catalog definitions with specific model-picker callers, default Jouzu human doctor reports, optional Pi custom example renderers excluding raw interpolation and plural-control suffixes, BASE launcher dictionary entries with explicitly absent frontend consumers, and individually reviewed sample occurrences. All other cases need individual evidence review.',
         output_sha256=hashlib.sha256(out.getvalue().encode('utf8')).hexdigest())
     return out.getvalue(), json.dumps(snapshot, ensure_ascii=False, indent=2) + '\n', snapshot
 

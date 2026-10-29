@@ -2,27 +2,30 @@
   "worklist_sha256": "957ecc8c959090cccd2d155ecbf19d4f14ea8b0a691699caa526f589d6196c2e",
   "target_callers_sha256": "7256093ba05c9774681e0b8f87c1bf32b7bfe796d95810fb1f2e77984894b883",
   "launcher_source_table_sha256": "eeb81ab12c8d7ca613acd89c4c3572467deecfc250c60ab12d0ab525e40018fb",
+  "reviewed_sample_sha256": "53c17b53998442acfbd597cd428127bb93d6b1209df3b46c8676bef7a64ae4ef",
+  "reviewed_catalog_sample_sha256": "280b044ce761a36d766cc11e01c45469829d27e7b676f76d686c55629cb14b3a",
   "records": 48933,
   "record_counts": {
-    "unresolved": 48710,
-    "always": 23,
-    "never": 47,
+    "unresolved": 48621,
+    "always": 105,
+    "never": 54,
     "optional": 153
   },
   "rule_counts": {
-    "insufficient-normalized-evidence": 48710,
+    "insufficient-normalized-evidence": 48621,
     "target-model-picker-caller": 6,
+    "individually-reviewed-sample": 89,
     "jouzu-doctor-human-report": 17,
     "launcher-dictionary-without-consumer": 47,
     "explicit-pi-example-renderer": 153
   },
   "distinct_exact_english_values_by_occurrence_class": {
-    "unresolved": 23309,
-    "always": 23,
-    "never": 47,
+    "unresolved": 23307,
+    "always": 104,
+    "never": 54,
     "optional": 143
   },
   "interpretation": "Conservative first pass; unresolved is not never. Counts are source occurrences. Exact English values may occur in multiple classes, and matching English does not imply identical translation semantics.",
-  "scope": "Six target catalog definitions with specific model-picker callers, default Jouzu human doctor reports, optional Pi custom example renderers excluding raw interpolation and plural-control suffixes, and BASE launcher dictionary entries with explicitly absent frontend consumers. All other cases need individual evidence review.",
-  "output_sha256": "31751e8f5e8f14f5deea7e7cdd266403a965158329d55bcd5a327588f4fe75a5"
+  "scope": "Six target catalog definitions with specific model-picker callers, default Jouzu human doctor reports, optional Pi custom example renderers excluding raw interpolation and plural-control suffixes, BASE launcher dictionary entries with explicitly absent frontend consumers, and individually reviewed sample occurrences. All other cases need individual evidence review.",
+  "output_sha256": "24098deda7918e92bfa12e206b07d8541f10015e3215afadc757924b5c07189b"
 }
