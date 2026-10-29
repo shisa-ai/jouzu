@@ -3,6 +3,10 @@
 Base source: [GitHub main at `346d1e4`](https://github.com/shisa-ai/jouzu/tree/346d1e481757a55eb62fc066e43bbc7999b8e6dd).
 Fetched follow-on target: [GitHub main at `1fda3eb`](https://github.com/shisa-ai/jouzu/tree/1fda3eb161b042aae66e4adcc07319f69946dadd).
 
+The pinned source/text inventory contains **48,933 worklist records**, **23,476 distinct exact English field values** and **1,808 fetched-target catalog definitions**. Counts include qualified source, reference, document, metadata and byte-observation records; they are not a count of unique UI strings requiring translation.
+
+All 689 locked JavaScript/auxiliary source bodies have qualified complete local review owners. Packaged text coverage additionally includes 102 optional TypeScript examples, 78 Markdown documents, 26 further JSON assets, eight native source/build files and six native binary byte corpora. Optional DOOM build/source/WASM and the shipped SDK license have separate qualified records. Previously reviewed resource owners remain linked separately. All 1,206 BASE Git paths have scope navigation. A scope reference can describe a boundary or archived material; it does not grant active producer ownership. Dynamic external/service/user wording, native instruction behavior and complete fetched-target caller equivalence retain their explicit boundaries. No translation or product behavior changes are included.
+
 [translation-worklist.csv](translation-worklist.csv) combines the fetched-target
 catalog definitions with the detailed source records in one filterable CSV.
 Use `record_kind=catalog-definition` for the 1,808 catalog entries; attributes
@@ -15,9 +19,8 @@ instruction to translate it. The English hash groups exact field values without
 asserting shared translation semantics. BASE records retain their BASE caller
 authority. The [snapshot](translation-worklist-snapshot.json) pins all inputs and
 counts. Detailed comparison/exclusion records using the same core schema retain
-their original qualifications in this view. The worklist grows with pending
-bundle reviews; full exclusion ledgers and documentation/asset line exports
-remain separately navigable.
+their original qualifications in this view. Full exclusion ledgers and
+documentation/asset line exports remain separately navigable.
 
 For the fetched-main target, start with
 [main-update-catalogs.csv](main-update-catalogs.csv): all **1,808 English Fluent
@@ -35,8 +38,8 @@ fourteen commits: 48 modified and eleven added. The target has 1,217 blobs;
 [main-update-unchanged.csv](main-update-unchanged.csv) proves identical Git mode
 and blob for 1,158 paths. The [snapshot](main-update-snapshot.json) pins both trees,
 changed-file SHA-256 values and the complete partition. Four corruption controls
-pass. Follow-on text and condition review remains open. Existing detailed tables
-and checks retain their base source authority; equal source blobs establish
+pass. Changed-source exports and byte-delta reviews follow below. Existing
+detailed tables and checks retain their base source authority; equal source blobs establish
 identity, while changed callers, configuration and upstream patches need separate
 review. No checkout or product operation is performed by this census.
 
@@ -405,7 +408,7 @@ No audited module, native build or example runs.
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
 universe with 46 qualified scope tables. All 303 noncompiled bodies now
 have local source review owners, alongside 81 compiled bodies;
-0 compiled bodies remain pending. The
+all 384 bodies have qualified local review owners. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1580,96 +1583,96 @@ sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worke
 request, environment, filesystem or native UI operation runs.
 
 The registered partial main-host units cover 164 disjoint ranges totaling
-3,536,719 of the body's 3,536,719 bytes. The 0 remaining gaps total 0
-bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
+3,536,719 of the body's 3,536,719 bytes, with no remaining gaps. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The [range census](pi-main-host-review-census.csv) and
 [snapshot](pi-main-host-review-census-snapshot.json) derive this union from 77
 registered scope tables, reject overlap and keep every frozen literal/template/
 regex occurrence assigned to a reviewed range or a pending gap. This accounting
 does not independently approve each semantic classification or promote a whole
-host owner. The whole main-host body remains pending in the 384-source census.
+host owner. The separate complete main-host aggregate below supplies that
+qualified owner in the 384-source review-link census.
 
 [pi-bundle-main-host-entry.csv](pi-bundle-main-host-entry.csv) records 124 qualified contexts in the final 54,781-byte entry range, including command errors, optional timing, authentication status and extension-prefix matching. Technical command identities and credential payloads remain protected.
 Its [exclusions](pi-bundle-main-host-entry-exclusions.csv),
 [boundaries](pi-bundle-main-host-entry-boundaries.csv) and
 [scope](pi-bundle-main-host-entry-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-catalog-tables.csv](pi-bundle-main-host-catalog-tables.csv) records 1,794 catalog name/provider/brand occurrences in 42 disjoint pure-data declarations (872,514 bytes). A strict static AST decoder matches the prior shipped JSON tables without evaluating JavaScript. Keys, scalar types, model identities and table roles do not establish ordinary activation or per-name display.
 Its [exclusions](pi-bundle-main-host-catalog-tables-exclusions.csv),
 [boundaries](pi-bundle-main-host-catalog-tables-boundaries.csv) and
 [scope](pi-bundle-main-host-catalog-tables-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-extension-loading.csv](pi-bundle-main-host-extension-loading.csv) records 21 qualified definitions in the complete 23,192-byte extension-loading and registry-adapter range. The fixed bundled-runtime selector preempts the regular Jiti branch. Error replacement, cause selection, exec/timing and error-array routes retain their exact guards.
 Its [exclusions](pi-bundle-main-host-extension-loading-exclusions.csv),
 [boundaries](pi-bundle-main-host-extension-loading-boundaries.csv) and
 [scope](pi-bundle-main-host-extension-loading-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-shell-edit.csv](pi-bundle-main-host-shell-edit.csv) records 91 qualified contexts in the complete 58,476-byte shell/edit range. Preview versus actual changes, abort timing, custom operations, duplicate suppression and structured-versus-display truncation remain distinct.
 Its [exclusions](pi-bundle-main-host-shell-edit-exclusions.csv),
 [boundaries](pi-bundle-main-host-shell-edit-boundaries.csv) and
 [scope](pi-bundle-main-host-shell-edit-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-file-tools.csv](pi-bundle-main-host-file-tools.csv) records 131 qualified contexts in the complete 48,318-byte file-tool range. Find/grep/list/read/write, image and binary-manager routes retain callback, abort, parse and size conditions. Binary download errors can reach managed-tool status when the interactive caller supplies its callback; suppression is not global.
 Its [exclusions](pi-bundle-main-host-file-tools-exclusions.csv),
 [boundaries](pi-bundle-main-host-file-tools-boundaries.csv) and
 [scope](pi-bundle-main-host-file-tools-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-report-helpers.csv](pi-bundle-main-host-report-helpers.csv) records 31 qualified contexts across two disjoint report/summary helper ranges (14,000 bytes). The compiled bug-report flow can invoke summarization, include its result in summary.md and upload the bundle. Session bookkeeping records manifest flags separately from the report body; temporary request text is not a global privacy guarantee.
 Its [exclusions](pi-bundle-main-host-report-helpers-exclusions.csv),
 [boundaries](pi-bundle-main-host-report-helpers-boundaries.csv) and
 [scope](pi-bundle-main-host-report-helpers-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-provider-registry.csv](pi-bundle-main-host-provider-registry.csv) records 147 qualified definitions across the 43 provider/auth/compat registry ranges between the static catalog declarations (74,034 bytes). Selector labels, refresh maps, catalog fallback and API errors retain their own consumers, abort behavior and truncation limits.
 Its [exclusions](pi-bundle-main-host-provider-registry-exclusions.csv),
 [boundaries](pi-bundle-main-host-provider-registry-boundaries.csv) and
 [scope](pi-bundle-main-host-provider-registry-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-model-runtime.csv](pi-bundle-main-host-model-runtime.csv) records 69 qualified contexts in the complete 85,941-byte model-runtime range. Private schema descriptions and overridden schema-key guards are excluded with explicit consumer evidence. Credential-synchronization replacement and unawaited registry refresh outcomes remain qualified.
 Its [exclusions](pi-bundle-main-host-model-runtime-exclusions.csv),
 [boundaries](pi-bundle-main-host-model-runtime-boundaries.csv) and
 [scope](pi-bundle-main-host-model-runtime-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-bundle-main-host-model-selectors.csv](pi-bundle-main-host-model-selectors.csv) records 53 qualified contexts across the public login/model/OAuth selectors and private authentication URL helper (21,040 bytes). Public constructors preserve API-qualified empty-list/cancellation routes even where current CLI guards or completion handlers suppress them. Cancellation, secret fields, URL/clipboard payloads and width conditions retain their exact limits.
 Its [exclusions](pi-bundle-main-host-model-selectors-exclusions.csv),
 [boundaries](pi-bundle-main-host-model-selectors-boundaries.csv) and
 [scope](pi-bundle-main-host-model-selectors-scope.csv) qualify only the named source ranges and
 bounded caller evidence. Canonical and both installed sources match; the
-unit corruption controls pass without importing audited code. The rest of
-the main host remains pending; this partial review does not promote its
-whole-file status or establish default Jouzu/native UI activation.
+unit corruption controls pass without importing audited code. This partial
+review grants only its ranges; the separate complete aggregate reconciles the
+whole body. Default Jouzu/native UI activation retains its own conditions.
 
 [pi-ai-entry-text.csv](pi-ai-entry-text.csv) records 17 qualified definitions
 across the final twelve complete Pi AI entry/compatibility bodies (30,919 bytes).
@@ -1712,7 +1715,8 @@ The [exclusions](pi-bundle-main-host-ai-runtime-helpers-exclusions.csv),
 [scope](pi-bundle-main-host-ai-runtime-helpers-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-mcp.csv](pi-bundle-main-host-mcp.csv) records 144 qualified contexts across the complete 34,249-byte MCP manager/extension range. TUI, RPC and no-op receivers remain distinct. MCP model clauses can persist in system-role sections while direct chat painting suppresses system messages. Cancellation severity matching, background reconnect return suppression, stale notifications and credentials saved before a later reconnect failure retain exact conditions. The 193 exclusions complete 314 lexical nodes; 21 boundaries and 18 corruption controls pass.
 The [exclusions](pi-bundle-main-host-mcp-exclusions.csv),
@@ -1720,7 +1724,8 @@ The [exclusions](pi-bundle-main-host-mcp-exclusions.csv),
 [scope](pi-bundle-main-host-mcp-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-settings-cli.csv](pi-bundle-main-host-settings-cli.csv) records 25 qualified definitions across the complete 47,599-byte settings/argument/help range. Queued settings persistence and drained error reporting retain original-message/stack and lock/release behavior. Parser warning, fatal error, unknown flag and help paths remain distinct; configuration failures can preempt help. The 284 exclusions complete 309 lexical nodes; ten boundaries and 27 corruption controls pass.
 The [exclusions](pi-bundle-main-host-settings-cli-exclusions.csv),
@@ -1728,7 +1733,8 @@ The [exclusions](pi-bundle-main-host-settings-cli-exclusions.csv),
 [scope](pi-bundle-main-host-settings-cli-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-model-resolution.csv](pi-bundle-main-host-model-resolution.csv) records 12 qualified definitions across the complete 11,955-byte model-resolution range, including its four-byte grammar-only declaration tail. Exact/fuzzy matching, ambiguity, thinking suffixes, scopes, CLI warnings and synthetic fallback fields retain distinct caller conditions. The 119 exclusions complete 131 lexical nodes; nine boundaries and 28 corruption controls pass.
 The [exclusions](pi-bundle-main-host-model-resolution-exclusions.csv),
@@ -1736,7 +1742,8 @@ The [exclusions](pi-bundle-main-host-model-resolution-exclusions.csv),
 [scope](pi-bundle-main-host-model-resolution-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-ignore.csv](pi-bundle-main-host-ignore.csv) records zero primary definitions across the complete 12,426-byte private ignore-library range. All 139 lexical nodes retain explicit exclusions; three fixed path-check diagnostics are suppressed by the actual resource/skill consumers' catch boundaries. Private bundled exports do not create a public host API. The relative-path false-return and trailing-slash bypass retain their exact validation/native limits. Nine boundaries and 27 corruption controls pass.
 The [exclusions](pi-bundle-main-host-ignore-exclusions.csv),
@@ -1744,7 +1751,8 @@ The [exclusions](pi-bundle-main-host-ignore-exclusions.csv),
 [scope](pi-bundle-main-host-ignore-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-bedrock-client.csv](pi-bundle-bedrock-client.csv) records 176 qualified
 definitions across the complete compiled Bedrock/AWS/Smithy body (886,422 bytes).
@@ -1777,7 +1785,8 @@ pause/upgrade handling and the bounded error-reason memory consumer. Native
 instructions remain opaque; no audited parser or WebAssembly code runs. The
 [scope](pi-bundle-main-host-llhttp-scope.csv) grants partial JavaScript ownership
 and separate native-data qualification. Independent decoding review and 25
-corruption controls pass; whole-host and wider caller coverage remain open.
+corruption controls pass. Complete local whole-host ownership is reconciled
+separately; wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-semver.csv](pi-bundle-main-host-semver.csv) records one
 API-qualified definition across the complete 41,004-byte version-library range.
@@ -1809,8 +1818,8 @@ control/trailing characters. The [scope](pi-bundle-google-client-scope.csv)
 grants one complete local body with bounded import/caller proofs. Canonical and
 installed copies match; 126 public after-hashes and 25 corruption controls pass.
 No SDK, auth, credential, transport, request, model, environment, filesystem or
-native UI operation runs. The main host remains the only whole-body runtime
-review pending in the coding-agent/TUI census.
+native UI operation runs. All coding-agent/TUI local source bodies now have
+qualified review owners; the complete main-host aggregate is linked below.
 
 [pi-bundle-main-host-cache-auth-support.csv](pi-bundle-main-host-cache-auth-support.csv) records Compiled cache/crash helpers, command and changelog metadata, clipboard image readers, version checks and guarded auth parsing.
 The [exclusions](pi-bundle-main-host-cache-auth-support-exclusions.csv),
@@ -1818,7 +1827,8 @@ The [exclusions](pi-bundle-main-host-cache-auth-support-exclusions.csv),
 [scope](pi-bundle-main-host-cache-auth-support-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-cache-warming.csv](pi-bundle-main-host-cache-warming.csv) records Compiled cache-warmer status, economics, timing and usage with explicit linked-session and credential/request gates.
 The [exclusions](pi-bundle-main-host-cache-warming-exclusions.csv),
@@ -1826,7 +1836,8 @@ The [exclusions](pi-bundle-main-host-cache-warming-exclusions.csv),
 [scope](pi-bundle-main-host-cache-warming-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-export-template-helpers.csv](pi-bundle-main-host-export-template-helpers.csv) records Compiled session HTML/JSONL export, ANSI/tool HTML, nested-tool records, prompt templates and input helpers.
 The [exclusions](pi-bundle-main-host-export-template-helpers-exclusions.csv),
@@ -1834,7 +1845,8 @@ The [exclusions](pi-bundle-main-host-export-template-helpers-exclusions.csv),
 [scope](pi-bundle-main-host-export-template-helpers-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-fetch-infra.csv](pi-bundle-main-host-fetch-infra.csv) records Compiled Fetch constants, origin/UTF8/infra/data-URL helpers and conditionally observable JSON serializer error.
 The [exclusions](pi-bundle-main-host-fetch-infra-exclusions.csv),
@@ -1842,7 +1854,8 @@ The [exclusions](pi-bundle-main-host-fetch-infra-exclusions.csv),
 [scope](pi-bundle-main-host-fetch-infra-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-glob.csv](pi-bundle-main-host-glob.csv) records Compiled brace expansion and minimatch helpers, linked model-scope pattern guard and qualified private defensive diagnostics.
 The [exclusions](pi-bundle-main-host-glob-exclusions.csv),
@@ -1850,7 +1863,8 @@ The [exclusions](pi-bundle-main-host-glob-exclusions.csv),
 [scope](pi-bundle-main-host-glob-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-hosted-git.csv](pi-bundle-main-host-hosted-git.csv) records Compiled host URL templates, shorthand extraction and GitHost cache/factory helpers; no ordinary fromManifest consumer.
 The [exclusions](pi-bundle-main-host-hosted-git-exclusions.csv),
@@ -1858,7 +1872,8 @@ The [exclusions](pi-bundle-main-host-hosted-git-exclusions.csv),
 [scope](pi-bundle-main-host-hosted-git-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-bootstrap.csv](pi-bundle-main-host-http-bootstrap.csv) records Compiled Undici imports, symbols and timer bootstrap; protected identities and external initialization boundaries.
 The [exclusions](pi-bundle-main-host-http-bootstrap-exclusions.csv),
@@ -1866,7 +1881,8 @@ The [exclusions](pi-bundle-main-host-http-bootstrap-exclusions.csv),
 [scope](pi-bundle-main-host-http-bootstrap-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-dispatch.csv](pi-bundle-main-host-http-dispatch.csv) records Compiled idle-timeout settings and conditional proxy/dispatcher/global-fetch bridge with exported API guard.
 The [exclusions](pi-bundle-main-host-http-dispatch-exclusions.csv),
@@ -1874,7 +1890,8 @@ The [exclusions](pi-bundle-main-host-http-dispatch-exclusions.csv),
 [scope](pi-bundle-main-host-http-dispatch-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-errors.csv](pi-bundle-main-host-http-errors.csv) records Compiled Undici error classes, defaults and header/search helpers with dispatcher, fetch-cause and observer qualifications.
 The [exclusions](pi-bundle-main-host-http-errors-exclusions.csv),
@@ -1882,7 +1899,8 @@ The [exclusions](pi-bundle-main-host-http-errors-exclusions.csv),
 [scope](pi-bundle-main-host-http-errors-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-request.csv](pi-bundle-main-host-http-request.csv) records Compiled Undici request, dispatcher, connector and LLHTTP enum helpers with conditional published API and native boundaries.
 The [exclusions](pi-bundle-main-host-http-request-exclusions.csv),
@@ -1890,7 +1908,8 @@ The [exclusions](pi-bundle-main-host-http-request-exclusions.csv),
 [scope](pi-bundle-main-host-http-request-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-utilities.csv](pi-bundle-main-host-http-utilities.csv) records Compiled Undici body/URL/header/range/abort/socket utilities, stats and qualified diagnostic-channel logging.
 The [exclusions](pi-bundle-main-host-http-utilities-exclusions.csv),
@@ -1898,7 +1917,8 @@ The [exclusions](pi-bundle-main-host-http-utilities-exclusions.csv),
 [scope](pi-bundle-main-host-http-utilities-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-llama-extension.csv](pi-bundle-main-host-llama-extension.csv) records Compiled llama/HuggingFace clients, provider, extension and UI under explicit local-model, command and server gates.
 The [exclusions](pi-bundle-main-host-llama-extension-exclusions.csv),
@@ -1906,7 +1926,8 @@ The [exclusions](pi-bundle-main-host-llama-extension-exclusions.csv),
 [scope](pi-bundle-main-host-llama-extension-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-lru-cache.csv](pi-bundle-main-host-lru-cache.csv) records Compiled LRU implementation, private hosted-Git default usage and qualified explicit diagnostic-subscriber API guards.
 The [exclusions](pi-bundle-main-host-lru-cache-exclusions.csv),
@@ -1914,7 +1935,8 @@ The [exclusions](pi-bundle-main-host-lru-cache-exclusions.csv),
 [scope](pi-bundle-main-host-lru-cache-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-mermaid-renderer.csv](pi-bundle-main-host-mermaid-renderer.csv) records Compiled Mermaid sanitizers, grammar, layout and Markdown transformer with mode, width, limits and first-warning guards.
 The [exclusions](pi-bundle-main-host-mermaid-renderer-exclusions.csv),
@@ -1922,7 +1944,8 @@ The [exclusions](pi-bundle-main-host-mermaid-renderer-exclusions.csv),
 [scope](pi-bundle-main-host-mermaid-renderer-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-message-components.csv](pi-bundle-main-host-message-components.csv) records Compiled loader/editor, assistant/bash/summary/custom-message components, border and footer formatting.
 The [exclusions](pi-bundle-main-host-message-components-exclusions.csv),
@@ -1930,7 +1953,8 @@ The [exclusions](pi-bundle-main-host-message-components-exclusions.csv),
 [scope](pi-bundle-main-host-message-components-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-migrations-theme.csv](pi-bundle-main-host-migrations-theme.csv) records Compiled migrations and deprecation output plus callback-installed theme schema validation diagnostics.
 The [exclusions](pi-bundle-main-host-migrations-theme-exclusions.csv),
@@ -1938,7 +1962,8 @@ The [exclusions](pi-bundle-main-host-migrations-theme-exclusions.csv),
 [scope](pi-bundle-main-host-migrations-theme-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-mode-protocol.csv](pi-bundle-main-host-mode-protocol.csv) records Compiled print/JSON/RPC modes and client, credential checks, file arguments and model-list output.
 The [exclusions](pi-bundle-main-host-mode-protocol-exclusions.csv),
@@ -1946,7 +1971,8 @@ The [exclusions](pi-bundle-main-host-mode-protocol-exclusions.csv),
 [scope](pi-bundle-main-host-mode-protocol-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-resource-config.csv](pi-bundle-main-host-resource-config.csv) records Compiled resource grouping, override diagnostics and private command-driven configuration selector.
 The [exclusions](pi-bundle-main-host-resource-config-exclusions.csv),
@@ -1954,7 +1980,8 @@ The [exclusions](pi-bundle-main-host-resource-config-exclusions.csv),
 [scope](pi-bundle-main-host-resource-config-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-resource-loader.csv](pi-bundle-main-host-resource-loader.csv) records Compiled resource/extension/context loading and Git/footer data with explicit exported-loader or linked-host consumers.
 The [exclusions](pi-bundle-main-host-resource-loader-exclusions.csv),
@@ -1962,7 +1989,8 @@ The [exclusions](pi-bundle-main-host-resource-loader-exclusions.csv),
 [scope](pi-bundle-main-host-resource-loader-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-session-runtime.csv](pi-bundle-main-host-session-runtime.csv) records Compiled session cwd and extension-flag diagnostics, service construction and session replacement runtime.
 The [exclusions](pi-bundle-main-host-session-runtime-exclusions.csv),
@@ -1970,7 +1998,8 @@ The [exclusions](pi-bundle-main-host-session-runtime-exclusions.csv),
 [scope](pi-bundle-main-host-session-runtime-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-share-report.csv](pi-bundle-main-host-share-report.csv) records Compiled share, bug-report and announcement commands, payload choices, upload metadata and conditional UI/API errors.
 The [exclusions](pi-bundle-main-host-share-report-exclusions.csv),
@@ -1978,7 +2007,8 @@ The [exclusions](pi-bundle-main-host-share-report-exclusions.csv),
 [scope](pi-bundle-main-host-share-report-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-startup-trust.csv](pi-bundle-main-host-startup-trust.csv) records Compiled first-time setup, startup selectors, project-trust prompts and settings diagnostics.
 The [exclusions](pi-bundle-main-host-startup-trust-exclusions.csv),
@@ -1986,7 +2016,8 @@ The [exclusions](pi-bundle-main-host-startup-trust-exclusions.csv),
 [scope](pi-bundle-main-host-startup-trust-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-status-theme-support.csv](pi-bundle-main-host-status-theme-support.csv) records Compiled status, scoped-model/trust/theme/header helpers, subscription warnings and qualified program-status payloads.
 The [exclusions](pi-bundle-main-host-status-theme-support-exclusions.csv),
@@ -1994,7 +2025,8 @@ The [exclusions](pi-bundle-main-host-status-theme-support-exclusions.csv),
 [scope](pi-bundle-main-host-status-theme-support-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-tool-adapters.csv](pi-bundle-main-host-tool-adapters.csv) records Compiled codemode, clipboard and MCP tool/resource adapters plus tool-search wrapper with actual replacement and API gates.
 The [exclusions](pi-bundle-main-host-tool-adapters-exclusions.csv),
@@ -2002,7 +2034,8 @@ The [exclusions](pi-bundle-main-host-tool-adapters-exclusions.csv),
 [scope](pi-bundle-main-host-tool-adapters-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-typebox-compiler.csv](pi-bundle-main-host-typebox-compiler.csv) records Compiled TypeBox code generator, Validator facade and compile export map; inspectable generated JavaScript remains code data.
 The [exclusions](pi-bundle-main-host-typebox-compiler-exclusions.csv),
@@ -2010,7 +2043,8 @@ The [exclusions](pi-bundle-main-host-typebox-compiler-exclusions.csv),
 [scope](pi-bundle-main-host-typebox-compiler-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-typebox-references.csv](pi-bundle-main-host-typebox-references.csv) records Compiled JSON Pointer and schema references, check/build/evaluate wrappers and public assertion diagnostics.
 The [exclusions](pi-bundle-main-host-typebox-references-exclusions.csv),
@@ -2018,7 +2052,8 @@ The [exclusions](pi-bundle-main-host-typebox-references-exclusions.csv),
 [scope](pi-bundle-main-host-typebox-references-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-typebox-validation.csv](pi-bundle-main-host-typebox-validation.csv) records Compiled TypeBox schema predicates, keyword checks and formats; structured errors and separately imported locale boundaries.
 The [exclusions](pi-bundle-main-host-typebox-validation-exclusions.csv),
@@ -2026,7 +2061,8 @@ The [exclusions](pi-bundle-main-host-typebox-validation-exclusions.csv),
 [scope](pi-bundle-main-host-typebox-validation-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-typebox-values.csv](pi-bundle-main-host-typebox-values.csv) records Compiled clean/convert/default/codec/create/parse/diff/repair APIs with optional caller guards and foreign callback errors.
 The [exclusions](pi-bundle-main-host-typebox-values-exclusions.csv),
@@ -2034,7 +2070,8 @@ The [exclusions](pi-bundle-main-host-typebox-values-exclusions.csv),
 [scope](pi-bundle-main-host-typebox-values-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-unicode-width-data.csv](pi-bundle-main-host-unicode-width-data.csv) records Compiled grapheme-width helpers and exhaustive structural proof of 986 numeric Unicode-width tuples.
 The [exclusions](pi-bundle-main-host-unicode-width-data-exclusions.csv),
@@ -2042,7 +2079,8 @@ The [exclusions](pi-bundle-main-host-unicode-width-data-exclusions.csv),
 [scope](pi-bundle-main-host-unicode-width-data-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-yaml-compose.csv](pi-bundle-main-host-yaml-compose.csv) records Compiled YAML error/excerpt and node/document composition with exact default frontmatter, resource and skill-error routes.
 The [exclusions](pi-bundle-main-host-yaml-compose-exclusions.csv),
@@ -2050,7 +2088,8 @@ The [exclusions](pi-bundle-main-host-yaml-compose-exclusions.csv),
 [scope](pi-bundle-main-host-yaml-compose-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-yaml-nodes.csv](pi-bundle-main-host-yaml-nodes.csv) records Compiled YAML node/document/schema/directive/alias/stringifier helpers; ordinary frontmatter parse versus private APIs.
 The [exclusions](pi-bundle-main-host-yaml-nodes-exclusions.csv),
@@ -2058,7 +2097,8 @@ The [exclusions](pi-bundle-main-host-yaml-nodes-exclusions.csv),
 [scope](pi-bundle-main-host-yaml-nodes-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-yaml-parser.csv](pi-bundle-main-host-yaml-parser.csv) records Compiled YAML CST, lexer, parser and namespace helpers with actual frontmatter use, diagnostics and debug payload gates.
 The [exclusions](pi-bundle-main-host-yaml-parser-exclusions.csv),
@@ -2066,7 +2106,8 @@ The [exclusions](pi-bundle-main-host-yaml-parser-exclusions.csv),
 [scope](pi-bundle-main-host-yaml-parser-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-ui-components.csv](pi-bundle-main-host-ui-components.csv) records 189 caption definitions in the complete 69,926-byte component range. Seven actual exported components retain exact class, branch and renderer recipes; terminal image capability, selected-item descriptions, tree filtering, tool fallbacks, empty selectors and recognition coupling stay qualified. The 639 exclusions complete all 828 frozen literal/template/regex occurrences. Its [boundaries](pi-bundle-main-host-ui-components-boundaries.csv) and [scope](pi-bundle-main-host-ui-components-scope.csv) retain partial ownership; no audited UI runs or whole host is promoted. Canonical and both installed source trees match; 13 corruption controls and independent component/renderer review pass.
 
@@ -2076,7 +2117,8 @@ The [exclusions](pi-bundle-main-host-interactive-selectors-exclusions.csv),
 [scope](pi-bundle-main-host-interactive-selectors-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-interactive-auth.csv](pi-bundle-main-host-interactive-auth.csv) records 41 qualified captions in the complete 15,803-byte interactive login/provider-auth range. Cancellation sentinels, selector stages, credential persistence, model refresh, success ordering and external provider messages retain exact consumers; 62 exclusions complete 103 source occurrences.
 The [exclusions](pi-bundle-main-host-interactive-auth-exclusions.csv),
@@ -2084,7 +2126,8 @@ The [exclusions](pi-bundle-main-host-interactive-auth-exclusions.csv),
 [scope](pi-bundle-main-host-interactive-auth-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-interactive-commands.csv](pi-bundle-main-host-interactive-commands.csv) records 77 qualified captions in the complete 19,347-byte interactive command range. Reload/import/export/session/hotkey/bash/report paths retain fatal, recoverable, file-output, queue and cancellation distinctions; 120 exclusions complete 197 source occurrences.
 The [exclusions](pi-bundle-main-host-interactive-commands-exclusions.csv),
@@ -2092,7 +2135,8 @@ The [exclusions](pi-bundle-main-host-interactive-commands-exclusions.csv),
 [scope](pi-bundle-main-host-interactive-commands-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-interactive-runtime.csv](pi-bundle-main-host-interactive-runtime.csv) records 149 authored captions and fragments across the complete 100,673-byte interactive runtime range. Instance defaults, startup/resources, extension dialogs, input dispatch, event/history rendering, shared public wrappers, notifications, shutdown and queues retain exact callers and conditions. The 585 exclusions complete all 734 frozen occurrences. Its [boundaries](pi-bundle-main-host-interactive-runtime-boundaries.csv) and [scope](pi-bundle-main-host-interactive-runtime-scope.csv) preserve partial source ownership, mutable error sinks, private/public API distinctions and nontransactional queue restoration. The canonical declaration and installed public patch are separately identified; compiled and patched unbundled behavior are not equated. Twelve corruption controls and independent full-range source review pass. No audited UI runs or whole host is promoted.
 
@@ -2102,7 +2146,8 @@ The [exclusions](pi-bundle-main-host-session-core-exclusions.csv),
 [scope](pi-bundle-main-host-session-core-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-interceptors.csv](pi-bundle-main-host-http-interceptors.csv) records The complete 20,066-byte Undici interceptor range with zero established public prose definitions. All 107 occurrences, including 20 own error/guard instances, retain exact private-factory, callback, export and invocation qualifications in the exclusions and boundaries.
 The [exclusions](pi-bundle-main-host-http-interceptors-exclusions.csv),
@@ -2110,7 +2155,8 @@ The [exclusions](pi-bundle-main-host-http-interceptors-exclusions.csv),
 [scope](pi-bundle-main-host-http-interceptors-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-cache-engine.csv](pi-bundle-main-host-http-cache-engine.csv) records The complete 53,583-byte Undici cache range with zero established public prose definitions. All 528 occurrences retain exact private-factory, error, synthetic-response, HTTP grammar, native and callback roles without inferring an installed cache API.
 The [exclusions](pi-bundle-main-host-http-cache-engine-exclusions.csv),
@@ -2118,7 +2164,8 @@ The [exclusions](pi-bundle-main-host-http-cache-engine-exclusions.csv),
 [scope](pi-bundle-main-host-http-cache-engine-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-transport-interceptors.csv](pi-bundle-main-host-http-transport-interceptors.csv) records The complete 22,287-byte decompression, retry/dedup and SQLite interceptor range. All 69 occurrences retain exact native SQL, process-warning, callback, guard and private-factory qualifications; no established public prose definition is promoted.
 The [exclusions](pi-bundle-main-host-http-transport-interceptors-exclusions.csv),
@@ -2126,7 +2173,8 @@ The [exclusions](pi-bundle-main-host-http-transport-interceptors-exclusions.csv)
 [scope](pi-bundle-main-host-http-transport-interceptors-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-fetch-types.csv](pi-bundle-main-host-http-fetch-types.csv) records 34 qualified definitions in the complete 38,289-byte Headers/Response/Request and Fetch-error type range. Conditional installed global APIs, immutable headers, URL/body validation, request cancellation and nested-cause behavior retain exact consumers; 232 exclusions complete 266 source occurrences.
 The [exclusions](pi-bundle-main-host-http-fetch-types-exclusions.csv),
@@ -2134,7 +2182,8 @@ The [exclusions](pi-bundle-main-host-http-fetch-types-exclusions.csv),
 [scope](pi-bundle-main-host-http-fetch-types-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-package-session-support.csv](pi-bundle-main-host-package-session-support.csv) records 117 qualified captions, fragments and callback/API definitions across the complete 115,005-byte image/package/keybinding/session-selector range. Forty-three keybinding descriptions have a concrete extension-factory/getDefinition receiver; exported formatDimensionNote has a separate direct API path. Package errors/progress, suppressed private guards, selector load/delete/rename timing and search recognition retain exact consumers. The 1,060 exclusions complete all 1,177 source occurrences. Its [boundaries](pi-bundle-main-host-package-session-support-boundaries.csv) and [scope](pi-bundle-main-host-package-session-support-scope.csv) preserve partial ownership and native limits. Twelve corruption controls and independent wording/condition review pass; no audited module or native operation runs.
 
@@ -2144,7 +2193,8 @@ The [exclusions](pi-bundle-main-host-webidl-exclusions.csv),
 [scope](pi-bundle-main-host-webidl-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-fetch-util.csv](pi-bundle-main-host-fetch-util.csv) records Three qualified public API guard definitions in the complete 17,720-byte Fetch utility range. Iterator/forEach and byte-stream conditions retain exact installed consumers; constant success stubs and native message matchers remain qualified in 151 exclusions.
 The [exclusions](pi-bundle-main-host-fetch-util-exclusions.csv),
@@ -2152,7 +2202,8 @@ The [exclusions](pi-bundle-main-host-fetch-util-exclusions.csv),
 [scope](pi-bundle-main-host-fetch-util-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-skills-extensions.csv](pi-bundle-main-host-skills-extensions.csv) records 46 qualified definitions in the complete 45,421-byte skill, prompt and extension-runtime range. Listener-dependent errors, no-op UI suppression, stale context, cancellation and request/current-state metadata paths retain exact consumers; 232 exclusions complete 278 occurrences.
 The [exclusions](pi-bundle-main-host-skills-extensions-exclusions.csv),
@@ -2160,7 +2211,8 @@ The [exclusions](pi-bundle-main-host-skills-extensions-exclusions.csv),
 [scope](pi-bundle-main-host-skills-extensions-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-session-storage.csv](pi-bundle-main-host-session-storage.csv) records 14 qualified contexts in the complete 31,366-byte session-storage and context-projection range. Direct CLI validation, prevalidated fork/open IDs, guarded public mutation APIs and suppressed header-scan failures retain distinct routes; 12 primary nodes plus 171 exclusions complete 183 occurrences.
 The [exclusions](pi-bundle-main-host-session-storage-exclusions.csv),
@@ -2168,7 +2220,8 @@ The [exclusions](pi-bundle-main-host-session-storage-exclusions.csv),
 [scope](pi-bundle-main-host-session-storage-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-fetch-runtime.csv](pi-bundle-main-host-http-fetch-runtime.csv) records 22 qualified definitions in the complete 55,797-byte Fetch runtime range. Installed Fetch errors, nested cause/body paths and custom dispatcher callbacks retain exact conditions; private cache, constant checks, response/status/header data and suppressed branches remain qualified in 442 exclusions.
 The [exclusions](pi-bundle-main-host-http-fetch-runtime-exclusions.csv),
@@ -2176,7 +2229,8 @@ The [exclusions](pi-bundle-main-host-http-fetch-runtime-exclusions.csv),
 [scope](pi-bundle-main-host-http-fetch-runtime-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-websocket.csv](pi-bundle-main-host-http-websocket.csv) records 24 qualified definitions in the complete 50,476-byte WebSocket range. Public validation and established outgoing close-frame prose retain distinct sinks; connecting failures, local error/close events and uninstalled private APIs retain exact limits in 239 exclusions.
 The [exclusions](pi-bundle-main-host-http-websocket-exclusions.csv),
@@ -2184,7 +2238,8 @@ The [exclusions](pi-bundle-main-host-http-websocket-exclusions.csv),
 [scope](pi-bundle-main-host-http-websocket-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-eventsource-index.csv](pi-bundle-main-host-http-eventsource-index.csv) records One qualified EventSource warning definition in the complete 19,831-byte EventSource, dispatch and install range. SSE cancellation, plain error events, private convenience APIs and actual global publication retain exact qualifications; 91 exclusions complete 92 occurrences.
 The [exclusions](pi-bundle-main-host-http-eventsource-index-exclusions.csv),
@@ -2192,7 +2247,8 @@ The [exclusions](pi-bundle-main-host-http-eventsource-index-exclusions.csv),
 [scope](pi-bundle-main-host-http-eventsource-index-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-api-mocks.csv](pi-bundle-main-host-http-api-mocks.csv) records 33 qualified definitions in the complete 80,260-byte dispatcher API, mock/snapshot and global-bridge range. Published instance request/stream/pipeline/upgrade/connect and returned BodyReadable paths retain exact callback, Promise, stream and lifecycle conditions. Normal transport and explicit custom composition remain distinct. The 477 frozen exclusions complete all 510 literal/template/regex occurrences; six additional identifier Console.table headings are separately retained as private display producers. Its [boundaries](pi-bundle-main-host-http-api-mocks-boundaries.csv) and [scope](pi-bundle-main-host-http-api-mocks-scope.csv) preserve private factory, native and cross-package bridge limits. Eleven corruption controls and independent full-source/role review pass; no audited runtime runs or whole host is promoted.
 
@@ -2202,7 +2258,8 @@ The [exclusions](pi-bundle-main-host-form-body-exclusions.csv),
 [scope](pi-bundle-main-host-form-body-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http1.csv](pi-bundle-main-host-http1.csv) records 14 qualified source occurrences in the complete 27,121-byte HTTP/1 transport range, including two assembly components for one parser message. Request errors, nested Fetch causes and explicit native socket observers remain distinct; redundant guards, private child events and native invariants remain qualified in 111 exclusions.
 The [exclusions](pi-bundle-main-host-http1-exclusions.csv),
@@ -2210,7 +2267,8 @@ The [exclusions](pi-bundle-main-host-http1-exclusions.csv),
 [scope](pi-bundle-main-host-http1-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http2.csv](pi-bundle-main-host-http2.csv) records 17 qualified source occurrences in the complete 30,306-byte HTTP/2 transport range. Stream errors, socket observers, replay and upgrade routing retain exact negotiation, timeout and event conditions; session informational storage and native/private invariants remain qualified in 141 exclusions.
 The [exclusions](pi-bundle-main-host-http2-exclusions.csv),
@@ -2218,7 +2276,8 @@ The [exclusions](pi-bundle-main-host-http2-exclusions.csv),
 [scope](pi-bundle-main-host-http2-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-agent-loop.csv](pi-bundle-main-host-agent-loop.csv) records 31 qualified contexts in the complete 33,745-byte Agent loop, state and optional proxy range. Exact compiled lifecycle, prompt/tool/result projection, cancellation, optional SDK and mutation timing remain separate; 29 primary nodes plus 171 exclusions complete 200 occurrences.
 The [exclusions](pi-bundle-main-host-agent-loop-exclusions.csv),
@@ -2226,7 +2285,8 @@ The [exclusions](pi-bundle-main-host-agent-loop-exclusions.csv),
 [scope](pi-bundle-main-host-agent-loop-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-compaction.csv](pi-bundle-main-host-compaction.csv) records 29 qualified contexts across the complete 26,287-byte compaction and branch-summary ranges. Summary preparation, context projection, abort/error/length labels, shared formatting and guarded public preparation APIs retain exact conditions; 27 primary nodes plus 116 exclusions complete 143 occurrences.
 The [exclusions](pi-bundle-main-host-compaction-exclusions.csv),
@@ -2234,7 +2294,8 @@ The [exclusions](pi-bundle-main-host-compaction-exclusions.csv),
 [scope](pi-bundle-main-host-compaction-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-client.csv](pi-bundle-main-host-http-client.csv) records One qualified source definition in the complete 15,228-byte Client range. Native socket observer delivery, fixed/default constructor settings, dynamic SOCKS pipelining and suppressed child events retain exact conditions; 74 exclusions complete 75 source occurrences.
 The [exclusions](pi-bundle-main-host-http-client-exclusions.csv),
@@ -2242,7 +2303,8 @@ The [exclusions](pi-bundle-main-host-http-client-exclusions.csv),
 [scope](pi-bundle-main-host-http-client-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-pools.csv](pi-bundle-main-host-http-pools.csv) records Two qualified source definitions in the complete 20,686-byte pool/Agent range. Published Env dispatch origin validation and SOCKS per-request pool connections validation have distinct API paths; fixed/default, private factory and legacy-wrapper guards remain qualified in 107 exclusions.
 The [exclusions](pi-bundle-main-host-http-pools-exclusions.csv),
@@ -2250,7 +2312,8 @@ The [exclusions](pi-bundle-main-host-http-pools-exclusions.csv),
 [scope](pi-bundle-main-host-http-pools-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-socks.csv](pi-bundle-main-host-http-socks.csv) records 45 qualified definitions in the complete 18,965-byte SOCKS parser/connector/agent range. Environment proxy selection, protocol/auth/hostname/socket negotiation, callback transport and dynamic request options retain exact consumers; 116 exclusions complete 161 occurrences.
 The [exclusions](pi-bundle-main-host-http-socks-exclusions.csv),
@@ -2258,7 +2321,8 @@ The [exclusions](pi-bundle-main-host-http-socks-exclusions.csv),
 [scope](pi-bundle-main-host-http-socks-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-proxy-env.csv](pi-bundle-main-host-http-proxy-env.csv) records Two qualified definitions in the complete 11,183-byte proxy/environment range. Actual configured proxy protocols, request origin and dispatch/factory guards retain exact public versus private conditions; 76 exclusions complete 78 occurrences.
 The [exclusions](pi-bundle-main-host-http-proxy-env-exclusions.csv),
@@ -2266,7 +2330,8 @@ The [exclusions](pi-bundle-main-host-http-proxy-env-exclusions.csv),
 [scope](pi-bundle-main-host-http-proxy-env-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-http-retry.csv](pi-bundle-main-host-http-retry.csv) records The complete 11,619-byte RetryHandler/RetryAgent range, with all 55 occurrences retained as qualified private-factory, lifecycle, protocol or protected data. Published callback lifecycle violations remain distinct from normal headers-sent retry gating; no established default retry prose is promoted.
 The [exclusions](pi-bundle-main-host-http-retry-exclusions.csv),
@@ -2274,7 +2339,8 @@ The [exclusions](pi-bundle-main-host-http-retry-exclusions.csv),
 [scope](pi-bundle-main-host-http-retry-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
-operation runs; whole main-host and wider caller coverage remain open.
+operation runs. Complete local main-host ownership is reconciled separately;
+wider caller and external/native behavior retain their qualifications.
 
 [pi-bundle-main-host-complete-scope.csv](pi-bundle-main-host-complete-scope.csv) records the complete local compiled main-host source owner. Its 77 pinned child units cover all 164 disjoint ranges, 3,536,719 bytes and 38,913 frozen literal/template/regex occurrences. It adds no English rows and preserves each child producer, trigger, suppression, activation and protected-data qualification. This local source result does not establish native instruction behavior, transitive external wording, default visibility or fetched-target runtime equivalence.
 
@@ -2291,6 +2357,8 @@ operation runs; whole main-host and wider caller coverage remain open.
 [pi-published-markdown-text.csv](pi-published-markdown-text.csv) exports all 78 packaged Markdown source documents (1,493,112 canonical bytes): 290 changelog parser sections and 77 other complete document records. The [line export](pi-published-markdown-text-asset-lines.csv) reconstructs 22,415 projected lines. Two upstream absolute-home-path spans are replaced by protected markers; original hashes and coordinates retain provenance, while the projection is 1,493,088 bytes. Source documents, historical changelog claims, code and commands retain their roles rather than becoming automatic runtime UI or translation directives. Explicit changelog display, guarded startup notes, discovered subagents/prompts and loaded dynamic resources have separate source-backed conditions. No audited parser, renderer, model, tool or native operation runs.
 
 [pi-optional-ui-examples.csv](pi-optional-ui-examples.csv) inventories 529 qualified primary records across 41 fully read optional UI, tool, RPC and rendering TypeScript examples (246,187 bytes). All 3,147 AST tokens and twelve nested shell spans are partitioned against 2,630 exclusions. Fifty boundaries preserve explicit extension/standalone/SDK activation, UI-mode and renderer conditions, cancellation and fallback behavior, model/export routes and protected control fields. Two upstream absolute-path fixture spans are projected to protected markers with original hashes and coordinates retained. These source examples do not establish default Jouzu activation or turn every record into a translation directive. Thirty-two corruption controls and independent all-row/source/privacy checks pass without audited execution.
+
+[pi-published-doom-license-text.csv](pi-published-doom-license-text.csv) records thirteen explicit operator-selected optional DOOM build-script outputs/advice and one complete shipped MIT license reading surface. Three readable source assets total 6,146 bytes; C includes/comments/API identifiers retain their source roles. The packaged 380,169-byte WASM is separately pinned and statically observed. Its English-bearing game/error data remains navigable as qualified printable-byte observations, with protected path projections and instruction/game behavior boundaries. Suppressed print hooks do not establish absence of exception or framebuffer wording; external game data and per-phrase publication remain separate. Neither source/build linkage nor optional extension packaging establishes default Jouzu activation. Source/archive/installed identities, source-region partitions and corruption controls are checked without executing the build, native code, game or audited examples.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3071,7 +3139,8 @@ in the ordinary route. Provider-route and payload-copy errors have separate
 preparation/admission publishers. Generic JSON callbacks, Bedrock binary/data
 rules, cancellation handling and hook restoration keep their conditions. One
 bounded native consumer matches the exact public patch after hash and both
-installed Pi1.4.0 trees; its full body remains pending. Four corruption controls
+installed Pi1.4.0 trees; its separate full-body owner is linked through the
+current runtime review census. Four corruption controls
 pass without product/provider/payload/cache/state execution.
 
 [native-request-transport.csv](native-request-transport.csv) adds 61 request/turn
@@ -3778,6 +3847,7 @@ node review/text-inventory/verify-pi-optional-sdk-examples.cjs
 python -B review/text-inventory/verify-locale-review-boundary-census.py
 python -B review/text-inventory/verify-pi-published-markdown-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-optional-ui-examples.cjs
+python -B review/text-inventory/verify-pi-published-doom-license-text.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
