@@ -1634,6 +1634,25 @@ unit corruption controls pass without importing audited code. The rest of
 the main host remains pending; this partial review does not promote its
 whole-file status or establish default Jouzu/native UI activation.
 
+[pi-ai-entry-text.csv](pi-ai-entry-text.csv) records 17 qualified definitions
+across the final twelve complete Pi AI entry/compatibility bodies (30,919 bytes).
+Its 269 [exclusions](pi-ai-entry-text-exclusions.csv) complete 286 lexical nodes,
+including comments and the CLI hashbang. Twenty
+[boundaries](pi-ai-entry-text-boundaries.csv) retain the developer CLI's prompts,
+credential-write/catch/finally conditions, compatibility dispatch/auth injection,
+environment readiness/cache behavior, image dispatch and synchronous resource
+cleanup. CLI provider prevalidation preempts a private guard; public registry
+wrappers and custom calls preserve separately qualified mismatch errors.
+An empty string Cloudflare authorization header satisfies its string-type
+predicate. Cleanup collects synchronous throws while returned Promises remain
+unawaited. Seven bodies define no own primary wording. The
+[scope](pi-ai-entry-text-scope.csv) completes local body ownership for all 200
+Pi AI runtime files; foreign producers, callers, metadata, fetched-target patches
+and whole-graph visibility retain their separate qualifications. Eleven bodies
+match the canonical archive and compat matches its exact public patch-after;
+both installed trees match. Twenty-three corruption controls pass. No CLI,
+credential, environment, file, cleanup, image, provider or native UI operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -1714,8 +1733,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. There are 188
-files with explicit complete local review owners; 12 files (30,919 bytes)
+authority, public patch manifest and nested package-list transform. There are 200
+files with explicit complete local review owners; 0 files (0 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -3037,6 +3056,7 @@ node review/text-inventory/verify-pi-bundle-main-host-report-helpers.cjs
 node review/text-inventory/verify-pi-bundle-main-host-provider-registry.cjs
 node review/text-inventory/verify-pi-bundle-main-host-model-runtime.cjs
 node review/text-inventory/verify-pi-bundle-main-host-model-selectors.cjs
+python -B review/text-inventory/verify-pi-ai-entry-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

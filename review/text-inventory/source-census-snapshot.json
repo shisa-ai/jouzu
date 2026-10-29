@@ -60,6 +60,7 @@
     "pi-bundle-main-host-provider-registry-scope.csv": "db85b00dcb6d0f442f171fa4d8c346290511a3bb8e37c0242ac36ae05df5590b",
     "pi-bundle-main-host-model-runtime-scope.csv": "ae7be976f3fb5966a1d884b7b7b85b6a79f844654921c611bb5e2766503f5d3f",
     "pi-bundle-main-host-model-selectors-scope.csv": "ec93303b5555a6937d39f4938d2575baf3e7ab1dd8bad4a1f1b286df4ff64a6d",
+    "pi-ai-entry-text-scope.csv": "48102ff4617c0a9f50ba1d95d51306e2b8fd0c443358ce6ca87c629a2b04a02b",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
