@@ -1,0 +1,3392 @@
+{
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit": "pi-native-clipboard-text",
+  "counts": {
+    "full_local_source_bodies": 8,
+    "bytes": 45367,
+    "physical_LF_lines": 1150,
+    "lexical_regions": 194,
+    "fixed_occurrences": 32,
+    "exclusions": 162,
+    "boundaries": 8,
+    "bounded_sources": 9,
+    "public_after_checks": 74,
+    "source_to_binary_behavior_owners": 0
+  },
+  "packages": [
+    {
+      "package": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "archive": "earendil-works-pi-tui-1.4.0.tgz",
+      "archive_sha256": "b112d44a1835f30c189ba5df9ceb8db33cdbe8c542ba6cddceb0cf731e4216ce",
+      "integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+      "metadata": [
+        {
+          "tree": "root",
+          "sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+        },
+        {
+          "tree": "cli-nested",
+          "sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+        }
+      ],
+      "metadata_qualification": "Root exact archive package.json; CLI parsed metadata only four exact public packlist exclusions added; no byte equivalence inferred."
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "archive": "earendil-works-pi-coding-agent-1.4.0.tgz",
+      "archive_sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+      "integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+      "metadata": [
+        {
+          "tree": "root",
+          "sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+        },
+        {
+          "tree": "cli-nested",
+          "sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+        }
+      ],
+      "metadata_qualification": "Root exact archive package.json; CLI parsed metadata only four exact public packlist exclusions added; no byte equivalence inferred."
+    }
+  ],
+  "pin_sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+  "metadata_transform": {
+    "source": "scripts/configure-release-packlists.mjs",
+    "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab"
+  },
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/clipboard.h",
+      "bytes": 8256,
+      "root_sha256": "e9c420915ee63594eb42687364324b33d487e269a84aba58f7b1c1103dc9d2a2",
+      "cli_nested_sha256": "e9c420915ee63594eb42687364324b33d487e269a84aba58f7b1c1103dc9d2a2",
+      "canonical_sha256": "e9c420915ee63594eb42687364324b33d487e269a84aba58f7b1c1103dc9d2a2",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 208,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/napi.h",
+      "bytes": 4329,
+      "root_sha256": "3ef7b32eb0b6f4227cea85a521a1dc4cb68f2db070c600bf845a3905bcfd8f13",
+      "cli_nested_sha256": "3ef7b32eb0b6f4227cea85a521a1dc4cb68f2db070c600bf845a3905bcfd8f13",
+      "canonical_sha256": "3ef7b32eb0b6f4227cea85a521a1dc4cb68f2db070c600bf845a3905bcfd8f13",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 91,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/linux/src/clipboard-worker.h",
+      "bytes": 2935,
+      "root_sha256": "a4a670338d49e97002e4ffb9c0e22e28e9536938ec182d7beb7fa8f69856cd81",
+      "cli_nested_sha256": "a4a670338d49e97002e4ffb9c0e22e28e9536938ec182d7beb7fa8f69856cd81",
+      "canonical_sha256": "a4a670338d49e97002e4ffb9c0e22e28e9536938ec182d7beb7fa8f69856cd81",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 70,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/linux/src/linux-platform-x11.c",
+      "bytes": 11069,
+      "root_sha256": "4b355976f1e40c087a606689e218e9e2eb39b9caeb6c7318938ab1f9434759e7",
+      "cli_nested_sha256": "4b355976f1e40c087a606689e218e9e2eb39b9caeb6c7318938ab1f9434759e7",
+      "canonical_sha256": "4b355976f1e40c087a606689e218e9e2eb39b9caeb6c7318938ab1f9434759e7",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 274,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/win32/src/win32-platform.c",
+      "bytes": 9574,
+      "root_sha256": "5b0d373af1358ca9bf9257085a36ad8f74dadcfc1e9b7fd53320fc21833b8389",
+      "cli_nested_sha256": "5b0d373af1358ca9bf9257085a36ad8f74dadcfc1e9b7fd53320fc21833b8389",
+      "canonical_sha256": "5b0d373af1358ca9bf9257085a36ad8f74dadcfc1e9b7fd53320fc21833b8389",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 241,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/darwin/src/darwin-platform.m",
+      "bytes": 5876,
+      "root_sha256": "485690f7ab57364b1a5e8a1fd82e227c16255ecd23f801d695f75ee2ec0692a1",
+      "cli_nested_sha256": "485690f7ab57364b1a5e8a1fd82e227c16255ecd23f801d695f75ee2ec0692a1",
+      "canonical_sha256": "485690f7ab57364b1a5e8a1fd82e227c16255ecd23f801d695f75ee2ec0692a1",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 132,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/linux/build.sh",
+      "bytes": 1443,
+      "root_sha256": "9d09704c600594d1449222da731d8f0d89efafe27b1624a7098475142099b423",
+      "cli_nested_sha256": "9d09704c600594d1449222da731d8f0d89efafe27b1624a7098475142099b423",
+      "canonical_sha256": "9d09704c600594d1449222da731d8f0d89efafe27b1624a7098475142099b423",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 65,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/darwin/build.sh",
+      "bytes": 1885,
+      "root_sha256": "5eadcaf6f73a10ea107b21825c20d7c16bdb593c08a9f2ce794769223a6595b7",
+      "cli_nested_sha256": "5eadcaf6f73a10ea107b21825c20d7c16bdb593c08a9f2ce794769223a6595b7",
+      "canonical_sha256": "5eadcaf6f73a10ea107b21825c20d7c16bdb593c08a9f2ce794769223a6595b7",
+      "relation": "exact archive/root/CLI bytes",
+      "physical_lines": 69,
+      "review": "Full local source body read; platform/native/binary execution unperformed; no source-to-binary equivalence."
+    }
+  ],
+  "public_after_hash_checks": [
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/settings-manager.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+      "after": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/settings-manager.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+      "after": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/system-prompt.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "after": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/system-prompt.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "after": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/cache-warmer.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+      "after": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/cache-warmer.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+      "after": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/main.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "after": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/main.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "after": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/main.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+      "after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/main.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+      "after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/resource-loader.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "after": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/resource-loader.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "after": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/resource-loader.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "948ac95e0eb67f29f78046404afdc94f4a12ade38a3a2f838a2628069bf70a8a",
+      "after": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/resource-loader.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "948ac95e0eb67f29f78046404afdc94f4a12ade38a3a2f838a2628069bf70a8a",
+      "after": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/sdk.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+      "after": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/sdk.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+      "after": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/sdk.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "2cb83c8604497198eda83ba4691d9c001c971c6b358af05f42355afc7666c669",
+      "after": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/sdk.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "2cb83c8604497198eda83ba4691d9c001c971c6b358af05f42355afc7666c669",
+      "after": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
+      "after": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
+      "after": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session-services.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+      "after": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session-services.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+      "after": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session-services.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+      "after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session-services.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+      "after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session-runtime.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "928b6528bb17d26273af8f7023a4f98e5f440d5896a4280d060b9b3e1f9a6882",
+      "after": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/agent-session-runtime.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "928b6528bb17d26273af8f7023a4f98e5f440d5896a4280d060b9b3e1f9a6882",
+      "after": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/rpc/rpc-mode.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+      "after": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/rpc/rpc-mode.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+      "after": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/loader.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+      "after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/loader.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+      "after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/skills.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+      "after": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/skills.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+      "after": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/skills.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "3bcb75e07c8d6fe6bf6ed7e515151cc62030f8b45b241fbd5877f665c6758565",
+      "after": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/skills.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "3bcb75e07c8d6fe6bf6ed7e515151cc62030f8b45b241fbd5877f665c6758565",
+      "after": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/session-manager.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+      "after": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/session-manager.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+      "after": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/session-manager.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "2288b69c82272311dc877da61ff2057bb04df49038ddef7eef6c8753c09f5313",
+      "after": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/session-manager.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "2288b69c82272311dc877da61ff2057bb04df49038ddef7eef6c8753c09f5313",
+      "after": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/runner.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+      "after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/runner.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+      "after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/runner.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
+      "after": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/runner.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
+      "after": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/messages.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+      "after": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/messages.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+      "after": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/messages.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+      "after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/messages.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+      "after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/compaction/compaction.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+      "after": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/compaction/compaction.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+      "after": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/compaction/branch-summarization.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+      "after": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/compaction/branch-summarization.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+      "after": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/compaction/branch-summarization.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+      "after": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/compaction/branch-summarization.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+      "after": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/model-runtime.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+      "after": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/model-runtime.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+      "after": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/model-runtime.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "5a7aac47a83c20316f593c74798f60ec4e521a0fddff03a0608dbc5514012bf5",
+      "after": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/model-runtime.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "5a7aac47a83c20316f593c74798f60ec4e521a0fddff03a0608dbc5514012bf5",
+      "after": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/interactive-mode.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "after": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/interactive-mode.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "after": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/interactive-mode.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "bfe4955c7b026ce5e91b60426837f277f65d5d5544c8a316ff416dbe2874078f",
+      "after": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/interactive-mode.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "bfe4955c7b026ce5e91b60426837f277f65d5d5544c8a316ff416dbe2874078f",
+      "after": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/components/custom-editor.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+      "after": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/components/custom-editor.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+      "after": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/slash-commands.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "cdbaa9cb7594702d5b5608cf0d26764e6218163087801d220d31c3fb9e2ac7c5",
+      "after": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/slash-commands.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "cdbaa9cb7594702d5b5608cf0d26764e6218163087801d220d31c3fb9e2ac7c5",
+      "after": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/bug-report.js",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+      "after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/modes/interactive/bug-report.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+      "after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/types.d.ts",
+      "tree": "root",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
+      "after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/extensions/types.d.ts",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
+      "after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/utils/clipboard.js",
+      "tree": "root",
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+      "before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "after": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/utils/clipboard.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+      "before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "after": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/tools/path-utils.js",
+      "tree": "root",
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "manifest_sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+      "before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+      "after": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    },
+    {
+      "package": "@earendil-works/pi-coding-agent",
+      "path": "dist/core/tools/path-utils.js",
+      "tree": "cli-nested",
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "manifest_sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+      "before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+      "after": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    }
+  ],
+  "tokens": [
+    {
+      "start": 56,
+      "end": 64,
+      "line": 4,
+      "column": 10,
+      "kind": "c-string",
+      "raw_source": "\"napi.h\"",
+      "value": "napi.h",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:56:64"
+    },
+    {
+      "start": 232,
+      "end": 321,
+      "line": 11,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "// CLIPBOARD_PATHS stores concatenated, NUL-terminated UTF-8 paths in clipboard_job.data.",
+      "value": "// CLIPBOARD_PATHS stores concatenated, NUL-terminated UTF-8 paths in clipboard_job.data.",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:232:321"
+    },
+    {
+      "start": 722,
+      "end": 794,
+      "line": 32,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "// Only this function runs on the worker thread. It must not call N-API.",
+      "value": "// Only this function runs on the worker thread. It must not call N-API.",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:722:794"
+    },
+    {
+      "start": 1334,
+      "end": 1349,
+      "line": 55,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"Out of memory\"",
+      "value": "Out of memory",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:1334:1349"
+    },
+    {
+      "start": 2082,
+      "end": 2101,
+      "line": 81,
+      "column": 75,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_array\"",
+      "value": "napi_create_array",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:2082:2101"
+    },
+    {
+      "start": 2175,
+      "end": 2193,
+      "line": 82,
+      "column": 72,
+      "kind": "c-string",
+      "raw_source": "\"napi_set_element\"",
+      "value": "napi_set_element",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:2175:2193"
+    },
+    {
+      "start": 2505,
+      "end": 2509,
+      "line": 89,
+      "column": 51,
+      "kind": "c-char",
+      "raw_source": "'\\0'",
+      "value": "\\0",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:2505:2509"
+    },
+    {
+      "start": 3035,
+      "end": 3060,
+      "line": 104,
+      "column": 88,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_string_utf8\"",
+      "value": "napi_create_string_utf8",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:3035:3060"
+    },
+    {
+      "start": 3143,
+      "end": 3174,
+      "line": 106,
+      "column": 35,
+      "kind": "c-string",
+      "raw_source": "\"Clipboard operation cancelled\"",
+      "value": "Clipboard operation cancelled",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:3143:3174"
+    },
+    {
+      "start": 3607,
+      "end": 3632,
+      "line": 113,
+      "column": 96,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_buffer_copy\"",
+      "value": "napi_create_buffer_copy",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:3607:3632"
+    },
+    {
+      "start": 3861,
+      "end": 3887,
+      "line": 116,
+      "column": 97,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_string_utf16\"",
+      "value": "napi_create_string_utf16",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:3861:3887"
+    },
+    {
+      "start": 4193,
+      "end": 4220,
+      "line": 120,
+      "column": 59,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_string_latin1\"",
+      "value": "napi_create_string_latin1",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:4193:4220"
+    },
+    {
+      "start": 4359,
+      "end": 4393,
+      "line": 123,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"Could not create clipboard value\"",
+      "value": "Could not create clipboard value",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:4359:4393"
+    },
+    {
+      "start": 4501,
+      "end": 4520,
+      "line": 126,
+      "column": 79,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_error\"",
+      "value": "napi_create_error",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:4501:4520"
+    },
+    {
+      "start": 4769,
+      "end": 4791,
+      "line": 132,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"napi_reject_deferred\"",
+      "value": "napi_reject_deferred",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:4769:4791"
+    },
+    {
+      "start": 4794,
+      "end": 4817,
+      "line": 132,
+      "column": 47,
+      "kind": "c-string",
+      "raw_source": "\"napi_resolve_deferred\"",
+      "value": "napi_resolve_deferred",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:4794:4817"
+    },
+    {
+      "start": 4934,
+      "end": 4958,
+      "line": 135,
+      "column": 70,
+      "kind": "c-string",
+      "raw_source": "\"napi_delete_async_work\"",
+      "value": "napi_delete_async_work",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:4934:4958"
+    },
+    {
+      "start": 5242,
+      "end": 5266,
+      "line": 142,
+      "column": 84,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_async_work\"",
+      "value": "napi_create_async_work",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5242:5266"
+    },
+    {
+      "start": 5337,
+      "end": 5360,
+      "line": 143,
+      "column": 69,
+      "kind": "c-string",
+      "raw_source": "\"napi_queue_async_work\"",
+      "value": "napi_queue_async_work",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5337:5360"
+    },
+    {
+      "start": 5432,
+      "end": 5456,
+      "line": 144,
+      "column": 70,
+      "kind": "c-string",
+      "raw_source": "\"napi_delete_async_work\"",
+      "value": "napi_delete_async_work",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5432:5456"
+    },
+    {
+      "start": 5539,
+      "end": 5560,
+      "line": 145,
+      "column": 81,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_promise\"",
+      "value": "napi_create_promise",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5539:5560"
+    },
+    {
+      "start": 5650,
+      "end": 5675,
+      "line": 146,
+      "column": 88,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_string_utf8\"",
+      "value": "napi_create_string_utf8",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5650:5675"
+    },
+    {
+      "start": 5795,
+      "end": 5828,
+      "line": 148,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Async clipboard API unavailable\"",
+      "value": "Async clipboard API unavailable",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5795:5828"
+    },
+    {
+      "start": 5924,
+      "end": 5939,
+      "line": 151,
+      "column": 32,
+      "kind": "c-string",
+      "raw_source": "\"Out of memory\"",
+      "value": "Out of memory",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:5924:5939"
+    },
+    {
+      "start": 6112,
+      "end": 6130,
+      "line": 155,
+      "column": 73,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_cb_info\"",
+      "value": "napi_get_cb_info",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:6112:6130"
+    },
+    {
+      "start": 6243,
+      "end": 6272,
+      "line": 157,
+      "column": 97,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_value_string_utf16\"",
+      "value": "napi_get_value_string_utf16",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:6243:6272"
+    },
+    {
+      "start": 6420,
+      "end": 6448,
+      "line": 160,
+      "column": 95,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_value_string_utf8\"",
+      "value": "napi_get_value_string_utf8",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:6420:6448"
+    },
+    {
+      "start": 6779,
+      "end": 6806,
+      "line": 168,
+      "column": 30,
+      "kind": "c-string",
+      "raw_source": "\"setText requires a string\"",
+      "value": "setText requires a string",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:6779:6806"
+    },
+    {
+      "start": 7143,
+      "end": 7174,
+      "line": 175,
+      "column": 30,
+      "kind": "c-string",
+      "raw_source": "\"Could not read clipboard text\"",
+      "value": "Could not read clipboard text",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:7143:7174"
+    },
+    {
+      "start": 7302,
+      "end": 7316,
+      "line": 183,
+      "column": 28,
+      "kind": "c-string",
+      "raw_source": "\"pi.clipboard\"",
+      "value": "pi.clipboard",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:7302:7316"
+    },
+    {
+      "start": 7697,
+      "end": 7734,
+      "line": 189,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not queue clipboard operation\"",
+      "value": "Could not queue clipboard operation",
+      "path": "native/clipboard.h",
+      "token_id": "native/clipboard.h:7697:7734"
+    },
+    {
+      "start": 37,
+      "end": 117,
+      "line": 4,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "// Resolve the small N-API surface we use from Node or Bun, without Node headers",
+      "value": "// Resolve the small N-API surface we use from Node or Bun, without Node headers",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:37:117"
+    },
+    {
+      "start": 118,
+      "end": 171,
+      "line": 5,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "// or a link-time dependency on a particular runtime.",
+      "value": "// or a link-time dependency on a particular runtime.",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:118:171"
+    },
+    {
+      "start": 437,
+      "end": 446,
+      "line": 16,
+      "column": 50,
+      "kind": "c-string",
+      "raw_source": "\"default\"",
+      "value": "default",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:437:446"
+    },
+    {
+      "start": 2900,
+      "end": 2910,
+      "line": 53,
+      "column": 31,
+      "kind": "c-string",
+      "raw_source": "\"node.dll\"",
+      "value": "node.dll",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:2900:2910"
+    },
+    {
+      "start": 3143,
+      "end": 3163,
+      "line": 61,
+      "column": 66,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_undefined\"",
+      "value": "napi_get_undefined",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:3143:3163"
+    },
+    {
+      "start": 3369,
+      "end": 3384,
+      "line": 68,
+      "column": 66,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_null\"",
+      "value": "napi_get_null",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:3369:3384"
+    },
+    {
+      "start": 3616,
+      "end": 3634,
+      "line": 75,
+      "column": 77,
+      "kind": "c-string",
+      "raw_source": "\"napi_throw_error\"",
+      "value": "napi_throw_error",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:3616:3634"
+    },
+    {
+      "start": 3932,
+      "end": 3954,
+      "line": 81,
+      "column": 89,
+      "kind": "c-string",
+      "raw_source": "\"napi_create_function\"",
+      "value": "napi_create_function",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:3932:3954"
+    },
+    {
+      "start": 4062,
+      "end": 4087,
+      "line": 83,
+      "column": 49,
+      "kind": "c-string",
+      "raw_source": "\"napi_set_named_property\"",
+      "value": "napi_set_named_property",
+      "path": "native/napi.h",
+      "token_id": "native/napi.h:4062:4087"
+    },
+    {
+      "start": 48,
+      "end": 67,
+      "line": 3,
+      "column": 10,
+      "kind": "c-string",
+      "raw_source": "\"../../clipboard.h\"",
+      "value": "../../clipboard.h",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:48:67"
+    },
+    {
+      "start": 572,
+      "end": 656,
+      "line": 15,
+      "column": 5,
+      "kind": "comment",
+      "raw_source": "// Unversioned ELF imports otherwise bind obsolete condition variables on glibc x64.",
+      "value": "// Unversioned ELF imports otherwise bind obsolete condition variables on glibc x64.",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:572:656"
+    },
+    {
+      "start": 737,
+      "end": 756,
+      "line": 16,
+      "column": 81,
+      "kind": "c-string",
+      "raw_source": "\"pthread_cond_init\"",
+      "value": "pthread_cond_init",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:737:756"
+    },
+    {
+      "start": 791,
+      "end": 812,
+      "line": 17,
+      "column": 33,
+      "kind": "c-string",
+      "raw_source": "\"pthread_cond_signal\"",
+      "value": "pthread_cond_signal",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:791:812"
+    },
+    {
+      "start": 849,
+      "end": 873,
+      "line": 18,
+      "column": 35,
+      "kind": "c-string",
+      "raw_source": "\"pthread_cond_timedwait\"",
+      "value": "pthread_cond_timedwait",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:849:873"
+    },
+    {
+      "start": 1453,
+      "end": 1502,
+      "line": 33,
+      "column": 35,
+      "kind": "comment",
+      "raw_source": "// The caller timed out; discard the late result.",
+      "value": "// The caller timed out; discard the late result.",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:1453:1502"
+    },
+    {
+      "start": 2102,
+      "end": 2174,
+      "line": 51,
+      "column": 31,
+      "kind": "comment",
+      "raw_source": "// Allow the two-second transfer deadline to report its own error first.",
+      "value": "// Allow the two-second transfer deadline to report its own error first.",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:2102:2174"
+    },
+    {
+      "start": 2323,
+      "end": 2398,
+      "line": 55,
+      "column": 13,
+      "kind": "comment",
+      "raw_source": "// Only this bounded wait occupies libuv. Other callers return unavailable.",
+      "value": "// Only this bounded wait occupies libuv. Other callers return unavailable.",
+      "path": "native/linux/src/clipboard-worker.h",
+      "token_id": "native/linux/src/clipboard-worker.h:2323:2398"
+    },
+    {
+      "start": 129,
+      "end": 149,
+      "line": 7,
+      "column": 10,
+      "kind": "c-string",
+      "raw_source": "\"clipboard-worker.h\"",
+      "value": "clipboard-worker.h",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:129:149"
+    },
+    {
+      "start": 282,
+      "end": 308,
+      "line": 13,
+      "column": 5,
+      "kind": "c-string",
+      "raw_source": "\"text/plain;charset=utf-8\"",
+      "value": "text/plain;charset=utf-8",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:282:308"
+    },
+    {
+      "start": 310,
+      "end": 336,
+      "line": 13,
+      "column": 33,
+      "kind": "c-string",
+      "raw_source": "\"text/plain;charset=UTF-8\"",
+      "value": "text/plain;charset=UTF-8",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:310:336"
+    },
+    {
+      "start": 338,
+      "end": 351,
+      "line": 13,
+      "column": 61,
+      "kind": "c-string",
+      "raw_source": "\"UTF8_STRING\"",
+      "value": "UTF8_STRING",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:338:351"
+    },
+    {
+      "start": 353,
+      "end": 365,
+      "line": 13,
+      "column": 76,
+      "kind": "c-string",
+      "raw_source": "\"text/plain\"",
+      "value": "text/plain",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:353:365"
+    },
+    {
+      "start": 367,
+      "end": 375,
+      "line": 13,
+      "column": 90,
+      "kind": "c-string",
+      "raw_source": "\"STRING\"",
+      "value": "STRING",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:367:375"
+    },
+    {
+      "start": 427,
+      "end": 438,
+      "line": 16,
+      "column": 5,
+      "kind": "c-string",
+      "raw_source": "\"image/png\"",
+      "value": "image/png",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:427:438"
+    },
+    {
+      "start": 440,
+      "end": 452,
+      "line": 16,
+      "column": 18,
+      "kind": "c-string",
+      "raw_source": "\"image/jpeg\"",
+      "value": "image/jpeg",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:440:452"
+    },
+    {
+      "start": 454,
+      "end": 466,
+      "line": 16,
+      "column": 32,
+      "kind": "c-string",
+      "raw_source": "\"image/webp\"",
+      "value": "image/webp",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:454:466"
+    },
+    {
+      "start": 468,
+      "end": 479,
+      "line": 16,
+      "column": 46,
+      "kind": "c-string",
+      "raw_source": "\"image/gif\"",
+      "value": "image/gif",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:468:479"
+    },
+    {
+      "start": 481,
+      "end": 492,
+      "line": 16,
+      "column": 59,
+      "kind": "c-string",
+      "raw_source": "\"image/bmp\"",
+      "value": "image/bmp",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:481:492"
+    },
+    {
+      "start": 494,
+      "end": 506,
+      "line": 16,
+      "column": 72,
+      "kind": "c-string",
+      "raw_source": "\"image/tiff\"",
+      "value": "image/tiff",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:494:506"
+    },
+    {
+      "start": 1457,
+      "end": 1529,
+      "line": 54,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "// Share one deadline across discovery, replies, and incremental chunks.",
+      "value": "// Share one deadline across discovery, replies, and incremental chunks.",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:1457:1529"
+    },
+    {
+      "start": 1530,
+      "end": 1602,
+      "line": 55,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "// Connection setup and flushing are libxcb calls on the private thread.",
+      "value": "// Connection setup and flushing are libxcb calls on the private thread.",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:1530:1602"
+    },
+    {
+      "start": 5554,
+      "end": 5607,
+      "line": 145,
+      "column": 37,
+      "kind": "comment",
+      "raw_source": "// No owner, or the owner does not offer this target.",
+      "value": "// No owner, or the owner does not offer this target.",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:5554:5607"
+    },
+    {
+      "start": 7843,
+      "end": 7854,
+      "line": 198,
+      "column": 51,
+      "kind": "c-string",
+      "raw_source": "\"CLIPBOARD\"",
+      "value": "CLIPBOARD",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:7843:7854"
+    },
+    {
+      "start": 7906,
+      "end": 7920,
+      "line": 199,
+      "column": 50,
+      "kind": "c-string",
+      "raw_source": "\"PI_CLIPBOARD\"",
+      "value": "PI_CLIPBOARD",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:7906:7920"
+    },
+    {
+      "start": 7971,
+      "end": 7980,
+      "line": 200,
+      "column": 49,
+      "kind": "c-string",
+      "raw_source": "\"TARGETS\"",
+      "value": "TARGETS",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:7971:7980"
+    },
+    {
+      "start": 8028,
+      "end": 8034,
+      "line": 201,
+      "column": 46,
+      "kind": "c-string",
+      "raw_source": "\"INCR\"",
+      "value": "INCR",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:8028:8034"
+    },
+    {
+      "start": 9493,
+      "end": 9553,
+      "line": 235,
+      "column": 5,
+      "kind": "comment",
+      "raw_source": "// Some owners refuse TARGETS but still serve text directly.",
+      "value": "// Some owners refuse TARGETS but still serve text directly.",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:9493:9553"
+    },
+    {
+      "start": 9653,
+      "end": 9666,
+      "line": 237,
+      "column": 42,
+      "kind": "c-string",
+      "raw_source": "\"UTF8_STRING\"",
+      "value": "UTF8_STRING",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:9653:9666"
+    },
+    {
+      "start": 10434,
+      "end": 10464,
+      "line": 259,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not read X11 clipboard\"",
+      "value": "Could not read X11 clipboard",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:10434:10464"
+    },
+    {
+      "start": 10943,
+      "end": 10952,
+      "line": 271,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getText\"",
+      "value": "getText",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:10943:10952"
+    },
+    {
+      "start": 11013,
+      "end": 11023,
+      "line": 272,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getImage\"",
+      "value": "getImage",
+      "path": "native/linux/src/linux-platform-x11.c",
+      "token_id": "native/linux/src/linux-platform-x11.c:11013:11023"
+    },
+    {
+      "start": 36,
+      "end": 55,
+      "line": 2,
+      "column": 10,
+      "kind": "c-string",
+      "raw_source": "\"../../clipboard.h\"",
+      "value": "../../clipboard.h",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:36:55"
+    },
+    {
+      "start": 665,
+      "end": 672,
+      "line": 26,
+      "column": 29,
+      "kind": "c-string",
+      "raw_source": "\"shift\"",
+      "value": "shift",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:665:672"
+    },
+    {
+      "start": 794,
+      "end": 803,
+      "line": 27,
+      "column": 29,
+      "kind": "c-string",
+      "raw_source": "\"control\"",
+      "value": "control",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:794:803"
+    },
+    {
+      "start": 931,
+      "end": 939,
+      "line": 28,
+      "column": 29,
+      "kind": "c-string",
+      "raw_source": "\"option\"",
+      "value": "option",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:931:939"
+    },
+    {
+      "start": 964,
+      "end": 969,
+      "line": 28,
+      "column": 62,
+      "kind": "c-string",
+      "raw_source": "\"alt\"",
+      "value": "alt",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:964:969"
+    },
+    {
+      "start": 1088,
+      "end": 1097,
+      "line": 29,
+      "column": 29,
+      "kind": "c-string",
+      "raw_source": "\"command\"",
+      "value": "command",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:1088:1097"
+    },
+    {
+      "start": 1122,
+      "end": 1129,
+      "line": 29,
+      "column": 63,
+      "kind": "c-string",
+      "raw_source": "\"super\"",
+      "value": "super",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:1122:1129"
+    },
+    {
+      "start": 1154,
+      "end": 1159,
+      "line": 29,
+      "column": 95,
+      "kind": "c-string",
+      "raw_source": "\"win\"",
+      "value": "win",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:1154:1159"
+    },
+    {
+      "start": 1665,
+      "end": 1683,
+      "line": 42,
+      "column": 77,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_boolean\"",
+      "value": "napi_get_boolean",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:1665:1683"
+    },
+    {
+      "start": 1815,
+      "end": 1850,
+      "line": 45,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not configure console input\"",
+      "value": "Could not configure console input",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:1815:1850"
+    },
+    {
+      "start": 2044,
+      "end": 2062,
+      "line": 51,
+      "column": 77,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_cb_info\"",
+      "value": "napi_get_cb_info",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:2044:2062"
+    },
+    {
+      "start": 2179,
+      "end": 2207,
+      "line": 53,
+      "column": 52,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_value_string_utf8\"",
+      "value": "napi_get_value_string_utf8",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:2179:2207"
+    },
+    {
+      "start": 2286,
+      "end": 2304,
+      "line": 54,
+      "column": 77,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_boolean\"",
+      "value": "napi_get_boolean",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:2286:2304"
+    },
+    {
+      "start": 2918,
+      "end": 2952,
+      "line": 71,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not inspect modifier state\"",
+      "value": "Could not inspect modifier state",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:2918:2952"
+    },
+    {
+      "start": 5054,
+      "end": 5060,
+      "line": 132,
+      "column": 48,
+      "kind": "c-string",
+      "raw_source": "L\"PNG\"",
+      "value": "PNG",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:5054:5060"
+    },
+    {
+      "start": 5859,
+      "end": 5896,
+      "line": 148,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"Clipboard does not contain an image\"",
+      "value": "Clipboard does not contain an image",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:5859:5896"
+    },
+    {
+      "start": 6262,
+      "end": 6265,
+      "line": 158,
+      "column": 25,
+      "kind": "c-char",
+      "raw_source": "'B'",
+      "value": "B",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:6262:6265"
+    },
+    {
+      "start": 6291,
+      "end": 6294,
+      "line": 159,
+      "column": 25,
+      "kind": "c-char",
+      "raw_source": "'M'",
+      "value": "M",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:6291:6294"
+    },
+    {
+      "start": 6705,
+      "end": 6746,
+      "line": 167,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not create clipboard image buffer\"",
+      "value": "Could not create clipboard image buffer",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:6705:6746"
+    },
+    {
+      "start": 6849,
+      "end": 6924,
+      "line": 174,
+      "column": 5,
+      "kind": "comment",
+      "raw_source": "// A real clipboard owner is required for text writes, including under Node",
+      "value": "// A real clipboard owner is required for text writes, including under Node",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:6849:6924"
+    },
+    {
+      "start": 6929,
+      "end": 6999,
+      "line": 175,
+      "column": 5,
+      "kind": "comment",
+      "raw_source": "// without a console. Create and destroy it on the same worker thread.",
+      "value": "// without a console. Create and destroy it on the same worker thread.",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:6929:6999"
+    },
+    {
+      "start": 7100,
+      "end": 7109,
+      "line": 178,
+      "column": 36,
+      "kind": "c-string",
+      "raw_source": "L\"STATIC\"",
+      "value": "STATIC",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:7100:7109"
+    },
+    {
+      "start": 7230,
+      "end": 7271,
+      "line": 181,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not create clipboard owner window\"",
+      "value": "Could not create clipboard owner window",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:7230:7271"
+    },
+    {
+      "start": 7405,
+      "end": 7431,
+      "line": 187,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"Could not open clipboard\"",
+      "value": "Could not open clipboard",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:7405:7431"
+    },
+    {
+      "start": 7996,
+      "end": 8026,
+      "line": 202,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not set clipboard text\"",
+      "value": "Could not set clipboard text",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:7996:8026"
+    },
+    {
+      "start": 8723,
+      "end": 8756,
+      "line": 217,
+      "column": 30,
+      "kind": "c-string",
+      "raw_source": "\"Clipboard does not contain text\"",
+      "value": "Clipboard does not contain text",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:8723:8756"
+    },
+    {
+      "start": 9197,
+      "end": 9225,
+      "line": 235,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"enableVirtualTerminalInput\"",
+      "value": "enableVirtualTerminalInput",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:9197:9225"
+    },
+    {
+      "start": 9297,
+      "end": 9316,
+      "line": 236,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"isModifierPressed\"",
+      "value": "isModifierPressed",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:9297:9316"
+    },
+    {
+      "start": 9378,
+      "end": 9387,
+      "line": 237,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getText\"",
+      "value": "getText",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:9378:9387"
+    },
+    {
+      "start": 9448,
+      "end": 9457,
+      "line": 238,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"setText\"",
+      "value": "setText",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:9448:9457"
+    },
+    {
+      "start": 9518,
+      "end": 9528,
+      "line": 239,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getImage\"",
+      "value": "getImage",
+      "path": "native/win32/src/win32-platform.c",
+      "token_id": "native/win32/src/win32-platform.c:9518:9528"
+    },
+    {
+      "start": 174,
+      "end": 193,
+      "line": 7,
+      "column": 10,
+      "kind": "c-string",
+      "raw_source": "\"../../clipboard.h\"",
+      "value": "../../clipboard.h",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:174:193"
+    },
+    {
+      "start": 279,
+      "end": 286,
+      "line": 10,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"shift\"",
+      "value": "shift",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:279:286"
+    },
+    {
+      "start": 345,
+      "end": 354,
+      "line": 11,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"command\"",
+      "value": "command",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:345:354"
+    },
+    {
+      "start": 415,
+      "end": 424,
+      "line": 12,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"control\"",
+      "value": "control",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:415:424"
+    },
+    {
+      "start": 485,
+      "end": 493,
+      "line": 13,
+      "column": 22,
+      "kind": "c-string",
+      "raw_source": "\"option\"",
+      "value": "option",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:485:493"
+    },
+    {
+      "start": 707,
+      "end": 725,
+      "line": 18,
+      "column": 77,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_cb_info\"",
+      "value": "napi_get_cb_info",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:707:725"
+    },
+    {
+      "start": 842,
+      "end": 870,
+      "line": 20,
+      "column": 52,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_value_string_utf8\"",
+      "value": "napi_get_value_string_utf8",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:842:870"
+    },
+    {
+      "start": 949,
+      "end": 967,
+      "line": 21,
+      "column": 77,
+      "kind": "c-string",
+      "raw_source": "\"napi_get_boolean\"",
+      "value": "napi_get_boolean",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:949:967"
+    },
+    {
+      "start": 1798,
+      "end": 1832,
+      "line": 42,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not inspect modifier state\"",
+      "value": "Could not inspect modifier state",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:1798:1832"
+    },
+    {
+      "start": 2059,
+      "end": 2085,
+      "line": 51,
+      "column": 26,
+      "kind": "c-string",
+      "raw_source": "\"Could not open clipboard\"",
+      "value": "Could not open clipboard",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:2059:2085"
+    },
+    {
+      "start": 2319,
+      "end": 2354,
+      "line": 55,
+      "column": 30,
+      "kind": "c-string",
+      "raw_source": "\"Clipboard text is not valid UTF-8\"",
+      "value": "Clipboard text is not valid UTF-8",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:2319:2354"
+    },
+    {
+      "start": 2524,
+      "end": 2554,
+      "line": 59,
+      "column": 91,
+      "kind": "c-string",
+      "raw_source": "\"Could not set clipboard text\"",
+      "value": "Could not set clipboard text",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:2524:2554"
+    },
+    {
+      "start": 2835,
+      "end": 2868,
+      "line": 65,
+      "column": 30,
+      "kind": "c-string",
+      "raw_source": "\"Could not encode clipboard text\"",
+      "value": "Could not encode clipboard text",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:2835:2868"
+    },
+    {
+      "start": 3564,
+      "end": 3600,
+      "line": 78,
+      "column": 34,
+      "kind": "c-string",
+      "raw_source": "\"Clipboard file paths are too large\"",
+      "value": "Clipboard file paths are too large",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:3564:3600"
+    },
+    {
+      "start": 3919,
+      "end": 3934,
+      "line": 89,
+      "column": 30,
+      "kind": "c-string",
+      "raw_source": "\"Out of memory\"",
+      "value": "Out of memory",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:3919:3934"
+    },
+    {
+      "start": 5180,
+      "end": 5217,
+      "line": 116,
+      "column": 31,
+      "kind": "c-string",
+      "raw_source": "\"Clipboard does not contain an image\"",
+      "value": "Clipboard does not contain an image",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:5180:5217"
+    },
+    {
+      "start": 5518,
+      "end": 5537,
+      "line": 126,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"isModifierPressed\"",
+      "value": "isModifierPressed",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:5518:5537"
+    },
+    {
+      "start": 5599,
+      "end": 5608,
+      "line": 127,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getText\"",
+      "value": "getText",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:5599:5608"
+    },
+    {
+      "start": 5669,
+      "end": 5678,
+      "line": 128,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"setText\"",
+      "value": "setText",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:5669:5678"
+    },
+    {
+      "start": 5739,
+      "end": 5749,
+      "line": 129,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getImage\"",
+      "value": "getImage",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:5739:5749"
+    },
+    {
+      "start": 5811,
+      "end": 5825,
+      "line": 130,
+      "column": 39,
+      "kind": "c-string",
+      "raw_source": "\"getFilePaths\"",
+      "value": "getFilePaths",
+      "path": "native/darwin/src/darwin-platform.m",
+      "token_id": "native/darwin/src/darwin-platform.m:5811:5825"
+    },
+    {
+      "start": 0,
+      "end": 19,
+      "line": 1,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "#!/usr/bin/env bash",
+      "value": "#!/usr/bin/env bash",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:0:19"
+    },
+    {
+      "start": 51,
+      "end": 98,
+      "line": 5,
+      "column": 12,
+      "kind": "shell-double",
+      "raw_source": "\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\"",
+      "value": "$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:51:98"
+    },
+    {
+      "start": 57,
+      "end": 89,
+      "line": 5,
+      "column": 18,
+      "kind": "shell-double",
+      "raw_source": "\"$(dirname \"${BASH_SOURCE[0]}\")\"",
+      "value": "$(dirname \"${BASH_SOURCE[0]}\")",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:57:89"
+    },
+    {
+      "start": 68,
+      "end": 87,
+      "line": 5,
+      "column": 29,
+      "kind": "shell-double",
+      "raw_source": "\"${BASH_SOURCE[0]}\"",
+      "value": "${BASH_SOURCE[0]}",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:68:87"
+    },
+    {
+      "start": 108,
+      "end": 119,
+      "line": 6,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"${CC:-cc}\"",
+      "value": "${CC:-cc}",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:108:119"
+    },
+    {
+      "start": 127,
+      "end": 140,
+      "line": 8,
+      "column": 7,
+      "kind": "shell-double",
+      "raw_source": "\"$(uname -s)\"",
+      "value": "$(uname -s)",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:127:140"
+    },
+    {
+      "start": 144,
+      "end": 151,
+      "line": 8,
+      "column": 24,
+      "kind": "shell-double",
+      "raw_source": "\"Linux\"",
+      "value": "Linux",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:144:151"
+    },
+    {
+      "start": 170,
+      "end": 215,
+      "line": 9,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"Linux native helpers must be built on Linux\"",
+      "value": "Linux native helpers must be built on Linux",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:170:215"
+    },
+    {
+      "start": 240,
+      "end": 253,
+      "line": 13,
+      "column": 6,
+      "kind": "shell-double",
+      "raw_source": "\"$(uname -m)\"",
+      "value": "$(uname -m)",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:240:253"
+    },
+    {
+      "start": 282,
+      "end": 287,
+      "line": 15,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"x64\"",
+      "value": "x64",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:282:287"
+    },
+    {
+      "start": 331,
+      "end": 338,
+      "line": 18,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"arm64\"",
+      "value": "arm64",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:331:338"
+    },
+    {
+      "start": 370,
+      "end": 415,
+      "line": 21,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"Unsupported Linux architecture: $(uname -m)\"",
+      "value": "Unsupported Linux architecture: $(uname -m)",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:370:415"
+    },
+    {
+      "start": 468,
+      "end": 479,
+      "line": 26,
+      "column": 17,
+      "kind": "shell-double",
+      "raw_source": "\"$compiler\"",
+      "value": "$compiler",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:468:479"
+    },
+    {
+      "start": 511,
+      "end": 550,
+      "line": 27,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"Linux C compiler not found: $compiler\"",
+      "value": "Linux C compiler not found: $compiler",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:511:550"
+    },
+    {
+      "start": 579,
+      "end": 631,
+      "line": 30,
+      "column": 11,
+      "kind": "shell-double",
+      "raw_source": "\"$(mktemp -d \"${TMPDIR:-/tmp}/pi-tui-linux.XXXXXX\")\"",
+      "value": "$(mktemp -d \"${TMPDIR:-/tmp}/pi-tui-linux.XXXXXX\")",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:579:631"
+    },
+    {
+      "start": 592,
+      "end": 629,
+      "line": 30,
+      "column": 24,
+      "kind": "shell-double",
+      "raw_source": "\"${TMPDIR:-/tmp}/pi-tui-linux.XXXXXX\"",
+      "value": "${TMPDIR:-/tmp}/pi-tui-linux.XXXXXX",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:592:629"
+    },
+    {
+      "start": 637,
+      "end": 658,
+      "line": 31,
+      "column": 6,
+      "kind": "shell-single",
+      "raw_source": "'rm -rf \"$build_dir\"'",
+      "value": "rm -rf \"$build_dir\"",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:637:658"
+    },
+    {
+      "start": 974,
+      "end": 1051,
+      "line": 51,
+      "column": 5,
+      "kind": "comment",
+      "raw_source": "# A timed-out private thread may outlive the Node environment that loaded us.",
+      "value": "# A timed-out private thread may outlive the Node environment that loaded us.",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:974:1051"
+    },
+    {
+      "start": 1097,
+      "end": 1133,
+      "line": 56,
+      "column": 12,
+      "kind": "shell-double",
+      "raw_source": "\"$build_dir/linux-platform-x11.node\"",
+      "value": "$build_dir/linux-platform-x11.node",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1097:1133"
+    },
+    {
+      "start": 1134,
+      "end": 1145,
+      "line": 57,
+      "column": 1,
+      "kind": "shell-double",
+      "raw_source": "\"$compiler\"",
+      "value": "$compiler",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1134:1145"
+    },
+    {
+      "start": 1146,
+      "end": 1166,
+      "line": 57,
+      "column": 13,
+      "kind": "shell-double",
+      "raw_source": "\"${common_flags[@]}\"",
+      "value": "${common_flags[@]}",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1146:1166"
+    },
+    {
+      "start": 1173,
+      "end": 1211,
+      "line": 58,
+      "column": 5,
+      "kind": "shell-double",
+      "raw_source": "\"$script_dir/src/linux-platform-x11.c\"",
+      "value": "$script_dir/src/linux-platform-x11.c",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1173:1211"
+    },
+    {
+      "start": 1233,
+      "end": 1246,
+      "line": 60,
+      "column": 8,
+      "kind": "shell-double",
+      "raw_source": "\"$x11_output\"",
+      "value": "$x11_output",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1233:1246"
+    },
+    {
+      "start": 1259,
+      "end": 1294,
+      "line": 62,
+      "column": 12,
+      "kind": "shell-double",
+      "raw_source": "\"$script_dir/prebuilds/linux-$arch\"",
+      "value": "$script_dir/prebuilds/linux-$arch",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1259:1294"
+    },
+    {
+      "start": 1304,
+      "end": 1317,
+      "line": 63,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"$output_dir\"",
+      "value": "$output_dir",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1304:1317"
+    },
+    {
+      "start": 1333,
+      "end": 1346,
+      "line": 64,
+      "column": 16,
+      "kind": "shell-double",
+      "raw_source": "\"$x11_output\"",
+      "value": "$x11_output",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1333:1346"
+    },
+    {
+      "start": 1347,
+      "end": 1384,
+      "line": 64,
+      "column": 30,
+      "kind": "shell-double",
+      "raw_source": "\"$output_dir/linux-platform-x11.node\"",
+      "value": "$output_dir/linux-platform-x11.node",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1347:1384"
+    },
+    {
+      "start": 1392,
+      "end": 1404,
+      "line": 65,
+      "column": 8,
+      "kind": "shell-single",
+      "raw_source": "'Built %s\\n'",
+      "value": "Built %s\\n",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1392:1404"
+    },
+    {
+      "start": 1405,
+      "end": 1442,
+      "line": 65,
+      "column": 21,
+      "kind": "shell-double",
+      "raw_source": "\"$output_dir/linux-platform-x11.node\"",
+      "value": "$output_dir/linux-platform-x11.node",
+      "path": "native/linux/build.sh",
+      "token_id": "native/linux/build.sh:1405:1442"
+    },
+    {
+      "start": 0,
+      "end": 19,
+      "line": 1,
+      "column": 1,
+      "kind": "comment",
+      "raw_source": "#!/usr/bin/env bash",
+      "value": "#!/usr/bin/env bash",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:0:19"
+    },
+    {
+      "start": 51,
+      "end": 98,
+      "line": 5,
+      "column": 12,
+      "kind": "shell-double",
+      "raw_source": "\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\"",
+      "value": "$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:51:98"
+    },
+    {
+      "start": 57,
+      "end": 89,
+      "line": 5,
+      "column": 18,
+      "kind": "shell-double",
+      "raw_source": "\"$(dirname \"${BASH_SOURCE[0]}\")\"",
+      "value": "$(dirname \"${BASH_SOURCE[0]}\")",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:57:89"
+    },
+    {
+      "start": 68,
+      "end": 87,
+      "line": 5,
+      "column": 29,
+      "kind": "shell-double",
+      "raw_source": "\"${BASH_SOURCE[0]}\"",
+      "value": "${BASH_SOURCE[0]}",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:68:87"
+    },
+    {
+      "start": 111,
+      "end": 146,
+      "line": 6,
+      "column": 13,
+      "kind": "shell-double",
+      "raw_source": "\"$script_dir/src/darwin-platform.m\"",
+      "value": "$script_dir/src/darwin-platform.m",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:111:146"
+    },
+    {
+      "start": 157,
+      "end": 166,
+      "line": 8,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"${CC:-}\"",
+      "value": "${CC:-}",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:157:166"
+    },
+    {
+      "start": 189,
+      "end": 194,
+      "line": 9,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"$CC\"",
+      "value": "$CC",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:189:194"
+    },
+    {
+      "start": 203,
+      "end": 216,
+      "line": 10,
+      "column": 9,
+      "kind": "shell-double",
+      "raw_source": "\"$(uname -s)\"",
+      "value": "$(uname -s)",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:203:216"
+    },
+    {
+      "start": 220,
+      "end": 228,
+      "line": 10,
+      "column": 26,
+      "kind": "shell-double",
+      "raw_source": "\"Darwin\"",
+      "value": "Darwin",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:220:228"
+    },
+    {
+      "start": 287,
+      "end": 310,
+      "line": 11,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"$(xcrun --find clang)\"",
+      "value": "$(xcrun --find clang)",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:287:310"
+    },
+    {
+      "start": 329,
+      "end": 336,
+      "line": 13,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"clang\"",
+      "value": "clang",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:329:336"
+    },
+    {
+      "start": 357,
+      "end": 368,
+      "line": 16,
+      "column": 17,
+      "kind": "shell-double",
+      "raw_source": "\"$compiler\"",
+      "value": "$compiler",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:357:368"
+    },
+    {
+      "start": 400,
+      "end": 440,
+      "line": 17,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"Darwin C compiler not found: $compiler\"",
+      "value": "Darwin C compiler not found: $compiler",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:400:440"
+    },
+    {
+      "start": 482,
+      "end": 496,
+      "line": 22,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"${SDKROOT:-}\"",
+      "value": "${SDKROOT:-}",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:482:496"
+    },
+    {
+      "start": 521,
+      "end": 531,
+      "line": 23,
+      "column": 16,
+      "kind": "shell-double",
+      "raw_source": "\"$SDKROOT\"",
+      "value": "$SDKROOT",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:521:531"
+    },
+    {
+      "start": 554,
+      "end": 588,
+      "line": 24,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"SDKROOT does not exist: $SDKROOT\"",
+      "value": "SDKROOT does not exist: $SDKROOT",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:554:588"
+    },
+    {
+      "start": 640,
+      "end": 650,
+      "line": 27,
+      "column": 26,
+      "kind": "shell-double",
+      "raw_source": "\"$SDKROOT\"",
+      "value": "$SDKROOT",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:640:650"
+    },
+    {
+      "start": 651,
+      "end": 689,
+      "line": 27,
+      "column": 37,
+      "kind": "shell-double",
+      "raw_source": "\"-F$SDKROOT/System/Library/Frameworks\"",
+      "value": "-F$SDKROOT/System/Library/Frameworks",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:651:689"
+    },
+    {
+      "start": 699,
+      "end": 712,
+      "line": 28,
+      "column": 9,
+      "kind": "shell-double",
+      "raw_source": "\"$(uname -s)\"",
+      "value": "$(uname -s)",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:699:712"
+    },
+    {
+      "start": 716,
+      "end": 724,
+      "line": 28,
+      "column": 26,
+      "kind": "shell-double",
+      "raw_source": "\"Darwin\"",
+      "value": "Darwin",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:716:724"
+    },
+    {
+      "start": 746,
+      "end": 785,
+      "line": 29,
+      "column": 13,
+      "kind": "shell-double",
+      "raw_source": "\"$(xcrun --sdk macosx --show-sdk-path)\"",
+      "value": "$(xcrun --sdk macosx --show-sdk-path)",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:746:785"
+    },
+    {
+      "start": 811,
+      "end": 821,
+      "line": 30,
+      "column": 26,
+      "kind": "shell-double",
+      "raw_source": "\"$sdkroot\"",
+      "value": "$sdkroot",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:811:821"
+    },
+    {
+      "start": 822,
+      "end": 860,
+      "line": 30,
+      "column": 37,
+      "kind": "shell-double",
+      "raw_source": "\"-F$sdkroot/System/Library/Frameworks\"",
+      "value": "-F$sdkroot/System/Library/Frameworks",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:822:860"
+    },
+    {
+      "start": 880,
+      "end": 933,
+      "line": 33,
+      "column": 15,
+      "kind": "shell-double",
+      "raw_source": "\"$(mktemp -d \"${TMPDIR:-/tmp}/pi-tui-darwin.XXXXXX\")\"",
+      "value": "$(mktemp -d \"${TMPDIR:-/tmp}/pi-tui-darwin.XXXXXX\")",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:880:933"
+    },
+    {
+      "start": 893,
+      "end": 931,
+      "line": 33,
+      "column": 28,
+      "kind": "shell-double",
+      "raw_source": "\"${TMPDIR:-/tmp}/pi-tui-darwin.XXXXXX\"",
+      "value": "${TMPDIR:-/tmp}/pi-tui-darwin.XXXXXX",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:893:931"
+    },
+    {
+      "start": 939,
+      "end": 964,
+      "line": 34,
+      "column": 6,
+      "kind": "shell-single",
+      "raw_source": "'rm -rf \"$temporary_dir\"'",
+      "value": "rm -rf \"$temporary_dir\"",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:939:964"
+    },
+    {
+      "start": 996,
+      "end": 1000,
+      "line": 37,
+      "column": 16,
+      "kind": "shell-double",
+      "raw_source": "\"$1\"",
+      "value": "$1",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:996:1000"
+    },
+    {
+      "start": 1018,
+      "end": 1022,
+      "line": 38,
+      "column": 18,
+      "kind": "shell-double",
+      "raw_source": "\"$2\"",
+      "value": "$2",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1018:1022"
+    },
+    {
+      "start": 1044,
+      "end": 1080,
+      "line": 39,
+      "column": 22,
+      "kind": "shell-double",
+      "raw_source": "\"$script_dir/prebuilds/darwin-$arch\"",
+      "value": "$script_dir/prebuilds/darwin-$arch",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1044:1080"
+    },
+    {
+      "start": 1108,
+      "end": 1158,
+      "line": 40,
+      "column": 28,
+      "kind": "shell-double",
+      "raw_source": "\"$temporary_dir/darwin-$arch/darwin-platform.node\"",
+      "value": "$temporary_dir/darwin-$arch/darwin-platform.node",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1108:1158"
+    },
+    {
+      "start": 1173,
+      "end": 1205,
+      "line": 42,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"$(dirname \"$temporary_output\")\"",
+      "value": "$(dirname \"$temporary_output\")",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1173:1205"
+    },
+    {
+      "start": 1184,
+      "end": 1203,
+      "line": 42,
+      "column": 25,
+      "kind": "shell-double",
+      "raw_source": "\"$temporary_output\"",
+      "value": "$temporary_output",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1184:1203"
+    },
+    {
+      "start": 1210,
+      "end": 1221,
+      "line": 43,
+      "column": 5,
+      "kind": "shell-double",
+      "raw_source": "\"$compiler\"",
+      "value": "$compiler",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1210:1221"
+    },
+    {
+      "start": 1366,
+      "end": 1384,
+      "line": 51,
+      "column": 9,
+      "kind": "shell-double",
+      "raw_source": "\"--target=$target\"",
+      "value": "--target=$target",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1366:1384"
+    },
+    {
+      "start": 1395,
+      "end": 1412,
+      "line": 52,
+      "column": 9,
+      "kind": "shell-double",
+      "raw_source": "\"${sdk_flags[@]}\"",
+      "value": "${sdk_flags[@]}",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1395:1412"
+    },
+    {
+      "start": 1614,
+      "end": 1628,
+      "line": 60,
+      "column": 9,
+      "kind": "shell-double",
+      "raw_source": "\"$source_file\"",
+      "value": "$source_file",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1614:1628"
+    },
+    {
+      "start": 1642,
+      "end": 1661,
+      "line": 61,
+      "column": 12,
+      "kind": "shell-double",
+      "raw_source": "\"$temporary_output\"",
+      "value": "$temporary_output",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1642:1661"
+    },
+    {
+      "start": 1676,
+      "end": 1689,
+      "line": 63,
+      "column": 14,
+      "kind": "shell-double",
+      "raw_source": "\"$output_dir\"",
+      "value": "$output_dir",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1676:1689"
+    },
+    {
+      "start": 1709,
+      "end": 1728,
+      "line": 64,
+      "column": 20,
+      "kind": "shell-double",
+      "raw_source": "\"$temporary_output\"",
+      "value": "$temporary_output",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1709:1728"
+    },
+    {
+      "start": 1729,
+      "end": 1763,
+      "line": 64,
+      "column": 40,
+      "kind": "shell-double",
+      "raw_source": "\"$output_dir/darwin-platform.node\"",
+      "value": "$output_dir/darwin-platform.node",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1729:1763"
+    },
+    {
+      "start": 1773,
+      "end": 1813,
+      "line": 65,
+      "column": 10,
+      "kind": "shell-double",
+      "raw_source": "\"Built $output_dir/darwin-platform.node\"",
+      "value": "Built $output_dir/darwin-platform.node",
+      "path": "native/darwin/build.sh",
+      "token_id": "native/darwin/build.sh:1773:1813"
+    }
+  ],
+  "error_and_output_sites": [
+    {
+      "path": "native/clipboard.h",
+      "line": 55,
+      "start": 1321,
+      "end": 1349,
+      "raw_source": "job->error = \"Out of memory\""
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 106,
+      "start": 3130,
+      "end": 3174,
+      "raw_source": "job->error = \"Clipboard operation cancelled\""
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 123,
+      "start": 4346,
+      "end": 4393,
+      "raw_source": "job->error = \"Could not create clipboard value\""
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 148,
+      "start": 5785,
+      "end": 5829,
+      "raw_source": "fail(env, \"Async clipboard API unavailable\")"
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 151,
+      "start": 5914,
+      "end": 5940,
+      "raw_source": "fail(env, \"Out of memory\")"
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 168,
+      "start": 6769,
+      "end": 6807,
+      "raw_source": "fail(env, \"setText requires a string\")"
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 175,
+      "start": 7133,
+      "end": 7175,
+      "raw_source": "fail(env, \"Could not read clipboard text\")"
+    },
+    {
+      "path": "native/clipboard.h",
+      "line": 189,
+      "start": 7687,
+      "end": 7735,
+      "raw_source": "fail(env, \"Could not queue clipboard operation\")"
+    },
+    {
+      "path": "native/linux/src/linux-platform-x11.c",
+      "line": 259,
+      "start": 10421,
+      "end": 10464,
+      "raw_source": "job->error = \"Could not read X11 clipboard\""
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 45,
+      "start": 1805,
+      "end": 1851,
+      "raw_source": "fail(env, \"Could not configure console input\")"
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 71,
+      "start": 2908,
+      "end": 2953,
+      "raw_source": "fail(env, \"Could not inspect modifier state\")"
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 148,
+      "start": 5846,
+      "end": 5896,
+      "raw_source": "job->error = \"Clipboard does not contain an image\""
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 167,
+      "start": 6692,
+      "end": 6746,
+      "raw_source": "job->error = \"Could not create clipboard image buffer\""
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 181,
+      "start": 7217,
+      "end": 7271,
+      "raw_source": "job->error = \"Could not create clipboard owner window\""
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 187,
+      "start": 7392,
+      "end": 7431,
+      "raw_source": "job->error = \"Could not open clipboard\""
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 202,
+      "start": 7983,
+      "end": 8026,
+      "raw_source": "job->error = \"Could not set clipboard text\""
+    },
+    {
+      "path": "native/win32/src/win32-platform.c",
+      "line": 217,
+      "start": 8710,
+      "end": 8756,
+      "raw_source": "job->error = \"Clipboard does not contain text\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 42,
+      "start": 1788,
+      "end": 1833,
+      "raw_source": "fail(env, \"Could not inspect modifier state\")"
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 51,
+      "start": 2046,
+      "end": 2085,
+      "raw_source": "job->error = \"Could not open clipboard\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 55,
+      "start": 2306,
+      "end": 2354,
+      "raw_source": "job->error = \"Clipboard text is not valid UTF-8\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 59,
+      "start": 2511,
+      "end": 2554,
+      "raw_source": "job->error = \"Could not set clipboard text\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 65,
+      "start": 2822,
+      "end": 2868,
+      "raw_source": "job->error = \"Could not encode clipboard text\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 78,
+      "start": 3551,
+      "end": 3600,
+      "raw_source": "job->error = \"Clipboard file paths are too large\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 89,
+      "start": 3906,
+      "end": 3934,
+      "raw_source": "job->error = \"Out of memory\""
+    },
+    {
+      "path": "native/darwin/src/darwin-platform.m",
+      "line": 116,
+      "start": 5167,
+      "end": 5217,
+      "raw_source": "job->error = \"Clipboard does not contain an image\""
+    },
+    {
+      "path": "native/linux/build.sh",
+      "line": 9,
+      "start": 165,
+      "end": 219,
+      "raw_source": "echo \"Linux native helpers must be built on Linux\" >&2"
+    },
+    {
+      "path": "native/linux/build.sh",
+      "line": 21,
+      "start": 365,
+      "end": 419,
+      "raw_source": "echo \"Unsupported Linux architecture: $(uname -m)\" >&2"
+    },
+    {
+      "path": "native/linux/build.sh",
+      "line": 27,
+      "start": 506,
+      "end": 554,
+      "raw_source": "echo \"Linux C compiler not found: $compiler\" >&2"
+    },
+    {
+      "path": "native/linux/build.sh",
+      "line": 65,
+      "start": 1385,
+      "end": 1442,
+      "raw_source": "printf 'Built %s\\n' \"$output_dir/linux-platform-x11.node\""
+    },
+    {
+      "path": "native/darwin/build.sh",
+      "line": 17,
+      "start": 395,
+      "end": 444,
+      "raw_source": "echo \"Darwin C compiler not found: $compiler\" >&2"
+    },
+    {
+      "path": "native/darwin/build.sh",
+      "line": 24,
+      "start": 549,
+      "end": 592,
+      "raw_source": "echo \"SDKROOT does not exist: $SDKROOT\" >&2"
+    },
+    {
+      "path": "native/darwin/build.sh",
+      "line": 65,
+      "start": 1768,
+      "end": 1813,
+      "raw_source": "echo \"Built $output_dir/darwin-platform.node\""
+    }
+  ],
+  "bounded_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-platform.js",
+      "bytes": 1723,
+      "root_sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2",
+      "cli_nested_sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2",
+      "canonical_sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 1,
+          "end_line": 42,
+          "raw_source": "import { createRequire } from \"node:module\";\nimport * as path from \"node:path\";\nimport { getNativeModuleCandidates } from \"./native-module-path.js\";\nconst cjsRequire = createRequire(import.meta.url);\n// Cache module loading, not display availability: a disconnected display can recover.\nconst helpers = new Map();\nfunction loadNativePlatformHelper(platform, suffix = \"\") {\n    const arch = process.arch;\n    if (arch !== \"x64\" && arch !== \"arm64\")\n        return undefined;\n    const nativePath = path.join(\"native\", platform, \"prebuilds\", `${platform}-${arch}`, `${platform}-platform${suffix}.node`);\n    if (helpers.has(nativePath))\n        return helpers.get(nativePath);\n    for (const modulePath of getNativeModuleCandidates(nativePath)) {\n        try {\n            const helper = cjsRequire(modulePath);\n            if (typeof helper?.getText === \"function\" && typeof helper.getImage === \"function\") {\n                helpers.set(nativePath, helper);\n                return helper;\n            }\n        }\n        catch {\n            // Try the next possible packaging location.\n        }\n    }\n    helpers.set(nativePath, undefined);\n    return undefined;\n}\nexport function getNativePlatformHelper() {\n    if (process.platform !== \"darwin\" && process.platform !== \"win32\")\n        return undefined;\n    return loadNativePlatformHelper(process.platform);\n}\n/** Load a clipboard helper without opening the display until a read is requested. */\nexport function getNativeClipboard() {\n    if (process.platform !== \"linux\")\n        return getNativePlatformHelper();\n    if (!process.env.DISPLAY)\n        return undefined;\n    return loadNativePlatformHelper(\"linux\", \"-x11\");\n}\n//# sourceMappingURL=native-platform.js.map",
+          "sha256": "bd3deaa60d547941511128f7bcf40083cff0130a836bd3baf168baee370ccdf2"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-module-path.js",
+      "bytes": 931,
+      "root_sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056",
+      "cli_nested_sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056",
+      "canonical_sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 1,
+          "end_line": 19,
+          "raw_source": "import { createRequire } from \"node:module\";\nimport { dirname, join } from \"node:path\";\nimport { fileURLToPath } from \"node:url\";\nconst moduleRequire = createRequire(import.meta.url);\nconst TUI_PACKAGE_NAME = \"@earendil-works/pi-tui\";\nexport function getNativeModuleCandidates(nativePath, options = {}) {\n    const moduleDir = dirname(fileURLToPath(options.moduleUrl ?? import.meta.url));\n    const candidates = [];\n    try {\n        const packageEntry = (options.resolvePackage ?? moduleRequire.resolve)(TUI_PACKAGE_NAME);\n        candidates.push(join(dirname(packageEntry), \"..\", nativePath));\n    }\n    catch {\n        // Standalone binaries do not have an installed TUI package.\n    }\n    candidates.push(join(moduleDir, \"..\", nativePath), join(moduleDir, nativePath), join(dirname(options.execPath ?? process.execPath), nativePath));\n    return Array.from(new Set(candidates));\n}\n//# sourceMappingURL=native-module-path.js.map",
+          "sha256": "3f7c149d50329f897f5c84326e3054a0d5df4c9444250a6839ebe1a4b19db056"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/native-modifiers.js",
+      "bytes": 372,
+      "root_sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4",
+      "cli_nested_sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4",
+      "canonical_sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 1,
+          "end_line": 13,
+          "raw_source": "import { getNativePlatformHelper } from \"./native-platform.js\";\nexport function isNativeModifierPressed(key) {\n    const helper = getNativePlatformHelper();\n    if (!helper?.isModifierPressed)\n        return false;\n    try {\n        return helper.isModifierPressed(key) === true;\n    }\n    catch {\n        return false;\n    }\n}\n//# sourceMappingURL=native-modifiers.js.map",
+          "sha256": "8ec9b2e44a2fb2f7f020f5a72be195742da2da148c91d93d359d829e6c0e07a4"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.js",
+      "bytes": 3130,
+      "root_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+      "cli_nested_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+      "canonical_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 29,
+          "end_line": 36,
+          "raw_source": "export { decodeKittyPrintable, isKeyRelease, isKeyRepeat, isKittyProtocolActive, Key, matchesKey, parseKey, setKittyProtocolActive, } from \"./keys.js\";\n// LaTeX rendering\nexport { renderLatex } from \"./latex.js\";\n// Native platform integration\nexport { getNativeClipboard } from \"./native-platform.js\";\nexport { oklabToOkhslLightness } from \"./oklab.js\";\n// Program status reporting (OSC 7501)\nexport { formatProgramStatus } from \"./program-status.js\";",
+          "sha256": "87310928f851a322d35230f8baebbeba614853ef6875efaa4822e259b1a38a33"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js",
+      "bytes": 21786,
+      "root_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+      "cli_nested_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+      "canonical_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 291,
+          "end_line": 330,
+          "raw_source": "            return;\n        clearTimeout(this.keyboardProtocolBufferFlushTimer);\n        this.keyboardProtocolBufferFlushTimer = undefined;\n    }\n    forwardInputSequence(sequence) {\n        if (!this.inputHandler)\n            return;\n        const shouldDetectNativeShiftEnter = sequence === \"\\r\" && (isAppleTerminalSession() || process.platform === \"win32\");\n        const input = normalizeNativeShiftEnterInput(sequence, shouldDetectNativeShiftEnter, shouldDetectNativeShiftEnter && isNativeModifierPressed(\"shift\"));\n        this.inputHandler(input);\n    }\n    enableModifyOtherKeys() {\n        if (this._kittyProtocolActive || this._modifyOtherKeysActive)\n            return;\n        process.stdout.write(\"\\x1b[>4;2m\");\n        this._modifyOtherKeysActive = true;\n    }\n    disableModifyOtherKeys() {\n        if (!this._modifyOtherKeysActive)\n            return;\n        process.stdout.write(\"\\x1b[>4;0m\");\n        this._modifyOtherKeysActive = false;\n    }\n    /**\n     * On Windows, add ENABLE_VIRTUAL_TERMINAL_INPUT (0x0200) to the stdin\n     * console handle so the terminal sends VT sequences for modified keys\n     * (e.g. \\x1b[Z for Shift+Tab). Without this, libuv's ReadConsoleInputW\n     * discards modifier state and Shift+Tab arrives as plain \\t.\n     */\n    enableWindowsVTInput() {\n        if (process.platform !== \"win32\")\n            return;\n        try {\n            getNativePlatformHelper()?.enableVirtualTerminalInput?.();\n        }\n        catch {\n            // Native helper not available \u2014 Shift+Tab won't be distinguishable from Tab.\n        }\n    }\n    async drainInput(maxMs = 1000, idleMs = 50) {",
+          "sha256": "8f25616887ed2e400bcf9268089d68308da7997e62df0bde80cdcf4935c8abe8"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "bytes": 7090,
+      "root_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+      "cli_nested_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+      "canonical_sha256": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "relation": "public manifest before/after",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 58,
+          "end_line": 107,
+          "raw_source": "/** Read plain text from the system clipboard. */\nexport async function readClipboardText() {\n    const commands = [];\n    // Termux reports platform \"android\", not \"linux\" (#10391).\n    if (process.env.TERMUX_VERSION)\n        commands.push([\"termux-clipboard-get\", []]);\n    if (platform() === \"linux\") {\n        if (process.env.WAYLAND_DISPLAY)\n            commands.push([\"wl-paste\", [\"--no-newline\", \"--type\", \"text\"]]);\n        if (process.env.DISPLAY) {\n            commands.push([\"xclip\", [\"-selection\", \"clipboard\", \"-out\"]], [\"xsel\", [\"--clipboard\", \"--output\"]]);\n        }\n    }\n    for (const [command, args] of commands) {\n        const bytes = await runClipboardCommand(command, args, { timeoutMs: 5000 });\n        if (bytes !== undefined)\n            return bytes.toString(\"utf8\") || null;\n    }\n    try {\n        return (await getNativeClipboard()?.getText()) || null;\n    }\n    catch {\n        return null;\n    }\n}\n/** Read file paths, such as Finder file copies, from the native clipboard. */\nexport async function readClipboardFilePaths() {\n    const paths = await getNativeClipboard()?.getFilePaths?.();\n    return paths?.length ? paths : null;\n}\nexport async function copyToClipboard(text) {\n    const p = platform();\n    const env = process.env;\n    let copied = false;\n    const tmuxEnabled = isTmuxClipboardEnabled(env);\n    // Direct writes precede OSC 52 so the terminal cannot race the native writer.\n    // Linux tools retain clipboard selection ownership after this call returns.\n    if (p !== \"linux\") {\n        try {\n            const clipboard = getNativeClipboard();\n            if (clipboard?.setText) {\n                await clipboard.setText(text);\n                copied = true;\n            }\n        }\n        catch {\n            // Try platform commands next.\n        }\n    }\n    if (!copied) {",
+          "sha256": "4cf6c2c99b08a71bfb80068fc597a07754a13d7931744cc21723f2a72fa87e73"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.js",
+      "bytes": 7484,
+      "root_sha256": "0e0f313764903cbfbeda9ba255231114cd42c0064527f70225b96b2431554090",
+      "cli_nested_sha256": "0e0f313764903cbfbeda9ba255231114cd42c0064527f70225b96b2431554090",
+      "canonical_sha256": "0e0f313764903cbfbeda9ba255231114cd42c0064527f70225b96b2431554090",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 169,
+          "end_line": 214,
+          "raw_source": "}\nasync function readClipboardImageViaNativeClipboard() {\n    const bytes = await getNativeClipboard()?.getImage();\n    if (bytes === undefined)\n        return undefined;\n    if (!bytes?.length)\n        return null;\n    return { bytes, mimeType: detectSupportedImageMimeType(bytes) ?? \"application/octet-stream\" };\n}\nexport async function readClipboardImage(options) {\n    const env = options?.env ?? process.env;\n    const platform = options?.platform ?? process.platform;\n    if (env.TERMUX_VERSION) {\n        return null;\n    }\n    let image;\n    if (platform === \"linux\") {\n        const wsl = isWSL(env);\n        if (isWaylandSession(env) || wsl) {\n            image = await readClipboardImageViaWlPaste();\n        }\n        if (image === undefined)\n            image = await readClipboardImageViaXclip();\n        // Preserve Linux's empty/unavailable distinction if Windows has no image.\n        if (!image && wsl)\n            image = (await readClipboardImageViaPowerShell()) ?? image;\n        if (image === undefined)\n            image = await readClipboardImageViaNativeClipboard();\n    }\n    else {\n        image = await readClipboardImageViaNativeClipboard();\n    }\n    if (!image) {\n        return null;\n    }\n    // Convert unsupported formats (e.g., Windows DIB data wrapped as BMP) to PNG\n    if (!isSupportedImageMimeType(image.mimeType)) {\n        const pngBytes = await convertToPng(image.bytes);\n        if (!pngBytes) {\n            return null;\n        }\n        return { bytes: pngBytes, mimeType: \"image/png\" };\n    }\n    return image;\n}\n//# sourceMappingURL=clipboard-image.js.map",
+          "sha256": "0b67ecb5a24e7f0eb27ff966719304c6e9966bef1b369636e1263717b657fd28"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "bytes": 283878,
+      "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "canonical_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "relation": "public manifest before/after",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 2475,
+          "end_line": 2540,
+          "raw_source": "                this.updateEditorBorderColor();\n            }\n        };\n        // Handle clipboard paste (triggered on Ctrl+V). Copied files use their original paths,\n        // images are attached via temporary files, and plain text is the final fallback.\n        this.defaultEditor.onPasteImage = () => {\n            void this.handleClipboardPaste();\n        };\n    }\n    async handleRightClickPaste() {\n        const target = this.renderer.getFocusedComponent();\n        const handleInput = target?.handleInput;\n        if (!target || !handleInput)\n            return;\n        try {\n            const text = await readClipboardText();\n            if (!text || this.renderer.getFocusedComponent() !== target)\n                return;\n            handleInput.call(target, `\\x1b[200~${text}\\x1b[201~`);\n            this.ui.requestRender();\n        }\n        catch {\n            // Silently ignore clipboard errors (may not have permission, etc.)\n        }\n    }\n    async handleClipboardPaste() {\n        try {\n            const filePaths = await readClipboardFilePaths();\n            if (filePaths) {\n                if (filePaths.some((filePath) => /\\p{Cc}/u.test(filePath))) {\n                    throw new Error(\"Clipboard file path contains control characters\");\n                }\n                const paths = this.isBashMode ? filePaths.map(quoteIfNeeded).join(\" \") : filePaths.join(\"\\n\");\n                const cursor = this.editor.getCursor?.();\n                const currentLine = cursor ? (this.editor.getText().split(\"\\n\")[cursor.line] ?? \"\") : \"\";\n                const characterBeforeCursor = cursor && cursor.col > 0 ? currentLine[cursor.col - 1] : \"\";\n                const characterAfterCursor = cursor ? currentLine[cursor.col] : \"\";\n                const leadingSpace = characterBeforeCursor && !/\\s/.test(characterBeforeCursor) ? \" \" : \"\";\n                const trailingSpace = characterAfterCursor && !/\\s/.test(characterAfterCursor) ? \" \" : \"\";\n                this.editor.insertTextAtCursor?.(`${leadingSpace}${paths}${trailingSpace}`);\n                this.ui.requestRender();\n                return;\n            }\n            const image = await readClipboardImage();\n            if (image) {\n                const tmpDir = os.tmpdir();\n                const ext = extensionForImageMimeType(image.mimeType) ?? \"png\";\n                const fileName = `pi-clipboard-${crypto.randomUUID()}.${ext}`;\n                const filePath = path.join(tmpDir, fileName);\n                fs.writeFileSync(filePath, Buffer.from(image.bytes));\n                this.editor.insertTextAtCursor?.(filePath);\n                this.ui.requestRender();\n                return;\n            }\n            const text = await readClipboardText();\n            if (text) {\n                this.editor.insertTextAtCursor?.(text);\n                this.ui.requestRender();\n            }\n        }\n        catch (error) {\n            this.showError(`Failed to paste from clipboard: ${error instanceof Error ? error.message : String(error)}`);\n        }\n    }\n    handleStartupSubmit(text) {\n        this.editor.setText(text);",
+          "sha256": "624c502c4c61c6855cd0635e9add2ab2f500da9a35f5ec8fc5fb7f5af01871bd"
+        }
+      ]
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native/win32/build.mjs",
+      "bytes": 7168,
+      "root_sha256": "2e77f5ab24f95e1354398ef6503926f73925119e414f1e08baac36025d0a7c27",
+      "cli_nested_sha256": "2e77f5ab24f95e1354398ef6503926f73925119e414f1e08baac36025d0a7c27",
+      "canonical_sha256": "2e77f5ab24f95e1354398ef6503926f73925119e414f1e08baac36025d0a7c27",
+      "relation": "exact archive/root/CLI bytes",
+      "coverage": "Bounded loader/wrapper/caller/build source only, not duplicate full ownership.",
+      "snippets": [
+        {
+          "start_line": 1,
+          "end_line": 25,
+          "raw_source": "import { spawnSync } from \"node:child_process\";\nimport { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from \"node:fs\";\nimport { tmpdir } from \"node:os\";\nimport * as path from \"node:path\";\nimport { fileURLToPath } from \"node:url\";\n\nconst scriptDir = path.dirname(fileURLToPath(import.meta.url));\nconst sourceFile = path.join(scriptDir, \"src\", \"win32-platform.c\");\nconst temporaryDir = mkdtempSync(path.join(tmpdir(), \"pi-tui-win32-\"));\n\nconst targets = [\n\t{\n\t\tarch: \"x64\",\n\t\tmsvcArch: \"x64\",\n\t\tmingwTarget: \"x86_64-w64-windows-gnu\",\n\t\tprefixedCompilers: [\"x86_64-w64-mingw32-gcc\", \"x86_64-w64-mingw32-clang\"],\n\t\tenvCompiler: \"CC_X64\",\n\t},\n\t{\n\t\tarch: \"arm64\",\n\t\tmsvcArch: \"arm64\",\n\t\tmingwTarget: \"aarch64-w64-windows-gnu\",\n\t\tprefixedCompilers: [\"aarch64-w64-mingw32-gcc\", \"aarch64-w64-mingw32-clang\"],\n\t\tenvCompiler: \"CC_ARM64\",\n\t},",
+          "sha256": "cb453a318e8dba4db570886a5bfa9b68167be93da36d0989ce9110352cb50ae9"
+        },
+        {
+          "start_line": 195,
+          "end_line": 232,
+          "raw_source": "\t\t\"-o\",\n\t\ttemporaryOutput,\n\t];\n\n\trun(compiler.command, args, { cwd: buildDir });\n\tinstallOutput(temporaryOutput, target);\n}\n\nif (process.argv.includes(\"--help\") || process.argv.includes(\"-h\")) {\n\tconsole.log(`Usage: npm --prefix packages/tui run build:native:win32\n\nBuilds win32-x64 and win32-arm64 native prebuilds.\n\nEnvironment:\n  PI_TUI_WIN32_TOOLCHAIN=msvc|mingw\n  CC_X64=/path/to/x86_64-w64-mingw32-gcc\n  CC_ARM64=/path/to/aarch64-w64-mingw32-gcc\n  CC=/path/to/clang`);\n\tprocess.exit(0);\n}\n\nconst requestedToolchain = process.env.PI_TUI_WIN32_TOOLCHAIN;\nif (requestedToolchain && requestedToolchain !== \"msvc\" && requestedToolchain !== \"mingw\") {\n\tthrow new Error(\"PI_TUI_WIN32_TOOLCHAIN must be either 'msvc' or 'mingw'\");\n}\n\nconst vsDevCmd = findVisualStudioDevCmd();\nconst hasMsvc = vsDevCmd ? canUseMsvc(vsDevCmd) : false;\nconst toolchain = requestedToolchain ?? (process.platform === \"win32\" && vsDevCmd ? \"msvc\" : \"mingw\");\n\nif (toolchain === \"msvc\") {\n\tif (!vsDevCmd || !hasMsvc) {\n\t\tthrow new Error(\"Microsoft C++ Build Tools not found. Install the Visual Studio C++ workload or set PI_TUI_WIN32_TOOLCHAIN=mingw.\");\n\t}\n\tfor (const target of targets) buildWithMsvc(target, vsDevCmd);\n} else {\n\tfor (const target of targets) buildWithMingw(target);\n}",
+          "sha256": "a9bdd4f25e86480a399be57684e56d554f936c12a4ccc812c1bb75340c041733"
+        }
+      ]
+    }
+  ],
+  "bounded_repo_sources": [
+    {
+      "source": "packages/session-ui/src/prompt-frame.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "b5fcb9be2f808cefae43af09a69d4b8222623b24901961e3e2f4660ab32fc68e",
+      "coverage": "Bounded BASE host/paste-priority recipe, not full owner.",
+      "snippets": [
+        {
+          "start_line": 382,
+          "end_line": 397,
+          "raw_source": "\t\tsuper.setAutocompleteProvider(filteredProvider);\n\t}\n\n\toverride handleInput(data: string): void {\n\t\tconst piPriorityAction =\n\t\t\tthis.keybindingsManager.matches(data, \"app.clipboard.pasteImage\") ||\n\t\t\tthis.keybindingsManager.matches(data, \"app.interrupt\") ||\n\t\t\tthis.keybindingsManager.matches(data, \"app.exit\") ||\n\t\t\tthis.keybindingsManager.matches(data, \"tui.editor.historyPrevious\") ||\n\t\t\tthis.keybindingsManager.matches(data, \"tui.editor.historyNext\");\n\t\tif (piPriorityAction) {\n\t\t\tsuper.handleInput(data);\n\t\t\treturn;\n\t\t}\n\t\tif (this.options.onModelCycle) {\n\t\t\tconst direction = this.keybindingsManager.matches(data, \"app.model.cycleForward\")"
+        }
+      ]
+    },
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "coverage": "Bounded BASE host/paste-priority recipe, not full owner.",
+      "snippets": [
+        {
+          "start_line": 755,
+          "end_line": 765,
+          "raw_source": "\t\t\t\t})\n\t\t\t: undefined;\n\tconst scrollbackSession = createScrollbackSessionObserver();\n\tconst startPi = () =>\n\t\tpi.main(piArgs, {\n\t\t\tsessionInfoFooter: runtimeDiagnostics.summary,\n\t\t\tcontentPolicyFactory: nativeTextguard.createPolicy,\n\t\t\tflowIngressFactory: async (context) => scrollbackSession.wrap(await flow?.flowIngressFactory(context)),\n\t\t\textensionFactories: [\n\t\t\t\t...classicHostBuiltinOverrides(),\n\t\t\t\tcreateDirectToolPolicyExtension(),"
+        },
+        {
+          "start_line": 805,
+          "end_line": 823,
+          "raw_source": "\t\t\tusesReleaseExtensions(parsed.args)\n\t\t\t\t? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)\n\t\t\t\t: startPi();\n\t\tif (!interactiveStartup) return execute();\n\t\tconst { withPiUiLocalization } = await import(\"./pi-ui-localization.js\");\n\t\tconst { withPiProseWrapping } = await import(\"./pi-prose-wrapping.js\");\n\t\treturn withPiUiLocalization(\n\t\t\t() => displayCatalog.bundle,\n\t\t\t() => withPiProseWrapping(execute),\n\t\t\tpi,\n\t\t);\n\t};\n\ttry {\n\t\tawait withJouzuOutput(runPi, {\n\t\t\tinteractive: interactiveStartup,\n\t\t\tprotectTitles: true,\n\t\t\trewrite: !usesMachineReadableStdout(piArgs),\n\t\t});\n\t} finally {"
+        }
+      ]
+    }
+  ],
+  "prior_full_owners": [
+    "pi-tui-input (JS loader/modifier/terminal)",
+    "pi-os-support (coding-agent clipboard/clipboard-image)",
+    "pi-published-auxiliary-text (Win32 builder)"
+  ],
+  "source_partition": "194 exact C literal/character/comment and shell recursive quote/comment regions =32 own diagnostic/output primary+162 protected/comment exclusions. Shell outer words overlap nested command-substitution words; neither program nor shell evaluated.",
+  "remaining_boundaries": [
+    "Six native binaries: separate static corpus does not close instructions, ABI, source linkage or behavior.",
+    "Node/Bun N-API and dynamic symbol APIs",
+    "X11/XCB/pthread/time/poll/native memory",
+    "Win32 clipboard/console/key APIs",
+    "Darwin Foundation/AppKit/CoreGraphics/ObjC runtime",
+    "Shell/compiler/linker/SDK/command output",
+    "Compiled standalone copies and package/native selection external to bounded loader snippets"
+  ],
+  "offset_units": "ASCII source, byte offsets equal UTF16 units; half-open ranges, 1-based source lines/columns. Shell substitutions and printf escapes preserved as unexpanded source spelling.",
+  "checker": {
+    "source": "review/text-inventory/verify-pi-native-clipboard-text.py",
+    "sha256": "f3e273061bae2cd8766a3337d6872b6ba1bcfee352ab6d23b0190053e7ec1599",
+    "audited_execution": false
+  },
+  "artifact_sha256_utf8_lf": {
+    "pi-native-clipboard-text.csv": "45b953ec24d64dd418baf5a192a65f31008177489c2822224bd803405a2f95f8",
+    "pi-native-clipboard-text-boundaries.csv": "3b9ce22ca6207d8b05869e9e75412cc423c0cb618cb1da5c6c499b1f8e470296",
+    "pi-native-clipboard-text-scope.csv": "8384c7fa8dbfe02ca06234413c1212fbdfc189eef9a44c745c0d3d001d5b2635",
+    "pi-native-clipboard-text-exclusions.csv": "7e9f521c32626fde61e1a5e114b2f28017e18e53bd5e08e168c7147937124810"
+  }
+}

@@ -403,9 +403,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 45 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 80 compiled bodies;
-1 compiled bodies remain pending. The
+universe with 46 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 81 compiled bodies;
+0 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -2276,6 +2276,14 @@ bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
 
+[pi-bundle-main-host-complete-scope.csv](pi-bundle-main-host-complete-scope.csv) records the complete local compiled main-host source owner. Its 77 pinned child units cover all 164 disjoint ranges, 3,536,719 bytes and 38,913 frozen literal/template/regex occurrences. It adds no English rows and preserves each child producer, trigger, suppression, activation and protected-data qualification. This local source result does not establish native instruction behavior, transitive external wording, default visibility or fetched-target runtime equivalence.
+
+[pi-native-clipboard-text.csv](pi-native-clipboard-text.csv) inventories 32 fixed diagnostics and build outputs across eight packaged clipboard source/build files (45,367 bytes), with 162 excluded source regions. Boundaries distinguish direct native API errors, suppressed clipboard failures, fallback routes and interactive error display. The source evidence does not establish binary equivalence or native execution behavior.
+
+[pi-native-binary-corpus.csv](pi-native-binary-corpus.csv) records 72 qualified printable-byte observations across six packaged native binaries (177,976 bytes). The 1,052 maximal printable observations include source-diagnostic counterparts and protected or unresolved byte pools. These are byte observations, not semantic English or translation directives; no instruction-level review, platform behavior or source/build equivalence is claimed.
+
+[pi-published-json-metadata.csv](pi-published-json-metadata.csv) inventories 297 annotations, navigation labels, package descriptions and explicitly qualified optional npm echo outputs in 26 packaged JSON assets (85,406 canonical bytes). Typed token spans, 3,547 exclusions, canonical/installed manifest transforms and shell/configuration conditions are preserved. Schema metadata and optional commands do not imply automatic interactive display.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -3754,6 +3762,10 @@ node review/text-inventory/verify-pi-bundle-main-host-http-pools.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-socks.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-proxy-env.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-retry.cjs
+python -B review/text-inventory/verify-pi-bundle-main-host-complete.py
+python -B review/text-inventory/verify-pi-native-clipboard-text.py
+python -B review/text-inventory/verify-pi-native-binary-corpus.py
+python -B review/text-inventory/verify-pi-published-json-metadata.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
