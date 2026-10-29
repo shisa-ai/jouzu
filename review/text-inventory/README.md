@@ -1216,6 +1216,22 @@ and game/WASM/WAD/native/compiler payloads remain separate. Canonical archives,
 both installed copies, exact anchors and eighteen corruption controls pass.
 No example, game, WASM, compiler, build or native UI operation runs.
 
+[pi-models-schema-data.csv](pi-models-schema-data.csv) records all 129 description
+occurrences and one generated-file comment in the complete shipped model schema
+(1,211 lines; 46,008 bytes). The 1,112
+[exclusions](pi-models-schema-data-exclusions.csv) complete the 1,242-key/scalar
+partition; 371 containers, eleven local references and five definitions are
+accounted for separately. Five
+[boundaries](pi-models-schema-data-boundaries.csv) retain direct-file/editor
+selection, concrete schema branches and foreign validator output. The prior
+schema-JS unit's 113 match records cover 105 unique resource pointers; the other
+24 description pointers contain sixteen distinct values. The
+[scope](pi-models-schema-data-scope.csv) pins the complete resource and exact
+source coordinates without adding any JavaScript runtime owner. Canonical
+archives, installed copies, prior crosslinks and 29 corruption controls pass.
+Remote schema bytes, editor presentation and validator diagnostics retain their
+separate boundaries; no schema, editor, configuration or native operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2589,6 +2605,7 @@ node review/text-inventory/verify-chord-runtime-text.cjs
 python -B review/text-inventory/verify-pi-bundle-host-resources.py
 python -B review/text-inventory/verify-pi-ai-openai-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-published-auxiliary-text.cjs
+python -B review/text-inventory/verify-pi-models-schema-data.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
