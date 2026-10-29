@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 35 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 70 compiled bodies;
-11 compiled bodies remain pending. The
+universe with 36 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 71 compiled bodies;
+10 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1422,6 +1422,21 @@ prompt and can repeat hooks during escalation. The
 fourteen bodies. Four archives, installed copies, public patch checks and nineteen
 corruption controls pass. SDK/binding/custom-fetch/model/native payloads remain
 bounded; no classifier, image request, binding, model, tool or native UI runs.
+
+[pi-bundle-web-streams.csv](pi-bundle-web-streams.csv) records 157 qualified
+definitions across the complete compiled streams/blob/form-data body
+(131,073 bytes). The 383 [exclusions](pi-bundle-web-streams-exclusions.csv)
+complete the 540-node partition. Forty-seven
+[boundaries](pi-bundle-web-streams-boundaries.csv) retain ambient/native stream
+precedence, ponyfill selection, reader/controller state, callbacks, BYOB buffers,
+abort and exported Blob/File/FormData helpers. Native stream availability can
+preempt the ponyfill; earlier view validation also preempts three detached-buffer
+headlines. Other pending/detached/BYOB and duck-signal guards retain explicit
+API conditions. The [scope](pi-bundle-web-streams-scope.csv) grants complete local
+review only to one body. Canonical archive, installed copies, 31 corruption
+controls and four LF-count regression cases pass. Foreign native/global/file/
+payload/caller graphs remain bounded; no stream, file, form, abort, request or
+native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2809,6 +2824,7 @@ node review/text-inventory/verify-pi-ai-auth-callback-text.cjs --node-modules <r
 node review/text-inventory/verify-pi-ai-auth-device-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-pi-messages-adapter.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-nonchat-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-bundle-web-streams.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
