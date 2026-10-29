@@ -113,6 +113,7 @@
     "pi-bundle-main-host-http-cache-engine-scope.csv": "4a850d9224c6b42a7b7ee0c37bdec9e276130d2518f9af9efa38f8e435792343",
     "pi-bundle-main-host-http-transport-interceptors-scope.csv": "7093ab9a8358284eafe28b8c127a278647bd8f4590b32154aeea038bc76668bc",
     "pi-bundle-main-host-http-fetch-types-scope.csv": "54c6db430e66799d50022ca1d021392655d978e7ae88485aa5f147e61f808466",
+    "pi-bundle-main-host-package-session-support-scope.csv": "e084b6bd0daad512176ea8973476e25c858f0f26e6983dec1d040b810b8f3aa8",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",

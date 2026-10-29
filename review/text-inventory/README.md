@@ -1579,12 +1579,12 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The registered partial main-host units cover 144 disjoint ranges totaling
-2,890,843 of the body's 3,536,719 bytes. The 4 remaining gaps total 645,876
+The registered partial main-host units cover 145 disjoint ranges totaling
+3,005,848 of the body's 3,536,719 bytes. The 4 remaining gaps total 530,871
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The [range census](pi-main-host-review-census.csv) and
-[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 58
+[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 59
 registered scope tables, reject overlap and keep every frozen literal/template/
 regex occurrence assigned to a reviewed range or a pending gap. This accounting
 does not independently approve each semantic classification or promote a whole
@@ -2135,6 +2135,8 @@ The [exclusions](pi-bundle-main-host-http-fetch-types-exclusions.csv),
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-package-session-support.csv](pi-bundle-main-host-package-session-support.csv) records 117 qualified captions, fragments and callback/API definitions across the complete 115,005-byte image/package/keybinding/session-selector range. Forty-three keybinding descriptions have a concrete extension-factory/getDefinition receiver; exported formatDimensionNote has a separate direct API path. Package errors/progress, suppressed private guards, selector load/delete/rename timing and search recognition retain exact consumers. The 1,060 exclusions complete all 1,177 source occurrences. Its [boundaries](pi-bundle-main-host-package-session-support-boundaries.csv) and [scope](pi-bundle-main-host-package-session-support-scope.csv) preserve partial ownership and native limits. Twelve corruption controls and independent wording/condition review pass; no audited module or native operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3595,6 +3597,7 @@ node review/text-inventory/verify-pi-bundle-main-host-http-interceptors.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-cache-engine.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-transport-interceptors.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-fetch-types.cjs
+python -B review/text-inventory/verify-pi-bundle-main-host-package-session-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
