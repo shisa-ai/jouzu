@@ -2,17 +2,17 @@
   "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
   "catalog_definitions": 1808,
-  "detailed_source_tables": 189,
-  "detailed_source_records": 42543,
-  "worklist_records": 44351,
+  "detailed_source_tables": 191,
+  "detailed_source_records": 42555,
+  "worklist_records": 44363,
   "record_kinds": {
     "catalog-definition": 1808,
-    "source-record": 39552,
+    "source-record": 39564,
     "catalog-reference-record": 2991
   },
   "source_revisions": {
     "1fda3eb161b042aae66e4adcc07319f69946dadd": 5548,
-    "346d1e481757a55eb62fc066e43bbc7999b8e6dd": 38803
+    "346d1e481757a55eb62fc066e43bbc7999b8e6dd": 38815
   },
   "distinct_exact_english_field_values": 20861,
   "input_sha256": {
@@ -118,7 +118,9 @@
     "pi-bundle-main-host-entry.csv": "013e9d516b660a6fabb82e8e5f5d8121ce440bc2c42d3956b15d56f5c1b19b3e",
     "pi-bundle-main-host-extension-loading.csv": "4655c73349796cc58121f7cca33764e09923927ebc1dc2d45044cf2128ec8667",
     "pi-bundle-main-host-file-tools.csv": "29238197ee3fd5f4c62b3f3b46014c24961263bde813a3035009b1b546770f63",
+    "pi-bundle-main-host-ignore.csv": "224aa3114a752c33d3f09980b241423c2a8822317f00da75af9df8c8edd3e216",
     "pi-bundle-main-host-mcp.csv": "3b09797affd79897213d41b1dcac327de93116d9e46d3bde469fba834ffca26f",
+    "pi-bundle-main-host-model-resolution.csv": "6be3972dd8af5f94eacf96d0711ad263c1b50bf3739c5b90bafa0c4cb39f32f4",
     "pi-bundle-main-host-model-runtime.csv": "cff467cb476312dc6e8ca1db782e4029e71c3f0bcba78a8ef5cc1b928b0b2516",
     "pi-bundle-main-host-model-selectors.csv": "4bb0d69777d32510988a5dc9c7130fd2b652c4c843271c2b97eb1afad5b029de",
     "pi-bundle-main-host-provider-registry.csv": "c900e254cfd1472619bf7011d178062ba2cdeeb2ec6f8e9d7cd92452871fc765",
@@ -206,7 +208,7 @@
     "web-adapter-text.csv": "d1ff93fb577b4dc67936808a7712a0187a6f891fa25e21b2e9e4975ab849d6b2",
     "workflow.csv": "db22ec9c2915d5824239b9a888f082c88c6464046e1f21b3ccefb2e1bc818019",
     "main-update-catalogs.csv": "8b2eab5c52be1a587f3ed0b7d514274c65196160f76ed3cf1a5bb84d6c18181f",
-    "catalog-links.py": "4dcad4981cc044f717d4babb96fbf4480ac05ec19502744813a508057d440475"
+    "catalog-links.py": "e3dbbbcf62ca878f9df1fe8d8556481f046f04b1e43cb9d087552a13d7e2645c"
   },
   "table_records": {
     "acp-dependencies.csv": 386,
@@ -311,7 +313,9 @@
     "pi-bundle-main-host-entry.csv": 124,
     "pi-bundle-main-host-extension-loading.csv": 21,
     "pi-bundle-main-host-file-tools.csv": 131,
+    "pi-bundle-main-host-ignore.csv": 0,
     "pi-bundle-main-host-mcp.csv": 144,
+    "pi-bundle-main-host-model-resolution.csv": 12,
     "pi-bundle-main-host-model-runtime.csv": 69,
     "pi-bundle-main-host-model-selectors.csv": 53,
     "pi-bundle-main-host-provider-registry.csv": 147,
@@ -404,6 +408,6 @@
   "discovery": "Git-indexed CSV tables and explicitly registered ready catalog-link partitions with at least the nine core detailed-record fields, plus all fetched-target catalog definitions; qualified comparison/exclusion records using that schema remain included, while untracked unregistered drafts are excluded.",
   "coverage": "Navigation/projection only, not a claim of complete inventory or a direction to translate every record. Preserve source/API/optional/model/metadata/fixture/protected-data and caller qualifications in the original table. Exact English equality does not establish shared translation semantics. BASE records keep BASE caller authority. Detailed comparison/exclusion records are included when their original table uses the core schema; full exclusion ledgers, documentation/asset line exports and lexical censuses retain their separate tables.",
   "verifier_sha256": "903a10d0a3b79cbc0b27e58bca039fbd32c42f57504e58b43bb5a945abdc03d5",
-  "worklist_sha256": "edb8780f158b298c3770375825eb61e75baf6f2bbb94fc21e064ec0667aa5fbc",
+  "worklist_sha256": "1b25589d0fb3273abd5825cc382a8691475bf8b23e79b75db7a2c0dc1f7a0204",
   "audited_execution": false
 }

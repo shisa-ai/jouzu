@@ -1579,8 +1579,8 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The following twelve partial main-host units cover 97 disjoint ranges totaling
-1,357,306 of the body's 3,536,719 bytes. The seven remaining gaps total 2,179,413
+The following fourteen partial main-host units cover 99 disjoint ranges totaling
+1,381,687 of the body's 3,536,719 bytes. The eight remaining gaps total 2,155,032
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The whole main-host body remains pending in the 384-source census.
@@ -1721,6 +1721,22 @@ operation runs; whole main-host and wider caller coverage remain open.
 The [exclusions](pi-bundle-main-host-settings-cli-exclusions.csv),
 [boundaries](pi-bundle-main-host-settings-cli-boundaries.csv) and
 [scope](pi-bundle-main-host-settings-cli-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-model-resolution.csv](pi-bundle-main-host-model-resolution.csv) records 12 qualified definitions across the complete 11,955-byte model-resolution range, including its four-byte grammar-only declaration tail. Exact/fuzzy matching, ambiguity, thinking suffixes, scopes, CLI warnings and synthetic fallback fields retain distinct caller conditions. The 119 exclusions complete 131 lexical nodes; nine boundaries and 28 corruption controls pass.
+The [exclusions](pi-bundle-main-host-model-resolution-exclusions.csv),
+[boundaries](pi-bundle-main-host-model-resolution-boundaries.csv) and
+[scope](pi-bundle-main-host-model-resolution-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-ignore.csv](pi-bundle-main-host-ignore.csv) records zero primary definitions across the complete 12,426-byte private ignore-library range. All 139 lexical nodes retain explicit exclusions; three fixed path-check diagnostics are suppressed by the actual resource/skill consumers' catch boundaries. Private bundled exports do not create a public host API. The relative-path false-return and trailing-slash bypass retain their exact validation/native limits. Nine boundaries and 27 corruption controls pass.
+The [exclusions](pi-bundle-main-host-ignore-exclusions.csv),
+[boundaries](pi-bundle-main-host-ignore-boundaries.csv) and
+[scope](pi-bundle-main-host-ignore-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
@@ -3135,6 +3151,8 @@ python -B review/text-inventory/verify-translation-worklist.py
 node review/text-inventory/verify-pi-bundle-main-host-ai-runtime-helpers.cjs
 node review/text-inventory/verify-pi-bundle-main-host-mcp.cjs
 node review/text-inventory/verify-pi-bundle-main-host-settings-cli.cjs
+node review/text-inventory/verify-pi-bundle-main-host-model-resolution.cjs
+node review/text-inventory/verify-pi-bundle-main-host-ignore.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
