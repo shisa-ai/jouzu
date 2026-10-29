@@ -1579,12 +1579,12 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The registered partial main-host units cover 145 disjoint ranges totaling
-3,005,848 of the body's 3,536,719 bytes. The 4 remaining gaps total 530,871
+The registered partial main-host units cover 152 disjoint ranges totaling
+3,241,367 of the body's 3,536,719 bytes. The 3 remaining gaps total 295,352
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The [range census](pi-main-host-review-census.csv) and
-[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 59
+[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 66
 registered scope tables, reject overlap and keep every frozen literal/template/
 regex occurrence assigned to a reviewed range or a pending gap. This accounting
 does not independently approve each semantic classification or promote a whole
@@ -2137,6 +2137,62 @@ audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-bundle-main-host-package-session-support.csv](pi-bundle-main-host-package-session-support.csv) records 117 qualified captions, fragments and callback/API definitions across the complete 115,005-byte image/package/keybinding/session-selector range. Forty-three keybinding descriptions have a concrete extension-factory/getDefinition receiver; exported formatDimensionNote has a separate direct API path. Package errors/progress, suppressed private guards, selector load/delete/rename timing and search recognition retain exact consumers. The 1,060 exclusions complete all 1,177 source occurrences. Its [boundaries](pi-bundle-main-host-package-session-support-boundaries.csv) and [scope](pi-bundle-main-host-package-session-support-scope.csv) preserve partial ownership and native limits. Twelve corruption controls and independent wording/condition review pass; no audited module or native operation runs.
+
+[pi-bundle-main-host-webidl.csv](pi-bundle-main-host-webidl.csv) records 16 qualified source contexts in the complete 14,908-byte WebIDL range. Actual installed API conversion paths, argument positions, dictionary aliases and grammar fragments retain exact conditions; 99 exclusions complete 115 source occurrences.
+The [exclusions](pi-bundle-main-host-webidl-exclusions.csv),
+[boundaries](pi-bundle-main-host-webidl-boundaries.csv) and
+[scope](pi-bundle-main-host-webidl-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-fetch-util.csv](pi-bundle-main-host-fetch-util.csv) records Three qualified public API guard definitions in the complete 17,720-byte Fetch utility range. Iterator/forEach and byte-stream conditions retain exact installed consumers; constant success stubs and native message matchers remain qualified in 151 exclusions.
+The [exclusions](pi-bundle-main-host-fetch-util-exclusions.csv),
+[boundaries](pi-bundle-main-host-fetch-util-boundaries.csv) and
+[scope](pi-bundle-main-host-fetch-util-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-skills-extensions.csv](pi-bundle-main-host-skills-extensions.csv) records 46 qualified definitions in the complete 45,421-byte skill, prompt and extension-runtime range. Listener-dependent errors, no-op UI suppression, stale context, cancellation and request/current-state metadata paths retain exact consumers; 232 exclusions complete 278 occurrences.
+The [exclusions](pi-bundle-main-host-skills-extensions-exclusions.csv),
+[boundaries](pi-bundle-main-host-skills-extensions-boundaries.csv) and
+[scope](pi-bundle-main-host-skills-extensions-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-session-storage.csv](pi-bundle-main-host-session-storage.csv) records 14 qualified contexts in the complete 31,366-byte session-storage and context-projection range. Direct CLI validation, prevalidated fork/open IDs, guarded public mutation APIs and suppressed header-scan failures retain distinct routes; 12 primary nodes plus 171 exclusions complete 183 occurrences.
+The [exclusions](pi-bundle-main-host-session-storage-exclusions.csv),
+[boundaries](pi-bundle-main-host-session-storage-boundaries.csv) and
+[scope](pi-bundle-main-host-session-storage-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-fetch-runtime.csv](pi-bundle-main-host-http-fetch-runtime.csv) records 22 qualified definitions in the complete 55,797-byte Fetch runtime range. Installed Fetch errors, nested cause/body paths and custom dispatcher callbacks retain exact conditions; private cache, constant checks, response/status/header data and suppressed branches remain qualified in 442 exclusions.
+The [exclusions](pi-bundle-main-host-http-fetch-runtime-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-fetch-runtime-boundaries.csv) and
+[scope](pi-bundle-main-host-http-fetch-runtime-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-websocket.csv](pi-bundle-main-host-http-websocket.csv) records 24 qualified definitions in the complete 50,476-byte WebSocket range. Public validation and established outgoing close-frame prose retain distinct sinks; connecting failures, local error/close events and uninstalled private APIs retain exact limits in 239 exclusions.
+The [exclusions](pi-bundle-main-host-http-websocket-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-websocket-boundaries.csv) and
+[scope](pi-bundle-main-host-http-websocket-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-eventsource-index.csv](pi-bundle-main-host-http-eventsource-index.csv) records One qualified EventSource warning definition in the complete 19,831-byte EventSource, dispatch and install range. SSE cancellation, plain error events, private convenience APIs and actual global publication retain exact qualifications; 91 exclusions complete 92 occurrences.
+The [exclusions](pi-bundle-main-host-http-eventsource-index-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-eventsource-index-boundaries.csv) and
+[scope](pi-bundle-main-host-http-eventsource-index-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3598,6 +3654,13 @@ node review/text-inventory/verify-pi-bundle-main-host-http-cache-engine.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-transport-interceptors.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http-fetch-types.cjs
 python -B review/text-inventory/verify-pi-bundle-main-host-package-session-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-bundle-main-host-webidl.cjs
+node review/text-inventory/verify-pi-bundle-main-host-fetch-util.cjs
+node review/text-inventory/verify-pi-bundle-main-host-skills-extensions.cjs
+node review/text-inventory/verify-pi-bundle-main-host-session-storage.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-fetch-runtime.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-websocket.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-eventsource-index.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
