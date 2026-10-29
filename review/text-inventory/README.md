@@ -1579,8 +1579,8 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The following fourteen partial main-host units cover 99 disjoint ranges totaling
-1,381,687 of the body's 3,536,719 bytes. The eight remaining gaps total 2,155,032
+The following sixteen partial main-host units cover 101 disjoint ranges totaling
+1,580,011 of the body's 3,536,719 bytes. The nine remaining gaps total 1,956,708
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The whole main-host body remains pending in the 384-source census.
@@ -1757,6 +1757,37 @@ preserve its embedded source whitespace. The
 bounded concrete callers. Canonical and both installed sources match; 126 public
 after-hashes and 26 corruption controls pass. No SDK, credential, transport,
 request, proxy, environment, filesystem or native UI operation runs.
+
+[pi-bundle-main-host-llhttp.csv](pi-bundle-main-host-llhttp.csv) records 204
+native diagnostic/status data definitions across two encoded parser images in
+the complete 157,320-byte constants/data range. The 110 JavaScript lexical nodes
+match the frozen source census; 348 native technical names and those JavaScript
+tokens retain 458 [exclusions](pi-bundle-main-host-llhttp-exclusions.csv).
+Static decoding checks all 68 active data segments, memory/file positions and
+the two identical string-bearing pools. These are 102 stored English/status
+entries per image, without per-entry binary reachability or display proof.
+Seven [boundaries](pi-bundle-main-host-llhttp-boundaries.csv) retain image
+selection, memoized decoding, protocol identities, content-length replacement,
+pause/upgrade handling and the bounded error-reason memory consumer. Native
+instructions remain opaque; no audited parser or WebAssembly code runs. The
+[scope](pi-bundle-main-host-llhttp-scope.csv) grants partial JavaScript ownership
+and separate native-data qualification. Independent decoding review and 25
+corruption controls pass; whole-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-semver.csv](pi-bundle-main-host-semver.csv) records one
+API-qualified definition across the complete 41,004-byte version-library range.
+Its 483 [exclusions](pi-bundle-main-host-semver-exclusions.csv) complete 484
+lexical nodes. Sixty-four
+[boundaries](pi-bundle-main-host-semver-boundaries.csv) retain eighteen source
+guards, private namespace/caller restrictions, catches and optional technical
+debug traces. A truthy nonstring installed package version with a concrete
+configured comparator can bypass the string-parser catch and reach the type
+guard through public package-resolution rejection. Constructor/operator/range
+errors are not promoted merely because bundled code exists. The
+[scope](pi-bundle-main-host-semver-scope.csv) grants this source range and bounded
+public/private declaration proofs. Canonical and installed copies match; 29
+corruption controls pass. No package resolution, debug logging, environment,
+filesystem or native UI operation runs; whole main-host coverage remains open.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3171,6 +3202,8 @@ node review/text-inventory/verify-pi-bundle-main-host-settings-cli.cjs
 node review/text-inventory/verify-pi-bundle-main-host-model-resolution.cjs
 node review/text-inventory/verify-pi-bundle-main-host-ignore.cjs
 python -B review/text-inventory/verify-pi-bundle-bedrock-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-bundle-main-host-llhttp.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-bundle-main-host-semver.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
