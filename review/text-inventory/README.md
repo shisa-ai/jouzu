@@ -1483,6 +1483,22 @@ Canonical archive, installed copies, 31 corruption controls and four LF-count
 cases pass. Foreign/native/grammar/callback/caller payloads remain bounded;
 no schema, build, formatter, report, search, retry, CodeMode or native UI runs.
 
+[pi-ai-validation-text.csv](pi-ai-validation-text.csv) records 38 qualified
+definitions across the complete Pi argument-validator body and five pinned
+TypeBox 1.3.27 locale/error-forwarding bodies (19,155 bytes). Its 151
+[exclusions](pi-ai-validation-text-exclusions.csv) complete the 189-node
+partition. Ten [boundaries](pi-ai-validation-text-boundaries.csv) retain
+pre-validation argument errors, cloning/conversion/coercion, constructor-marker
+predicates, primitive early returns, schema-check repetition, locale selection
+and custom refinement data. The standard English callback is initially selected;
+its 33 source definitions do not establish an automatic application-language
+bridge. Original argument serialization can itself fail before the composed
+validation error. The [scope](pi-ai-validation-text-scope.csv) grants one Pi AI
+body and five foreign message/forwarding bodies local review; it does not close
+the compiler, schema-engine or custom-callback graph. Exact archive/lock and both
+installed copies match; fourteen corruption controls pass. No validator,
+formatter, schema, tool or model operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -1563,8 +1579,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. There are 187
-files with explicit complete local review owners; 13 files (41,677 bytes)
+authority, public patch manifest and nested package-list transform. There are 188
+files with explicit complete local review owners; 12 files (30,919 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -2873,6 +2889,7 @@ python -B review/text-inventory/verify-pi-bundle-web-streams.py
 python -B review/text-inventory/verify-pi-bundle-highlight-core.py
 python -B review/text-inventory/verify-pi-bundle-jiti-loader.py
 python -B review/text-inventory/verify-pi-bundle-schema-tools.py
+python -B review/text-inventory/verify-pi-ai-validation-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
