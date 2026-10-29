@@ -27,6 +27,7 @@
     "pi-bundle-anthropic-node-tools-scope.csv": "48d4bb37e52b9c6cd48d3a2621d2156870ef8fab1088e23ada66ad42ecf0b38b",
     "pi-bundle-http-transport-scope.csv": "2bbf32b67555406f2de1c94642c425a0b548fd1917fb568ec530892c422ddd4c",
     "chord-runtime-text-scope.csv": "a3b7c16e9811f75bec99c08bdc9b6d34b4ccae70c510e0619ce245425346a34c",
+    "pi-bundle-host-resources-scope.csv": "88c5b650b2adf93d7ccb94c4be5e88c98a71560700a93e2bd1b60ff7d053ba12",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",

@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 33 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 66 compiled bodies;
-15 compiled bodies remain pending. The
+universe with 34 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 69 compiled bodies;
+12 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1163,6 +1163,21 @@ all source anchors and nineteen corruption controls pass. Server entry linkage
 and independently usable protocol/context APIs retain their separate conditions.
 This package is outside both earlier runtime censuses; no host, plugin, link,
 server, native operation or UI runs.
+
+[pi-bundle-host-resources.csv](pi-bundle-host-resources.csv) records 71 qualified
+expressions across three complete host-resource, MCP OAuth and 3D-view bodies
+(104,209 bytes). The 707 [exclusions](pi-bundle-host-resources-exclusions.csv)
+complete the 778-node partition, with six separate structural records.
+Eighty-one [boundaries](pi-bundle-host-resources-boundaries.csv) retain resource
+selection, process wrappers, browser callbacks, cancellation, token exchange,
+connection state, retained logs and overlay activation. Browser success confirms
+callback-code receipt before token exchange. Connected-state reporting can
+preempt a refresh error; process stderr tails and native wrappers have their own
+limits. The [scope](pi-bundle-host-resources-scope.csv) grants complete local review
+only to three bodies. Canonical archive, both installed trees and 31 corruption
+controls pass. Compiled native routes retain distinct activation conditions from
+Jouzu's package imports. No resource, process, authentication, browser, graphics,
+network or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2534,6 +2549,7 @@ python -B review/text-inventory/verify-pi-bundle-execution-runtime.py
 python -B review/text-inventory/verify-pi-bundle-anthropic-node-tools.py
 python -B review/text-inventory/verify-pi-bundle-http-transport.py
 node review/text-inventory/verify-chord-runtime-text.cjs
+python -B review/text-inventory/verify-pi-bundle-host-resources.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
