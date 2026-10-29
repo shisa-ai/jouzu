@@ -1,0 +1,3375 @@
+{
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit": "pi-bundle-main-host-typebox-compiler",
+  "package": "@earendil-works/pi-coding-agent",
+  "version": "1.4.0",
+  "canonical_archive": {
+    "file": "earendil-works-pi-coding-agent-1.4.0.tgz",
+    "sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+    "integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+  },
+  "upstream_pin_sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+  "metadata_transform": {
+    "source": "scripts/configure-release-packlists.mjs",
+    "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+    "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "qualification": "Pure read-only manifest reconstruction; no transform execution."
+  },
+  "metadata": [
+    {
+      "tree": "root",
+      "sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+      "type": "module",
+      "main": "./dist/index.js",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "files": [
+        "dist",
+        "docs",
+        "examples",
+        "schemas",
+        "containerization.md",
+        "CHANGELOG.md"
+      ],
+      "qualification": "Exact archive metadata bytes"
+    },
+    {
+      "tree": "cli-nested",
+      "sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+      "type": "module",
+      "main": "./dist/index.js",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "files": [
+        "dist",
+        "docs",
+        "examples",
+        "schemas",
+        "containerization.md",
+        "CHANGELOG.md",
+        "!**/*.map",
+        "!**/*.d.ts",
+        "!**/*.d.mts",
+        "!**/*.d.cts"
+      ],
+      "qualification": "Only exact four public release packlist exclusions added"
+    }
+  ],
+  "public_manifest_after_checks": [
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/settings-manager.js",
+      "tree": "root",
+      "before": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+      "after": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/settings-manager.js",
+      "tree": "cli-nested",
+      "before": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+      "after": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/system-prompt.js",
+      "tree": "root",
+      "before": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "after": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/system-prompt.js",
+      "tree": "cli-nested",
+      "before": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "after": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/cache-warmer.js",
+      "tree": "root",
+      "before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+      "after": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/cache-warmer.js",
+      "tree": "cli-nested",
+      "before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+      "after": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.js",
+      "tree": "root",
+      "before": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "after": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.js",
+      "tree": "cli-nested",
+      "before": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "after": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.d.ts",
+      "tree": "root",
+      "before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+      "after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.d.ts",
+      "tree": "cli-nested",
+      "before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+      "after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.js",
+      "tree": "root",
+      "before": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "after": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.js",
+      "tree": "cli-nested",
+      "before": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "after": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.d.ts",
+      "tree": "root",
+      "before": "948ac95e0eb67f29f78046404afdc94f4a12ade38a3a2f838a2628069bf70a8a",
+      "after": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.d.ts",
+      "tree": "cli-nested",
+      "before": "948ac95e0eb67f29f78046404afdc94f4a12ade38a3a2f838a2628069bf70a8a",
+      "after": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.js",
+      "tree": "root",
+      "before": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+      "after": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.js",
+      "tree": "cli-nested",
+      "before": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+      "after": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.d.ts",
+      "tree": "root",
+      "before": "2cb83c8604497198eda83ba4691d9c001c971c6b358af05f42355afc7666c669",
+      "after": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.d.ts",
+      "tree": "cli-nested",
+      "before": "2cb83c8604497198eda83ba4691d9c001c971c6b358af05f42355afc7666c669",
+      "after": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.js",
+      "tree": "root",
+      "before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.js",
+      "tree": "cli-nested",
+      "before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.d.ts",
+      "tree": "root",
+      "before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
+      "after": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.d.ts",
+      "tree": "cli-nested",
+      "before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
+      "after": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.js",
+      "tree": "root",
+      "before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+      "after": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.js",
+      "tree": "cli-nested",
+      "before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+      "after": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.d.ts",
+      "tree": "root",
+      "before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+      "after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.d.ts",
+      "tree": "cli-nested",
+      "before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+      "after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-runtime.js",
+      "tree": "root",
+      "before": "928b6528bb17d26273af8f7023a4f98e5f440d5896a4280d060b9b3e1f9a6882",
+      "after": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-runtime.js",
+      "tree": "cli-nested",
+      "before": "928b6528bb17d26273af8f7023a4f98e5f440d5896a4280d060b9b3e1f9a6882",
+      "after": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/rpc/rpc-mode.js",
+      "tree": "root",
+      "before": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+      "after": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/rpc/rpc-mode.js",
+      "tree": "cli-nested",
+      "before": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+      "after": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/loader.js",
+      "tree": "root",
+      "before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+      "after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/loader.js",
+      "tree": "cli-nested",
+      "before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+      "after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.js",
+      "tree": "root",
+      "before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+      "after": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.js",
+      "tree": "cli-nested",
+      "before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+      "after": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.d.ts",
+      "tree": "root",
+      "before": "3bcb75e07c8d6fe6bf6ed7e515151cc62030f8b45b241fbd5877f665c6758565",
+      "after": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.d.ts",
+      "tree": "cli-nested",
+      "before": "3bcb75e07c8d6fe6bf6ed7e515151cc62030f8b45b241fbd5877f665c6758565",
+      "after": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.js",
+      "tree": "root",
+      "before": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+      "after": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.js",
+      "tree": "cli-nested",
+      "before": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+      "after": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.d.ts",
+      "tree": "root",
+      "before": "2288b69c82272311dc877da61ff2057bb04df49038ddef7eef6c8753c09f5313",
+      "after": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.d.ts",
+      "tree": "cli-nested",
+      "before": "2288b69c82272311dc877da61ff2057bb04df49038ddef7eef6c8753c09f5313",
+      "after": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.js",
+      "tree": "root",
+      "before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+      "after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.js",
+      "tree": "cli-nested",
+      "before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+      "after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.d.ts",
+      "tree": "root",
+      "before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
+      "after": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.d.ts",
+      "tree": "cli-nested",
+      "before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
+      "after": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.js",
+      "tree": "root",
+      "before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+      "after": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.js",
+      "tree": "cli-nested",
+      "before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+      "after": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.d.ts",
+      "tree": "root",
+      "before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+      "after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.d.ts",
+      "tree": "cli-nested",
+      "before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+      "after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/compaction.js",
+      "tree": "root",
+      "before": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+      "after": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/compaction.js",
+      "tree": "cli-nested",
+      "before": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+      "after": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.js",
+      "tree": "root",
+      "before": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+      "after": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.js",
+      "tree": "cli-nested",
+      "before": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+      "after": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.d.ts",
+      "tree": "root",
+      "before": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+      "after": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.d.ts",
+      "tree": "cli-nested",
+      "before": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+      "after": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.js",
+      "tree": "root",
+      "before": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+      "after": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.js",
+      "tree": "cli-nested",
+      "before": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+      "after": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.d.ts",
+      "tree": "root",
+      "before": "5a7aac47a83c20316f593c74798f60ec4e521a0fddff03a0608dbc5514012bf5",
+      "after": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.d.ts",
+      "tree": "cli-nested",
+      "before": "5a7aac47a83c20316f593c74798f60ec4e521a0fddff03a0608dbc5514012bf5",
+      "after": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.js",
+      "tree": "root",
+      "before": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "after": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.js",
+      "tree": "cli-nested",
+      "before": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "after": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.d.ts",
+      "tree": "root",
+      "before": "bfe4955c7b026ce5e91b60426837f277f65d5d5544c8a316ff416dbe2874078f",
+      "after": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.d.ts",
+      "tree": "cli-nested",
+      "before": "bfe4955c7b026ce5e91b60426837f277f65d5d5544c8a316ff416dbe2874078f",
+      "after": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/components/custom-editor.js",
+      "tree": "root",
+      "before": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+      "after": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/components/custom-editor.js",
+      "tree": "cli-nested",
+      "before": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+      "after": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/slash-commands.js",
+      "tree": "root",
+      "before": "cdbaa9cb7594702d5b5608cf0d26764e6218163087801d220d31c3fb9e2ac7c5",
+      "after": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/slash-commands.js",
+      "tree": "cli-nested",
+      "before": "cdbaa9cb7594702d5b5608cf0d26764e6218163087801d220d31c3fb9e2ac7c5",
+      "after": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/bug-report.js",
+      "tree": "root",
+      "before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+      "after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/bug-report.js",
+      "tree": "cli-nested",
+      "before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+      "after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/types.d.ts",
+      "tree": "root",
+      "before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
+      "after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/types.d.ts",
+      "tree": "cli-nested",
+      "before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
+      "after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+      "path": "dist/utils/clipboard.js",
+      "tree": "root",
+      "before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "after": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+      "path": "dist/utils/clipboard.js",
+      "tree": "cli-nested",
+      "before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "after": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "manifest_sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+      "path": "dist/core/tools/path-utils.js",
+      "tree": "root",
+      "before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+      "after": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    },
+    {
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "manifest_sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+      "path": "dist/core/tools/path-utils.js",
+      "tree": "cli-nested",
+      "before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+      "after": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    }
+  ],
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "bytes": 3536719,
+      "physical_lines": 1222,
+      "root_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "cli_nested_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "archive_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "review": "Exact partial range only; not whole MAINHOST semantic ownership."
+    }
+  ],
+  "reviewed_ranges": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177815,
+      "end": 1180472,
+      "bytes": 2657,
+      "range_sha256": "88da6985bc2b4c3172017bdd5191add982a7dc1a0295a311d580e56596d74bc7",
+      "qualification": "Complete local compiled MAINHOST partial range[1177815,1180472),2657B only: TypeBox Code source generator, Validator facade, Compile/default and compile namespace export map. Whole host semantic owner0. Zero locally authored English captions; generated JavaScript is conditional user-inspectable API data, not never-visible. Source read/AST only, no Code/Compile/Validator/schema/evaluator/module/parser execution."
+    }
+  ],
+  "full_body_owners": 0,
+  "counts": {
+    "partial_source_ranges": 1,
+    "reviewed_bytes": 2657,
+    "full_body_owners": 0,
+    "top_level_declarations": 12,
+    "fixed_contexts": 0,
+    "primary_tokens": 0,
+    "exclusions": 14,
+    "total_lexical_nodes": 14,
+    "error_constructors": 0,
+    "catches": 0,
+    "promise_catches": 0,
+    "throws": 1,
+    "calls": 67,
+    "functions_and_methods": 21,
+    "controls": 7,
+    "callbacks": 9,
+    "boundaries": 2,
+    "frozen_B023_joins": 14,
+    "public_after_hash_checks": 74,
+    "catalog_occurrences": 0
+  },
+  "tokens": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177978,
+      "end": 1177993,
+      "line": 272,
+      "column": 48366,
+      "physical_line": 272,
+      "raw_source": "\"// @ts-ignore\"",
+      "kind": "string",
+      "value": "// @ts-ignore",
+      "decoded_value": "// @ts-ignore",
+      "parent_kind": "ReturnStatement",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "TsIgnore",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1177978:1177993",
+      "definition": "TsIgnore",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178021,
+      "end": 1178023,
+      "line": 272,
+      "column": 48409,
+      "physical_line": 272,
+      "raw_source": "\"\"",
+      "kind": "string",
+      "value": "",
+      "decoded_value": "",
+      "parent_kind": "ReturnStatement",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "Separator",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178021:1178023",
+      "definition": "Separator",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178088,
+      "end": 1178135,
+      "line": 272,
+      "column": 48476,
+      "physical_line": 272,
+      "raw_source": "'import { CheckContext } from \"typebox/schema\"'",
+      "kind": "string",
+      "value": "import { CheckContext } from \"typebox/schema\"",
+      "decoded_value": "import { CheckContext } from \"typebox/schema\"",
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ImportSection",
+          "line": 272
+        },
+        "conditions": [
+          {
+            "kind": "ConditionalExpression",
+            "condition": "build.UseUnevaluated()",
+            "branch": "whenTrue",
+            "start": 1178064,
+            "end": 1178086,
+            "line": 272,
+            "column": 48452
+          }
+        ]
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178088:1178135",
+      "definition": "ImportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178140,
+      "end": 1178182,
+      "line": 272,
+      "column": 48528,
+      "physical_line": 272,
+      "raw_source": "'import { Hashing } from \"typebox/system\"'",
+      "kind": "string",
+      "value": "import { Hashing } from \"typebox/system\"",
+      "decoded_value": "import { Hashing } from \"typebox/system\"",
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ImportSection",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178140:1178182",
+      "definition": "ImportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178183,
+      "end": 1178224,
+      "line": 272,
+      "column": 48571,
+      "physical_line": 272,
+      "raw_source": "'import { Format } from \"typebox/format\"'",
+      "kind": "string",
+      "value": "import { Format } from \"typebox/format\"",
+      "decoded_value": "import { Format } from \"typebox/format\"",
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ImportSection",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178183:1178224",
+      "definition": "ImportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178225,
+      "end": 1178264,
+      "line": 272,
+      "column": 48613,
+      "physical_line": 272,
+      "raw_source": "'import { Guard } from \"typebox/guard\"'",
+      "kind": "string",
+      "value": "import { Guard } from \"typebox/guard\"",
+      "decoded_value": "import { Guard } from \"typebox/guard\"",
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ImportSection",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178225:1178264",
+      "definition": "ImportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178361,
+      "end": 1178385,
+      "line": 272,
+      "column": 48749,
+      "physical_line": 272,
+      "raw_source": "`let ${identifier} = []`",
+      "kind": "template",
+      "value": "let ${identifier} = []",
+      "decoded_value": [
+        "let ",
+        " = []"
+      ],
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ExternalSection",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [
+        [
+          1178368,
+          1178378
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178361:1178385",
+      "definition": "ExternalSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178409,
+      "end": 1178487,
+      "line": 272,
+      "column": 48797,
+      "physical_line": 272,
+      "raw_source": "`export function SetExternal(external) { ${identifier} = external.variables }`",
+      "kind": "template",
+      "value": "export function SetExternal(external) { ${identifier} = external.variables }",
+      "decoded_value": [
+        "export function SetExternal(external) { ",
+        " = external.variables }"
+      ],
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ExternalSection",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [
+        [
+          1178452,
+          1178462
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178409:1178487",
+      "definition": "ExternalSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178580,
+      "end": 1178590,
+      "line": 272,
+      "column": 48968,
+      "physical_line": 272,
+      "raw_source": "`${func};`",
+      "kind": "template",
+      "value": "${func};",
+      "decoded_value": [
+        "",
+        ";"
+      ],
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "ArrowFunction",
+          "name": "<anonymous>",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [
+        [
+          1178583,
+          1178587
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178580:1178590",
+      "definition": "FunctionSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178597,
+      "end": 1178600,
+      "line": 272,
+      "column": 48985,
+      "physical_line": 272,
+      "raw_source": "`\n`",
+      "kind": "string",
+      "value": "\n",
+      "decoded_value": "\n",
+      "parent_kind": "CallExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "ArrowFunction",
+          "name": "<anonymous>",
+          "line": 272
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178597:1178600",
+      "definition": "FunctionSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178665,
+      "end": 1178732,
+      "line": 273,
+      "column": 67,
+      "physical_line": 273,
+      "raw_source": "`const context = new CheckContext({}, {}); return ${build.Entry()}`",
+      "kind": "template",
+      "value": "const context = new CheckContext({}, {}); return ${build.Entry()}",
+      "decoded_value": [
+        "const context = new CheckContext({}, {}); return ",
+        ""
+      ],
+      "parent_kind": "ConditionalExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ExportSection",
+          "line": 273
+        },
+        "conditions": [
+          {
+            "kind": "ConditionalExpression",
+            "condition": "build.UseUnevaluated()",
+            "branch": "whenTrue",
+            "start": 1178642,
+            "end": 1178664,
+            "line": 273,
+            "column": 44
+          }
+        ]
+      },
+      "expression_ranges": [
+        [
+          1178717,
+          1178730
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178665:1178732",
+      "definition": "ExportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178733,
+      "end": 1178758,
+      "line": 273,
+      "column": 135,
+      "physical_line": 273,
+      "raw_source": "`return ${build.Entry()}`",
+      "kind": "template",
+      "value": "return ${build.Entry()}",
+      "decoded_value": [
+        "return ",
+        ""
+      ],
+      "parent_kind": "ConditionalExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ExportSection",
+          "line": 273
+        },
+        "conditions": [
+          {
+            "kind": "ConditionalExpression",
+            "condition": "build.UseUnevaluated()",
+            "branch": "whenFalse",
+            "start": 1178642,
+            "end": 1178664,
+            "line": 273,
+            "column": 44
+          }
+        ]
+      },
+      "expression_ranges": [
+        [
+          1178743,
+          1178756
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178733:1178758",
+      "definition": "ExportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178789,
+      "end": 1178831,
+      "line": 273,
+      "column": 191,
+      "physical_line": 273,
+      "raw_source": "`export function Check(value) { ${body} }`",
+      "kind": "template",
+      "value": "export function Check(value) { ${body} }",
+      "decoded_value": [
+        "export function Check(value) { ",
+        " }"
+      ],
+      "parent_kind": "ArrayLiteralExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "ExportSection",
+          "line": 273
+        },
+        "conditions": []
+      },
+      "expression_ranges": [
+        [
+          1178823,
+          1178827
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178789:1178831",
+      "definition": "ExportSection",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179101,
+      "end": 1179104,
+      "line": 273,
+      "column": 503,
+      "physical_line": 273,
+      "raw_source": "`\n`",
+      "kind": "string",
+      "value": "\n",
+      "decoded_value": "\n",
+      "parent_kind": "CallExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "Code",
+          "line": 273
+        },
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1179101:1179104",
+      "definition": "Code",
+      "fixed_items": []
+    }
+  ],
+  "fixed_anchors": [],
+  "errors": [],
+  "catches": [],
+  "promise_catches": [],
+  "throws": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179692,
+      "end": 1179738,
+      "line": 274,
+      "column": 590,
+      "physical_line": 274,
+      "raw_source": "throw new ParseError(value,this.Errors(value))"
+    }
+  ],
+  "calls": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177838,
+      "end": 1177951,
+      "line": 272,
+      "column": 48226,
+      "physical_line": 272,
+      "raw_source": "__export(compile_exports,{Code:()=>Code,Compile:()=>Compile,Validator:()=>Validator,default:()=>compile_default})",
+      "kind": "call",
+      "callee": "__export",
+      "argument_ranges": [
+        [
+          1177847,
+          1177862
+        ],
+        [
+          1177863,
+          1177950
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178064,
+      "end": 1178086,
+      "line": 272,
+      "column": 48452,
+      "physical_line": 272,
+      "raw_source": "build.UseUnevaluated()",
+      "kind": "call",
+      "callee": "build.UseUnevaluated",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178314,
+      "end": 1178330,
+      "line": 272,
+      "column": 48702,
+      "physical_line": 272,
+      "raw_source": "build.External()",
+      "kind": "call",
+      "callee": "build.External",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178338,
+      "end": 1178349,
+      "line": 272,
+      "column": 48726,
+      "physical_line": 272,
+      "raw_source": "Separator()",
+      "kind": "call",
+      "callee": "Separator",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178350,
+      "end": 1178360,
+      "line": 272,
+      "column": 48738,
+      "physical_line": 272,
+      "raw_source": "TsIgnore()",
+      "kind": "call",
+      "callee": "TsIgnore",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178386,
+      "end": 1178397,
+      "line": 272,
+      "column": 48774,
+      "physical_line": 272,
+      "raw_source": "Separator()",
+      "kind": "call",
+      "callee": "Separator",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178398,
+      "end": 1178408,
+      "line": 272,
+      "column": 48786,
+      "physical_line": 272,
+      "raw_source": "TsIgnore()",
+      "kind": "call",
+      "callee": "TsIgnore",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178528,
+      "end": 1178602,
+      "line": 272,
+      "column": 48916,
+      "physical_line": 272,
+      "raw_source": "build.Functions().map(func=>[Separator(),TsIgnore(),`${func};`].join(`\n`))",
+      "kind": "call",
+      "callee": "build.Functions().map",
+      "argument_ranges": [
+        [
+          1178550,
+          1178601
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178528,
+      "end": 1178545,
+      "line": 272,
+      "column": 48916,
+      "physical_line": 272,
+      "raw_source": "build.Functions()",
+      "kind": "call",
+      "callee": "build.Functions",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178556,
+      "end": 1178601,
+      "line": 272,
+      "column": 48944,
+      "physical_line": 272,
+      "raw_source": "[Separator(),TsIgnore(),`${func};`].join(`\n`)",
+      "kind": "call",
+      "callee": "[Separator(),TsIgnore(),`${func};`].join",
+      "argument_ranges": [
+        [
+          1178597,
+          1178600
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178557,
+      "end": 1178568,
+      "line": 272,
+      "column": 48945,
+      "physical_line": 272,
+      "raw_source": "Separator()",
+      "kind": "call",
+      "callee": "Separator",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178569,
+      "end": 1178579,
+      "line": 272,
+      "column": 48957,
+      "physical_line": 272,
+      "raw_source": "TsIgnore()",
+      "kind": "call",
+      "callee": "TsIgnore",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178642,
+      "end": 1178664,
+      "line": 273,
+      "column": 44,
+      "physical_line": 273,
+      "raw_source": "build.UseUnevaluated()",
+      "kind": "call",
+      "callee": "build.UseUnevaluated",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178717,
+      "end": 1178730,
+      "line": 273,
+      "column": 119,
+      "physical_line": 273,
+      "raw_source": "build.Entry()",
+      "kind": "call",
+      "callee": "build.Entry",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178743,
+      "end": 1178756,
+      "line": 273,
+      "column": 145,
+      "physical_line": 273,
+      "raw_source": "build.Entry()",
+      "kind": "call",
+      "callee": "build.Entry",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178766,
+      "end": 1178777,
+      "line": 273,
+      "column": 168,
+      "physical_line": 273,
+      "raw_source": "Separator()",
+      "kind": "call",
+      "callee": "Separator",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178778,
+      "end": 1178788,
+      "line": 273,
+      "column": 180,
+      "physical_line": 273,
+      "raw_source": "TsIgnore()",
+      "kind": "call",
+      "callee": "TsIgnore",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178874,
+      "end": 1178962,
+      "line": 273,
+      "column": 276,
+      "physical_line": 273,
+      "raw_source": "arguments_exports.Match(args,{2:(context2,type2)=>[context2,type2],1:type2=>[{},type2]})",
+      "kind": "call",
+      "callee": "arguments_exports.Match",
+      "argument_ranges": [
+        [
+          1178898,
+          1178902
+        ],
+        [
+          1178903,
+          1178961
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178969,
+      "end": 1178988,
+      "line": 273,
+      "column": 371,
+      "physical_line": 273,
+      "raw_source": "Build(context,type)",
+      "kind": "call",
+      "callee": "Build",
+      "argument_ranges": [
+        [
+          1178975,
+          1178982
+        ],
+        [
+          1178983,
+          1178987
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178994,
+      "end": 1179105,
+      "line": 273,
+      "column": 396,
+      "physical_line": 273,
+      "raw_source": "[...ImportSection(build),...ExternalSection(build),...FunctionSection(build),...ExportSection(build)].join(`\n`)",
+      "kind": "call",
+      "callee": "[...ImportSection(build),...ExternalSection(build),...FunctionSection(build),...ExportSection(build)].join",
+      "argument_ranges": [
+        [
+          1179101,
+          1179104
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178998,
+      "end": 1179018,
+      "line": 273,
+      "column": 400,
+      "physical_line": 273,
+      "raw_source": "ImportSection(build)",
+      "kind": "call",
+      "callee": "ImportSection",
+      "argument_ranges": [
+        [
+          1179012,
+          1179017
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179022,
+      "end": 1179044,
+      "line": 273,
+      "column": 424,
+      "physical_line": 273,
+      "raw_source": "ExternalSection(build)",
+      "kind": "call",
+      "callee": "ExternalSection",
+      "argument_ranges": [
+        [
+          1179038,
+          1179043
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179048,
+      "end": 1179070,
+      "line": 273,
+      "column": 450,
+      "physical_line": 273,
+      "raw_source": "FunctionSection(build)",
+      "kind": "call",
+      "callee": "FunctionSection",
+      "argument_ranges": [
+        [
+          1179064,
+          1179069
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179074,
+      "end": 1179094,
+      "line": 273,
+      "column": 476,
+      "physical_line": 273,
+      "raw_source": "ExportSection(build)",
+      "kind": "call",
+      "callee": "ExportSection",
+      "argument_ranges": [
+        [
+          1179088,
+          1179093
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179122,
+      "end": 1179138,
+      "line": 274,
+      "column": 20,
+      "physical_line": 274,
+      "raw_source": "build.External()",
+      "kind": "call",
+      "callee": "build.External",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179210,
+      "end": 1179232,
+      "line": 274,
+      "column": 108,
+      "physical_line": 274,
+      "raw_source": "HasCodec(context,type)",
+      "kind": "call",
+      "callee": "HasCodec",
+      "argument_ranges": [
+        [
+          1179219,
+          1179226
+        ],
+        [
+          1179227,
+          1179231
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179250,
+      "end": 1179269,
+      "line": 274,
+      "column": 148,
+      "physical_line": 274,
+      "raw_source": "Build(context,type)",
+      "kind": "call",
+      "callee": "Build",
+      "argument_ranges": [
+        [
+          1179256,
+          1179263
+        ],
+        [
+          1179264,
+          1179268
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179290,
+      "end": 1179317,
+      "line": 274,
+      "column": 188,
+      "physical_line": 274,
+      "raw_source": "this.buildResult.Evaluate()",
+      "kind": "call",
+      "callee": "this.buildResult.Evaluate",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179341,
+      "end": 1179376,
+      "line": 274,
+      "column": 239,
+      "physical_line": 274,
+      "raw_source": "this.evaluateResult.IsAccelerated()",
+      "kind": "call",
+      "callee": "this.evaluateResult.IsAccelerated",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179394,
+      "end": 1179420,
+      "line": 274,
+      "column": 292,
+      "physical_line": 274,
+      "raw_source": "this.buildResult.Context()",
+      "kind": "call",
+      "callee": "this.buildResult.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179435,
+      "end": 1179460,
+      "line": 274,
+      "column": 333,
+      "physical_line": 274,
+      "raw_source": "this.buildResult.Schema()",
+      "kind": "call",
+      "callee": "this.buildResult.Schema",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179475,
+      "end": 1179501,
+      "line": 274,
+      "column": 373,
+      "physical_line": 274,
+      "raw_source": "this.evaluateResult.Code()",
+      "kind": "call",
+      "callee": "this.evaluateResult.Code",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179522,
+      "end": 1179554,
+      "line": 274,
+      "column": 420,
+      "physical_line": 274,
+      "raw_source": "this.evaluateResult.Check(value)",
+      "kind": "call",
+      "callee": "this.evaluateResult.Check",
+      "argument_ranges": [
+        [
+          1179548,
+          1179553
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179571,
+      "end": 1179588,
+      "line": 274,
+      "column": 469,
+      "physical_line": 274,
+      "raw_source": "this.Check(value)",
+      "kind": "call",
+      "callee": "this.Check",
+      "argument_ranges": [
+        [
+          1179582,
+          1179587
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179605,
+      "end": 1179627,
+      "line": 274,
+      "column": 503,
+      "physical_line": 274,
+      "raw_source": "settings_exports.Get()",
+      "kind": "call",
+      "callee": "settings_exports.Get",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179651,
+      "end": 1179691,
+      "line": 274,
+      "column": 549,
+      "physical_line": 274,
+      "raw_source": "Parser(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Parser",
+      "argument_ranges": [
+        [
+          1179658,
+          1179672
+        ],
+        [
+          1179673,
+          1179684
+        ],
+        [
+          1179685,
+          1179690
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179658,
+      "end": 1179672,
+      "line": 274,
+      "column": 556,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179673,
+      "end": 1179684,
+      "line": 274,
+      "column": 571,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179698,
+      "end": 1179738,
+      "line": 274,
+      "column": 596,
+      "physical_line": 274,
+      "raw_source": "new ParseError(value,this.Errors(value))",
+      "kind": "new",
+      "callee": "ParseError",
+      "argument_ranges": [
+        [
+          1179713,
+          1179718
+        ],
+        [
+          1179719,
+          1179737
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179719,
+      "end": 1179737,
+      "line": 274,
+      "column": 617,
+      "physical_line": 274,
+      "raw_source": "this.Errors(value)",
+      "kind": "call",
+      "callee": "this.Errors",
+      "argument_ranges": [
+        [
+          1179731,
+          1179736
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179760,
+      "end": 1179780,
+      "line": 274,
+      "column": 658,
+      "physical_line": 274,
+      "raw_source": "this.IsAccelerated()",
+      "kind": "call",
+      "callee": "this.IsAccelerated",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179782,
+      "end": 1179799,
+      "line": 274,
+      "column": 680,
+      "physical_line": 274,
+      "raw_source": "this.Check(value)",
+      "kind": "call",
+      "callee": "this.Check",
+      "argument_ranges": [
+        [
+          1179793,
+          1179798
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179803,
+      "end": 1179844,
+      "line": 274,
+      "column": 701,
+      "physical_line": 274,
+      "raw_source": "Errors2(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Errors2",
+      "argument_ranges": [
+        [
+          1179811,
+          1179825
+        ],
+        [
+          1179826,
+          1179837
+        ],
+        [
+          1179838,
+          1179843
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179811,
+      "end": 1179825,
+      "line": 274,
+      "column": 709,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179826,
+      "end": 1179837,
+      "line": 274,
+      "column": 724,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179865,
+      "end": 1179904,
+      "line": 274,
+      "column": 763,
+      "physical_line": 274,
+      "raw_source": "Clean(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Clean",
+      "argument_ranges": [
+        [
+          1179871,
+          1179885
+        ],
+        [
+          1179886,
+          1179897
+        ],
+        [
+          1179898,
+          1179903
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179871,
+      "end": 1179885,
+      "line": 274,
+      "column": 769,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179886,
+      "end": 1179897,
+      "line": 274,
+      "column": 784,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179927,
+      "end": 1179968,
+      "line": 274,
+      "column": 825,
+      "physical_line": 274,
+      "raw_source": "Convert(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Convert",
+      "argument_ranges": [
+        [
+          1179935,
+          1179949
+        ],
+        [
+          1179950,
+          1179961
+        ],
+        [
+          1179962,
+          1179967
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179935,
+      "end": 1179949,
+      "line": 274,
+      "column": 833,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179950,
+      "end": 1179961,
+      "line": 274,
+      "column": 848,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179985,
+      "end": 1180019,
+      "line": 274,
+      "column": 883,
+      "physical_line": 274,
+      "raw_source": "Create(this.Context(),this.Type())",
+      "kind": "call",
+      "callee": "Create",
+      "argument_ranges": [
+        [
+          1179992,
+          1180006
+        ],
+        [
+          1180007,
+          1180018
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179992,
+      "end": 1180006,
+      "line": 274,
+      "column": 890,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180007,
+      "end": 1180018,
+      "line": 274,
+      "column": 905,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180042,
+      "end": 1180083,
+      "line": 274,
+      "column": 940,
+      "physical_line": 274,
+      "raw_source": "Default(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Default",
+      "argument_ranges": [
+        [
+          1180050,
+          1180064
+        ],
+        [
+          1180065,
+          1180076
+        ],
+        [
+          1180077,
+          1180082
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180050,
+      "end": 1180064,
+      "line": 274,
+      "column": 948,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180065,
+      "end": 1180076,
+      "line": 274,
+      "column": 963,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180119,
+      "end": 1180160,
+      "line": 274,
+      "column": 1017,
+      "physical_line": 274,
+      "raw_source": "Decode9(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Decode9",
+      "argument_ranges": [
+        [
+          1180127,
+          1180141
+        ],
+        [
+          1180142,
+          1180153
+        ],
+        [
+          1180154,
+          1180159
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180127,
+      "end": 1180141,
+      "line": 274,
+      "column": 1025,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180142,
+      "end": 1180153,
+      "line": 274,
+      "column": 1040,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180161,
+      "end": 1180178,
+      "line": 274,
+      "column": 1059,
+      "physical_line": 274,
+      "raw_source": "this.Parse(value)",
+      "kind": "call",
+      "callee": "this.Parse",
+      "argument_ranges": [
+        [
+          1180172,
+          1180177
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180214,
+      "end": 1180255,
+      "line": 274,
+      "column": 1112,
+      "physical_line": 274,
+      "raw_source": "Encode9(this.Context(),this.Type(),value)",
+      "kind": "call",
+      "callee": "Encode9",
+      "argument_ranges": [
+        [
+          1180222,
+          1180236
+        ],
+        [
+          1180237,
+          1180248
+        ],
+        [
+          1180249,
+          1180254
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180222,
+      "end": 1180236,
+      "line": 274,
+      "column": 1120,
+      "physical_line": 274,
+      "raw_source": "this.Context()",
+      "kind": "call",
+      "callee": "this.Context",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180237,
+      "end": 1180248,
+      "line": 274,
+      "column": 1135,
+      "physical_line": 274,
+      "raw_source": "this.Type()",
+      "kind": "call",
+      "callee": "this.Type",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180256,
+      "end": 1180273,
+      "line": 274,
+      "column": 1154,
+      "physical_line": 274,
+      "raw_source": "this.Parse(value)",
+      "kind": "call",
+      "callee": "this.Parse",
+      "argument_ranges": [
+        [
+          1180267,
+          1180272
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180320,
+      "end": 1180408,
+      "line": 274,
+      "column": 1218,
+      "physical_line": 274,
+      "raw_source": "arguments_exports.Match(args,{2:(context2,type2)=>[context2,type2],1:type2=>[{},type2]})",
+      "kind": "call",
+      "callee": "arguments_exports.Match",
+      "argument_ranges": [
+        [
+          1180344,
+          1180348
+        ],
+        [
+          1180349,
+          1180407
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180416,
+      "end": 1180443,
+      "line": 274,
+      "column": 1314,
+      "physical_line": 274,
+      "raw_source": "new Validator(context,type)",
+      "kind": "new",
+      "callee": "Validator",
+      "argument_ranges": [
+        [
+          1180430,
+          1180437
+        ],
+        [
+          1180438,
+          1180442
+        ]
+      ]
+    }
+  ],
+  "functions_and_methods": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177952,
+      "end": 1177994,
+      "line": 272,
+      "column": 48340,
+      "physical_line": 272,
+      "raw_source": "function TsIgnore(){return\"// @ts-ignore\"}",
+      "name": "TsIgnore"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177994,
+      "end": 1178024,
+      "line": 272,
+      "column": 48382,
+      "physical_line": 272,
+      "raw_source": "function Separator(){return\"\"}",
+      "name": "Separator"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178024,
+      "end": 1178266,
+      "line": 272,
+      "column": 48412,
+      "physical_line": 272,
+      "raw_source": "function ImportSection(build){return[...build.UseUnevaluated()?['import { CheckContext } from \"typebox/schema\"']:[],'import { Hashing } from \"typebox/system\"','import { Format } from \"typebox/format\"','import { Guard } from \"typebox/guard\"']}",
+      "name": "ImportSection"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178266,
+      "end": 1178489,
+      "line": 272,
+      "column": 48654,
+      "physical_line": 272,
+      "raw_source": "function ExternalSection(build){let{identifier}=build.External();return[Separator(),TsIgnore(),`let ${identifier} = []`,Separator(),TsIgnore(),`export function SetExternal(external) { ${identifier} = external.variables }`]}",
+      "name": "ExternalSection"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178489,
+      "end": 1178603,
+      "line": 272,
+      "column": 48877,
+      "physical_line": 272,
+      "raw_source": "function FunctionSection(build){return build.Functions().map(func=>[Separator(),TsIgnore(),`${func};`].join(`\n`))}",
+      "name": "FunctionSection"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178603,
+      "end": 1178833,
+      "line": 273,
+      "column": 5,
+      "physical_line": 273,
+      "raw_source": "function ExportSection(build){let body=build.UseUnevaluated()?`const context = new CheckContext({}, {}); return ${build.Entry()}`:`return ${build.Entry()}`;return[Separator(),TsIgnore(),`export function Check(value) { ${body} }`]}",
+      "name": "ExportSection"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178833,
+      "end": 1179150,
+      "line": 273,
+      "column": 235,
+      "physical_line": 273,
+      "raw_source": "function Code(...args){let[context,type]=arguments_exports.Match(args,{2:(context2,type2)=>[context2,type2],1:type2=>[{},type2]}),build=Build(context,type),code=[...ImportSection(build),...ExternalSection(build),...FunctionSection(build),...ExportSection(build)].join(`\n`);return{External:build.External(),Code:code}}",
+      "name": "Code"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179318,
+      "end": 1179377,
+      "line": 274,
+      "column": 216,
+      "physical_line": 274,
+      "raw_source": "IsAccelerated(){return this.evaluateResult.IsAccelerated()}",
+      "name": "IsAccelerated"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179377,
+      "end": 1179421,
+      "line": 274,
+      "column": 275,
+      "physical_line": 274,
+      "raw_source": "Context(){return this.buildResult.Context()}",
+      "name": "Context"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179421,
+      "end": 1179461,
+      "line": 274,
+      "column": 319,
+      "physical_line": 274,
+      "raw_source": "Type(){return this.buildResult.Schema()}",
+      "name": "Type"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179461,
+      "end": 1179502,
+      "line": 274,
+      "column": 359,
+      "physical_line": 274,
+      "raw_source": "Code(){return this.evaluateResult.Code()}",
+      "name": "Code"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179502,
+      "end": 1179555,
+      "line": 274,
+      "column": 400,
+      "physical_line": 274,
+      "raw_source": "Check(value){return this.evaluateResult.Check(value)}",
+      "name": "Check"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179555,
+      "end": 1179739,
+      "line": 274,
+      "column": 453,
+      "physical_line": 274,
+      "raw_source": "Parse(value){if(this.Check(value))return value;if(settings_exports.Get().correctiveParse)return Parser(this.Context(),this.Type(),value);throw new ParseError(value,this.Errors(value))}",
+      "name": "Parse"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179739,
+      "end": 1179845,
+      "line": 274,
+      "column": 637,
+      "physical_line": 274,
+      "raw_source": "Errors(value){return this.IsAccelerated()&&this.Check(value)?[]:Errors2(this.Context(),this.Type(),value)}",
+      "name": "Errors"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179845,
+      "end": 1179905,
+      "line": 274,
+      "column": 743,
+      "physical_line": 274,
+      "raw_source": "Clean(value){return Clean(this.Context(),this.Type(),value)}",
+      "name": "Clean"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179905,
+      "end": 1179969,
+      "line": 274,
+      "column": 803,
+      "physical_line": 274,
+      "raw_source": "Convert(value){return Convert(this.Context(),this.Type(),value)}",
+      "name": "Convert"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179969,
+      "end": 1180020,
+      "line": 274,
+      "column": 867,
+      "physical_line": 274,
+      "raw_source": "Create(){return Create(this.Context(),this.Type())}",
+      "name": "Create"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180020,
+      "end": 1180084,
+      "line": 274,
+      "column": 918,
+      "physical_line": 274,
+      "raw_source": "Default(value){return Default(this.Context(),this.Type(),value)}",
+      "name": "Default"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180084,
+      "end": 1180179,
+      "line": 274,
+      "column": 982,
+      "physical_line": 274,
+      "raw_source": "Decode(value){return this.hasCodec?Decode9(this.Context(),this.Type(),value):this.Parse(value)}",
+      "name": "Decode"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180179,
+      "end": 1180274,
+      "line": 274,
+      "column": 1077,
+      "physical_line": 274,
+      "raw_source": "Encode(value){return this.hasCodec?Encode9(this.Context(),this.Type(),value):this.Parse(value)}",
+      "name": "Encode"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180276,
+      "end": 1180444,
+      "line": 274,
+      "column": 1174,
+      "physical_line": 274,
+      "raw_source": "function Compile(...args){let[context,type]=arguments_exports.Match(args,{2:(context2,type2)=>[context2,type2],1:type2=>[{},type2]});return new Validator(context,type)}",
+      "name": "Compile"
+    }
+  ],
+  "controls": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178064,
+      "end": 1178139,
+      "line": 272,
+      "column": 48452,
+      "physical_line": 272,
+      "raw_source": "build.UseUnevaluated()?['import { CheckContext } from \"typebox/schema\"']:[]",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178642,
+      "end": 1178758,
+      "line": 273,
+      "column": 44,
+      "physical_line": 273,
+      "raw_source": "build.UseUnevaluated()?`const context = new CheckContext({}, {}); return ${build.Entry()}`:`return ${build.Entry()}`",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179568,
+      "end": 1179602,
+      "line": 274,
+      "column": 466,
+      "physical_line": 274,
+      "raw_source": "if(this.Check(value))return value;",
+      "kind": "IfStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179602,
+      "end": 1179692,
+      "line": 274,
+      "column": 500,
+      "physical_line": 274,
+      "raw_source": "if(settings_exports.Get().correctiveParse)return Parser(this.Context(),this.Type(),value);",
+      "kind": "IfStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179760,
+      "end": 1179844,
+      "line": 274,
+      "column": 658,
+      "physical_line": 274,
+      "raw_source": "this.IsAccelerated()&&this.Check(value)?[]:Errors2(this.Context(),this.Type(),value)",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180105,
+      "end": 1180178,
+      "line": 274,
+      "column": 1003,
+      "physical_line": 274,
+      "raw_source": "this.hasCodec?Decode9(this.Context(),this.Type(),value):this.Parse(value)",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180200,
+      "end": 1180273,
+      "line": 274,
+      "column": 1098,
+      "physical_line": 274,
+      "raw_source": "this.hasCodec?Encode9(this.Context(),this.Type(),value):this.Parse(value)",
+      "kind": "ConditionalExpression"
+    }
+  ],
+  "callbacks": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177869,
+      "end": 1177877,
+      "line": 272,
+      "column": 48257,
+      "physical_line": 272,
+      "raw_source": "()=>Code",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177886,
+      "end": 1177897,
+      "line": 272,
+      "column": 48274,
+      "physical_line": 272,
+      "raw_source": "()=>Compile",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177908,
+      "end": 1177921,
+      "line": 272,
+      "column": 48296,
+      "physical_line": 272,
+      "raw_source": "()=>Validator",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177930,
+      "end": 1177949,
+      "line": 272,
+      "column": 48318,
+      "physical_line": 272,
+      "raw_source": "()=>compile_default",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178550,
+      "end": 1178601,
+      "line": 272,
+      "column": 48938,
+      "physical_line": 272,
+      "raw_source": "func=>[Separator(),TsIgnore(),`${func};`].join(`\n`)",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178906,
+      "end": 1178940,
+      "line": 273,
+      "column": 308,
+      "physical_line": 273,
+      "raw_source": "(context2,type2)=>[context2,type2]",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178943,
+      "end": 1178960,
+      "line": 273,
+      "column": 345,
+      "physical_line": 273,
+      "raw_source": "type2=>[{},type2]",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180352,
+      "end": 1180386,
+      "line": 274,
+      "column": 1250,
+      "physical_line": 274,
+      "raw_source": "(context2,type2)=>[context2,type2]",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180389,
+      "end": 1180406,
+      "line": 274,
+      "column": 1287,
+      "physical_line": 274,
+      "raw_source": "type2=>[{},type2]",
+      "kind": "ArrowFunction"
+    }
+  ],
+  "reviewed_top_level_declarations": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177815,
+      "end": 1177838,
+      "line": 272,
+      "column": 48203,
+      "physical_line": 272,
+      "raw_source": "var compile_exports={};",
+      "name": "compile_exports",
+      "kind": "FirstStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177838,
+      "end": 1177952,
+      "line": 272,
+      "column": 48226,
+      "physical_line": 272,
+      "raw_source": "__export(compile_exports,{Code:()=>Code,Compile:()=>Compile,Validator:()=>Validator,default:()=>compile_default});",
+      "kind": "ExpressionStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177952,
+      "end": 1177994,
+      "line": 272,
+      "column": 48340,
+      "physical_line": 272,
+      "raw_source": "function TsIgnore(){return\"// @ts-ignore\"}",
+      "name": "TsIgnore",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1177994,
+      "end": 1178024,
+      "line": 272,
+      "column": 48382,
+      "physical_line": 272,
+      "raw_source": "function Separator(){return\"\"}",
+      "name": "Separator",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178024,
+      "end": 1178266,
+      "line": 272,
+      "column": 48412,
+      "physical_line": 272,
+      "raw_source": "function ImportSection(build){return[...build.UseUnevaluated()?['import { CheckContext } from \"typebox/schema\"']:[],'import { Hashing } from \"typebox/system\"','import { Format } from \"typebox/format\"','import { Guard } from \"typebox/guard\"']}",
+      "name": "ImportSection",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178266,
+      "end": 1178489,
+      "line": 272,
+      "column": 48654,
+      "physical_line": 272,
+      "raw_source": "function ExternalSection(build){let{identifier}=build.External();return[Separator(),TsIgnore(),`let ${identifier} = []`,Separator(),TsIgnore(),`export function SetExternal(external) { ${identifier} = external.variables }`]}",
+      "name": "ExternalSection",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178489,
+      "end": 1178603,
+      "line": 272,
+      "column": 48877,
+      "physical_line": 272,
+      "raw_source": "function FunctionSection(build){return build.Functions().map(func=>[Separator(),TsIgnore(),`${func};`].join(`\n`))}",
+      "name": "FunctionSection",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178603,
+      "end": 1178833,
+      "line": 273,
+      "column": 5,
+      "physical_line": 273,
+      "raw_source": "function ExportSection(build){let body=build.UseUnevaluated()?`const context = new CheckContext({}, {}); return ${build.Entry()}`:`return ${build.Entry()}`;return[Separator(),TsIgnore(),`export function Check(value) { ${body} }`]}",
+      "name": "ExportSection",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1178833,
+      "end": 1179150,
+      "line": 273,
+      "column": 235,
+      "physical_line": 273,
+      "raw_source": "function Code(...args){let[context,type]=arguments_exports.Match(args,{2:(context2,type2)=>[context2,type2],1:type2=>[{},type2]}),build=Build(context,type),code=[...ImportSection(build),...ExternalSection(build),...FunctionSection(build),...ExportSection(build)].join(`\n`);return{External:build.External(),Code:code}}",
+      "name": "Code",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1179150,
+      "end": 1180276,
+      "line": 274,
+      "column": 48,
+      "physical_line": 274,
+      "raw_source": "var Validator=class{constructor(context,type){this.hasCodec=HasCodec(context,type),this.buildResult=Build(context,type),this.evaluateResult=this.buildResult.Evaluate()}IsAccelerated(){return this.evaluateResult.IsAccelerated()}Context(){return this.buildResult.Context()}Type(){return this.buildResult.Schema()}Code(){return this.evaluateResult.Code()}Check(value){return this.evaluateResult.Check(value)}Parse(value){if(this.Check(value))return value;if(settings_exports.Get().correctiveParse)return Parser(this.Context(),this.Type(),value);throw new ParseError(value,this.Errors(value))}Errors(value){return this.IsAccelerated()&&this.Check(value)?[]:Errors2(this.Context(),this.Type(),value)}Clean(value){return Clean(this.Context(),this.Type(),value)}Convert(value){return Convert(this.Context(),this.Type(),value)}Create(){return Create(this.Context(),this.Type())}Default(value){return Default(this.Context(),this.Type(),value)}Decode(value){return this.hasCodec?Decode9(this.Context(),this.Type(),value):this.Parse(value)}Encode(value){return this.hasCodec?Encode9(this.Context(),this.Type(),value):this.Parse(value)}};",
+      "name": "Validator",
+      "kind": "FirstStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180276,
+      "end": 1180444,
+      "line": 274,
+      "column": 1174,
+      "physical_line": 274,
+      "raw_source": "function Compile(...args){let[context,type]=arguments_exports.Match(args,{2:(context2,type2)=>[context2,type2],1:type2=>[{},type2]});return new Validator(context,type)}",
+      "name": "Compile",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1180444,
+      "end": 1180472,
+      "line": 274,
+      "column": 1342,
+      "physical_line": 274,
+      "raw_source": "var compile_default=Compile;",
+      "name": "compile_default",
+      "kind": "FirstStatement"
+    }
+  ],
+  "bounded_cross_range_support": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1129546,
+      "end": 1133346,
+      "line": 271,
+      "column": 122515,
+      "physical_line": 271,
+      "raw_source": "function CreateCode(build){let functions=build.Functions().join(`;\n`),statements=build.UseUnevaluated()?[\"const context = new CheckContext({}, {})\",`return ${build.Entry()}`]:[`return ${build.Entry()}`];return`${functions}; return (value) => { ${statements.join(\"; \")} }`}function CreateEvaluatedCheck(build,code){return environment_exports.Evaluate(\"CheckContext\",\"Guard\",\"Format\",\"Hashing\",build.External().identifier,code)(CheckContext,guard_exports,format_exports,hash_exports,build.External().variables)}function CreateDynamicCheck(build){let stack=new Stack(build.Context(),build.Schema()),context=new CheckContext;return value=>CheckSchema(stack,context,build.Schema(),value)}function CreateCheck(build,code){return environment_exports.CanEvaluate()?CreateEvaluatedCheck(build,code):CreateDynamicCheck(build)}var EvaluateResult=class{constructor(isAccelerated,code,check){this.isAccelerated=isAccelerated,this.code=code,this.check=check}IsAccelerated(){return this.isAccelerated}Code(){return this.code}Check(value){return this.check(value)}},BuildResult=class{constructor(context,schema,external,functions,entry,useUnevaluated){this.context=context,this.schema=schema,this.external=external,this.functions=functions,this.entry=entry,this.useUnevaluated=useUnevaluated}Context(){return this.context}Schema(){return this.schema}UseUnevaluated(){return this.useUnevaluated}External(){return this.external}Functions(){return this.functions}Entry(){return this.entry}Evaluate(){let code=CreateCode(this),check=CreateCheck(this,code);return new EvaluateResult(environment_exports.CanEvaluate(),code,check)}};function Build(...args){let[context,schema]=arguments_exports.Match(args,{2:(context2,schema2)=>[context2,schema2],1:schema2=>[{},schema2]});ResetExternal(),ResetFunctions();let stack=new Stack(context,schema),build=new BuildContext(HasUnevaluated(context,schema)),call=CreateFunction(stack,build,schema,\"value\"),functions=GetFunctions(),externals=GetExternal();return new BuildResult(context,schema,externals,functions,call,build.UseUnevaluated())}function Errors(...args){let[context,schema,value]=arguments_exports.Match(args,{3:(context2,schema2,value2)=>[context2,schema2,value2],2:(schema2,value2)=>[{},schema2,value2]}),stack=new Stack(context,schema),errorContext=new ErrorContext,result=ErrorSchema(stack,errorContext,\"#\",\"\",schema,value),errors=errorContext.GetErrors(),locale=Get(),localized=errors.map(error=>({...error,message:locale(error)}));return[result,localized]}function Check(...args){let[context,schema,value]=arguments_exports.Match(args,{3:(context2,schema2,value2)=>[context2,schema2,value2],2:(schema2,value2)=>[{},schema2,value2]}),stack=new Stack(context,schema),checkContext=new CheckContext;return CheckSchema(stack,checkContext,schema,value)}function Check2(...args){let[context,type,value]=arguments_exports.Match(args,{3:(context2,type2,value2)=>[context2,type2,value2],2:(type2,value2)=>[{},type2,value2]});return Check(context,type,value)}function Errors2(...args){let[context,type,value]=arguments_exports.Match(args,{3:(context2,type2,value2)=>[context2,type2,value2],2:(type2,value2)=>[{},type2,value2]}),[_,errors]=Errors(context,type,value);return errors}var AssertError=class extends Error{constructor(source,value,errors){super(source),Object.defineProperty(this,\"cause\",{value:{source,errors,value},writable:!1,configurable:!1,enumerable:!1})}};function Assert(...args){let[context,type,value]=arguments_exports.Match(args,{3:(context2,type2,value2)=>[context2,type2,value2],2:(type2,value2)=>[{},type2,value2]});if(!Check2(context,type,value))throw new AssertError(\"Assert\",value,Errors2(context,type,value))}function FromArray2(context,type,value){return guard_exports.IsArray(value)?value.map(value2=>FromType(context,type.items,value2)):value}",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Source-only BuildResult/Evaluate/Check/Errors route; Errors localizes errors via Get() callback; AssertError source/cause",
+      "sha256": "1def35dab0a6cc6b1cca53f840bef0b5a721432909947d70d8861abe6c9f34db"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1166880,
+      "end": 1167715,
+      "line": 272,
+      "column": 37268,
+      "physical_line": 272,
+      "raw_source": "var ParseError=class extends AssertError{constructor(value,errors){super(\"Parse\",value,errors)}};function Assert4(context,type,value){if(!Check2(context,type,value))throw new ParseError(value,Errors2(context,type,value));return value}var Parser=Pipeline([(_context,_type,value)=>Clone2(value),(context,type,value)=>Default(context,type,value),(context,type,value)=>Convert(context,type,value),(context,type,value)=>Clean(context,type,value),(context,type,value)=>Assert4(context,type,value)]);function Parse(...args){let[context,type,value]=arguments_exports.Match(args,{3:(context2,type2,value2)=>[context2,type2,value2],2:(type2,value2)=>[{},type2,value2]});if(Check2(context,type,value))return value;if(settings_exports.Get().correctiveParse)return Parser(context,type,value);throw new ParseError(value,Errors2(context,type,value))}",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "ParseError source Parse and corrective Parser fallback",
+      "sha256": "0487637ca7ec3d9e842f5fe96d26acff3389b05e175529bb3a6acaca84b292a2"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1249460,
+      "end": 1249980,
+      "line": 480,
+      "column": 17736,
+      "physical_line": 480,
+      "raw_source": "tion getValidator(schema){let key=schema,cached=validatorCache.get(key);if(cached)return cached;let validator=Compile(schema);return validatorCache.set(key,validator),validator}function formatValidationPath(error){if(error.keyword===\"required\"){let requiredProperty=error.params.requiredProperties?.[0];if(requiredProperty){let basePath=error.instancePath.replace(/^\\//,\"\").replace(/\\//g,\".\");return basePath?`${basePath}.${requiredProperty}`:requiredProperty}}return error.instancePath.replace(/^\\//,\"\").replace(/\\//g,\"",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Settings getValidator Compile cache and error path formatter",
+      "sha256": "ad09cfc3bf7550f80aa765b44b992c8d6de22b3fb71eeb21871ec0ce9d8a0067"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2279360,
+      "end": 2279940,
+      "line": 485,
+      "column": 1028205,
+      "physical_line": 485,
+      "raw_source": "ecord(typebox_exports.String(),ProviderConfigSchema)},ModelsConfigSchema=typebox_exports.Object({$schema:typebox_exports.Optional(typebox_exports.String()),...ModelsConfigProperties});var validateModelsConfig=Compile(ModelsConfigSchema);function formatValidationPath2(error){if(error.keyword===\"required\"){let requiredProperty=error.params.requiredProperties?.[0];if(requiredProperty){let basePath=error.instancePath.replace(/^\\//,\"\").replace(/\\//g,\".\");return basePath?`${basePath}.${requiredProperty}`:requiredProperty}}return error.instancePath.replace(/^\\//,\"\").replace(/\\//g,",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Models schema Compile and validation formatter",
+      "sha256": "12316d445f949ca781ae9d78d5a7ce55d7965e39e02361968ca3eb7527fd15c7"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2419420,
+      "end": 2419770,
+      "line": 499,
+      "column": 8058,
+      "physical_line": 499,
+      "raw_source": "nction isLegacyKeybindingName(key){return key in KEYBINDING_NAME_MIGRATIONS}var validateKeybindingValue=Compile(KeybindingValueSchema);function toKeybindingsConfig(value){let config={};for(let[key,binding]of Object.entries(value))key!==\"$schema\"&&validateKeybindingValue.Check(binding)&&(config[key]=binding);return config}function migrateKeybindings",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Keybinding Compile Check filtering",
+      "sha256": "8cbefb0b582569491d304711634362f38ed7eb1867734595ab43e0544e686053"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3459090,
+      "end": 3460447,
+      "line": 1134,
+      "column": 2541,
+      "physical_line": 1134,
+      "raw_source": "ption:\"Theme schema for Pi coding agent\",additionalProperties:!1}),compiledThemeSchema=Compile(ThemeJsonSchema);function validateThemeJson(label,json){if(typeof json==\"object\"&&json!==null&&\"name\"in json&&typeof json.name==\"string\"&&json.name.includes(\"/\"))throw new Error(`Invalid theme name \"${json.name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`);if(!compiledThemeSchema.Check(json)){let errors=Array.from(compiledThemeSchema.Errors(json)),missingColors=new Set,otherErrors=[];for(let error of errors){if(error.keyword===\"required\"&&error.instancePath===\"/colors\"){let requiredProperties=error.params.requiredProperties;for(let requiredProperty of requiredProperties??[])missingColors.add(requiredProperty);continue}let path10=error.instancePath||\"/\";otherErrors.push(`  - ${path10}: ${error.message}`)}let errorMessage5=`Invalid theme \"${label}\":\n`;throw missingColors.size>0&&(errorMessage5+=`\nMissing required color tokens:\n`,errorMessage5+=Array.from(missingColors).sort().map(color=>`  - ${color}`).join(`\n`),errorMessage5+=`\n\nPlease add these colors to your theme's \"colors\" object.`,errorMessage5+=`\nSee the built-in themes (dark.json, light.json) for reference values.`),otherErrors.length>0&&(errorMessage5+=`\n\nOther errors:\n${otherErrors.join(`\n`)}`),new Error(errorMessage5)}return json}",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Theme Compile and formatted Check/Errors diagnostics",
+      "sha256": "d4a3e66e7ed9e49c912c1483ebac9b7510b1c12aea4ea053a16eaf9186288a81"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3533920,
+      "end": 3534430,
+      "line": 1222,
+      "column": 19199,
+      "physical_line": 1222,
+      "raw_source": "messages,initialMessage,initialImages});stopThemeWatcher(),restoreStdout(),exitCode!==0&&(process.exitCode=exitCode);return}}export{configureHttpDispatcher,value_exports2 as value_exports,compile_exports,SettingsManager,parseArgs,resolveModelScopeWithDiagnostics,resolveCliModel,all_exports,compat_exports,VIRTUAL_MODEL_STATE_ENTRY,CredentialSynchronizationError,ModelRuntime,convertToPng,resizeImage,formatDimensionNote,detectSupportedImageMimeTypeFromFile,createSyntheticSourceInfo,DefaultPackageManager,Dyna",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Actual final ESM compile_exports export",
+      "sha256": "5accba0baefd7e82ca274209453ce5daa498f4a0c4a992bc18b88bc00eedab8c"
+    }
+  ],
+  "supplemental_repo_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "coverage": "Bounded actual BASE package-dot/main/extension-policy/output-wrapper source only, separate full owner.",
+      "snippets": [
+        {
+          "start": 101,
+          "end": 103,
+          "source": "async function loadPiRuntime(): Promise<typeof import(\"@earendil-works/pi-coding-agent\")> {\n\treturn import(\"@earendil-works/pi-coding-agent\");\n}"
+        },
+        {
+          "start": 755,
+          "end": 765,
+          "source": "\t\t\t\t})\n\t\t\t: undefined;\n\tconst scrollbackSession = createScrollbackSessionObserver();\n\tconst startPi = () =>\n\t\tpi.main(piArgs, {\n\t\t\tsessionInfoFooter: runtimeDiagnostics.summary,\n\t\t\tcontentPolicyFactory: nativeTextguard.createPolicy,\n\t\t\tflowIngressFactory: async (context) => scrollbackSession.wrap(await flow?.flowIngressFactory(context)),\n\t\t\textensionFactories: [\n\t\t\t\t...classicHostBuiltinOverrides(),\n\t\t\t\tcreateDirectToolPolicyExtension(),"
+        },
+        {
+          "start": 805,
+          "end": 823,
+          "source": "\t\t\tusesReleaseExtensions(parsed.args)\n\t\t\t\t? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)\n\t\t\t\t: startPi();\n\t\tif (!interactiveStartup) return execute();\n\t\tconst { withPiUiLocalization } = await import(\"./pi-ui-localization.js\");\n\t\tconst { withPiProseWrapping } = await import(\"./pi-prose-wrapping.js\");\n\t\treturn withPiUiLocalization(\n\t\t\t() => displayCatalog.bundle,\n\t\t\t() => withPiProseWrapping(execute),\n\t\t\tpi,\n\t\t);\n\t};\n\ttry {\n\t\tawait withJouzuOutput(runPi, {\n\t\t\tinteractive: interactiveStartup,\n\t\t\tprotectTitles: true,\n\t\t\trewrite: !usesMachineReadableStdout(piArgs),\n\t\t});\n\t} finally {"
+        }
+      ]
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367",
+      "coverage": "Bounded actual BASE package-dot/main/extension-policy/output-wrapper source only, separate full owner.",
+      "snippets": [
+        {
+          "start": 42,
+          "end": 53,
+          "source": "export function classicHostBuiltinOverrides(): InlineExtension[] {\n\treturn [\n\t\t{\n\t\t\tname: \"codemode\",\n\t\t\tbuiltin: true,\n\t\t\treplaceable: true,\n\t\t\t// Scripts can issue model requests outside the classic host's request checkpoint.\n\t\t\tfactory() {},\n\t\t},\n\t\tcreateDeferredMcpExtension(),\n\t];\n}"
+        }
+      ]
+    },
+    {
+      "source": "packages/cli/src/runtime.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd",
+      "coverage": "Bounded actual BASE package-dot/main/extension-policy/output-wrapper source only, separate full owner.",
+      "snippets": [
+        {
+          "start": 81,
+          "end": 92,
+          "source": "export function configurePiProcess(paths: JouzuPaths): void {\n\tprocess.title = \"jouzu\";\n\tprocess.env.AI_AGENT = \"jouzu\";\n\tprocess.env.PI_CODING_AGENT = \"true\";\n\tprocess.env.PI_CODING_AGENT_DIR = paths.agentDir;\n\tprocess.env.PI_CODING_AGENT_SESSION_DIR = paths.sessionDir;\n\tprocess.env.JOUZU_RUNTIME_STATE_DIR = paths.stateDir;\n\tprocess.env.PI_VCC_CONFIG_PATH = join(paths.agentDir, \"pi-vcc-config.json\");\n\tprocess.env.PI_SKIP_VERSION_CHECK = \"1\";\n}\n"
+        }
+      ]
+    }
+  ],
+  "external_bounded_support": [],
+  "structural_data_proofs": [],
+  "global_symbol_refs_mechanical": {
+    "qualification": "Whole-source identifier references only; no full global caller/coupling review.",
+    "refs": {
+      "Code": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1130532,
+          "end": 1130536,
+          "line": 272,
+          "column": 920,
+          "physical_line": 272,
+          "raw_source": "Code",
+          "parent_kind": "MethodDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177864,
+          "end": 1177868,
+          "line": 272,
+          "column": 48252,
+          "physical_line": 272,
+          "raw_source": "Code",
+          "parent_kind": "PropertyAssignment"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177873,
+          "end": 1177877,
+          "line": 272,
+          "column": 48261,
+          "physical_line": 272,
+          "raw_source": "Code",
+          "parent_kind": "ArrowFunction"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1178842,
+          "end": 1178846,
+          "line": 273,
+          "column": 244,
+          "physical_line": 273,
+          "raw_source": "Code",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1179139,
+          "end": 1179143,
+          "line": 274,
+          "column": 37,
+          "physical_line": 274,
+          "raw_source": "Code",
+          "parent_kind": "PropertyAssignment"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1179461,
+          "end": 1179465,
+          "line": 274,
+          "column": 359,
+          "physical_line": 274,
+          "raw_source": "Code",
+          "parent_kind": "MethodDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1179495,
+          "end": 1179499,
+          "line": 274,
+          "column": 393,
+          "physical_line": 274,
+          "raw_source": "Code",
+          "parent_kind": "PropertyAccessExpression"
+        }
+      ],
+      "compile_exports": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177819,
+          "end": 1177834,
+          "line": 272,
+          "column": 48207,
+          "physical_line": 272,
+          "raw_source": "compile_exports",
+          "parent_kind": "VariableDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177847,
+          "end": 1177862,
+          "line": 272,
+          "column": 48235,
+          "physical_line": 272,
+          "raw_source": "compile_exports",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3534108,
+          "end": 3534123,
+          "line": 1222,
+          "column": 19387,
+          "physical_line": 1222,
+          "raw_source": "compile_exports",
+          "parent_kind": "ExportSpecifier"
+        }
+      ],
+      "Compile": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177878,
+          "end": 1177885,
+          "line": 272,
+          "column": 48266,
+          "physical_line": 272,
+          "raw_source": "Compile",
+          "parent_kind": "PropertyAssignment"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177890,
+          "end": 1177897,
+          "line": 272,
+          "column": 48278,
+          "physical_line": 272,
+          "raw_source": "Compile",
+          "parent_kind": "ArrowFunction"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1180285,
+          "end": 1180292,
+          "line": 274,
+          "column": 1183,
+          "physical_line": 274,
+          "raw_source": "Compile",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1180464,
+          "end": 1180471,
+          "line": 274,
+          "column": 1362,
+          "physical_line": 274,
+          "raw_source": "Compile",
+          "parent_kind": "VariableDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1249570,
+          "end": 1249577,
+          "line": 480,
+          "column": 17846,
+          "physical_line": 480,
+          "raw_source": "Compile",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 2279569,
+          "end": 2279576,
+          "line": 485,
+          "column": 1028414,
+          "physical_line": 485,
+          "raw_source": "Compile",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 2419524,
+          "end": 2419531,
+          "line": 499,
+          "column": 8162,
+          "physical_line": 499,
+          "raw_source": "Compile",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3459177,
+          "end": 3459184,
+          "line": 1134,
+          "column": 2628,
+          "physical_line": 1134,
+          "raw_source": "Compile",
+          "parent_kind": "CallExpression"
+        }
+      ],
+      "Validator": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177898,
+          "end": 1177907,
+          "line": 272,
+          "column": 48286,
+          "physical_line": 272,
+          "raw_source": "Validator",
+          "parent_kind": "PropertyAssignment"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177912,
+          "end": 1177921,
+          "line": 272,
+          "column": 48300,
+          "physical_line": 272,
+          "raw_source": "Validator",
+          "parent_kind": "ArrowFunction"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1179154,
+          "end": 1179163,
+          "line": 274,
+          "column": 52,
+          "physical_line": 274,
+          "raw_source": "Validator",
+          "parent_kind": "VariableDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1180420,
+          "end": 1180429,
+          "line": 274,
+          "column": 1318,
+          "physical_line": 274,
+          "raw_source": "Validator",
+          "parent_kind": "NewExpression"
+        }
+      ],
+      "compile_default": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1177934,
+          "end": 1177949,
+          "line": 272,
+          "column": 48322,
+          "physical_line": 272,
+          "raw_source": "compile_default",
+          "parent_kind": "ArrowFunction"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1180448,
+          "end": 1180463,
+          "line": 274,
+          "column": 1346,
+          "physical_line": 274,
+          "raw_source": "compile_default",
+          "parent_kind": "VariableDeclaration"
+        }
+      ]
+    }
+  },
+  "frozen_lexical_joins": [
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1177978:1177993",
+      "frozen_id": "B023:L007565",
+      "start": 1177978,
+      "end": 1177993
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178021:1178023",
+      "frozen_id": "B023:L007566",
+      "start": 1178021,
+      "end": 1178023
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178088:1178135",
+      "frozen_id": "B023:L007567",
+      "start": 1178088,
+      "end": 1178135
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178140:1178182",
+      "frozen_id": "B023:L007568",
+      "start": 1178140,
+      "end": 1178182
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178183:1178224",
+      "frozen_id": "B023:L007569",
+      "start": 1178183,
+      "end": 1178224
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178225:1178264",
+      "frozen_id": "B023:L007570",
+      "start": 1178225,
+      "end": 1178264
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178361:1178385",
+      "frozen_id": "B023:L007571",
+      "start": 1178361,
+      "end": 1178385
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178409:1178487",
+      "frozen_id": "B023:L007572",
+      "start": 1178409,
+      "end": 1178487
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178580:1178590",
+      "frozen_id": "B023:L007573",
+      "start": 1178580,
+      "end": 1178590
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178597:1178600",
+      "frozen_id": "B023:L007574",
+      "start": 1178597,
+      "end": 1178600
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178665:1178732",
+      "frozen_id": "B023:L007575",
+      "start": 1178665,
+      "end": 1178732
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178733:1178758",
+      "frozen_id": "B023:L007576",
+      "start": 1178733,
+      "end": 1178758
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1178789:1178831",
+      "frozen_id": "B023:L007577",
+      "start": 1178789,
+      "end": 1178831
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1179101:1179104",
+      "frozen_id": "B023:L007578",
+      "start": 1179101,
+      "end": 1179104
+    }
+  ],
+  "caught_diagnostic_routes": [],
+  "interpretation": "Complete local compiled MAINHOST partial range[1177815,1180472),2657B only: TypeBox Code source generator, Validator facade, Compile/default and compile namespace export map. Whole host semantic owner0. Zero locally authored English captions; generated JavaScript is conditional user-inspectable API data, not never-visible. Source read/AST only, no Code/Compile/Validator/schema/evaluator/module/parser execution.",
+  "offset_units": "Original ASCII bytes equal UTF16 units, start inclusive/end exclusive; 1-based line/column. Exact raw_source preserved; strings decoded and template delimiter-free source expressions retained.",
+  "parser": {
+    "typescript": "6.0.3",
+    "parse_errors": 0,
+    "audited_execution": false
+  },
+  "checker": {
+    "source": "review/text-inventory/verify-pi-bundle-main-host-typebox-compiler.cjs",
+    "sha256": "a5f94f2259cc11f18095397e7e77732f69ed0db3ad2a3145f7b7ff35b1398cbc",
+    "mode": "Default read-only canonical archive/Git/fs and TypeScript AST; --write only authors own audit outputs, never audited modules."
+  },
+  "artifact_sha256_utf8_lf": {
+    "pi-bundle-main-host-typebox-compiler.csv": "224aa3114a752c33d3f09980b241423c2a8822317f00da75af9df8c8edd3e216",
+    "pi-bundle-main-host-typebox-compiler-boundaries.csv": "3c67a6b5443fe2875e36521c37ebe8632d8ba8ce07fd53918dd50cc281b01d35",
+    "pi-bundle-main-host-typebox-compiler-exclusions.csv": "936683d5d05e1f76e8e2b0567f845c5b073db583d1094fc5cd86d7809055bc20",
+    "pi-bundle-main-host-typebox-compiler-scope.csv": "e80c56784e0a0f8cf7360fa149a9af1551a7c69e20863227d5f5c64abbde6ba6"
+  }
+}

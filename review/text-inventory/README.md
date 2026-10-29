@@ -1579,11 +1579,16 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The following sixteen partial main-host units cover 101 disjoint ranges totaling
-1,580,011 of the body's 3,536,719 bytes. The nine remaining gaps total 1,956,708
+The registered partial main-host units cover 134 disjoint ranges totaling
+2,444,130 of the body's 3,536,719 bytes. The six remaining gaps total 1,092,589
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
-The whole main-host body remains pending in the 384-source census.
+The [range census](pi-main-host-review-census.csv) and
+[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 48
+registered scope tables, reject overlap and keep every frozen literal/template/
+regex occurrence assigned to a reviewed range or a pending gap. This accounting
+does not independently approve each semantic classification or promote a whole
+host owner. The whole main-host body remains pending in the 384-source census.
 
 [pi-bundle-main-host-entry.csv](pi-bundle-main-host-entry.csv) records 124 qualified contexts in the final 54,781-byte entry range, including command errors, optional timing, authentication status and extension-prefix matching. Technical command identities and credential payloads remain protected.
 Its [exclusions](pi-bundle-main-host-entry-exclusions.csv),
@@ -1806,6 +1811,262 @@ installed copies match; 126 public after-hashes and 25 corruption controls pass.
 No SDK, auth, credential, transport, request, model, environment, filesystem or
 native UI operation runs. The main host remains the only whole-body runtime
 review pending in the coding-agent/TUI census.
+
+[pi-bundle-main-host-cache-auth-support.csv](pi-bundle-main-host-cache-auth-support.csv) records Compiled cache/crash helpers, command and changelog metadata, clipboard image readers, version checks and guarded auth parsing.
+The [exclusions](pi-bundle-main-host-cache-auth-support-exclusions.csv),
+[boundaries](pi-bundle-main-host-cache-auth-support-boundaries.csv) and
+[scope](pi-bundle-main-host-cache-auth-support-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-cache-warming.csv](pi-bundle-main-host-cache-warming.csv) records Compiled cache-warmer status, economics, timing and usage with explicit linked-session and credential/request gates.
+The [exclusions](pi-bundle-main-host-cache-warming-exclusions.csv),
+[boundaries](pi-bundle-main-host-cache-warming-boundaries.csv) and
+[scope](pi-bundle-main-host-cache-warming-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-export-template-helpers.csv](pi-bundle-main-host-export-template-helpers.csv) records Compiled session HTML/JSONL export, ANSI/tool HTML, nested-tool records, prompt templates and input helpers.
+The [exclusions](pi-bundle-main-host-export-template-helpers-exclusions.csv),
+[boundaries](pi-bundle-main-host-export-template-helpers-boundaries.csv) and
+[scope](pi-bundle-main-host-export-template-helpers-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-fetch-infra.csv](pi-bundle-main-host-fetch-infra.csv) records Compiled Fetch constants, origin/UTF8/infra/data-URL helpers and conditionally observable JSON serializer error.
+The [exclusions](pi-bundle-main-host-fetch-infra-exclusions.csv),
+[boundaries](pi-bundle-main-host-fetch-infra-boundaries.csv) and
+[scope](pi-bundle-main-host-fetch-infra-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-glob.csv](pi-bundle-main-host-glob.csv) records Compiled brace expansion and minimatch helpers, linked model-scope pattern guard and qualified private defensive diagnostics.
+The [exclusions](pi-bundle-main-host-glob-exclusions.csv),
+[boundaries](pi-bundle-main-host-glob-boundaries.csv) and
+[scope](pi-bundle-main-host-glob-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-hosted-git.csv](pi-bundle-main-host-hosted-git.csv) records Compiled host URL templates, shorthand extraction and GitHost cache/factory helpers; no ordinary fromManifest consumer.
+The [exclusions](pi-bundle-main-host-hosted-git-exclusions.csv),
+[boundaries](pi-bundle-main-host-hosted-git-boundaries.csv) and
+[scope](pi-bundle-main-host-hosted-git-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-bootstrap.csv](pi-bundle-main-host-http-bootstrap.csv) records Compiled Undici imports, symbols and timer bootstrap; protected identities and external initialization boundaries.
+The [exclusions](pi-bundle-main-host-http-bootstrap-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-bootstrap-boundaries.csv) and
+[scope](pi-bundle-main-host-http-bootstrap-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-dispatch.csv](pi-bundle-main-host-http-dispatch.csv) records Compiled idle-timeout settings and conditional proxy/dispatcher/global-fetch bridge with exported API guard.
+The [exclusions](pi-bundle-main-host-http-dispatch-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-dispatch-boundaries.csv) and
+[scope](pi-bundle-main-host-http-dispatch-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-errors.csv](pi-bundle-main-host-http-errors.csv) records Compiled Undici error classes, defaults and header/search helpers with dispatcher, fetch-cause and observer qualifications.
+The [exclusions](pi-bundle-main-host-http-errors-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-errors-boundaries.csv) and
+[scope](pi-bundle-main-host-http-errors-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-request.csv](pi-bundle-main-host-http-request.csv) records Compiled Undici request, dispatcher, connector and LLHTTP enum helpers with conditional published API and native boundaries.
+The [exclusions](pi-bundle-main-host-http-request-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-request-boundaries.csv) and
+[scope](pi-bundle-main-host-http-request-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-utilities.csv](pi-bundle-main-host-http-utilities.csv) records Compiled Undici body/URL/header/range/abort/socket utilities, stats and qualified diagnostic-channel logging.
+The [exclusions](pi-bundle-main-host-http-utilities-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-utilities-boundaries.csv) and
+[scope](pi-bundle-main-host-http-utilities-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-llama-extension.csv](pi-bundle-main-host-llama-extension.csv) records Compiled llama/HuggingFace clients, provider, extension and UI under explicit local-model, command and server gates.
+The [exclusions](pi-bundle-main-host-llama-extension-exclusions.csv),
+[boundaries](pi-bundle-main-host-llama-extension-boundaries.csv) and
+[scope](pi-bundle-main-host-llama-extension-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-lru-cache.csv](pi-bundle-main-host-lru-cache.csv) records Compiled LRU implementation, private hosted-Git default usage and qualified explicit diagnostic-subscriber API guards.
+The [exclusions](pi-bundle-main-host-lru-cache-exclusions.csv),
+[boundaries](pi-bundle-main-host-lru-cache-boundaries.csv) and
+[scope](pi-bundle-main-host-lru-cache-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-mermaid-renderer.csv](pi-bundle-main-host-mermaid-renderer.csv) records Compiled Mermaid sanitizers, grammar, layout and Markdown transformer with mode, width, limits and first-warning guards.
+The [exclusions](pi-bundle-main-host-mermaid-renderer-exclusions.csv),
+[boundaries](pi-bundle-main-host-mermaid-renderer-boundaries.csv) and
+[scope](pi-bundle-main-host-mermaid-renderer-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-message-components.csv](pi-bundle-main-host-message-components.csv) records Compiled loader/editor, assistant/bash/summary/custom-message components, border and footer formatting.
+The [exclusions](pi-bundle-main-host-message-components-exclusions.csv),
+[boundaries](pi-bundle-main-host-message-components-boundaries.csv) and
+[scope](pi-bundle-main-host-message-components-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-migrations-theme.csv](pi-bundle-main-host-migrations-theme.csv) records Compiled migrations and deprecation output plus callback-installed theme schema validation diagnostics.
+The [exclusions](pi-bundle-main-host-migrations-theme-exclusions.csv),
+[boundaries](pi-bundle-main-host-migrations-theme-boundaries.csv) and
+[scope](pi-bundle-main-host-migrations-theme-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-mode-protocol.csv](pi-bundle-main-host-mode-protocol.csv) records Compiled print/JSON/RPC modes and client, credential checks, file arguments and model-list output.
+The [exclusions](pi-bundle-main-host-mode-protocol-exclusions.csv),
+[boundaries](pi-bundle-main-host-mode-protocol-boundaries.csv) and
+[scope](pi-bundle-main-host-mode-protocol-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-resource-config.csv](pi-bundle-main-host-resource-config.csv) records Compiled resource grouping, override diagnostics and private command-driven configuration selector.
+The [exclusions](pi-bundle-main-host-resource-config-exclusions.csv),
+[boundaries](pi-bundle-main-host-resource-config-boundaries.csv) and
+[scope](pi-bundle-main-host-resource-config-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-resource-loader.csv](pi-bundle-main-host-resource-loader.csv) records Compiled resource/extension/context loading and Git/footer data with explicit exported-loader or linked-host consumers.
+The [exclusions](pi-bundle-main-host-resource-loader-exclusions.csv),
+[boundaries](pi-bundle-main-host-resource-loader-boundaries.csv) and
+[scope](pi-bundle-main-host-resource-loader-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-session-runtime.csv](pi-bundle-main-host-session-runtime.csv) records Compiled session cwd and extension-flag diagnostics, service construction and session replacement runtime.
+The [exclusions](pi-bundle-main-host-session-runtime-exclusions.csv),
+[boundaries](pi-bundle-main-host-session-runtime-boundaries.csv) and
+[scope](pi-bundle-main-host-session-runtime-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-share-report.csv](pi-bundle-main-host-share-report.csv) records Compiled share, bug-report and announcement commands, payload choices, upload metadata and conditional UI/API errors.
+The [exclusions](pi-bundle-main-host-share-report-exclusions.csv),
+[boundaries](pi-bundle-main-host-share-report-boundaries.csv) and
+[scope](pi-bundle-main-host-share-report-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-startup-trust.csv](pi-bundle-main-host-startup-trust.csv) records Compiled first-time setup, startup selectors, project-trust prompts and settings diagnostics.
+The [exclusions](pi-bundle-main-host-startup-trust-exclusions.csv),
+[boundaries](pi-bundle-main-host-startup-trust-boundaries.csv) and
+[scope](pi-bundle-main-host-startup-trust-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-status-theme-support.csv](pi-bundle-main-host-status-theme-support.csv) records Compiled status, scoped-model/trust/theme/header helpers, subscription warnings and qualified program-status payloads.
+The [exclusions](pi-bundle-main-host-status-theme-support-exclusions.csv),
+[boundaries](pi-bundle-main-host-status-theme-support-boundaries.csv) and
+[scope](pi-bundle-main-host-status-theme-support-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-tool-adapters.csv](pi-bundle-main-host-tool-adapters.csv) records Compiled codemode, clipboard and MCP tool/resource adapters plus tool-search wrapper with actual replacement and API gates.
+The [exclusions](pi-bundle-main-host-tool-adapters-exclusions.csv),
+[boundaries](pi-bundle-main-host-tool-adapters-boundaries.csv) and
+[scope](pi-bundle-main-host-tool-adapters-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-typebox-compiler.csv](pi-bundle-main-host-typebox-compiler.csv) records Compiled TypeBox code generator, Validator facade and compile export map; inspectable generated JavaScript remains code data.
+The [exclusions](pi-bundle-main-host-typebox-compiler-exclusions.csv),
+[boundaries](pi-bundle-main-host-typebox-compiler-boundaries.csv) and
+[scope](pi-bundle-main-host-typebox-compiler-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-typebox-references.csv](pi-bundle-main-host-typebox-references.csv) records Compiled JSON Pointer and schema references, check/build/evaluate wrappers and public assertion diagnostics.
+The [exclusions](pi-bundle-main-host-typebox-references-exclusions.csv),
+[boundaries](pi-bundle-main-host-typebox-references-boundaries.csv) and
+[scope](pi-bundle-main-host-typebox-references-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-typebox-validation.csv](pi-bundle-main-host-typebox-validation.csv) records Compiled TypeBox schema predicates, keyword checks and formats; structured errors and separately imported locale boundaries.
+The [exclusions](pi-bundle-main-host-typebox-validation-exclusions.csv),
+[boundaries](pi-bundle-main-host-typebox-validation-boundaries.csv) and
+[scope](pi-bundle-main-host-typebox-validation-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-typebox-values.csv](pi-bundle-main-host-typebox-values.csv) records Compiled clean/convert/default/codec/create/parse/diff/repair APIs with optional caller guards and foreign callback errors.
+The [exclusions](pi-bundle-main-host-typebox-values-exclusions.csv),
+[boundaries](pi-bundle-main-host-typebox-values-boundaries.csv) and
+[scope](pi-bundle-main-host-typebox-values-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-unicode-width-data.csv](pi-bundle-main-host-unicode-width-data.csv) records Compiled grapheme-width helpers and exhaustive structural proof of 986 numeric Unicode-width tuples.
+The [exclusions](pi-bundle-main-host-unicode-width-data-exclusions.csv),
+[boundaries](pi-bundle-main-host-unicode-width-data-boundaries.csv) and
+[scope](pi-bundle-main-host-unicode-width-data-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-yaml-compose.csv](pi-bundle-main-host-yaml-compose.csv) records Compiled YAML error/excerpt and node/document composition with exact default frontmatter, resource and skill-error routes.
+The [exclusions](pi-bundle-main-host-yaml-compose-exclusions.csv),
+[boundaries](pi-bundle-main-host-yaml-compose-boundaries.csv) and
+[scope](pi-bundle-main-host-yaml-compose-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-yaml-nodes.csv](pi-bundle-main-host-yaml-nodes.csv) records Compiled YAML node/document/schema/directive/alias/stringifier helpers; ordinary frontmatter parse versus private APIs.
+The [exclusions](pi-bundle-main-host-yaml-nodes-exclusions.csv),
+[boundaries](pi-bundle-main-host-yaml-nodes-boundaries.csv) and
+[scope](pi-bundle-main-host-yaml-nodes-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-yaml-parser.csv](pi-bundle-main-host-yaml-parser.csv) records Compiled YAML CST, lexer, parser and namespace helpers with actual frontmatter use, diagnostics and debug payload gates.
+The [exclusions](pi-bundle-main-host-yaml-parser-exclusions.csv),
+[boundaries](pi-bundle-main-host-yaml-parser-boundaries.csv) and
+[scope](pi-bundle-main-host-yaml-parser-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3223,6 +3484,39 @@ python -B review/text-inventory/verify-pi-bundle-bedrock-client.py --node-module
 python -B review/text-inventory/verify-pi-bundle-main-host-llhttp.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-bundle-main-host-semver.cjs
 python -B review/text-inventory/verify-pi-bundle-google-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-bundle-main-host-cache-auth-support.cjs
+node review/text-inventory/verify-pi-bundle-main-host-cache-warming.cjs
+node review/text-inventory/verify-pi-bundle-main-host-export-template-helpers.cjs
+node review/text-inventory/verify-pi-bundle-main-host-fetch-infra.cjs
+node review/text-inventory/verify-pi-bundle-main-host-glob.cjs
+node review/text-inventory/verify-pi-bundle-main-host-hosted-git.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-bootstrap.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-dispatch.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-errors.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-request.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-utilities.cjs
+node review/text-inventory/verify-pi-bundle-main-host-llama-extension.cjs
+node review/text-inventory/verify-pi-bundle-main-host-lru-cache.cjs
+node review/text-inventory/verify-pi-bundle-main-host-mermaid-renderer.cjs
+node review/text-inventory/verify-pi-bundle-main-host-message-components.cjs
+node review/text-inventory/verify-pi-bundle-main-host-migrations-theme.cjs
+node review/text-inventory/verify-pi-bundle-main-host-mode-protocol.cjs
+node review/text-inventory/verify-pi-bundle-main-host-resource-config.cjs
+node review/text-inventory/verify-pi-bundle-main-host-resource-loader.cjs
+node review/text-inventory/verify-pi-bundle-main-host-session-runtime.cjs
+node review/text-inventory/verify-pi-bundle-main-host-share-report.cjs
+node review/text-inventory/verify-pi-bundle-main-host-startup-trust.cjs
+node review/text-inventory/verify-pi-bundle-main-host-status-theme-support.cjs
+node review/text-inventory/verify-pi-bundle-main-host-tool-adapters.cjs
+node review/text-inventory/verify-pi-bundle-main-host-typebox-compiler.cjs
+node review/text-inventory/verify-pi-bundle-main-host-typebox-references.cjs
+node review/text-inventory/verify-pi-bundle-main-host-typebox-validation.cjs
+node review/text-inventory/verify-pi-bundle-main-host-typebox-values.cjs
+node review/text-inventory/verify-pi-bundle-main-host-unicode-width-data.cjs
+node review/text-inventory/verify-pi-bundle-main-host-yaml-compose.cjs
+node review/text-inventory/verify-pi-bundle-main-host-yaml-nodes.cjs
+node review/text-inventory/verify-pi-bundle-main-host-yaml-parser.cjs
+python -B review/text-inventory/verify-pi-main-host-review-census.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

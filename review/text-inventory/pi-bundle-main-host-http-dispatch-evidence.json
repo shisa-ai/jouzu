@@ -1,0 +1,2460 @@
+{
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit": "pi-bundle-main-host-http-dispatch",
+  "package": "@earendil-works/pi-coding-agent",
+  "version": "1.4.0",
+  "canonical_archive": {
+    "file": "earendil-works-pi-coding-agent-1.4.0.tgz",
+    "sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+    "integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+  },
+  "upstream_pin_sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+  "metadata_transform": {
+    "source": "scripts/configure-release-packlists.mjs",
+    "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+    "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "qualification": "Pure read-only manifest reconstruction; no transform execution."
+  },
+  "metadata": [
+    {
+      "tree": "root",
+      "sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+      "type": "module",
+      "main": "./dist/index.js",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "files": [
+        "dist",
+        "docs",
+        "examples",
+        "schemas",
+        "containerization.md",
+        "CHANGELOG.md"
+      ],
+      "qualification": "Exact archive metadata bytes"
+    },
+    {
+      "tree": "cli-nested",
+      "sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+      "type": "module",
+      "main": "./dist/index.js",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "files": [
+        "dist",
+        "docs",
+        "examples",
+        "schemas",
+        "containerization.md",
+        "CHANGELOG.md",
+        "!**/*.map",
+        "!**/*.d.ts",
+        "!**/*.d.mts",
+        "!**/*.d.cts"
+      ],
+      "qualification": "Only exact four public release packlist exclusions added"
+    }
+  ],
+  "public_manifest_after_checks": [
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/settings-manager.js",
+      "tree": "root",
+      "before": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+      "after": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/settings-manager.js",
+      "tree": "cli-nested",
+      "before": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+      "after": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/system-prompt.js",
+      "tree": "root",
+      "before": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "after": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/system-prompt.js",
+      "tree": "cli-nested",
+      "before": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+      "after": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/cache-warmer.js",
+      "tree": "root",
+      "before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+      "after": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/cache-warmer.js",
+      "tree": "cli-nested",
+      "before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+      "after": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.js",
+      "tree": "root",
+      "before": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "after": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.js",
+      "tree": "cli-nested",
+      "before": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "after": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.d.ts",
+      "tree": "root",
+      "before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+      "after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/main.d.ts",
+      "tree": "cli-nested",
+      "before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+      "after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.js",
+      "tree": "root",
+      "before": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "after": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.js",
+      "tree": "cli-nested",
+      "before": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+      "after": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.d.ts",
+      "tree": "root",
+      "before": "948ac95e0eb67f29f78046404afdc94f4a12ade38a3a2f838a2628069bf70a8a",
+      "after": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/resource-loader.d.ts",
+      "tree": "cli-nested",
+      "before": "948ac95e0eb67f29f78046404afdc94f4a12ade38a3a2f838a2628069bf70a8a",
+      "after": "35553cd94cddee099c582ecae5f290313d68efe47fd2aaa32b07fee72b248349"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.js",
+      "tree": "root",
+      "before": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+      "after": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.js",
+      "tree": "cli-nested",
+      "before": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+      "after": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.d.ts",
+      "tree": "root",
+      "before": "2cb83c8604497198eda83ba4691d9c001c971c6b358af05f42355afc7666c669",
+      "after": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/sdk.d.ts",
+      "tree": "cli-nested",
+      "before": "2cb83c8604497198eda83ba4691d9c001c971c6b358af05f42355afc7666c669",
+      "after": "5f16411d2e23147bea01c39d1854fd34d147093e4050f8ab6e6e11c66764f328"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.js",
+      "tree": "root",
+      "before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.js",
+      "tree": "cli-nested",
+      "before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.d.ts",
+      "tree": "root",
+      "before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
+      "after": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session.d.ts",
+      "tree": "cli-nested",
+      "before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
+      "after": "bd34a2091dbbad739d529f84b793c61bb061a8c57b97bb044ceb8d8de8baac12"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.js",
+      "tree": "root",
+      "before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+      "after": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.js",
+      "tree": "cli-nested",
+      "before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+      "after": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.d.ts",
+      "tree": "root",
+      "before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+      "after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-services.d.ts",
+      "tree": "cli-nested",
+      "before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+      "after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-runtime.js",
+      "tree": "root",
+      "before": "928b6528bb17d26273af8f7023a4f98e5f440d5896a4280d060b9b3e1f9a6882",
+      "after": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/agent-session-runtime.js",
+      "tree": "cli-nested",
+      "before": "928b6528bb17d26273af8f7023a4f98e5f440d5896a4280d060b9b3e1f9a6882",
+      "after": "844858499c5d0af1c45a6cca390e0929ac19e11b45228795fa1ce374bbc479b7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/rpc/rpc-mode.js",
+      "tree": "root",
+      "before": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+      "after": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/rpc/rpc-mode.js",
+      "tree": "cli-nested",
+      "before": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+      "after": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/loader.js",
+      "tree": "root",
+      "before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+      "after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/loader.js",
+      "tree": "cli-nested",
+      "before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+      "after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.js",
+      "tree": "root",
+      "before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+      "after": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.js",
+      "tree": "cli-nested",
+      "before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+      "after": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.d.ts",
+      "tree": "root",
+      "before": "3bcb75e07c8d6fe6bf6ed7e515151cc62030f8b45b241fbd5877f665c6758565",
+      "after": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/skills.d.ts",
+      "tree": "cli-nested",
+      "before": "3bcb75e07c8d6fe6bf6ed7e515151cc62030f8b45b241fbd5877f665c6758565",
+      "after": "c386ceda89fc5e911e0606a330b2b7dd856e5d085f1e16f435d8d434d6302c6e"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.js",
+      "tree": "root",
+      "before": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+      "after": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.js",
+      "tree": "cli-nested",
+      "before": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+      "after": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.d.ts",
+      "tree": "root",
+      "before": "2288b69c82272311dc877da61ff2057bb04df49038ddef7eef6c8753c09f5313",
+      "after": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/session-manager.d.ts",
+      "tree": "cli-nested",
+      "before": "2288b69c82272311dc877da61ff2057bb04df49038ddef7eef6c8753c09f5313",
+      "after": "fdea2b19a08c4ecf689a27c77dfd53e59f6edf4347e6e110fea023ba32276d76"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.js",
+      "tree": "root",
+      "before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+      "after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.js",
+      "tree": "cli-nested",
+      "before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+      "after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.d.ts",
+      "tree": "root",
+      "before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
+      "after": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/runner.d.ts",
+      "tree": "cli-nested",
+      "before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
+      "after": "940b24e9765e6f254a8eda57ce95b180aec6cfbf2ac4822bde97b4a8ac529c5b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.js",
+      "tree": "root",
+      "before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+      "after": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.js",
+      "tree": "cli-nested",
+      "before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
+      "after": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.d.ts",
+      "tree": "root",
+      "before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+      "after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/messages.d.ts",
+      "tree": "cli-nested",
+      "before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+      "after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/compaction.js",
+      "tree": "root",
+      "before": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+      "after": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/compaction.js",
+      "tree": "cli-nested",
+      "before": "f51e78ef1da66b5803fc91e185f07b968f8f989ab9326b7744958416aad3f6f6",
+      "after": "1d2d98cfe7531f5aa0ee269fd15889741bcc86cbc2602bf832eec5a53eca36b9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.js",
+      "tree": "root",
+      "before": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+      "after": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.js",
+      "tree": "cli-nested",
+      "before": "08f04dcd48af3bb64eab3b018f3b15f74474185482cb70ebf478dee62deb1a95",
+      "after": "82af405015c2ee917249dccdd84f85aa8aeb6b31b49d116f52598e31b25efb6b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.d.ts",
+      "tree": "root",
+      "before": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+      "after": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/compaction/branch-summarization.d.ts",
+      "tree": "cli-nested",
+      "before": "36376989db49c19167a1478947968158b4ef8184e493cf392e7deaaeaec55943",
+      "after": "60f2fb4da663af46c5aa734145aa85e3fbbed80ca701e6bf702a30fdefa1c56f"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.js",
+      "tree": "root",
+      "before": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+      "after": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.js",
+      "tree": "cli-nested",
+      "before": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+      "after": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.d.ts",
+      "tree": "root",
+      "before": "5a7aac47a83c20316f593c74798f60ec4e521a0fddff03a0608dbc5514012bf5",
+      "after": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/model-runtime.d.ts",
+      "tree": "cli-nested",
+      "before": "5a7aac47a83c20316f593c74798f60ec4e521a0fddff03a0608dbc5514012bf5",
+      "after": "0e8f08c0d39c52596d518262624a86f4410772ffe6c3b85d86cfd9ecec73be15"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.js",
+      "tree": "root",
+      "before": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "after": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.js",
+      "tree": "cli-nested",
+      "before": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "after": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.d.ts",
+      "tree": "root",
+      "before": "bfe4955c7b026ce5e91b60426837f277f65d5d5544c8a316ff416dbe2874078f",
+      "after": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/interactive-mode.d.ts",
+      "tree": "cli-nested",
+      "before": "bfe4955c7b026ce5e91b60426837f277f65d5d5544c8a316ff416dbe2874078f",
+      "after": "d2f384a3ca9a74fe1cabcba846afeb6422368f26137d6d3cb8c5e37c109c21f9"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/components/custom-editor.js",
+      "tree": "root",
+      "before": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+      "after": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/components/custom-editor.js",
+      "tree": "cli-nested",
+      "before": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+      "after": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/slash-commands.js",
+      "tree": "root",
+      "before": "cdbaa9cb7594702d5b5608cf0d26764e6218163087801d220d31c3fb9e2ac7c5",
+      "after": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/slash-commands.js",
+      "tree": "cli-nested",
+      "before": "cdbaa9cb7594702d5b5608cf0d26764e6218163087801d220d31c3fb9e2ac7c5",
+      "after": "04b4f282b6dba3d4c71969fc61ea70478b43ae7bf5a005084d829ff21ab9158c"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/bug-report.js",
+      "tree": "root",
+      "before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+      "after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/modes/interactive/bug-report.js",
+      "tree": "cli-nested",
+      "before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
+      "after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/types.d.ts",
+      "tree": "root",
+      "before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
+      "after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "manifest": "upstream/pi-content-policy/patch.lock.json",
+      "manifest_sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+      "path": "dist/core/extensions/types.d.ts",
+      "tree": "cli-nested",
+      "before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
+      "after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
+    },
+    {
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+      "path": "dist/utils/clipboard.js",
+      "tree": "root",
+      "before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "after": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+      "path": "dist/utils/clipboard.js",
+      "tree": "cli-nested",
+      "before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+      "after": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7"
+    },
+    {
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "manifest_sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+      "path": "dist/core/tools/path-utils.js",
+      "tree": "root",
+      "before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+      "after": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    },
+    {
+      "manifest": "upstream/pi-path-utils/patch.lock.json",
+      "manifest_sha256": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+      "path": "dist/core/tools/path-utils.js",
+      "tree": "cli-nested",
+      "before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",
+      "after": "4e5ac182448246d7017ea52d1c8169bb523688395db83a24099a1f9a270eb88f"
+    }
+  ],
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "bytes": 3536719,
+      "physical_lines": 1222,
+      "root_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "cli_nested_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "archive_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "review": "Exact partial range only; not whole MAINHOST semantic ownership."
+    }
+  ],
+  "reviewed_ranges": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013045,
+      "end": 1015412,
+      "bytes": 2367,
+      "range_sha256": "1f5eb948f335968ddd2e5c59bfda86a4f545874e706d91410cf878a290ad779d",
+      "qualification": "Complete local compiled MAINHOST partial range[1013045,1015412),2367B only: HTTP idle-timeout choices/parser/formatter, proxy environment defaults and Undici dispatcher/fetch bridge. Whole host semantic owner0. configureHttpDispatcher actual final ESM export plus compiled main/settings callers. BASE Jouzu package-dot unbundled dispatch is distinct. No environment mutation/dispatcher/fetch/native/request/network operation executed."
+    }
+  ],
+  "full_body_owners": 0,
+  "counts": {
+    "partial_source_ranges": 1,
+    "reviewed_bytes": 2367,
+    "full_body_owners": 0,
+    "top_level_declarations": 11,
+    "fixed_contexts": 7,
+    "primary_tokens": 7,
+    "exclusions": 5,
+    "total_lexical_nodes": 12,
+    "error_constructors": 1,
+    "catches": 0,
+    "promise_catches": 0,
+    "throws": 1,
+    "calls": 23,
+    "functions_and_methods": 7,
+    "controls": 8,
+    "callbacks": 2,
+    "boundaries": 2,
+    "frozen_B023_joins": 12,
+    "public_after_hash_checks": 74,
+    "catalog_occurrences": 0
+  },
+  "tokens": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013108,
+      "end": 1013121,
+      "line": 271,
+      "column": 6077,
+      "physical_line": 271,
+      "raw_source": "\"node:events\"",
+      "kind": "string",
+      "value": "node:events",
+      "decoded_value": "node:events",
+      "parent_kind": "ImportDeclaration",
+      "lexical_context": {
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013108:1013121",
+      "definition": "<import>",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013243,
+      "end": 1013251,
+      "line": 271,
+      "column": 6212,
+      "physical_line": 271,
+      "raw_source": "\"30 sec\"",
+      "kind": "string",
+      "value": "30 sec",
+      "decoded_value": "30 sec",
+      "parent_kind": "PropertyAssignment",
+      "lexical_context": {
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013243:1013251",
+      "definition": "DEFAULT_HTTP_IDLE_TIMEOUT_MS,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,HTTP_IDLE_TIMEOUT_CHOICES,originalGlobalFetch,installedGlobalFetch",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.1"
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013274,
+      "end": 1013281,
+      "line": 271,
+      "column": 6243,
+      "physical_line": 271,
+      "raw_source": "\"1 min\"",
+      "kind": "string",
+      "value": "1 min",
+      "decoded_value": "1 min",
+      "parent_kind": "PropertyAssignment",
+      "lexical_context": {
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013274:1013281",
+      "definition": "DEFAULT_HTTP_IDLE_TIMEOUT_MS,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,HTTP_IDLE_TIMEOUT_CHOICES,originalGlobalFetch,installedGlobalFetch",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.2"
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013304,
+      "end": 1013311,
+      "line": 271,
+      "column": 6273,
+      "physical_line": 271,
+      "raw_source": "\"2 min\"",
+      "kind": "string",
+      "value": "2 min",
+      "decoded_value": "2 min",
+      "parent_kind": "PropertyAssignment",
+      "lexical_context": {
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013304:1013311",
+      "definition": "DEFAULT_HTTP_IDLE_TIMEOUT_MS,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,HTTP_IDLE_TIMEOUT_CHOICES,originalGlobalFetch,installedGlobalFetch",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.3"
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013335,
+      "end": 1013342,
+      "line": 271,
+      "column": 6304,
+      "physical_line": 271,
+      "raw_source": "\"5 min\"",
+      "kind": "string",
+      "value": "5 min",
+      "decoded_value": "5 min",
+      "parent_kind": "PropertyAssignment",
+      "lexical_context": {
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013335:1013342",
+      "definition": "DEFAULT_HTTP_IDLE_TIMEOUT_MS,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,HTTP_IDLE_TIMEOUT_CHOICES,originalGlobalFetch,installedGlobalFetch",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.4"
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013365,
+      "end": 1013375,
+      "line": 271,
+      "column": 6334,
+      "physical_line": 271,
+      "raw_source": "\"disabled\"",
+      "kind": "string",
+      "value": "disabled",
+      "decoded_value": "disabled",
+      "parent_kind": "PropertyAssignment",
+      "lexical_context": {
+        "conditions": []
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013365:1013375",
+      "definition": "DEFAULT_HTTP_IDLE_TIMEOUT_MS,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,HTTP_IDLE_TIMEOUT_CHOICES,originalGlobalFetch,installedGlobalFetch",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.5"
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013504,
+      "end": 1013512,
+      "line": 271,
+      "column": 6473,
+      "physical_line": 271,
+      "raw_source": "\"string\"",
+      "kind": "string",
+      "value": "string",
+      "decoded_value": "string",
+      "parent_kind": "BinaryExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "parseHttpIdleTimeoutMs",
+          "line": 271
+        },
+        "conditions": [
+          {
+            "kind": "IfStatement",
+            "condition": "typeof value==\"string\"",
+            "branch": "condition",
+            "start": 1013490,
+            "end": 1013512,
+            "line": 271,
+            "column": 6459
+          }
+        ]
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013504:1013512",
+      "definition": "parseHttpIdleTimeoutMs",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013570,
+      "end": 1013580,
+      "line": 271,
+      "column": 6539,
+      "physical_line": 271,
+      "raw_source": "\"disabled\"",
+      "kind": "string",
+      "value": "disabled",
+      "decoded_value": "disabled",
+      "parent_kind": "BinaryExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "parseHttpIdleTimeoutMs",
+          "line": 271
+        },
+        "conditions": [
+          {
+            "kind": "ConditionalExpression",
+            "condition": "trimmed.toLowerCase()===\"disabled\"",
+            "branch": "condition",
+            "start": 1013546,
+            "end": 1013580,
+            "line": 271,
+            "column": 6515
+          },
+          {
+            "kind": "IfStatement",
+            "condition": "typeof value==\"string\"",
+            "branch": "then",
+            "start": 1013490,
+            "end": 1013512,
+            "line": 271,
+            "column": 6459
+          }
+        ]
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013570:1013580",
+      "definition": "parseHttpIdleTimeoutMs",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013668,
+      "end": 1013676,
+      "line": 271,
+      "column": 6637,
+      "physical_line": 271,
+      "raw_source": "\"number\"",
+      "kind": "string",
+      "value": "number",
+      "decoded_value": "number",
+      "parent_kind": "BinaryExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "parseHttpIdleTimeoutMs",
+          "line": 271
+        },
+        "conditions": [
+          {
+            "kind": "IfStatement",
+            "condition": "!(typeof value!=\"number\"||!Number.isFinite(value)||value<0)",
+            "branch": "condition",
+            "start": 1013652,
+            "end": 1013711,
+            "line": 271,
+            "column": 6621
+          }
+        ]
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013668:1013676",
+      "definition": "parseHttpIdleTimeoutMs",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013884,
+      "end": 1013906,
+      "line": 271,
+      "column": 6853,
+      "physical_line": 271,
+      "raw_source": "`${timeoutMs/1e3} sec`",
+      "kind": "template",
+      "value": "${timeoutMs/1e3} sec",
+      "decoded_value": [
+        "",
+        " sec"
+      ],
+      "parent_kind": "ConditionalExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "formatHttpIdleTimeoutMs",
+          "line": 271
+        },
+        "conditions": [
+          {
+            "kind": "ConditionalExpression",
+            "condition": "choice",
+            "branch": "whenFalse",
+            "start": 1013864,
+            "end": 1013870,
+            "line": 271,
+            "column": 6833
+          }
+        ]
+      },
+      "expression_ranges": [
+        [
+          1013887,
+          1013900
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013884:1013906",
+      "definition": "formatHttpIdleTimeoutMs",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.6"
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014223,
+      "end": 1014230,
+      "line": 271,
+      "column": 7192,
+      "physical_line": 271,
+      "raw_source": "\"error\"",
+      "kind": "string",
+      "value": "error",
+      "decoded_value": "error",
+      "parent_kind": "CallExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "withUndiciErrorListener",
+          "line": 271
+        },
+        "conditions": [
+          {
+            "kind": "BinaryExpression",
+            "condition": "dispatcher instanceof EventEmitter",
+            "branch": "&& right operand",
+            "start": 1014145,
+            "end": 1014179,
+            "line": 271,
+            "column": 7114
+          }
+        ]
+      },
+      "expression_ranges": [],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1014223:1014230",
+      "definition": "withUndiciErrorListener",
+      "fixed_items": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014829,
+      "end": 1014878,
+      "line": 271,
+      "column": 7798,
+      "physical_line": 271,
+      "raw_source": "`Invalid HTTP idle timeout: ${String(timeoutMs)}`",
+      "kind": "template",
+      "value": "Invalid HTTP idle timeout: ${String(timeoutMs)}",
+      "decoded_value": [
+        "Invalid HTTP idle timeout: ",
+        ""
+      ],
+      "parent_kind": "NewExpression",
+      "lexical_context": {
+        "owner": {
+          "kind": "FunctionDeclaration",
+          "name": "configureHttpDispatcher",
+          "line": 271
+        },
+        "conditions": [
+          {
+            "kind": "IfStatement",
+            "condition": "normalizedTimeoutMs===void 0",
+            "branch": "then",
+            "start": 1014784,
+            "end": 1014812,
+            "line": 271,
+            "column": 7753
+          }
+        ]
+      },
+      "expression_ranges": [
+        [
+          1014859,
+          1014876
+        ]
+      ],
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1014829:1014878",
+      "definition": "configureHttpDispatcher",
+      "fixed_items": [
+        "pi-bundle-main-host-http-dispatch.fixed.7"
+      ]
+    }
+  ],
+  "fixed_anchors": [
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.1",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013243:1013251"
+    },
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.2",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013274:1013281"
+    },
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.3",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013304:1013311"
+    },
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.4",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013335:1013342"
+    },
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.5",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013365:1013375"
+    },
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.6",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013884:1013906"
+    },
+    {
+      "item_id": "pi-bundle-main-host-http-dispatch.fixed.7",
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1014829:1014878"
+    }
+  ],
+  "errors": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014819,
+      "end": 1014879,
+      "line": 271,
+      "column": 7788,
+      "physical_line": 271,
+      "raw_source": "new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`)",
+      "kind": "new",
+      "callee": "Error",
+      "argument_ranges": [
+        [
+          1014829,
+          1014878
+        ]
+      ]
+    }
+  ],
+  "catches": [],
+  "promise_catches": [],
+  "throws": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014813,
+      "end": 1014880,
+      "line": 271,
+      "column": 7782,
+      "physical_line": 271,
+      "raw_source": "throw new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`);"
+    }
+  ],
+  "calls": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013056,
+      "end": 1013083,
+      "line": 271,
+      "column": 6025,
+      "physical_line": 271,
+      "raw_source": "__toESM(require_undici(),1)",
+      "kind": "call",
+      "callee": "__toESM",
+      "argument_ranges": [
+        [
+          1013064,
+          1013080
+        ],
+        [
+          1013081,
+          1013082
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013064,
+      "end": 1013080,
+      "line": 271,
+      "column": 6033,
+      "physical_line": 271,
+      "raw_source": "require_undici()",
+      "kind": "call",
+      "callee": "require_undici",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013526,
+      "end": 1013538,
+      "line": 271,
+      "column": 6495,
+      "physical_line": 271,
+      "raw_source": "value.trim()",
+      "kind": "call",
+      "callee": "value.trim",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013546,
+      "end": 1013567,
+      "line": 271,
+      "column": 6515,
+      "physical_line": 271,
+      "raw_source": "trimmed.toLowerCase()",
+      "kind": "call",
+      "callee": "trimmed.toLowerCase",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013609,
+      "end": 1013648,
+      "line": 271,
+      "column": 6578,
+      "physical_line": 271,
+      "raw_source": "parseHttpIdleTimeoutMs(Number(trimmed))",
+      "kind": "call",
+      "callee": "parseHttpIdleTimeoutMs",
+      "argument_ranges": [
+        [
+          1013632,
+          1013647
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013632,
+      "end": 1013647,
+      "line": 271,
+      "column": 6601,
+      "physical_line": 271,
+      "raw_source": "Number(trimmed)",
+      "kind": "call",
+      "callee": "Number",
+      "argument_ranges": [
+        [
+          1013639,
+          1013646
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013679,
+      "end": 1013701,
+      "line": 271,
+      "column": 6648,
+      "physical_line": 271,
+      "raw_source": "Number.isFinite(value)",
+      "kind": "call",
+      "callee": "Number.isFinite",
+      "argument_ranges": [
+        [
+          1013695,
+          1013700
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013719,
+      "end": 1013736,
+      "line": 271,
+      "column": 6688,
+      "physical_line": 271,
+      "raw_source": "Math.floor(value)",
+      "kind": "call",
+      "callee": "Math.floor",
+      "argument_ranges": [
+        [
+          1013730,
+          1013735
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013792,
+      "end": 1013856,
+      "line": 271,
+      "column": 6761,
+      "physical_line": 271,
+      "raw_source": "HTTP_IDLE_TIMEOUT_CHOICES.find(item=>item.timeoutMs===timeoutMs)",
+      "kind": "call",
+      "callee": "HTTP_IDLE_TIMEOUT_CHOICES.find",
+      "argument_ranges": [
+        [
+          1013823,
+          1013855
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013960,
+      "end": 1013977,
+      "line": 271,
+      "column": 6929,
+      "physical_line": 271,
+      "raw_source": "httpProxy?.trim()",
+      "kind": "call",
+      "callee": "httpProxy?.trim",
+      "argument_ranges": []
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014181,
+      "end": 1014259,
+      "line": 271,
+      "column": 7150,
+      "physical_line": 271,
+      "raw_source": "EventEmitter.prototype.on.call(dispatcher,\"error\",ignoreUndiciDispatcherError)",
+      "kind": "call",
+      "callee": "EventEmitter.prototype.on.call",
+      "argument_ranges": [
+        [
+          1014212,
+          1014222
+        ],
+        [
+          1014223,
+          1014230
+        ],
+        [
+          1014231,
+          1014258
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014322,
+      "end": 1014380,
+      "line": 271,
+      "column": 7291,
+      "physical_line": 271,
+      "raw_source": "withUndiciErrorListener(new undici.Client(origin,options))",
+      "kind": "call",
+      "callee": "withUndiciErrorListener",
+      "argument_ranges": [
+        [
+          1014346,
+          1014379
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014346,
+      "end": 1014379,
+      "line": 271,
+      "column": 7315,
+      "physical_line": 271,
+      "raw_source": "new undici.Client(origin,options)",
+      "kind": "new",
+      "callee": "undici.Client",
+      "argument_ranges": [
+        [
+          1014364,
+          1014370
+        ],
+        [
+          1014371,
+          1014378
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014506,
+      "end": 1014550,
+      "line": 271,
+      "column": 7475,
+      "physical_line": 271,
+      "raw_source": "createUndiciClient(origin,dispatcherOptions)",
+      "kind": "call",
+      "callee": "createUndiciClient",
+      "argument_ranges": [
+        [
+          1014525,
+          1014531
+        ],
+        [
+          1014532,
+          1014549
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014551,
+      "end": 1014649,
+      "line": 271,
+      "column": 7520,
+      "physical_line": 271,
+      "raw_source": "withUndiciErrorListener(new undici.Pool(origin,{...dispatcherOptions,factory:createUndiciClient}))",
+      "kind": "call",
+      "callee": "withUndiciErrorListener",
+      "argument_ranges": [
+        [
+          1014575,
+          1014648
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014575,
+      "end": 1014648,
+      "line": 271,
+      "column": 7544,
+      "physical_line": 271,
+      "raw_source": "new undici.Pool(origin,{...dispatcherOptions,factory:createUndiciClient})",
+      "kind": "new",
+      "callee": "undici.Pool",
+      "argument_ranges": [
+        [
+          1014591,
+          1014597
+        ],
+        [
+          1014598,
+          1014647
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014747,
+      "end": 1014780,
+      "line": 271,
+      "column": 7716,
+      "physical_line": 271,
+      "raw_source": "parseHttpIdleTimeoutMs(timeoutMs)",
+      "kind": "call",
+      "callee": "parseHttpIdleTimeoutMs",
+      "argument_ranges": [
+        [
+          1014770,
+          1014779
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014819,
+      "end": 1014879,
+      "line": 271,
+      "column": 7788,
+      "physical_line": 271,
+      "raw_source": "new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`)",
+      "kind": "new",
+      "callee": "Error",
+      "argument_ranges": [
+        [
+          1014829,
+          1014878
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014859,
+      "end": 1014876,
+      "line": 271,
+      "column": 7828,
+      "physical_line": 271,
+      "raw_source": "String(timeoutMs)",
+      "kind": "call",
+      "callee": "String",
+      "argument_ranges": [
+        [
+          1014866,
+          1014875
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014895,
+      "end": 1015201,
+      "line": 271,
+      "column": 7864,
+      "physical_line": 271,
+      "raw_source": "withUndiciErrorListener(new undici.EnvHttpProxyAgent({allowH2:!1,proxyTunnel:!0,bodyTimeout:normalizedTimeoutMs,connect:{autoSelectFamilyAttemptTimeout:DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS},headersTimeout:normalizedTimeoutMs,clientFactory:createUndiciClient,factory:createUndiciOriginDispatcher}))",
+      "kind": "call",
+      "callee": "withUndiciErrorListener",
+      "argument_ranges": [
+        [
+          1014919,
+          1015200
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014919,
+      "end": 1015200,
+      "line": 271,
+      "column": 7888,
+      "physical_line": 271,
+      "raw_source": "new undici.EnvHttpProxyAgent({allowH2:!1,proxyTunnel:!0,bodyTimeout:normalizedTimeoutMs,connect:{autoSelectFamilyAttemptTimeout:DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS},headersTimeout:normalizedTimeoutMs,clientFactory:createUndiciClient,factory:createUndiciOriginDispatcher})",
+      "kind": "new",
+      "callee": "undici.EnvHttpProxyAgent",
+      "argument_ranges": [
+        [
+          1014948,
+          1015199
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1015202,
+      "end": 1015240,
+      "line": 271,
+      "column": 8171,
+      "physical_line": 271,
+      "raw_source": "undici.setGlobalDispatcher(dispatcher)",
+      "kind": "call",
+      "callee": "undici.setGlobalDispatcher",
+      "argument_ranges": [
+        [
+          1015229,
+          1015239
+        ]
+      ]
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1015354,
+      "end": 1015372,
+      "line": 271,
+      "column": 8323,
+      "physical_line": 271,
+      "raw_source": "undici.install?.()",
+      "kind": "call",
+      "callee": "undici.install",
+      "argument_ranges": []
+    }
+  ],
+  "functions_and_methods": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013448,
+      "end": 1013737,
+      "line": 271,
+      "column": 6417,
+      "physical_line": 271,
+      "raw_source": "function parseHttpIdleTimeoutMs(value){if(typeof value==\"string\"){let trimmed=value.trim();return trimmed.toLowerCase()===\"disabled\"?0:trimmed.length===0?void 0:parseHttpIdleTimeoutMs(Number(trimmed))}if(!(typeof value!=\"number\"||!Number.isFinite(value)||value<0))return Math.floor(value)}",
+      "name": "parseHttpIdleTimeoutMs"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013737,
+      "end": 1013907,
+      "line": 271,
+      "column": 6706,
+      "physical_line": 271,
+      "raw_source": "function formatHttpIdleTimeoutMs(timeoutMs){let choice=HTTP_IDLE_TIMEOUT_CHOICES.find(item=>item.timeoutMs===timeoutMs);return choice?choice.label:`${timeoutMs/1e3} sec`}",
+      "name": "formatHttpIdleTimeoutMs"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013907,
+      "end": 1014050,
+      "line": 271,
+      "column": 6876,
+      "physical_line": 271,
+      "raw_source": "function applyHttpProxySettings(httpProxy){let proxy=httpProxy?.trim();proxy&&(process.env.HTTP_PROXY??=proxy,process.env.HTTPS_PROXY??=proxy)}",
+      "name": "applyHttpProxySettings"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014093,
+      "end": 1014271,
+      "line": 271,
+      "column": 7062,
+      "physical_line": 271,
+      "raw_source": "function withUndiciErrorListener(dispatcher){return dispatcher instanceof EventEmitter&&EventEmitter.prototype.on.call(dispatcher,\"error\",ignoreUndiciDispatcherError),dispatcher}",
+      "name": "withUndiciErrorListener"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014271,
+      "end": 1014381,
+      "line": 271,
+      "column": 7240,
+      "physical_line": 271,
+      "raw_source": "function createUndiciClient(origin,options){return withUndiciErrorListener(new undici.Client(origin,options))}",
+      "name": "createUndiciClient"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014381,
+      "end": 1014650,
+      "line": 271,
+      "column": 7350,
+      "physical_line": 271,
+      "raw_source": "function createUndiciOriginDispatcher(origin,options){let dispatcherOptions=options;return dispatcherOptions.connections===1?createUndiciClient(origin,dispatcherOptions):withUndiciErrorListener(new undici.Pool(origin,{...dispatcherOptions,factory:createUndiciClient}))}",
+      "name": "createUndiciOriginDispatcher"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014650,
+      "end": 1015412,
+      "line": 271,
+      "column": 7619,
+      "physical_line": 271,
+      "raw_source": "function configureHttpDispatcher(timeoutMs=DEFAULT_HTTP_IDLE_TIMEOUT_MS){let normalizedTimeoutMs=parseHttpIdleTimeoutMs(timeoutMs);if(normalizedTimeoutMs===void 0)throw new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`);let dispatcher=withUndiciErrorListener(new undici.EnvHttpProxyAgent({allowH2:!1,proxyTunnel:!0,bodyTimeout:normalizedTimeoutMs,connect:{autoSelectFamilyAttemptTimeout:DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS},headersTimeout:normalizedTimeoutMs,clientFactory:createUndiciClient,factory:createUndiciOriginDispatcher}));undici.setGlobalDispatcher(dispatcher),(installedGlobalFetch===void 0?globalThis.fetch===originalGlobalFetch:globalThis.fetch===installedGlobalFetch)&&(undici.install?.(),installedGlobalFetch=globalThis.fetch)}",
+      "name": "configureHttpDispatcher"
+    }
+  ],
+  "controls": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013487,
+      "end": 1013649,
+      "line": 271,
+      "column": 6456,
+      "physical_line": 271,
+      "raw_source": "if(typeof value==\"string\"){let trimmed=value.trim();return trimmed.toLowerCase()===\"disabled\"?0:trimmed.length===0?void 0:parseHttpIdleTimeoutMs(Number(trimmed))}",
+      "kind": "IfStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013546,
+      "end": 1013648,
+      "line": 271,
+      "column": 6515,
+      "physical_line": 271,
+      "raw_source": "trimmed.toLowerCase()===\"disabled\"?0:trimmed.length===0?void 0:parseHttpIdleTimeoutMs(Number(trimmed))",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013583,
+      "end": 1013648,
+      "line": 271,
+      "column": 6552,
+      "physical_line": 271,
+      "raw_source": "trimmed.length===0?void 0:parseHttpIdleTimeoutMs(Number(trimmed))",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013649,
+      "end": 1013736,
+      "line": 271,
+      "column": 6618,
+      "physical_line": 271,
+      "raw_source": "if(!(typeof value!=\"number\"||!Number.isFinite(value)||value<0))return Math.floor(value)",
+      "kind": "IfStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013864,
+      "end": 1013906,
+      "line": 271,
+      "column": 6833,
+      "physical_line": 271,
+      "raw_source": "choice?choice.label:`${timeoutMs/1e3} sec`",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014472,
+      "end": 1014649,
+      "line": 271,
+      "column": 7441,
+      "physical_line": 271,
+      "raw_source": "dispatcherOptions.connections===1?createUndiciClient(origin,dispatcherOptions):withUndiciErrorListener(new undici.Pool(origin,{...dispatcherOptions,factory:createUndiciClient}))",
+      "kind": "ConditionalExpression"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014781,
+      "end": 1014880,
+      "line": 271,
+      "column": 7750,
+      "physical_line": 271,
+      "raw_source": "if(normalizedTimeoutMs===void 0)throw new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`);",
+      "kind": "IfStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1015242,
+      "end": 1015350,
+      "line": 271,
+      "column": 8211,
+      "physical_line": 271,
+      "raw_source": "installedGlobalFetch===void 0?globalThis.fetch===originalGlobalFetch:globalThis.fetch===installedGlobalFetch",
+      "kind": "ConditionalExpression"
+    }
+  ],
+  "callbacks": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013823,
+      "end": 1013855,
+      "line": 271,
+      "column": 6792,
+      "physical_line": 271,
+      "raw_source": "item=>item.timeoutMs===timeoutMs",
+      "kind": "ArrowFunction"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014082,
+      "end": 1014092,
+      "line": 271,
+      "column": 7051,
+      "physical_line": 271,
+      "raw_source": "_error=>{}",
+      "kind": "ArrowFunction"
+    }
+  ],
+  "reviewed_top_level_declarations": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013045,
+      "end": 1013084,
+      "line": 271,
+      "column": 6014,
+      "physical_line": 271,
+      "raw_source": "var undici=__toESM(require_undici(),1);",
+      "name": "undici",
+      "kind": "FirstStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013084,
+      "end": 1013122,
+      "line": 271,
+      "column": 6053,
+      "physical_line": 271,
+      "raw_source": "import{EventEmitter}from\"node:events\";",
+      "kind": "ImportDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013122,
+      "end": 1013448,
+      "line": 271,
+      "column": 6091,
+      "physical_line": 271,
+      "raw_source": "var DEFAULT_HTTP_IDLE_TIMEOUT_MS=3e5,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS=2e3,HTTP_IDLE_TIMEOUT_CHOICES=[{label:\"30 sec\",timeoutMs:3e4},{label:\"1 min\",timeoutMs:6e4},{label:\"2 min\",timeoutMs:12e4},{label:\"5 min\",timeoutMs:3e5},{label:\"disabled\",timeoutMs:0}],originalGlobalFetch=globalThis.fetch,installedGlobalFetch;",
+      "name": "DEFAULT_HTTP_IDLE_TIMEOUT_MS,DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS,HTTP_IDLE_TIMEOUT_CHOICES,originalGlobalFetch,installedGlobalFetch",
+      "kind": "FirstStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013448,
+      "end": 1013737,
+      "line": 271,
+      "column": 6417,
+      "physical_line": 271,
+      "raw_source": "function parseHttpIdleTimeoutMs(value){if(typeof value==\"string\"){let trimmed=value.trim();return trimmed.toLowerCase()===\"disabled\"?0:trimmed.length===0?void 0:parseHttpIdleTimeoutMs(Number(trimmed))}if(!(typeof value!=\"number\"||!Number.isFinite(value)||value<0))return Math.floor(value)}",
+      "name": "parseHttpIdleTimeoutMs",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013737,
+      "end": 1013907,
+      "line": 271,
+      "column": 6706,
+      "physical_line": 271,
+      "raw_source": "function formatHttpIdleTimeoutMs(timeoutMs){let choice=HTTP_IDLE_TIMEOUT_CHOICES.find(item=>item.timeoutMs===timeoutMs);return choice?choice.label:`${timeoutMs/1e3} sec`}",
+      "name": "formatHttpIdleTimeoutMs",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1013907,
+      "end": 1014050,
+      "line": 271,
+      "column": 6876,
+      "physical_line": 271,
+      "raw_source": "function applyHttpProxySettings(httpProxy){let proxy=httpProxy?.trim();proxy&&(process.env.HTTP_PROXY??=proxy,process.env.HTTPS_PROXY??=proxy)}",
+      "name": "applyHttpProxySettings",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014050,
+      "end": 1014093,
+      "line": 271,
+      "column": 7019,
+      "physical_line": 271,
+      "raw_source": "var ignoreUndiciDispatcherError=_error=>{};",
+      "name": "ignoreUndiciDispatcherError",
+      "kind": "FirstStatement"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014093,
+      "end": 1014271,
+      "line": 271,
+      "column": 7062,
+      "physical_line": 271,
+      "raw_source": "function withUndiciErrorListener(dispatcher){return dispatcher instanceof EventEmitter&&EventEmitter.prototype.on.call(dispatcher,\"error\",ignoreUndiciDispatcherError),dispatcher}",
+      "name": "withUndiciErrorListener",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014271,
+      "end": 1014381,
+      "line": 271,
+      "column": 7240,
+      "physical_line": 271,
+      "raw_source": "function createUndiciClient(origin,options){return withUndiciErrorListener(new undici.Client(origin,options))}",
+      "name": "createUndiciClient",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014381,
+      "end": 1014650,
+      "line": 271,
+      "column": 7350,
+      "physical_line": 271,
+      "raw_source": "function createUndiciOriginDispatcher(origin,options){let dispatcherOptions=options;return dispatcherOptions.connections===1?createUndiciClient(origin,dispatcherOptions):withUndiciErrorListener(new undici.Pool(origin,{...dispatcherOptions,factory:createUndiciClient}))}",
+      "name": "createUndiciOriginDispatcher",
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1014650,
+      "end": 1015412,
+      "line": 271,
+      "column": 7619,
+      "physical_line": 271,
+      "raw_source": "function configureHttpDispatcher(timeoutMs=DEFAULT_HTTP_IDLE_TIMEOUT_MS){let normalizedTimeoutMs=parseHttpIdleTimeoutMs(timeoutMs);if(normalizedTimeoutMs===void 0)throw new Error(`Invalid HTTP idle timeout: ${String(timeoutMs)}`);let dispatcher=withUndiciErrorListener(new undici.EnvHttpProxyAgent({allowH2:!1,proxyTunnel:!0,bodyTimeout:normalizedTimeoutMs,connect:{autoSelectFamilyAttemptTimeout:DEFAULT_AUTO_SELECT_FAMILY_ATTEMPT_TIMEOUT_MS},headersTimeout:normalizedTimeoutMs,clientFactory:createUndiciClient,factory:createUndiciOriginDispatcher}));undici.setGlobalDispatcher(dispatcher),(installedGlobalFetch===void 0?globalThis.fetch===originalGlobalFetch:globalThis.fetch===installedGlobalFetch)&&(undici.install?.(),installedGlobalFetch=globalThis.fetch)}",
+      "name": "configureHttpDispatcher",
+      "kind": "FunctionDeclaration"
+    }
+  ],
+  "bounded_cross_range_support": [
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3012710,
+      "end": 3013150,
+      "line": 932,
+      "column": 19051,
+      "physical_line": 932,
+      "raw_source": "b Gist)\",currentValue:config.sessionShareDestination,values:[\"auto\",\"gist\",\"radius\"]},{id:\"http-idle-timeout\",label:\"HTTP idle timeout\",description:\"Maximum idle gap while waiting for HTTP headers or body chunks. Disable for local models that pause longer than five minutes.\",currentValue:formatHttpIdleTimeoutMs(config.httpIdleTimeoutMs),values:HTTP_IDLE_TIMEOUT_CHOICES.map(choice=>choice.label)},{id:\"cache-warming-mode\",label:\"Cache war",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Settings idle-timeout value/current formatting",
+      "sha256": "1b435039fb3c168e1dcd67838be8eec496328b59e9d9a6d34542dc1a99dc474d"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3023150,
+      "end": 3023470,
+      "line": 932,
+      "column": 29491,
+      "physical_line": 932,
+      "raw_source": "-destination\":callbacks.onSessionShareDestinationChange(newValue);break;case\"http-idle-timeout\":{let choice=HTTP_IDLE_TIMEOUT_CHOICES.find(item=>item.label===newValue);choice&&callbacks.onHttpIdleTimeoutMsChange(choice.timeoutMs);break}case\"cache-warming-mode\":callbacks.onCacheWarmingModeChange(newValue);break;case\"hid",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Label to timeoutMs callback mapping",
+      "sha256": "2c4a36c2c641856bebce8501cd536444bb49f0cc5e72b83f70129d7836358cd1"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3315750,
+      "end": 3316160,
+      "line": 1005,
+      "column": 6895,
+      "physical_line": 1005,
+      "raw_source": "anager.setSessionShareDestination(destination)},onHttpIdleTimeoutMsChange:timeoutMs=>{this.settingsManager.setHttpIdleTimeoutMs(timeoutMs),configureHttpDispatcher(timeoutMs),this.showStatus(`HTTP idle timeout: ${formatHttpIdleTimeoutMs(timeoutMs)}`)},onCacheWarmingModeChange:mode=>{this.session.setCacheWarmingMode(mode),this.showStatus(`Cache warming: ${mode}`)},onModelThinkingLevelChange:(provider,modelId,",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Interactive settings setter/configure/status callback",
+      "sha256": "02d04ce23c44b5787eaeeb0771aaded72b88232b90ae3cfd3efbb0b4d792eea9"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3249250,
+      "end": 3249560,
+      "line": 988,
+      "column": 2213,
+      "physical_line": 988,
+      "raw_source": "})}applyRuntimeSettings(){setCapabilityOverrides(this.settingsManager.getTerminalCapabilityOverrides()),this.ensurePngTranscoder(),configureHttpDispatcher(this.settingsManager.getHttpIdleTimeoutMs()),this.applyFullscreenScrollbarSetting(),this.renderer instanceof TuiAltScreen&&(this.renderer.setCopyOnSelect(t",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Runtime settings configure caller",
+      "sha256": "418a9494a6fcb5c74f6295a8b273b47d06a69d5f89cec88727686b6619f7a018"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3522860,
+      "end": 3523300,
+      "line": 1222,
+      "column": 8139,
+      "physical_line": 1222,
+      "raw_source": "ntDir=getAgentDir(),bootstrapSettingsManager=SettingsManager.create(cwd,agentDir,{projectTrusted:!1});if(applyHttpProxySettings(bootstrapSettingsManager.getGlobalSettings().httpProxy),configureHttpDispatcher(),await handlePackageCommand(args,{extensionFactories})){let exitCode=process.exitCode??0;if(process.platform===\"win32\"&&exitCode===0&&args[0]===\"update\")return;process.exit(exitCode);return}if(await handleConfigCommand(args,{extens",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Compiled main bootstrap config call",
+      "sha256": "838e02bffadd57c41943d982d871abca48f516697a3fa9aacba85307133263cb"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3530800,
+      "end": 3531080,
+      "line": 1222,
+      "column": 16079,
+      "physical_line": 1222,
+      "raw_source": "rrides(settingsManager.getTerminalCapabilityOverrides()),applyHttpProxySettings(settingsManager.getGlobalSettings().httpProxy),configureHttpDispatcher(settingsManager.getHttpIdleTimeoutMs()),parsed.help){reportDiagnostics(startupSettingsDiagnostics);let extensionFlags=resourceLoa",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Compiled main settings config and help precedence",
+      "sha256": "e0147919b861942cff2c8fd947f9b48a55bab7796d883fa3d82768ea76611a9b"
+    },
+    {
+      "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3533920,
+      "end": 3534430,
+      "line": 1222,
+      "column": 19199,
+      "physical_line": 1222,
+      "raw_source": "messages,initialMessage,initialImages});stopThemeWatcher(),restoreStdout(),exitCode!==0&&(process.exitCode=exitCode);return}}export{configureHttpDispatcher,value_exports2 as value_exports,compile_exports,SettingsManager,parseArgs,resolveModelScopeWithDiagnostics,resolveCliModel,all_exports,compat_exports,VIRTUAL_MODEL_STATE_ENTRY,CredentialSynchronizationError,ModelRuntime,convertToPng,resizeImage,formatDimensionNote,detectSupportedImageMimeTypeFromFile,createSyntheticSourceInfo,DefaultPackageManager,Dyna",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "coverage": "Bounded cross-range source/caller only; independent semantic owner, no new full body ownership.",
+      "purpose": "Final ESM exports configureHttpDispatcher",
+      "sha256": "5accba0baefd7e82ca274209453ce5daa498f4a0c4a992bc18b88bc00eedab8c"
+    }
+  ],
+  "supplemental_repo_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "coverage": "Bounded actual BASE package-dot/main/extension-policy/output-wrapper source only, separate full owner.",
+      "snippets": [
+        {
+          "start": 101,
+          "end": 103,
+          "source": "async function loadPiRuntime(): Promise<typeof import(\"@earendil-works/pi-coding-agent\")> {\n\treturn import(\"@earendil-works/pi-coding-agent\");\n}"
+        },
+        {
+          "start": 755,
+          "end": 765,
+          "source": "\t\t\t\t})\n\t\t\t: undefined;\n\tconst scrollbackSession = createScrollbackSessionObserver();\n\tconst startPi = () =>\n\t\tpi.main(piArgs, {\n\t\t\tsessionInfoFooter: runtimeDiagnostics.summary,\n\t\t\tcontentPolicyFactory: nativeTextguard.createPolicy,\n\t\t\tflowIngressFactory: async (context) => scrollbackSession.wrap(await flow?.flowIngressFactory(context)),\n\t\t\textensionFactories: [\n\t\t\t\t...classicHostBuiltinOverrides(),\n\t\t\t\tcreateDirectToolPolicyExtension(),"
+        },
+        {
+          "start": 805,
+          "end": 823,
+          "source": "\t\t\tusesReleaseExtensions(parsed.args)\n\t\t\t\t? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)\n\t\t\t\t: startPi();\n\t\tif (!interactiveStartup) return execute();\n\t\tconst { withPiUiLocalization } = await import(\"./pi-ui-localization.js\");\n\t\tconst { withPiProseWrapping } = await import(\"./pi-prose-wrapping.js\");\n\t\treturn withPiUiLocalization(\n\t\t\t() => displayCatalog.bundle,\n\t\t\t() => withPiProseWrapping(execute),\n\t\t\tpi,\n\t\t);\n\t};\n\ttry {\n\t\tawait withJouzuOutput(runPi, {\n\t\t\tinteractive: interactiveStartup,\n\t\t\tprotectTitles: true,\n\t\t\trewrite: !usesMachineReadableStdout(piArgs),\n\t\t});\n\t} finally {"
+        }
+      ]
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367",
+      "coverage": "Bounded actual BASE package-dot/main/extension-policy/output-wrapper source only, separate full owner.",
+      "snippets": [
+        {
+          "start": 42,
+          "end": 53,
+          "source": "export function classicHostBuiltinOverrides(): InlineExtension[] {\n\treturn [\n\t\t{\n\t\t\tname: \"codemode\",\n\t\t\tbuiltin: true,\n\t\t\treplaceable: true,\n\t\t\t// Scripts can issue model requests outside the classic host's request checkpoint.\n\t\t\tfactory() {},\n\t\t},\n\t\tcreateDeferredMcpExtension(),\n\t];\n}"
+        }
+      ]
+    },
+    {
+      "source": "packages/cli/src/runtime.ts",
+      "revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd",
+      "coverage": "Bounded actual BASE package-dot/main/extension-policy/output-wrapper source only, separate full owner.",
+      "snippets": [
+        {
+          "start": 81,
+          "end": 92,
+          "source": "export function configurePiProcess(paths: JouzuPaths): void {\n\tprocess.title = \"jouzu\";\n\tprocess.env.AI_AGENT = \"jouzu\";\n\tprocess.env.PI_CODING_AGENT = \"true\";\n\tprocess.env.PI_CODING_AGENT_DIR = paths.agentDir;\n\tprocess.env.PI_CODING_AGENT_SESSION_DIR = paths.sessionDir;\n\tprocess.env.JOUZU_RUNTIME_STATE_DIR = paths.stateDir;\n\tprocess.env.PI_VCC_CONFIG_PATH = join(paths.agentDir, \"pi-vcc-config.json\");\n\tprocess.env.PI_SKIP_VERSION_CHECK = \"1\";\n}\n"
+        }
+      ]
+    }
+  ],
+  "external_bounded_support": [],
+  "structural_data_proofs": [],
+  "global_symbol_refs_mechanical": {
+    "qualification": "Whole-source identifier references only; no full global caller/coupling review.",
+    "refs": {
+      "HTTP_IDLE_TIMEOUT_CHOICES": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1013209,
+          "end": 1013234,
+          "line": 271,
+          "column": 6178,
+          "physical_line": 271,
+          "raw_source": "HTTP_IDLE_TIMEOUT_CHOICES",
+          "parent_kind": "VariableDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1013792,
+          "end": 1013817,
+          "line": 271,
+          "column": 6761,
+          "physical_line": 271,
+          "raw_source": "HTTP_IDLE_TIMEOUT_CHOICES",
+          "parent_kind": "PropertyAccessExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3013056,
+          "end": 3013081,
+          "line": 932,
+          "column": 19397,
+          "physical_line": 932,
+          "raw_source": "HTTP_IDLE_TIMEOUT_CHOICES",
+          "parent_kind": "PropertyAccessExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3023258,
+          "end": 3023283,
+          "line": 932,
+          "column": 29599,
+          "physical_line": 932,
+          "raw_source": "HTTP_IDLE_TIMEOUT_CHOICES",
+          "parent_kind": "PropertyAccessExpression"
+        }
+      ],
+      "parseHttpIdleTimeoutMs": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1013457,
+          "end": 1013479,
+          "line": 271,
+          "column": 6426,
+          "physical_line": 271,
+          "raw_source": "parseHttpIdleTimeoutMs",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1013609,
+          "end": 1013631,
+          "line": 271,
+          "column": 6578,
+          "physical_line": 271,
+          "raw_source": "parseHttpIdleTimeoutMs",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014747,
+          "end": 1014769,
+          "line": 271,
+          "column": 7716,
+          "physical_line": 271,
+          "raw_source": "parseHttpIdleTimeoutMs",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1182796,
+          "end": 1182818,
+          "line": 274,
+          "column": 3694,
+          "physical_line": 274,
+          "raw_source": "parseHttpIdleTimeoutMs",
+          "parent_kind": "CallExpression"
+        }
+      ],
+      "formatHttpIdleTimeoutMs": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1013746,
+          "end": 1013769,
+          "line": 271,
+          "column": 6715,
+          "physical_line": 271,
+          "raw_source": "formatHttpIdleTimeoutMs",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3012999,
+          "end": 3013022,
+          "line": 932,
+          "column": 19340,
+          "physical_line": 932,
+          "raw_source": "formatHttpIdleTimeoutMs",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3315962,
+          "end": 3315985,
+          "line": 1005,
+          "column": 7107,
+          "physical_line": 1005,
+          "raw_source": "formatHttpIdleTimeoutMs",
+          "parent_kind": "CallExpression"
+        }
+      ],
+      "withUndiciErrorListener": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014102,
+          "end": 1014125,
+          "line": 271,
+          "column": 7071,
+          "physical_line": 271,
+          "raw_source": "withUndiciErrorListener",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014322,
+          "end": 1014345,
+          "line": 271,
+          "column": 7291,
+          "physical_line": 271,
+          "raw_source": "withUndiciErrorListener",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014551,
+          "end": 1014574,
+          "line": 271,
+          "column": 7520,
+          "physical_line": 271,
+          "raw_source": "withUndiciErrorListener",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014895,
+          "end": 1014918,
+          "line": 271,
+          "column": 7864,
+          "physical_line": 271,
+          "raw_source": "withUndiciErrorListener",
+          "parent_kind": "CallExpression"
+        }
+      ],
+      "createUndiciClient": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014280,
+          "end": 1014298,
+          "line": 271,
+          "column": 7249,
+          "physical_line": 271,
+          "raw_source": "createUndiciClient",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014506,
+          "end": 1014524,
+          "line": 271,
+          "column": 7475,
+          "physical_line": 271,
+          "raw_source": "createUndiciClient",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014628,
+          "end": 1014646,
+          "line": 271,
+          "column": 7597,
+          "physical_line": 271,
+          "raw_source": "createUndiciClient",
+          "parent_kind": "PropertyAssignment"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1015143,
+          "end": 1015161,
+          "line": 271,
+          "column": 8112,
+          "physical_line": 271,
+          "raw_source": "createUndiciClient",
+          "parent_kind": "PropertyAssignment"
+        }
+      ],
+      "createUndiciOriginDispatcher": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014390,
+          "end": 1014418,
+          "line": 271,
+          "column": 7359,
+          "physical_line": 271,
+          "raw_source": "createUndiciOriginDispatcher",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1015170,
+          "end": 1015198,
+          "line": 271,
+          "column": 8139,
+          "physical_line": 271,
+          "raw_source": "createUndiciOriginDispatcher",
+          "parent_kind": "PropertyAssignment"
+        }
+      ],
+      "configureHttpDispatcher": [
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 1014659,
+          "end": 1014682,
+          "line": 271,
+          "column": 7628,
+          "physical_line": 271,
+          "raw_source": "configureHttpDispatcher",
+          "parent_kind": "FunctionDeclaration"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3249381,
+          "end": 3249404,
+          "line": 988,
+          "column": 2344,
+          "physical_line": 988,
+          "raw_source": "configureHttpDispatcher",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3315889,
+          "end": 3315912,
+          "line": 1005,
+          "column": 7034,
+          "physical_line": 1005,
+          "raw_source": "configureHttpDispatcher",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3523044,
+          "end": 3523067,
+          "line": 1222,
+          "column": 8323,
+          "physical_line": 1222,
+          "raw_source": "configureHttpDispatcher",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3530927,
+          "end": 3530950,
+          "line": 1222,
+          "column": 16206,
+          "physical_line": 1222,
+          "raw_source": "configureHttpDispatcher",
+          "parent_kind": "CallExpression"
+        },
+        {
+          "path": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "physical_source": "dist/bundle/chunks/chunk-MM3LKT73.js",
+          "start": 3534052,
+          "end": 3534075,
+          "line": 1222,
+          "column": 19331,
+          "physical_line": 1222,
+          "raw_source": "configureHttpDispatcher",
+          "parent_kind": "ExportSpecifier"
+        }
+      ]
+    }
+  },
+  "frozen_lexical_joins": [
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013108:1013121",
+      "frozen_id": "B023:L007042",
+      "start": 1013108,
+      "end": 1013121
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013243:1013251",
+      "frozen_id": "B023:L007043",
+      "start": 1013243,
+      "end": 1013251
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013274:1013281",
+      "frozen_id": "B023:L007044",
+      "start": 1013274,
+      "end": 1013281
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013304:1013311",
+      "frozen_id": "B023:L007045",
+      "start": 1013304,
+      "end": 1013311
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013335:1013342",
+      "frozen_id": "B023:L007046",
+      "start": 1013335,
+      "end": 1013342
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013365:1013375",
+      "frozen_id": "B023:L007047",
+      "start": 1013365,
+      "end": 1013375
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013504:1013512",
+      "frozen_id": "B023:L007048",
+      "start": 1013504,
+      "end": 1013512
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013570:1013580",
+      "frozen_id": "B023:L007049",
+      "start": 1013570,
+      "end": 1013580
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013668:1013676",
+      "frozen_id": "B023:L007050",
+      "start": 1013668,
+      "end": 1013676
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1013884:1013906",
+      "frozen_id": "B023:L007051",
+      "start": 1013884,
+      "end": 1013906
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1014223:1014230",
+      "frozen_id": "B023:L007052",
+      "start": 1014223,
+      "end": 1014230
+    },
+    {
+      "token_id": "dist/bundle/chunks/chunk-MM3LKT73.js:1014829:1014878",
+      "frozen_id": "B023:L007053",
+      "start": 1014829,
+      "end": 1014878
+    }
+  ],
+  "caught_diagnostic_routes": [],
+  "interpretation": "Complete local compiled MAINHOST partial range[1013045,1015412),2367B only: HTTP idle-timeout choices/parser/formatter, proxy environment defaults and Undici dispatcher/fetch bridge. Whole host semantic owner0. configureHttpDispatcher actual final ESM export plus compiled main/settings callers. BASE Jouzu package-dot unbundled dispatch is distinct. No environment mutation/dispatcher/fetch/native/request/network operation executed.",
+  "offset_units": "Original ASCII bytes equal UTF16 units, start inclusive/end exclusive; 1-based line/column. Exact raw_source preserved; strings decoded and template delimiter-free source expressions retained.",
+  "parser": {
+    "typescript": "6.0.3",
+    "parse_errors": 0,
+    "audited_execution": false
+  },
+  "checker": {
+    "source": "review/text-inventory/verify-pi-bundle-main-host-http-dispatch.cjs",
+    "sha256": "9020193bc8dc9079f877b31cefcdadf60eb97566dc65700700909e0c41ffbe8d",
+    "mode": "Default read-only canonical archive/Git/fs and TypeScript AST; --write only authors own audit outputs, never audited modules."
+  },
+  "artifact_sha256_utf8_lf": {
+    "pi-bundle-main-host-http-dispatch.csv": "ff70fe1869542640047102ae3560e7279816087509f1ef0d84a41eb4a1526913",
+    "pi-bundle-main-host-http-dispatch-boundaries.csv": "1c1fc33cfe008dfc53bce1f64b6caeecb36f10fa7afeaff2714264dee359e36e",
+    "pi-bundle-main-host-http-dispatch-exclusions.csv": "f5834e131b2464e657b1ad81286b5faae253f596a9c9b48f54a09d6858cdf91c",
+    "pi-bundle-main-host-http-dispatch-scope.csv": "4e6579d2c19ba29e072d5c905d41809351a47df76d6a4d8739a8f871ec02cf6d"
+  }
+}
