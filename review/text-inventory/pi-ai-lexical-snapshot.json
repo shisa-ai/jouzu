@@ -17,7 +17,7 @@
   ],
   "source_census": "pi-ai-runtime-census.csv",
   "source_proof_checker": "verify-pi-ai-runtime-census.py",
-  "source_proof_checker_sha256": "095b91f5eb7264db36038370685476a6550e344a746be2a014b79686bec8fe9f",
+  "source_proof_checker_sha256": "df3feae6cc254504d9237291b1f2c69bd97750b7822c642a84731407932be6c4",
   "source_projection": "Only source paths, bytes, physical lines, canonical/installed hashes and patch provenance are consumed; mutable semantic ownership fields are deliberately excluded.",
   "source_files": [
     {

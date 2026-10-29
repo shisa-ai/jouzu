@@ -16,7 +16,7 @@ ROOT = HERE.parents[1]
 BASE = '346d1e481757a55eb62fc066e43bbc7999b8e6dd'
 PACKAGE = '@earendil-works/pi-ai'
 PREFIX = 'npm:' + PACKAGE + '@1.4.0/'
-SCOPES = ['pi-ai-auth-callback-text-scope.csv', 'pi-ai-mistral-adapter-scope.csv', 'pi-ai-host-utilities-scope.csv', 'pi-ai-bedrock-adapter-scope.csv', 'pi-ai-error-utilities-scope.csv', 'pi-ai-auth-shared-text-scope.csv', 'pi-ai-anthropic-adapter-scope.csv', 'pi-ai-data-utilities-scope.csv', 'pi-ai-openai-adapters-scope.csv', 'pi-ai-google-adapters-scope.csv', 'pi-ai-faux-text-scope.csv', 'pi-ai-model-auth-scope.csv', 'pi-ai-request-text-scope.csv',
+SCOPES = ['pi-ai-auth-device-text-scope.csv', 'pi-ai-auth-callback-text-scope.csv', 'pi-ai-mistral-adapter-scope.csv', 'pi-ai-host-utilities-scope.csv', 'pi-ai-bedrock-adapter-scope.csv', 'pi-ai-error-utilities-scope.csv', 'pi-ai-auth-shared-text-scope.csv', 'pi-ai-anthropic-adapter-scope.csv', 'pi-ai-data-utilities-scope.csv', 'pi-ai-openai-adapters-scope.csv', 'pi-ai-google-adapters-scope.csv', 'pi-ai-faux-text-scope.csv', 'pi-ai-model-auth-scope.csv', 'pi-ai-request-text-scope.csv',
           'pi-ai-provider-definitions-scope.csv', 'pi-ai-provider-helpers-scope.csv', 'pi-ai-provider-schemas-scope.csv']
 FIELDS = ['source', 'package_version', 'bytes', 'physical_lines', 'root_sha256',
           'cli_nested_sha256', 'archive_sha256', 'provenance', 'deviation_manifest', 'local_source_status',
@@ -55,7 +55,7 @@ def verify_records(rows):
         owners = json.loads(row['local_owners_json'])
         assert bool(owners) == (row['local_source_status'] == 'local-source-owner-present'), 'Owner status'
         assert row['coverage_boundary'] == LIMIT, 'Coverage boundary'
-    assert sum(r['local_source_status'] == 'local-source-owner-present' for r in rows) == 166, 'Owner count'
+    assert sum(r['local_source_status'] == 'local-source-owner-present' for r in rows) == 171, 'Owner count'
     assert sum(r['provenance'] == 'pinned-source-patch-after' for r in rows) == 16, 'Patch count'
 
 
@@ -144,7 +144,7 @@ def generate(root_modules, nested_modules, archive):
         runtime_files=len(rows), runtime_bytes=sum(int(r['bytes']) for r in rows),
         physical_lines=sum(int(r['physical_lines']) for r in rows), exact_archive_matches=184,
         pinned_source_patch_after_matches=16,
-        local_source_owners_present=166, local_source_bodies_pending=34,
+        local_source_owners_present=171, local_source_bodies_pending=29,
         pending_bytes=sum(int(r['bytes']) for r in rows if r['local_source_status'] == 'local-source-body-pending'),
         owner_input_sha256_utf8_lf=inputs, coverage_boundary=LIMIT,
         separate_census='Pi AI only; does not change the coding-agent/TUI 384-source census.',
@@ -190,8 +190,8 @@ def main():
             (HERE / name).write_text(expected, encoding='utf8', newline='\n')
         else:
             assert (HERE / name).read_bytes() == expected.encode('utf8'), name + ' is stale'
-    print(json.dumps(dict(runtime_files=200, runtime_bytes=931910, local_owners=166,
-                          bodies_pending=34, negative_controls=negative_controls(rows),
+    print(json.dumps(dict(runtime_files=200, runtime_bytes=931910, local_owners=171,
+                          bodies_pending=29, negative_controls=negative_controls(rows),
                           audited_execution=False), indent=2))
 
 
