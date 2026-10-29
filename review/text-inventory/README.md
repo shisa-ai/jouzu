@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 31 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 63 compiled bodies;
-18 compiled bodies remain pending. The
+universe with 32 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 64 compiled bodies;
+17 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1100,6 +1100,21 @@ two bodies and keeps VM/native/model/caller dependencies bounded. Canonical
 archive, both installed trees and 31 corruption controls pass. Jouzu's inspected
 classic override is empty; native tool routes require their own activation.
 No script, worker, tool, model, VM or native UI operation runs.
+
+[pi-bundle-anthropic-node-tools.csv](pi-bundle-anthropic-node-tools.csv) records
+130 qualified expressions across the complete optional Anthropic SDK Node tool
+body (62,805 bytes). Its 432
+[exclusions](pi-bundle-anthropic-node-tools-exclusions.csv) complete the 562-node
+partition. Eighty-six
+[boundaries](pi-bundle-anthropic-node-tools-boundaries.csv) retain explicit worker
+selection, custom-tool precedence, file/skill/memory gates, tool-error content,
+API returns and logger filtering. Tool descriptions are request metadata;
+ToolError content, prefixed general errors and selected logger output have
+separate consumers. The [scope](pi-bundle-anthropic-node-tools-scope.csv) grants
+complete local review to one compiled body. The bundled SDK version marker and
+public dependency lock are pinned without claiming source equivalence to other
+SDK bodies. Canonical archive, installed copies and 31 corruption controls pass.
+No shell, file-state, skill, memory, model, network or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2467,6 +2482,7 @@ node review/text-inventory/verify-pi-telemetry-runtime-text.cjs
 node review/text-inventory/verify-pi-server-protocol-text.cjs
 python -B review/text-inventory/verify-pi-ai-google-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-execution-runtime.py
+python -B review/text-inventory/verify-pi-bundle-anthropic-node-tools.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

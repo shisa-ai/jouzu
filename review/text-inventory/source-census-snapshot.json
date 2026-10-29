@@ -24,6 +24,7 @@
     "pi-server-protocol-text-scope.csv": "d5eeea4336c6983a2952409732495aca1bdf9e4e36b4c2b559876a57520e98f7",
     "pi-ai-google-adapters-scope.csv": "414efcf5d63788fcd0829959b67738ccceff3d0be0dea952220b074720d5d2b1",
     "pi-bundle-execution-runtime-scope.csv": "88d3f98e6c863dab6f0f2d1f03f3de4c5a241d6f607303bb114a5692c551e26b",
+    "pi-bundle-anthropic-node-tools-scope.csv": "48d4bb37e52b9c6cd48d3a2621d2156870ef8fab1088e23ada66ad42ecf0b38b",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
