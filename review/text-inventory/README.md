@@ -1579,12 +1579,12 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The registered partial main-host units cover 139 disjoint ranges totaling
-2,673,176 of the body's 3,536,719 bytes. The 4 remaining gaps total 863,543
+The registered partial main-host units cover 144 disjoint ranges totaling
+2,890,843 of the body's 3,536,719 bytes. The 4 remaining gaps total 645,876
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The [range census](pi-main-host-review-census.csv) and
-[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 53
+[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 58
 registered scope tables, reject overlap and keep every frozen literal/template/
 regex occurrence assigned to a reviewed range or a pending gap. This accounting
 does not independently approve each semantic classification or promote a whole
@@ -2095,6 +2095,46 @@ audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-bundle-main-host-interactive-runtime.csv](pi-bundle-main-host-interactive-runtime.csv) records 149 authored captions and fragments across the complete 100,673-byte interactive runtime range. Instance defaults, startup/resources, extension dialogs, input dispatch, event/history rendering, shared public wrappers, notifications, shutdown and queues retain exact callers and conditions. The 585 exclusions complete all 734 frozen occurrences. Its [boundaries](pi-bundle-main-host-interactive-runtime-boundaries.csv) and [scope](pi-bundle-main-host-interactive-runtime-scope.csv) preserve partial source ownership, mutable error sinks, private/public API distinctions and nontransactional queue restoration. The canonical declaration and installed public patch are separately identified; compiled and patched unbundled behavior are not equated. Twelve corruption controls and independent full-range source review pass. No audited UI runs or whole host is promoted.
+
+[pi-bundle-main-host-session-core.csv](pi-bundle-main-host-session-core.csv) records 38 qualified contexts in the complete 83,442-byte AgentSession range. Prompt/request projections, persisted metadata, summary reporting, cancellation, compaction, tool activity and exported API errors retain exact current callers and timing; 31 primary source nodes plus 311 exclusions complete 342 frozen occurrences.
+The [exclusions](pi-bundle-main-host-session-core-exclusions.csv),
+[boundaries](pi-bundle-main-host-session-core-boundaries.csv) and
+[scope](pi-bundle-main-host-session-core-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-interceptors.csv](pi-bundle-main-host-http-interceptors.csv) records The complete 20,066-byte Undici interceptor range with zero established public prose definitions. All 107 occurrences, including 20 own error/guard instances, retain exact private-factory, callback, export and invocation qualifications in the exclusions and boundaries.
+The [exclusions](pi-bundle-main-host-http-interceptors-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-interceptors-boundaries.csv) and
+[scope](pi-bundle-main-host-http-interceptors-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-cache-engine.csv](pi-bundle-main-host-http-cache-engine.csv) records The complete 53,583-byte Undici cache range with zero established public prose definitions. All 528 occurrences retain exact private-factory, error, synthetic-response, HTTP grammar, native and callback roles without inferring an installed cache API.
+The [exclusions](pi-bundle-main-host-http-cache-engine-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-cache-engine-boundaries.csv) and
+[scope](pi-bundle-main-host-http-cache-engine-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-transport-interceptors.csv](pi-bundle-main-host-http-transport-interceptors.csv) records The complete 22,287-byte decompression, retry/dedup and SQLite interceptor range. All 69 occurrences retain exact native SQL, process-warning, callback, guard and private-factory qualifications; no established public prose definition is promoted.
+The [exclusions](pi-bundle-main-host-http-transport-interceptors-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-transport-interceptors-boundaries.csv) and
+[scope](pi-bundle-main-host-http-transport-interceptors-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-fetch-types.csv](pi-bundle-main-host-http-fetch-types.csv) records 34 qualified definitions in the complete 38,289-byte Headers/Response/Request and Fetch-error type range. Conditional installed global APIs, immutable headers, URL/body validation, request cancellation and nested-cause behavior retain exact consumers; 232 exclusions complete 266 source occurrences.
+The [exclusions](pi-bundle-main-host-http-fetch-types-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-fetch-types-boundaries.csv) and
+[scope](pi-bundle-main-host-http-fetch-types-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3550,6 +3590,11 @@ node review/text-inventory/verify-pi-bundle-main-host-interactive-selectors.cjs
 node review/text-inventory/verify-pi-bundle-main-host-interactive-auth.cjs
 node review/text-inventory/verify-pi-bundle-main-host-interactive-commands.cjs
 python -B review/text-inventory/verify-pi-bundle-main-host-interactive-runtime.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-bundle-main-host-session-core.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-interceptors.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-cache-engine.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-transport-interceptors.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-fetch-types.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
