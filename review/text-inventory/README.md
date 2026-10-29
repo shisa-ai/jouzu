@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 37 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 72 compiled bodies;
-9 compiled bodies remain pending. The
+universe with 38 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 73 compiled bodies;
+8 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1453,6 +1453,20 @@ complete local review only to one compiled body. Canonical archive, installed
 copies, 31 corruption controls and four LF-count cases pass. Foreign/native/DOM/
 callback/renderer payloads remain bounded; no highlighting, browser, parser,
 code rendering or native UI operation runs.
+
+[pi-bundle-jiti-loader.csv](pi-bundle-jiti-loader.csv) records 23 qualified
+definitions across the complete compiled regular Jiti loader (201,917 bytes).
+The 2,019 [exclusions](pi-bundle-jiti-loader-exclusions.csv) complete the 2,042-node
+partition. Sixty-one [boundaries](pi-bundle-jiti-loader-boundaries.csv) retain
+direct internal-module APIs, debug options, process warnings, cache writes,
+resolution attempts and replacement catches. The inspected compiled host's
+embedded-module flag selects its static loader, preempting the regular-loader
+arm. Private parser text and replaced resolution failures retain exact exclusions;
+optional warnings have separate routes. The [scope](pi-bundle-jiti-loader-scope.csv)
+grants complete local review only to this loader, with bounded host proof.
+Canonical archive, installed copies, 31 corruption controls and four LF-count
+cases pass. Foreign resolver/native/module/cache consumers remain bounded;
+no loader, import, cache, process warning, environment or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2842,6 +2856,7 @@ python -B review/text-inventory/verify-pi-ai-pi-messages-adapter.py --node-modul
 python -B review/text-inventory/verify-pi-ai-nonchat-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-web-streams.py
 python -B review/text-inventory/verify-pi-bundle-highlight-core.py
+python -B review/text-inventory/verify-pi-bundle-jiti-loader.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
