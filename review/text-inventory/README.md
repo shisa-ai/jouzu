@@ -403,9 +403,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 43 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 78 compiled bodies;
-3 compiled bodies remain pending. The
+universe with 44 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 79 compiled bodies;
+2 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1740,6 +1740,23 @@ The [exclusions](pi-bundle-main-host-ignore-exclusions.csv),
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-bedrock-client.csv](pi-bundle-bedrock-client.csv) records 176 qualified
+definitions across the complete compiled Bedrock/AWS/Smithy body (886,422 bytes).
+Its 6,076 [exclusions](pi-bundle-bedrock-client-exclusions.csv) complete the
+6,252-node partition. Ten
+[boundaries](pi-bundle-bedrock-client-boundaries.csv) retain the two Pi stream
+exports, actual HTTP/2 versus HTTP/1 proxy/credential routes, RestJSON and
+conditional STS Query parsing, event-frame/CRC failures, credential-chain
+replacement, direct warnings and model-request/error normalization. Private
+unrelated SDK helpers do not acquire a public API from their presence. Setup
+before the async error catch, abort, retry, logger and stream/admission conditions
+remain explicit. One multiline warning uses a documented JSON-string cell to
+preserve its embedded source whitespace. The
+[scope](pi-bundle-bedrock-client-scope.csv) grants one complete local body with
+bounded concrete callers. Canonical and both installed sources match; 126 public
+after-hashes and 26 corruption controls pass. No SDK, credential, transport,
+request, proxy, environment, filesystem or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -3153,6 +3170,7 @@ node review/text-inventory/verify-pi-bundle-main-host-mcp.cjs
 node review/text-inventory/verify-pi-bundle-main-host-settings-cli.cjs
 node review/text-inventory/verify-pi-bundle-main-host-model-resolution.cjs
 node review/text-inventory/verify-pi-bundle-main-host-ignore.cjs
+python -B review/text-inventory/verify-pi-bundle-bedrock-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
