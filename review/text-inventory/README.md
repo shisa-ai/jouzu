@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 34 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 69 compiled bodies;
-12 compiled bodies remain pending. The
+universe with 35 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 70 compiled bodies;
+11 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1265,6 +1265,21 @@ bodies: one exact public patch after-hash and two canonical matches. Four archiv
 both installed copies, metadata transforms and 22 corruption controls pass.
 Foreign SDK bodies and consumer graphs remain bounded; no request, authentication,
 thinking renderer, provider or native UI operation runs.
+
+[pi-bundle-mcp-protocol.csv](pi-bundle-mcp-protocol.csv) records ninety qualified
+expressions across one complete compiled MCP/auth/locking body (87,391 bytes).
+The 526 [exclusions](pi-bundle-mcp-protocol-exclusions.csv) complete the 616-node
+partition. The 103 [boundaries](pi-bundle-mcp-protocol-boundaries.csv) distinguish
+direct API failures, remote JSON-RPC packets, transport events, content conversion,
+authentication and file-lock conditions. The default inspected connection has no
+client error-event subscriber; event-only diagnostics and request timeouts retain
+different routes. Native read-only auth checking replaces original diagnostics
+with its state result, and current content wrappers can preempt API-only binary
+fallback text. The [scope](pi-bundle-mcp-protocol-scope.csv) grants complete local
+review only to this compiled body. Canonical archive, both installed trees,
+31 corruption controls and four LF-count regression cases pass. Imported native,
+transport and consumer graphs remain bounded; no lock, authentication, command,
+transport, server, network or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2642,6 +2657,7 @@ node review/text-inventory/verify-pi-published-auxiliary-text.cjs
 python -B review/text-inventory/verify-pi-models-schema-data.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-data-utilities.py
 python -B review/text-inventory/verify-pi-ai-anthropic-adapter.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-bundle-mcp-protocol.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
