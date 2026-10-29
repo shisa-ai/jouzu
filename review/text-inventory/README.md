@@ -1296,6 +1296,22 @@ exact source anchors and seventeen corruption controls pass. Provider, credentia
 browser, native callback and payload dependencies remain bounded; no login,
 device, callback server, environment or native UI operation runs.
 
+[pi-ai-error-utilities.csv](pi-ai-error-utilities.csv) records three qualified
+definitions across four complete error/retry bodies (624 lines; 30,576 bytes).
+The 213 [exclusions](pi-ai-error-utilities-exclusions.csv) complete the 216-node
+partition, including 84 comments. Fourteen
+[boundaries](pi-ai-error-utilities-boundaries.csv) retain body/status precedence,
+UTF-16 truncation, provider retries, server-delay caps, abort timing, assistant
+backoff and overflow recognition. Selected bodies are capped at 4,000 UTF-16
+units with a suffix; original messages and prefixes can follow uncapped paths.
+The private backoff abort headline is normalized away, while a stable-message
+guard preempts the generic retry fallback. English regex/pattern clauses consume
+existing provider errors and retain producer couplings. The
+[scope](pi-ai-error-utilities-scope.csv) grants complete local review only to four
+bodies. Independent review, frozen lexical/source-anchor joins, package provenance,
+raw artifact hashes and fourteen corruption controls pass. No formatter, classifier,
+retry, timer, provider, request, model or native UI operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -1376,8 +1392,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. There are 152
-files with explicit complete local review owners; 48 files (327,567 bytes)
+authority, public patch manifest and nested package-list transform. There are 156
+files with explicit complete local review owners; 44 files (296,991 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -2674,6 +2690,7 @@ python -B review/text-inventory/verify-pi-ai-data-utilities.py
 python -B review/text-inventory/verify-pi-ai-anthropic-adapter.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-mcp-protocol.py
 node review/text-inventory/verify-pi-ai-auth-shared-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-ai-error-utilities.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
