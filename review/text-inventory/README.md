@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 41 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 76 compiled bodies;
-5 compiled bodies remain pending. The
+universe with 42 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 77 compiled bodies;
+4 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1529,6 +1529,23 @@ replace highlighting failures with raw source. The
 bounded core/terminal consumer proofs. Canonical archive and installed copies
 match; 31 corruption controls and four physical-LF regressions pass. No grammar,
 regex, highlighter, import or native UI operation runs.
+
+[pi-bundle-anthropic-client.csv](pi-bundle-anthropic-client.csv) records 240
+qualified definitions in the complete compiled Anthropic client body
+(293,583 bytes). Its 2,250
+[exclusions](pi-bundle-anthropic-client-exclusions.csv) complete the 2,490-node
+partition. Ten [boundaries](pi-bundle-anthropic-client-boundaries.csv) retain
+request/error construction, logging levels and direct warnings, credential and
+cache gates, optional webhooks/workers/toolrunners, response parsing and model
+context. The native PiAnthropic adapter disables implicit credential resolution
+and uses asResponse(), bypassing SDK response/stream parsing; construction and
+request errors retain their separately qualified routes. Optional SDK helper
+activation does not establish current Jouzu model/session/UI use. Flow admission,
+abort, redaction, clipping and caller catches can replace or suppress source
+wording. The [scope](pi-bundle-anthropic-client-scope.csv) grants one complete
+local body with bounded importer/caller proofs. Exact canonical and installed
+sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
+request, environment, filesystem or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2923,6 +2940,7 @@ python -B review/text-inventory/verify-pi-bundle-schema-tools.py
 python -B review/text-inventory/verify-pi-ai-validation-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-terminal-theme.py
 python -B review/text-inventory/verify-pi-bundle-highlight-languages.py
+python -B review/text-inventory/verify-pi-bundle-anthropic-client.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
