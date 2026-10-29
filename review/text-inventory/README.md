@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 29 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 50 compiled bodies;
-31 compiled bodies remain pending. The
+universe with 30 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 61 compiled bodies;
+20 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -993,6 +993,20 @@ routes. The [scope](pi-bundle-chat-adapters-scope.csv) grants complete local rev
 only to four bodies; imported SDKs and caller excerpts remain bounded. Canonical
 archive, both installed trees and 34 corruption controls pass. Compiled API
 availability does not establish default Jouzu activation; no provider or UI runs.
+
+[pi-bundle-utility-runtime.csv](pi-bundle-utility-runtime.csv) records 49 qualified
+trust, helper and API definitions across eleven complete compiled bodies
+(77,128 bytes). The 551 [exclusions](pi-bundle-utility-runtime-exclusions.csv)
+complete the 600-literal/template/regex partition, including three bodies with
+zero primary expressions. Forty-three
+[boundaries](pi-bundle-utility-runtime-boundaries.csv) retain native trust choices,
+shell and image helpers, classifier errors, multipart parsing, selector APIs and
+external runtime payloads. Normal image-worker errors can be suppressed by the
+in-process fallback; selector exports require an explicit API caller within the
+inspected graph. The [scope](pi-bundle-utility-runtime-scope.csv) grants complete
+local review to eleven bodies and keeps imported SDK/native/renderer excerpts
+bounded. Canonical archive, both installed trees and 34 corruption controls pass.
+No worker, shell, image, WASM, configuration or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2353,6 +2367,7 @@ python -B review/text-inventory/verify-pi-bundle-entry-support.py
 python -B review/text-inventory/verify-pi-ai-faux-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-catalog-data.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-chat-adapters.py
+python -B review/text-inventory/verify-pi-bundle-utility-runtime.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
