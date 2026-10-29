@@ -3,6 +3,22 @@
 Base source: [GitHub main at `346d1e4`](https://github.com/shisa-ai/jouzu/tree/346d1e481757a55eb62fc066e43bbc7999b8e6dd).
 Fetched follow-on target: [GitHub main at `1fda3eb`](https://github.com/shisa-ai/jouzu/tree/1fda3eb161b042aae66e4adcc07319f69946dadd).
 
+[translation-worklist.csv](translation-worklist.csv) combines the fetched-target
+catalog definitions with the detailed source records in one filterable CSV.
+Use `record_kind=catalog-definition` for the 1,808 catalog entries; attributes
+and variables retain their separate JSON fields. Reference and source records
+preserve exact English, source/display locations, triggers and translation
+boundaries. The original table and parsed CSV record number lead to the full
+consumer/evidence record. API-only, optional, model-facing, metadata, fixture and
+protected-data qualifications remain applicable; a worklist row is not an
+instruction to translate it. The English hash groups exact field values without
+asserting shared translation semantics. BASE records retain their BASE caller
+authority. The [snapshot](translation-worklist-snapshot.json) pins all inputs and
+counts. Detailed comparison/exclusion records using the same core schema retain
+their original qualifications in this view. The worklist grows with pending
+bundle reviews; full exclusion ledgers and documentation/asset line exports
+remain separately navigable.
+
 For the fetched-main target, start with
 [main-update-catalogs.csv](main-update-catalogs.csv): all **1,808 English Fluent
 definitions**, with exact patterns, attributes, variables, comments and immutable
@@ -3115,6 +3131,7 @@ node review/text-inventory/verify-pi-bundle-main-host-model-selectors.cjs
 python -B review/text-inventory/verify-pi-ai-entry-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-openai-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-main-update-pi-runtime-parity.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-translation-worklist.py
 node review/text-inventory/verify-pi-bundle-main-host-ai-runtime-helpers.cjs
 node review/text-inventory/verify-pi-bundle-main-host-mcp.cjs
 node review/text-inventory/verify-pi-bundle-main-host-settings-cli.cjs
