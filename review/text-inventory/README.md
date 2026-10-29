@@ -1198,6 +1198,24 @@ archives, both installed copies, public metadata transforms and 25 corruption
 controls pass. Foreign clients and fetched-target patches remain separately
 qualified; no converter, socket, provider, authentication or native UI runs.
 
+[pi-published-auxiliary-text.csv](pi-published-auxiliary-text.csv) records 22
+qualified contexts across the two published JavaScript bodies outside `dist`:
+the Doom example loader and Windows native-build script (71,775 bytes).
+Its 23 primary components and 490
+[exclusions](pi-published-auxiliary-text-exclusions.csv) partition 513 text,
+regex and comment nodes. Forty-four
+[boundaries](pi-published-auxiliary-text-boundaries.csv) retain explicit example
+selection, wrapper configuration, loader settlement, native imports, build help,
+temporary files, compiler probes and inherited compiler output. The inspected
+example suppresses print/printErr callbacks; initialization rejection and native
+diagnostics retain distinct conditions. Build help follows temporary-directory
+creation, and compiler probes suppress output while actual compilation inherits
+it. The [scope](pi-published-auxiliary-text-scope.csv) grants full local review
+only to the two JavaScript bodies; example TypeScript consumers remain bounded,
+and game/WASM/WAD/native/compiler payloads remain separate. Canonical archives,
+both installed copies, exact anchors and eighteen corruption controls pass.
+No example, game, WASM, compiler, build or native UI operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2570,6 +2588,7 @@ python -B review/text-inventory/verify-pi-bundle-http-transport.py
 node review/text-inventory/verify-chord-runtime-text.cjs
 python -B review/text-inventory/verify-pi-bundle-host-resources.py
 python -B review/text-inventory/verify-pi-ai-openai-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+node review/text-inventory/verify-pi-published-auxiliary-text.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
