@@ -1579,12 +1579,12 @@ local body with bounded importer/caller proofs. Exact canonical and installed
 sources match; 23 corruption controls pass. No SDK, auth, webhook, crypto, worker,
 request, environment, filesystem or native UI operation runs.
 
-The registered partial main-host units cover 159 disjoint ranges totaling
-3,459,038 of the body's 3,536,719 bytes. The 1 remaining gaps total 77,681
+The registered partial main-host units cover 164 disjoint ranges totaling
+3,536,719 of the body's 3,536,719 bytes. The 0 remaining gaps total 0
 bytes. These ASCII-source range coordinates are both UTF-16 and byte offsets;
 bounded support snippets outside the owned ranges do not increase that union.
 The [range census](pi-main-host-review-census.csv) and
-[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 72
+[snapshot](pi-main-host-review-census-snapshot.json) derive this union from 77
 registered scope tables, reject overlap and keep every frozen literal/template/
 regex occurrence assigned to a reviewed range or a pending gap. This accounting
 does not independently approve each semantic classification or promote a whole
@@ -2232,6 +2232,46 @@ operation runs; whole main-host and wider caller coverage remain open.
 The [exclusions](pi-bundle-main-host-compaction-exclusions.csv),
 [boundaries](pi-bundle-main-host-compaction-boundaries.csv) and
 [scope](pi-bundle-main-host-compaction-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-client.csv](pi-bundle-main-host-http-client.csv) records One qualified source definition in the complete 15,228-byte Client range. Native socket observer delivery, fixed/default constructor settings, dynamic SOCKS pipelining and suppressed child events retain exact conditions; 74 exclusions complete 75 source occurrences.
+The [exclusions](pi-bundle-main-host-http-client-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-client-boundaries.csv) and
+[scope](pi-bundle-main-host-http-client-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-pools.csv](pi-bundle-main-host-http-pools.csv) records Two qualified source definitions in the complete 20,686-byte pool/Agent range. Published Env dispatch origin validation and SOCKS per-request pool connections validation have distinct API paths; fixed/default, private factory and legacy-wrapper guards remain qualified in 107 exclusions.
+The [exclusions](pi-bundle-main-host-http-pools-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-pools-boundaries.csv) and
+[scope](pi-bundle-main-host-http-pools-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-socks.csv](pi-bundle-main-host-http-socks.csv) records 45 qualified definitions in the complete 18,965-byte SOCKS parser/connector/agent range. Environment proxy selection, protocol/auth/hostname/socket negotiation, callback transport and dynamic request options retain exact consumers; 116 exclusions complete 161 occurrences.
+The [exclusions](pi-bundle-main-host-http-socks-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-socks-boundaries.csv) and
+[scope](pi-bundle-main-host-http-socks-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-proxy-env.csv](pi-bundle-main-host-http-proxy-env.csv) records Two qualified definitions in the complete 11,183-byte proxy/environment range. Actual configured proxy protocols, request origin and dispatch/factory guards retain exact public versus private conditions; 76 exclusions complete 78 occurrences.
+The [exclusions](pi-bundle-main-host-http-proxy-env-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-proxy-env-boundaries.csv) and
+[scope](pi-bundle-main-host-http-proxy-env-scope.csv) retain source-only partial ownership and
+bounded concrete callers. Canonical and both installed sources match. No
+audited module, provider, auth, configuration, file, model or native UI
+operation runs; whole main-host and wider caller coverage remain open.
+
+[pi-bundle-main-host-http-retry.csv](pi-bundle-main-host-http-retry.csv) records The complete 11,619-byte RetryHandler/RetryAgent range, with all 55 occurrences retained as qualified private-factory, lifecycle, protocol or protected data. Published callback lifecycle violations remain distinct from normal headers-sent retry gating; no established default retry prose is promoted.
+The [exclusions](pi-bundle-main-host-http-retry-exclusions.csv),
+[boundaries](pi-bundle-main-host-http-retry-boundaries.csv) and
+[scope](pi-bundle-main-host-http-retry-scope.csv) retain source-only partial ownership and
 bounded concrete callers. Canonical and both installed sources match. No
 audited module, provider, auth, configuration, file, model or native UI
 operation runs; whole main-host and wider caller coverage remain open.
@@ -3709,6 +3749,11 @@ node review/text-inventory/verify-pi-bundle-main-host-http1.cjs
 node review/text-inventory/verify-pi-bundle-main-host-http2.cjs
 node review/text-inventory/verify-pi-bundle-main-host-agent-loop.cjs
 node review/text-inventory/verify-pi-bundle-main-host-compaction.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-client.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-pools.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-socks.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-proxy-env.cjs
+node review/text-inventory/verify-pi-bundle-main-host-http-retry.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
