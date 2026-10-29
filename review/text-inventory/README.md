@@ -966,6 +966,20 @@ trees, the nested manifest transform and twelve corruption controls pass.
 This package is separate from the coding-agent/TUI and Pi AI censuses; no agent,
 proxy, tool or native operation runs.
 
+[pi-ai-provider-schemas.csv](pi-ai-provider-schemas.csv) records 114 schema
+prose definitions and fragments across two complete schema bodies (453 lines).
+The 59 [exclusions](pi-ai-provider-schemas-exclusions.csv) complete the 173-occurrence
+string/template partition. Eighty-five definitions have exact shipped-resource
+matches, with 113 JSON-pointer/value links and exact description-value coordinates;
+29 retain exported-metadata-only conditions. Six
+[boundaries](pi-ai-provider-schemas-boundaries.csv) separate schema resources,
+configuration error projection and foreign TypeBox producers. Two private merge
+invariants remain excluded under the fixed audited assembly. The
+[scope](pi-ai-provider-schemas-scope.csv) grants full local review to two JS bodies;
+resource/helper/caller boundaries stay explicit. Three archives, both installed
+trees, nested manifest proof and nineteen corruption controls pass. No schema,
+configuration, editor, model or native operation runs.
+
 [pi-ai-provider-helpers.csv](pi-ai-provider-helpers.csv) records ten qualified
 definitions across six complete direct-provider helpers (273 lines). The 46
 [exclusions](pi-ai-provider-helpers-exclusions.csv) complete the 56-occurrence
@@ -1017,8 +1031,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. There are 106
-files with explicit complete local review owners; 94 files (748,613 bytes)
+authority, public patch manifest and nested package-list transform. There are 108
+files with explicit complete local review owners; 92 files (718,132 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -2294,6 +2308,7 @@ python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <ro
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
+python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-provider-definitions.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-lexical.cjs
