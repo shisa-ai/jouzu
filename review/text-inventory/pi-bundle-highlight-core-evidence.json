@@ -1,0 +1,4800 @@
+{
+  "schema": "pi-bundle-highlight-core-v1",
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "package_identities": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      }
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      }
+    }
+  ],
+  "archive_provenance": {
+    "name": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "archive_name": "earendil-works-pi-coding-agent-1.4.0.tgz",
+    "archive_sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+    "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "integrity_authorities": [
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:upstream/pi.lock.json",
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:package-lock.json"
+    ],
+    "metadata_qualification": "Installed package.json copies pinned independently; file-level archive/patch provenance checked, not a claim every installed package byte equals pristine archive."
+  },
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "root_sha256": "5c90a831ae8d5f5aa8e66e2fa3c76b5e2f6046df80429172654385d23c6c9b73",
+      "cli_nested_sha256": "5c90a831ae8d5f5aa8e66e2fa3c76b5e2f6046df80429172654385d23c6c9b73",
+      "archive_sha256": "5c90a831ae8d5f5aa8e66e2fa3c76b5e2f6046df80429172654385d23c6c9b73",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 112077,
+      "lines": 6
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "root_sha256": "2857397f268829d29c5b22ff366e723ba9c98f2a13fc290ff64ffe921ba1686a",
+      "cli_nested_sha256": "2857397f268829d29c5b22ff366e723ba9c98f2a13fc290ff64ffe921ba1686a",
+      "archive_sha256": "2857397f268829d29c5b22ff366e723ba9c98f2a13fc290ff64ffe921ba1686a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1649,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "root_sha256": "b09f9387bb838ee733d15a63d1af07876e0932381c2a9b7d42f74f22cd4d2947",
+      "cli_nested_sha256": "b09f9387bb838ee733d15a63d1af07876e0932381c2a9b7d42f74f22cd4d2947",
+      "archive_sha256": "b09f9387bb838ee733d15a63d1af07876e0932381c2a9b7d42f74f22cd4d2947",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 462868,
+      "lines": 131
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/lib-4AVRLBHM.js",
+      "root_sha256": "1ada30d2ddabb60ad5f86e95d7a13d7826ae737a81e8ad2da5efe90994f18c3a",
+      "cli_nested_sha256": "1ada30d2ddabb60ad5f86e95d7a13d7826ae737a81e8ad2da5efe90994f18c3a",
+      "archive_sha256": "1ada30d2ddabb60ad5f86e95d7a13d7826ae737a81e8ad2da5efe90994f18c3a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 966765,
+      "lines": 9
+    }
+  ],
+  "primary_proofs": [
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.1",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 7534,
+      "end": 7576,
+      "kind": "string",
+      "payload": "begin & end are not supported with match",
+      "raw_source": "\"begin & end are not supported with match\"",
+      "line": 2,
+      "column": 7417,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 7482,
+          "end": 7492,
+          "raw": "mode.match",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 7497,
+          "end": 7517,
+          "raw": "mode.begin||mode.end",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "rray(mode.illegal)&&(mode.illegal=either(...mode.illegal))}function compileMatch(mode,_parent){if(mode.match){if(mode.begin||mode.end)throw new Error(\"begin & end are not supported with match\");mode.begin=mode.match,delete mode.match}}function compileRelevance(mode,_parent){mode.relevance===void 0&&(m"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.2",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 11260,
+      "end": 11356,
+      "kind": "string",
+      "payload": "ERR: Prefer `keywords.$pattern` to `mode.lexemes`, BOTH are not allowed. (see mode reference) ",
+      "raw_source": "\"ERR: Prefer `keywords.$pattern` to `mode.lexemes`, BOTH are not allowed. (see mode reference) \"",
+      "line": 2,
+      "column": 11143,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 11025,
+          "end": 11243,
+          "raw": "typeof mode.keywords==\"object\"&&(keywordPattern=mode.keywords.$pattern,delete mode.keywords.$pattern),mode.keywords&&(mode.keywords=compileKeywords(mode.keywords,language.case_insensitive)),mode.lexemes&&keywordPattern",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "ywords.$pattern),mode.keywords&&(mode.keywords=compileKeywords(mode.keywords,language.case_insensitive)),mode.lexemes&&keywordPattern)throw new Error(\"ERR: Prefer `keywords.$pattern` to `mode.lexemes`, BOTH are not allowed. (see mode reference) \");return keywordPattern=keywordPattern||mode.lexemes||/\\w+/,cmode.keywordPatternRe=langRe(keywordPattern,!0),p"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.3",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 12293,
+      "end": 12384,
+      "kind": "string",
+      "payload": "ERR: contains `self` is not supported at the top-level of a language.  See documentation.",
+      "raw_source": "\"ERR: contains `self` is not supported at the top-level of a language.  See documentation.\"",
+      "line": 2,
+      "column": 12176,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 12161,
+          "end": 12276,
+          "raw": "language.compilerExtensions||(language.compilerExtensions=[]),language.contains&&language.contains.includes(\"self\")",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "x(cmode),cmode}if(language.compilerExtensions||(language.compilerExtensions=[]),language.contains&&language.contains.includes(\"self\"))throw new Error(\"ERR: contains `self` is not supported at the top-level of a language.  See documentation.\");return language.classNameAliases=inherit(language.classNameAliases||{}),compileMode(language)}function depen"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.4",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 13341,
+      "end": 13408,
+      "kind": "template",
+      "payload": "The language \"${this.language}\" you specified could not be found.",
+      "raw_source": "`The language \"${this.language}\" you specified could not be found.`",
+      "line": 2,
+      "column": 13224,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 13270,
+          "end": 13320,
+          "raw": "!this.autoDetect&&!hljs.getLanguage(this.language)",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "return this.unknownLanguage?\"\":\"hljs \"+this.detectedLanguage},highlighted(){if(!this.autoDetect&&!hljs.getLanguage(this.language))return console.warn(`The language \"${this.language}\" you specified could not be found.`),this.unknownLanguage=!0,escapeHTML(this.code);let result={};return this.autoDetect?(result=hljs.highlightAut"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.5",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 16057,
+      "end": 16075,
+      "kind": "template",
+      "payload": "WARN: ${message}",
+      "raw_source": "`WARN: ${message}`",
+      "line": 2,
+      "column": 15940,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "eturn result+escapeHTML(value.substr(processed))}var seenDeprecations={},error=message=>{console.error(message)},warn=(message,...args)=>{console.log(`WARN: ${message}`,...args)},deprecated=(version2,message)=>{seenDeprecations[`${version2}/${message}`]||(console.log(`Deprecate"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.6",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 16175,
+      "end": 16217,
+      "kind": "template",
+      "payload": "Deprecated as of ${version2}. ${message}",
+      "raw_source": "`Deprecated as of ${version2}. ${message}`",
+      "line": 2,
+      "column": 16058,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "(message,...args)=>{console.log(`WARN: ${message}`,...args)},deprecated=(version2,message)=>{seenDeprecations[`${version2}/${message}`]||(console.log(`Deprecated as of ${version2}. ${message}`),seenDeprecations[`${version2}/${message}`]=!0)},escape$1=escapeHTML,inherit$1=inherit,NO_MATCH=Symbol(\"nomat"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.7",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 16494,
+      "end": 16579,
+      "kind": "string",
+      "payload": "Could not find the language '{}', did you forget to load/include a language module?",
+      "raw_source": "\"Could not find the language '{}', did you forget to load/include a language module?\"",
+      "line": 2,
+      "column": 16377,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "n(hljs){let languages=Object.create(null),aliases=Object.create(null),plugins=[],SAFE_MODE=!0,fixMarkupRe=/(^(<[^>]+>|\\t|)+|\\n)/gm,LANGUAGE_NOT_FOUND=\"Could not find the language '{}', did you forget to load/include a language module?\",PLAINTEXT_LANGUAGE={disableAutodetect:!0,name:\"Plain text\",contains:[]},options={noHighlightRe:/^(no-?highlig"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.8",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 17204,
+      "end": 17255,
+      "kind": "string",
+      "payload": "Falling back to no-highlight mode for this block.",
+      "raw_source": "\"Falling back to no-highlight mode for this block.\"",
+      "line": 2,
+      "column": 17087,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 17091,
+          "end": 17096,
+          "raw": "match",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "ns.languageDetectRe.exec(classes);if(match){let language=getLanguage(match[1]);return language||(warn(LANGUAGE_NOT_FOUND.replace(\"{}\",match[1])),warn(\"Falling back to no-highlight mode for this block.\",block)),language?match[1]:\"no-highlight\"}return classes.split(/\\s+/).find(_class=>shouldNotHighlight(_class)|"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.9",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 17675,
+      "end": 17728,
+      "kind": "string",
+      "payload": "highlight(lang, code, ...args) has been deprecated.",
+      "raw_source": "\"highlight(lang, code, ...args) has been deprecated.\"",
+      "line": 2,
+      "column": 17558,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "t\"?(code=codeOrlanguageName,ignoreIllegals=optionsOrCode.ignoreIllegals,languageName=optionsOrCode.language,continuation=void 0):(deprecated(\"10.7.0\",\"highlight(lang, code, ...args) has been deprecated.\"),deprecated(\"10.7.0\",`Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.j"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.10",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 17750,
+      "end": 17852,
+      "kind": "template",
+      "payload": "Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.js/issues/2277",
+      "raw_source": "`Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.js/issues/2277`",
+      "line": 2,
+      "column": 17633,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "guageName=optionsOrCode.language,continuation=void 0):(deprecated(\"10.7.0\",\"highlight(lang, code, ...args) has been deprecated.\"),deprecated(\"10.7.0\",`Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.js/issues/2277`),languageName=codeOrlanguageName,code=optionsOrCode);let context={code,language:languageName};fire(\"before:hi"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.11",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 22078,
+      "end": 22099,
+      "kind": "string",
+      "payload": "0 width match regex",
+      "raw_source": "\"0 width match regex\"",
+      "line": 3,
+      "column": 4283,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 3,
+          "start": 21894,
+          "end": 21982,
+          "raw": "lastMatch.type===\"begin\"&&match.type===\"end\"&&lastMatch.index===match.index&&lexeme===\"\"",
+          "polarity": "true/body"
+        },
+        {
+          "kind": "if",
+          "line": 3,
+          "start": 21987,
+          "end": 22058,
+          "raw": "modeBuffer+=codeToHighlight.slice(match.index,match.index+1),!SAFE_MODE",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "pe===\"end\"&&lastMatch.index===match.index&&lexeme===\"\"){if(modeBuffer+=codeToHighlight.slice(match.index,match.index+1),!SAFE_MODE){let err=new Error(\"0 width match regex\");throw err.languageName=languageName,err.badRule=lastMatch.rule,err}return 1}if(lastMatch=match,match.type==="
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.12",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 22306,
+      "end": 22324,
+      "kind": "string",
+      "payload": "Illegal lexeme \"",
+      "raw_source": "'Illegal lexeme \"'",
+      "line": 3,
+      "column": 4511,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 3,
+          "start": 22247,
+          "end": 22286,
+          "raw": "match.type===\"illegal\"&&!ignoreIllegals",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "ch.rule,err}return 1}if(lastMatch=match,match.type===\"begin\")return doBeginMatch(match);if(match.type===\"illegal\"&&!ignoreIllegals){let err=new Error('Illegal lexeme \"'+lexeme+'\" for mode \"'+(top.className||\"<unnamed>\")+'\"');throw err.mode=top,err}else if(match.type===\"end\"){le"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.13",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 22332,
+      "end": 22346,
+      "kind": "string",
+      "payload": "\" for mode \"",
+      "raw_source": "'\" for mode \"'",
+      "line": 3,
+      "column": 4537,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 3,
+          "start": 22247,
+          "end": 22286,
+          "raw": "match.type===\"illegal\"&&!ignoreIllegals",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "stMatch=match,match.type===\"begin\")return doBeginMatch(match);if(match.type===\"illegal\"&&!ignoreIllegals){let err=new Error('Illegal lexeme \"'+lexeme+'\" for mode \"'+(top.className||\"<unnamed>\")+'\"');throw err.mode=top,err}else if(match.type===\"end\"){let processed=doEndMatch"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.14",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 22613,
+      "end": 22672,
+      "kind": "string",
+      "payload": "potential infinite loop, way more iterations than matches",
+      "raw_source": "\"potential infinite loop, way more iterations than matches\"",
+      "line": 3,
+      "column": 4818,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 3,
+          "start": 22556,
+          "end": 22596,
+          "raw": "iterations>1e5&&iterations>match.index*3",
+          "polarity": "true/body"
+        }
+      ],
+      "context": ";if(processed!==NO_MATCH)return processed}if(match.type===\"illegal\"&&lexeme===\"\")return 1;if(iterations>1e5&&iterations>match.index*3)throw new Error(\"potential infinite loop, way more iterations than matches\");return modeBuffer+=lexeme,lexeme.length}let language=getLanguage(languageName);if(!language)throw error(LANG"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.15",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 22835,
+      "end": 22856,
+      "kind": "string",
+      "payload": "Unknown language: \"",
+      "raw_source": "'Unknown language: \"'",
+      "line": 3,
+      "column": 5040,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "if",
+          "line": 3,
+          "start": 22756,
+          "end": 22765,
+          "raw": "!language",
+          "polarity": "true/body"
+        }
+      ],
+      "context": "Buffer+=lexeme,lexeme.length}let language=getLanguage(languageName);if(!language)throw error(LANGUAGE_NOT_FOUND.replace(\"{}\",languageName)),new Error('Unknown language: \"'+languageName+'\"');let md=compileLanguage(language,{plugins}),result=\"\",top=continuation||md,continuations={},"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.16",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 26455,
+      "end": 26498,
+      "kind": "string",
+      "payload": "'useBR' will be removed entirely in v11.0",
+      "raw_source": "\"'useBR' will be removed entirely in v11.0\"",
+      "line": 5,
+      "column": 1059,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "uage,re:result.second_best.relevance,relavance:result.second_best.relevance})}function configure(userOptions){userOptions.useBR&&(deprecated(\"10.3.0\",\"'useBR' will be removed entirely in v11.0\"),deprecated(\"10.3.0\",\"Please see https://github.com/highlightjs/highlight.js/issues/2559\")),options=inherit$1"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.17",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 26520,
+      "end": 26588,
+      "kind": "string",
+      "payload": "Please see https://github.com/highlightjs/highlight.js/issues/2559",
+      "raw_source": "\"Please see https://github.com/highlightjs/highlight.js/issues/2559\"",
+      "line": 5,
+      "column": 1124,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": ".relevance})}function configure(userOptions){userOptions.useBR&&(deprecated(\"10.3.0\",\"'useBR' will be removed entirely in v11.0\"),deprecated(\"10.3.0\",\"Please see https://github.com/highlightjs/highlight.js/issues/2559\")),options=inherit$1(options,userOptions)}let initHighlighting=()=>{if(initHighlighting.called)return;initHigh"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.18",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 26737,
+      "end": 26801,
+      "kind": "string",
+      "payload": "initHighlighting() is deprecated.  Use highlightAll() instead.",
+      "raw_source": "\"initHighlighting() is deprecated.  Use highlightAll() instead.\"",
+      "line": 5,
+      "column": 1341,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "\")),options=inherit$1(options,userOptions)}let initHighlighting=()=>{if(initHighlighting.called)return;initHighlighting.called=!0,deprecated(\"10.6.0\",\"initHighlighting() is deprecated.  Use highlightAll() instead.\"),document.querySelectorAll(\"pre code\").forEach(highlightElement)};function initHighlightingOnLoad(){deprecate"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.19",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 26922,
+      "end": 26992,
+      "kind": "string",
+      "payload": "initHighlightingOnLoad() is deprecated.  Use highlightAll() instead.",
+      "raw_source": "\"initHighlightingOnLoad() is deprecated.  Use highlightAll() instead.\"",
+      "line": 5,
+      "column": 1526,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": " Use highlightAll() instead.\"),document.querySelectorAll(\"pre code\").forEach(highlightElement)};function initHighlightingOnLoad(){deprecated(\"10.6.0\",\"initHighlightingOnLoad() is deprecated.  Use highlightAll() instead.\"),wantsHighlight=!0}let wantsHighlight=!1;function highlightAll(){if(document.readyState===\"loading\"){wantsHig"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.20",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 27457,
+      "end": 27512,
+      "kind": "string",
+      "payload": "Language definition for '{}' could not be registered.",
+      "raw_source": "\"Language definition for '{}' could not be registered.\"",
+      "line": 5,
+      "column": 2061,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        }
+      ],
+      "context": "ntLoaded\",boot,!1);function registerLanguage(languageName,languageDefinition){let lang=null;try{lang=languageDefinition(hljs)}catch(error$1){if(error(\"Language definition for '{}' could not be registered.\".replace(\"{}\",languageName)),SAFE_MODE)error(error$1);else throw error$1;lang=PLAINTEXT_LANGUAGE}lang.name||(l"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.21",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 28057,
+      "end": 28107,
+      "kind": "string",
+      "payload": "requireLanguage will be removed entirely in v11.",
+      "raw_source": "\"requireLanguage will be removed entirely in v11.\"",
+      "line": 5,
+      "column": 2661,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": "lias]===languageName&&delete aliases[alias]}function listLanguages(){return Object.keys(languages)}function requireLanguage(name){deprecated(\"10.4.0\",\"requireLanguage will be removed entirely in v11.\"),deprecated(\"10.4.0\",\"Please see https://github.com/highlightjs/highlight.js/pull/2844\");let lang=getLanguage"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.22",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 28129,
+      "end": 28195,
+      "kind": "string",
+      "payload": "Please see https://github.com/highlightjs/highlight.js/pull/2844",
+      "raw_source": "\"Please see https://github.com/highlightjs/highlight.js/pull/2844\"",
+      "line": 5,
+      "column": 2733,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": "urn Object.keys(languages)}function requireLanguage(name){deprecated(\"10.4.0\",\"requireLanguage will be removed entirely in v11.\"),deprecated(\"10.4.0\",\"Please see https://github.com/highlightjs/highlight.js/pull/2844\");let lang=getLanguage(name);if(lang)return lang;throw new Error(\"The '{}' language is required, but not loade"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.23",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 28260,
+      "end": 28308,
+      "kind": "string",
+      "payload": "The '{}' language is required, but not loaded.",
+      "raw_source": "\"The '{}' language is required, but not loaded.\"",
+      "line": 5,
+      "column": 2864,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": "eprecated(\"10.4.0\",\"Please see https://github.com/highlightjs/highlight.js/pull/2844\");let lang=getLanguage(name);if(lang)return lang;throw new Error(\"The '{}' language is required, but not loaded.\".replace(\"{}\",name))}function getLanguage(name){return name=(name||\"\").toLowerCase(),languages[name]||language"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.24",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 29331,
+      "end": 29376,
+      "kind": "string",
+      "payload": "fixMarkup will be removed entirely in v11.0",
+      "raw_source": "\"fixMarkup will be removed entirely in v11.0\"",
+      "line": 5,
+      "column": 3935,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": "(event,args){let cb=event;plugins.forEach(function(plugin){plugin[cb]&&plugin[cb](args)})}function deprecateFixMarkup(arg){return deprecated(\"10.2.0\",\"fixMarkup will be removed entirely in v11.0\"),deprecated(\"10.2.0\",\"Please see https://github.com/highlightjs/highlight.js/issues/2534\"),fixMarkup(arg)}fun"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.25",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 29398,
+      "end": 29466,
+      "kind": "string",
+      "payload": "Please see https://github.com/highlightjs/highlight.js/issues/2534",
+      "raw_source": "\"Please see https://github.com/highlightjs/highlight.js/issues/2534\"",
+      "line": 5,
+      "column": 4002,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": "b]&&plugin[cb](args)})}function deprecateFixMarkup(arg){return deprecated(\"10.2.0\",\"fixMarkup will be removed entirely in v11.0\"),deprecated(\"10.2.0\",\"Please see https://github.com/highlightjs/highlight.js/issues/2534\"),fixMarkup(arg)}function deprecateHighlightBlock(el){return deprecated(\"10.7.0\",\"highlightBlock will be remov"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.26",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 29547,
+      "end": 29597,
+      "kind": "string",
+      "payload": "highlightBlock will be removed entirely in v12.0",
+      "raw_source": "\"highlightBlock will be removed entirely in v12.0\"",
+      "line": 5,
+      "column": 4151,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": ",\"Please see https://github.com/highlightjs/highlight.js/issues/2534\"),fixMarkup(arg)}function deprecateHighlightBlock(el){return deprecated(\"10.7.0\",\"highlightBlock will be removed entirely in v12.0\"),deprecated(\"10.7.0\",\"Please use highlightElement now.\"),highlightElement(el)}Object.assign(hljs,{highlight:h"
+    },
+    {
+      "item_id": "pi.bundle-highlight-core.fixed.27",
+      "path": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 29619,
+      "end": 29653,
+      "kind": "string",
+      "payload": "Please use highlightElement now.",
+      "raw_source": "\"Please use highlightElement now.\"",
+      "line": 5,
+      "column": 4223,
+      "if_for_guards": [
+        {
+          "kind": "if",
+          "line": 2,
+          "start": 15494,
+          "end": 15602,
+          "raw": "result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original",
+          "polarity": "false/else"
+        },
+        {
+          "kind": "for",
+          "line": 5,
+          "start": 27864,
+          "end": 27897,
+          "raw": "let alias of Object.keys(aliases)",
+          "polarity": "for-body"
+        }
+      ],
+      "context": "ixMarkup(arg)}function deprecateHighlightBlock(el){return deprecated(\"10.7.0\",\"highlightBlock will be removed entirely in v12.0\"),deprecated(\"10.7.0\",\"Please use highlightElement now.\"),highlightElement(el)}Object.assign(hljs,{highlight:highlight2,highlightAuto,highlightAll,fixMarkup:deprecate"
+    }
+  ],
+  "source_review": {
+    "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+    "full_body_read": true,
+    "primitives": {
+      "controls": [
+        {
+          "kind": "for",
+          "start": 1090,
+          "end": 1114,
+          "raw_source": "for(let key in original)"
+        },
+        {
+          "kind": "for",
+          "start": 1177,
+          "end": 1196,
+          "raw_source": "for(let key in obj)"
+        },
+        {
+          "kind": "if",
+          "start": 1469,
+          "end": 1497,
+          "raw_source": "if(!emitsWrappingTags(node))"
+        },
+        {
+          "kind": "if",
+          "start": 2076,
+          "end": 2099,
+          "raw_source": "if(this.stack.length>1)"
+        },
+        {
+          "kind": "for",
+          "start": 2139,
+          "end": 2162,
+          "raw_source": "for(;this.closeNode();)"
+        },
+        {
+          "kind": "for",
+          "start": 3784,
+          "end": 3802,
+          "raw_source": "for(;re.length>0;)"
+        },
+        {
+          "kind": "if",
+          "start": 3833,
+          "end": 3843,
+          "raw_source": "if(!match)"
+        },
+        {
+          "kind": "if",
+          "start": 7479,
+          "end": 7493,
+          "raw_source": "if(mode.match)"
+        },
+        {
+          "kind": "if",
+          "start": 7494,
+          "end": 7518,
+          "raw_source": "if(mode.begin||mode.end)"
+        },
+        {
+          "kind": "if",
+          "start": 9373,
+          "end": 9383,
+          "raw_source": "if(!match)"
+        },
+        {
+          "kind": "if",
+          "start": 9674,
+          "end": 9702,
+          "raw_source": "if(this.multiRegexes[index])"
+        },
+        {
+          "kind": "if",
+          "start": 10159,
+          "end": 10238,
+          "raw_source": "if(this.resumingScanAtSamePosition()&&!(result&&result.index===this.lastIndex))"
+        },
+        {
+          "kind": "if",
+          "start": 10739,
+          "end": 10758,
+          "raw_source": "if(mode.isCompiled)"
+        },
+        {
+          "kind": "if",
+          "start": 11022,
+          "end": 11244,
+          "raw_source": "if(typeof mode.keywords==\"object\"&&(keywordPattern=mode.keywords.$pattern,delete mode.keywords.$pattern),mode.keywords&&(mode.keywords=compileKeywords(mode.keywords,language.case_insensitive)),mode.lexemes&&keywordPattern)"
+        },
+        {
+          "kind": "if",
+          "start": 12158,
+          "end": 12277,
+          "raw_source": "if(language.compilerExtensions||(language.compilerExtensions=[]),language.contains&&language.contains.includes(\"self\"))"
+        },
+        {
+          "kind": "if",
+          "start": 13267,
+          "end": 13321,
+          "raw_source": "if(!this.autoDetect&&!hljs.getLanguage(this.language))"
+        },
+        {
+          "kind": "if",
+          "start": 14119,
+          "end": 14145,
+          "raw_source": "if(!originalStream.length)"
+        },
+        {
+          "kind": "for",
+          "start": 14439,
+          "end": 14500,
+          "raw_source": "for(let child=node2.firstChild;child;child=child.nextSibling)"
+        },
+        {
+          "kind": "for",
+          "start": 15422,
+          "end": 15464,
+          "raw_source": "for(;original.length||highlighted.length;)"
+        },
+        {
+          "kind": "if",
+          "start": 15491,
+          "end": 15603,
+          "raw_source": "if(result+=escapeHTML(value.substring(processed,stream[0].offset)),processed=stream[0].offset,stream===original)"
+        },
+        {
+          "kind": "while",
+          "start": 15694,
+          "end": 15763,
+          "raw_source": "while(stream===original&&stream.length&&stream[0].offset===processed)"
+        },
+        {
+          "kind": "if",
+          "start": 17088,
+          "end": 17097,
+          "raw_source": "if(match)"
+        },
+        {
+          "kind": "if",
+          "start": 18466,
+          "end": 18483,
+          "raw_source": "if(!top.keywords)"
+        },
+        {
+          "kind": "for",
+          "start": 18623,
+          "end": 18635,
+          "raw_source": "for(;match;)"
+        },
+        {
+          "kind": "if",
+          "start": 18717,
+          "end": 18725,
+          "raw_source": "if(data)"
+        },
+        {
+          "kind": "if",
+          "start": 18758,
+          "end": 18838,
+          "raw_source": "if(emitter.addText(buf),buf=\"\",relevance+=keywordRelevance,kind.startsWith(\"_\"))"
+        },
+        {
+          "kind": "if",
+          "start": 19136,
+          "end": 19155,
+          "raw_source": "if(modeBuffer===\"\")"
+        },
+        {
+          "kind": "if",
+          "start": 19179,
+          "end": 19215,
+          "raw_source": "if(typeof top.subLanguage==\"string\")"
+        },
+        {
+          "kind": "if",
+          "start": 19216,
+          "end": 19247,
+          "raw_source": "if(!languages[top.subLanguage])"
+        },
+        {
+          "kind": "if",
+          "start": 19975,
+          "end": 19986,
+          "raw_source": "if(matched)"
+        },
+        {
+          "kind": "if",
+          "start": 19987,
+          "end": 20005,
+          "raw_source": "if(mode[\"on:end\"])"
+        },
+        {
+          "kind": "if",
+          "start": 20095,
+          "end": 20106,
+          "raw_source": "if(matched)"
+        },
+        {
+          "kind": "for",
+          "start": 20107,
+          "end": 20142,
+          "raw_source": "for(;mode.endsParent&&mode.parent;)"
+        },
+        {
+          "kind": "if",
+          "start": 20172,
+          "end": 20195,
+          "raw_source": "if(mode.endsWithParent)"
+        },
+        {
+          "kind": "for",
+          "start": 20523,
+          "end": 20553,
+          "raw_source": "for(let cb of beforeCallbacks)"
+        },
+        {
+          "kind": "if",
+          "start": 20553,
+          "end": 20597,
+          "raw_source": "if(cb&&(cb(match,resp),resp.isMatchIgnored))"
+        },
+        {
+          "kind": "if",
+          "start": 21058,
+          "end": 21070,
+          "raw_source": "if(!endMode)"
+        },
+        {
+          "kind": "while",
+          "start": 21356,
+          "end": 21383,
+          "raw_source": "while(top!==endMode.parent)"
+        },
+        {
+          "kind": "for",
+          "start": 21576,
+          "end": 21638,
+          "raw_source": "for(let current=top;current!==language;current=current.parent)"
+        },
+        {
+          "kind": "if",
+          "start": 21822,
+          "end": 21866,
+          "raw_source": "if(modeBuffer+=textBeforeMatch,lexeme==null)"
+        },
+        {
+          "kind": "if",
+          "start": 21891,
+          "end": 21983,
+          "raw_source": "if(lastMatch.type===\"begin\"&&match.type===\"end\"&&lastMatch.index===match.index&&lexeme===\"\")"
+        },
+        {
+          "kind": "if",
+          "start": 21984,
+          "end": 22059,
+          "raw_source": "if(modeBuffer+=codeToHighlight.slice(match.index,match.index+1),!SAFE_MODE)"
+        },
+        {
+          "kind": "if",
+          "start": 22177,
+          "end": 22217,
+          "raw_source": "if(lastMatch=match,match.type===\"begin\")"
+        },
+        {
+          "kind": "if",
+          "start": 22244,
+          "end": 22287,
+          "raw_source": "if(match.type===\"illegal\"&&!ignoreIllegals)"
+        },
+        {
+          "kind": "if",
+          "start": 22409,
+          "end": 22431,
+          "raw_source": "if(match.type===\"end\")"
+        },
+        {
+          "kind": "if",
+          "start": 22464,
+          "end": 22488,
+          "raw_source": "if(processed!==NO_MATCH)"
+        },
+        {
+          "kind": "if",
+          "start": 22505,
+          "end": 22544,
+          "raw_source": "if(match.type===\"illegal\"&&lexeme===\"\")"
+        },
+        {
+          "kind": "if",
+          "start": 22553,
+          "end": 22597,
+          "raw_source": "if(iterations>1e5&&iterations>match.index*3)"
+        },
+        {
+          "kind": "if",
+          "start": 22753,
+          "end": 22766,
+          "raw_source": "if(!language)"
+        },
+        {
+          "kind": "for",
+          "start": 23111,
+          "end": 23143,
+          "raw_source": "for(top.matcher.considerAll();;)"
+        },
+        {
+          "kind": "if",
+          "start": 23308,
+          "end": 23318,
+          "raw_source": "if(!match)"
+        },
+        {
+          "kind": "if",
+          "start": 23688,
+          "end": 23736,
+          "raw_source": "if(err.message&&err.message.includes(\"Illegal\"))"
+        },
+        {
+          "kind": "if",
+          "start": 23913,
+          "end": 23926,
+          "raw_source": "if(SAFE_MODE)"
+        },
+        {
+          "kind": "if",
+          "start": 24572,
+          "end": 24601,
+          "raw_source": "if(a.relevance!==b.relevance)"
+        },
+        {
+          "kind": "if",
+          "start": 24632,
+          "end": 24658,
+          "raw_source": "if(a.language&&b.language)"
+        },
+        {
+          "kind": "if",
+          "start": 24659,
+          "end": 24710,
+          "raw_source": "if(getLanguage(a.language).supersetOf===b.language)"
+        },
+        {
+          "kind": "if",
+          "start": 24719,
+          "end": 24770,
+          "raw_source": "if(getLanguage(b.language).supersetOf===a.language)"
+        },
+        {
+          "kind": "if",
+          "start": 25791,
+          "end": 25823,
+          "raw_source": "if(shouldNotHighlight(language))"
+        },
+        {
+          "kind": "if",
+          "start": 26656,
+          "end": 26683,
+          "raw_source": "if(initHighlighting.called)"
+        },
+        {
+          "kind": "if",
+          "start": 27058,
+          "end": 27093,
+          "raw_source": "if(document.readyState===\"loading\")"
+        },
+        {
+          "kind": "if",
+          "start": 27448,
+          "end": 27551,
+          "raw_source": "if(error(\"Language definition for '{}' could not be registered.\".replace(\"{}\",languageName)),SAFE_MODE)"
+        },
+        {
+          "kind": "for",
+          "start": 27860,
+          "end": 27898,
+          "raw_source": "for(let alias of Object.keys(aliases))"
+        },
+        {
+          "kind": "if",
+          "start": 28224,
+          "end": 28232,
+          "raw_source": "if(lang)"
+        },
+        {
+          "kind": "for",
+          "start": 30164,
+          "end": 30185,
+          "raw_source": "for(let key in MODES)"
+        },
+        {
+          "kind": "if",
+          "start": 59224,
+          "end": 59242,
+          "raw_source": "if(nextChar===\"<\")"
+        },
+        {
+          "kind": "for",
+          "start": 103111,
+          "end": 103146,
+          "raw_source": "for(let variant of STRING.variants)"
+        },
+        {
+          "kind": "if",
+          "start": 105946,
+          "end": 105964,
+          "raw_source": "if(nextChar===\"<\")"
+        },
+        {
+          "kind": "if",
+          "start": 111146,
+          "end": 111159,
+          "raw_source": "if(indx===-1)"
+        }
+      ],
+      "catches": [
+        {
+          "start": 23677,
+          "end": 24049,
+          "raw_source": "catch(err){if(err.message&&err.message.includes(\"Illegal\"))return{illegal:!0,illegalBy:{msg:err.message,context:codeToHighlight.slice(index-100,index+100),mode:err.mode},sofar:result,relevance:0,value:escape$1(codeToHighlight),emitter};if(SAFE_MODE)return{illegal:!1,relevance:0,value:escape$1(codeToHighlight),emitter,language:languageName,top,errorRaised:err};throw err}",
+          "body_start": 23687,
+          "body_end": 24049
+        },
+        {
+          "start": 27433,
+          "end": 27609,
+          "raw_source": "catch(error$1){if(error(\"Language definition for '{}' could not be registered.\".replace(\"{}\",languageName)),SAFE_MODE)error(error$1);else throw error$1;lang=PLAINTEXT_LANGUAGE}",
+          "body_start": 27447,
+          "body_end": 27609
+        }
+      ],
+      "error_calls": [
+        {
+          "start": 344,
+          "end": 373,
+          "raw_source": "new Error(\"map is read-only\")"
+        },
+        {
+          "start": 442,
+          "end": 471,
+          "raw_source": "new Error(\"set is read-only\")"
+        },
+        {
+          "start": 7524,
+          "end": 7577,
+          "raw_source": "new Error(\"begin & end are not supported with match\")"
+        },
+        {
+          "start": 11250,
+          "end": 11357,
+          "raw_source": "new Error(\"ERR: Prefer `keywords.$pattern` to `mode.lexemes`, BOTH are not allowed. (see mode reference) \")"
+        },
+        {
+          "start": 12283,
+          "end": 12385,
+          "raw_source": "new Error(\"ERR: contains `self` is not supported at the top-level of a language.  See documentation.\")"
+        },
+        {
+          "start": 22068,
+          "end": 22100,
+          "raw_source": "new Error(\"0 width match regex\")"
+        },
+        {
+          "start": 22296,
+          "end": 22380,
+          "raw_source": "new Error('Illegal lexeme \"'+lexeme+'\" for mode \"'+(top.className||\"<unnamed>\")+'\"')"
+        },
+        {
+          "start": 22603,
+          "end": 22673,
+          "raw_source": "new Error(\"potential infinite loop, way more iterations than matches\")"
+        },
+        {
+          "start": 22825,
+          "end": 22874,
+          "raw_source": "new Error('Unknown language: \"'+languageName+'\"')"
+        },
+        {
+          "start": 28250,
+          "end": 28328,
+          "raw_source": "new Error(\"The '{}' language is required, but not loaded.\".replace(\"{}\",name))"
+        },
+        {
+          "start": 111165,
+          "end": 111206,
+          "raw_source": "new Error(\"can not find mode to replace\")"
+        }
+      ],
+      "promise_catches": [],
+      "finalizers": [],
+      "shortcircuit_ternary_operators": [
+        {
+          "kind": "?",
+          "start": 297,
+          "end": 298,
+          "context_start": 237,
+          "context_end": 358,
+          "context": "s,module){function deepFreeze(obj){return obj instanceof Map?obj.clear=obj.delete=obj.set=function(){throw new Error(\"map"
+        },
+        {
+          "kind": "&&",
+          "start": 393,
+          "end": 395,
+          "context_start": 333,
+          "context_end": 455,
+          "context": "on(){throw new Error(\"map is read-only\")}:obj instanceof Set&&(obj.add=obj.clear=obj.delete=function(){throw new Error(\"se"
+        },
+        {
+          "kind": "&&",
+          "start": 588,
+          "end": 590,
+          "context_start": 528,
+          "context_end": 650,
+          "context": "Each(function(name){var prop=obj[name];typeof prop==\"object\"&&!Object.isFrozen(prop)&&deepFreeze(prop)}),obj}var deepFreez"
+        },
+        {
+          "kind": "&&",
+          "start": 612,
+          "end": 614,
+          "context_start": 552,
+          "context_end": 674,
+          "context": "prop=obj[name];typeof prop==\"object\"&&!Object.isFrozen(prop)&&deepFreeze(prop)}),obj}var deepFreezeEs6=deepFreeze,_default"
+        },
+        {
+          "kind": "&&",
+          "start": 772,
+          "end": 774,
+          "context_start": 712,
+          "context_end": 834,
+          "context": "ault;var Response=class{constructor(mode){mode.data===void 0&&(mode.data={}),this.data=mode.data,this.isMatchIgnored=!1}ig"
+        },
+        {
+          "kind": "||",
+          "start": 1544,
+          "end": 1546,
+          "context_start": 1484,
+          "context_end": 1606,
+          "context": "ngTags(node))return;let className=node.kind;node.sublanguage||(className=`${this.classPrefix}${className}`),this.span(clas"
+        },
+        {
+          "kind": "&&",
+          "start": 1652,
+          "end": 1654,
+          "context_start": 1592,
+          "context_end": 1714,
+          "context": "this.span(className)}closeNode(node){emitsWrappingTags(node)&&(this.buffer+=SPAN_CLOSE)}value(){return this.buffer}span(cl"
+        },
+        {
+          "kind": "?",
+          "start": 2339,
+          "end": 2340,
+          "context_start": 2279,
+          "context_end": 2400,
+          "context": "ode)}static _walk(builder,node){return typeof node==\"string\"?builder.addText(node):node.children&&(builder.openNode(node)"
+        },
+        {
+          "kind": "&&",
+          "start": 2375,
+          "end": 2377,
+          "context_start": 2315,
+          "context_end": 2437,
+          "context": "rn typeof node==\"string\"?builder.addText(node):node.children&&(builder.openNode(node),node.children.forEach(child=>this._w"
+        },
+        {
+          "kind": "&&",
+          "start": 2534,
+          "end": 2536,
+          "context_start": 2474,
+          "context_end": 2596,
+          "context": "(node)),builder}static _collapse(node){typeof node!=\"string\"&&node.children&&(node.children.every(el=>typeof el==\"string\")"
+        },
+        {
+          "kind": "&&",
+          "start": 2549,
+          "end": 2551,
+          "context_start": 2489,
+          "context_end": 2611,
+          "context": "}static _collapse(node){typeof node!=\"string\"&&node.children&&(node.children.every(el=>typeof el==\"string\")?node.children="
+        },
+        {
+          "kind": "?",
+          "start": 2596,
+          "end": 2597,
+          "context_start": 2536,
+          "context_end": 2657,
+          "context": "node.children&&(node.children.every(el=>typeof el==\"string\")?node.children=[node.children.join(\"\")]:node.children.forEach"
+        },
+        {
+          "kind": "&&",
+          "start": 2821,
+          "end": 2823,
+          "context_start": 2761,
+          "context_end": 2883,
+          "context": "super(),this.options=options}addKeyword(text,kind){text!==\"\"&&(this.openNode(kind),this.addText(text),this.closeNode())}ad"
+        },
+        {
+          "kind": "&&",
+          "start": 2904,
+          "end": 2906,
+          "context_start": 2844,
+          "context_end": 2966,
+          "context": "this.addText(text),this.closeNode())}addText(text){text!==\"\"&&this.add(text)}addSublanguage(emitter,name){let node=emitter"
+        },
+        {
+          "kind": "?",
+          "start": 3225,
+          "end": 3226,
+          "context_start": 3165,
+          "context_end": 3286,
+          "context": "^$*+?.()|[\\]{}]/g,\"\\\\$&\"),\"m\")}function source(re){return re?typeof re==\"string\"?re:re.source:null}function concat(...arg"
+        },
+        {
+          "kind": "?",
+          "start": 3245,
+          "end": 3246,
+          "context_start": 3185,
+          "context_end": 3306,
+          "context": "\\$&\"),\"m\")}function source(re){return re?typeof re==\"string\"?re:re.source:null}function concat(...args){return args.map(x"
+        },
+        {
+          "kind": "&&",
+          "start": 3528,
+          "end": 3530,
+          "context_start": 3468,
+          "context_end": 3590,
+          "context": "xec(\"\").length-1}function startsWith(re,lexeme){let match=re&&re.exec(lexeme);return match&&match.index===0}var BACKREF_RE"
+        },
+        {
+          "kind": "&&",
+          "start": 3558,
+          "end": 3560,
+          "context_start": 3498,
+          "context_end": 3620,
+          "context": "tsWith(re,lexeme){let match=re&&re.exec(lexeme);return match&&match.index===0}var BACKREF_RE=/\\[(?:[^\\\\\\]]|\\\\.)*\\]|\\(\\??|\\"
+        },
+        {
+          "kind": "&&",
+          "start": 3954,
+          "end": 3956,
+          "context_start": 3894,
+          "context_end": 4016,
+          "context": "re.substring(match.index+match[0].length),match[0][0]===\"\\\\\"&&match[1]?out+=\"\\\\\"+String(Number(match[1])+offset):(out+=mat"
+        },
+        {
+          "kind": "?",
+          "start": 3964,
+          "end": 3965,
+          "context_start": 3904,
+          "context_end": 4025,
+          "context": "ng(match.index+match[0].length),match[0][0]===\"\\\\\"&&match[1]?out+=\"\\\\\"+String(Number(match[1])+offset):(out+=match[0],mat"
+        },
+        {
+          "kind": "&&",
+          "start": 4036,
+          "end": 4038,
+          "context_start": 3976,
+          "context_end": 4098,
+          "context": "tring(Number(match[1])+offset):(out+=match[0],match[0]===\"(\"&&numCaptures++)}return out}).map(re=>`(${re})`).join(separato"
+        },
+        {
+          "kind": "&&",
+          "start": 4561,
+          "end": 4563,
+          "context_start": 4501,
+          "context_end": 4623,
+          "context": "=(opts={})=>{let beginShebang=/^#![ ]*\\//;return opts.binary&&(opts.begin=concat(beginShebang,/.*\\b/,opts.binary,/\\b.*/)),"
+        },
+        {
+          "kind": "&&",
+          "start": 4721,
+          "end": 4723,
+          "context_start": 4661,
+          "context_end": 4783,
+          "context": "hebang,end:/$/,relevance:0,\"on:begin\":(m,resp)=>{m.index!==0&&resp.ignoreMatch()}},opts)},BACKSLASH_ESCAPE={begin:\"\\\\\\\\[\\\\"
+        },
+        {
+          "kind": "&&",
+          "start": 6482,
+          "end": 6484,
+          "context_start": 6422,
+          "context_end": 6544,
+          "context": "Match=m[1]},\"on:end\":(m,resp)=>{resp.data._beginMatch!==m[1]&&resp.ignoreMatch()}})},MODES=Object.freeze({__proto__:null,M"
+        },
+        {
+          "kind": "&&",
+          "start": 7007,
+          "end": 7009,
+          "context_start": 6947,
+          "context_end": 7069,
+          "context": "recedingDot(match,response){match.input[match.index-1]===\".\"&&response.ignoreMatch()}function beginKeywords(mode,parent){p"
+        },
+        {
+          "kind": "&&",
+          "start": 7074,
+          "end": 7076,
+          "context_start": 7014,
+          "context_end": 7136,
+          "context": "nse.ignoreMatch()}function beginKeywords(mode,parent){parent&&mode.beginKeywords&&(mode.begin=\"\\\\b(\"+mode.beginKeywords.sp"
+        },
+        {
+          "kind": "&&",
+          "start": 7094,
+          "end": 7096,
+          "context_start": 7034,
+          "context_end": 7156,
+          "context": "nction beginKeywords(mode,parent){parent&&mode.beginKeywords&&(mode.begin=\"\\\\b(\"+mode.beginKeywords.split(\" \").join(\"|\")+\""
+        },
+        {
+          "kind": "||",
+          "start": 7245,
+          "end": 7247,
+          "context_start": 7185,
+          "context_end": 7307,
+          "context": "eforeBegin=skipIfhasPrecedingDot,mode.keywords=mode.keywords||mode.beginKeywords,delete mode.beginKeywords,mode.relevance="
+        },
+        {
+          "kind": "&&",
+          "start": 7315,
+          "end": 7317,
+          "context_start": 7255,
+          "context_end": 7377,
+          "context": "inKeywords,delete mode.beginKeywords,mode.relevance===void 0&&(mode.relevance=0))}function compileIllegal(mode,_parent){Ar"
+        },
+        {
+          "kind": "&&",
+          "start": 7402,
+          "end": 7404,
+          "context_start": 7342,
+          "context_end": 7464,
+          "context": "ion compileIllegal(mode,_parent){Array.isArray(mode.illegal)&&(mode.illegal=either(...mode.illegal))}function compileMatch"
+        },
+        {
+          "kind": "||",
+          "start": 7507,
+          "end": 7509,
+          "context_start": 7447,
+          "context_end": 7569,
+          "context": "tion compileMatch(mode,_parent){if(mode.match){if(mode.begin||mode.end)throw new Error(\"begin & end are not supported with"
+        },
+        {
+          "kind": "&&",
+          "start": 7682,
+          "end": 7684,
+          "context_start": 7622,
+          "context_end": 7744,
+          "context": "ction compileRelevance(mode,_parent){mode.relevance===void 0&&(mode.relevance=1)}var COMMON_KEYWORDS=[\"of\",\"and\",\"for\",\"in"
+        },
+        {
+          "kind": "?",
+          "start": 7979,
+          "end": 7980,
+          "context_start": 7919,
+          "context_end": 8040,
+          "context": "{let compiledKeywords={};return typeof rawKeywords==\"string\"?compileList(className,rawKeywords.split(\" \")):Array.isArray("
+        },
+        {
+          "kind": "?",
+          "start": 8052,
+          "end": 8053,
+          "context_start": 7992,
+          "context_end": 8113,
+          "context": "className,rawKeywords.split(\" \")):Array.isArray(rawKeywords)?compileList(className,rawKeywords):Object.keys(rawKeywords)."
+        },
+        {
+          "kind": "&&",
+          "start": 8321,
+          "end": 8323,
+          "context_start": 8261,
+          "context_end": 8383,
+          "context": "function compileList(className2,keywordList){caseInsensitive&&(keywordList=keywordList.map(x=>x.toLowerCase())),keywordLis"
+        },
+        {
+          "kind": "?",
+          "start": 8582,
+          "end": 8583,
+          "context_start": 8522,
+          "context_end": 8643,
+          "context": " scoreForKeyword(keyword,providedScore){return providedScore?Number(providedScore):commonKeyword(keyword)?0:1}function co"
+        },
+        {
+          "kind": "?",
+          "start": 8627,
+          "end": 8628,
+          "context_start": 8567,
+          "context_end": 8688,
+          "context": "n providedScore?Number(providedScore):commonKeyword(keyword)?0:1}function commonKeyword(keyword){return COMMON_KEYWORDS.i"
+        },
+        {
+          "kind": "?",
+          "start": 8856,
+          "end": 8857,
+          "context_start": 8796,
+          "context_end": 8917,
+          "context": "turn new RegExp(source(value),\"m\"+(language.case_insensitive?\"i\":\"\")+(global?\"g\":\"\"))}class MultiRegex{constructor(){this"
+        },
+        {
+          "kind": "?",
+          "start": 8872,
+          "end": 8873,
+          "context_start": 8812,
+          "context_end": 8933,
+          "context": "source(value),\"m\"+(language.case_insensitive?\"i\":\"\")+(global?\"g\":\"\"))}class MultiRegex{constructor(){this.matchIndexes={}"
+        },
+        {
+          "kind": "&&",
+          "start": 9164,
+          "end": 9166,
+          "context_start": 9104,
+          "context_end": 9226,
+          "context": "At+=countMatchGroups(re)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let terminators=this.regexes.map(el=>el"
+        },
+        {
+          "kind": "&&",
+          "start": 9430,
+          "end": 9432,
+          "context_start": 9370,
+          "context_end": 9492,
+          "context": "s);if(!match)return null;let i=match.findIndex((el,i2)=>i2>0&&el!==void 0),matchData=this.matchIndexes[i];return match.spl"
+        },
+        {
+          "kind": "&&",
+          "start": 10049,
+          "end": 10051,
+          "context_start": 9989,
+          "context_end": 10111,
+          "context": "Rule(re,opts){this.rules.push([re,opts]),opts.type===\"begin\"&&this.count++}exec(s){let m=this.getMatcher(this.regexIndex);"
+        },
+        {
+          "kind": "&&",
+          "start": 10195,
+          "end": 10197,
+          "context_start": 10135,
+          "context_end": 10257,
+          "context": "ex;let result=m.exec(s);if(this.resumingScanAtSamePosition()&&!(result&&result.index===this.lastIndex)){let m2=this.getMat"
+        },
+        {
+          "kind": "&&",
+          "start": 10205,
+          "end": 10207,
+          "context_start": 10145,
+          "context_end": 10267,
+          "context": "ult=m.exec(s);if(this.resumingScanAtSamePosition()&&!(result&&result.index===this.lastIndex)){let m2=this.getMatcher(0);m2"
+        },
+        {
+          "kind": "&&",
+          "start": 10326,
+          "end": 10328,
+          "context_start": 10266,
+          "context_end": 10388,
+          "context": "2.lastIndex=this.lastIndex+1,result=m2.exec(s)}return result&&(this.regexIndex+=result.position+1,this.regexIndex===this.c"
+        },
+        {
+          "kind": "&&",
+          "start": 10392,
+          "end": 10394,
+          "context_start": 10332,
+          "context_end": 10454,
+          "context": "s.regexIndex+=result.position+1,this.regexIndex===this.count&&this.considerAll()),result}}function buildModeRegex(mode){le"
+        },
+        {
+          "kind": "&&",
+          "start": 10585,
+          "end": 10587,
+          "context_start": 10525,
+          "context_end": 10647,
+          "context": "ule(term.begin,{rule:term,type:\"begin\"})),mode.terminatorEnd&&mm.addRule(mode.terminatorEnd,{type:\"end\"}),mode.illegal&&mm"
+        },
+        {
+          "kind": "&&",
+          "start": 10643,
+          "end": 10645,
+          "context_start": 10583,
+          "context_end": 10705,
+          "context": "nd&&mm.addRule(mode.terminatorEnd,{type:\"end\"}),mode.illegal&&mm.addRule(mode.illegal,{type:\"illegal\"}),mm}function compil"
+        },
+        {
+          "kind": "&&",
+          "start": 11055,
+          "end": 11057,
+          "context_start": 10995,
+          "context_end": 11117,
+          "context": "!0;let keywordPattern=null;if(typeof mode.keywords==\"object\"&&(keywordPattern=mode.keywords.$pattern,delete mode.keywords."
+        },
+        {
+          "kind": "&&",
+          "start": 11140,
+          "end": 11142,
+          "context_start": 11080,
+          "context_end": 11202,
+          "context": "ywords.$pattern,delete mode.keywords.$pattern),mode.keywords&&(mode.keywords=compileKeywords(mode.keywords,language.case_i"
+        },
+        {
+          "kind": "&&",
+          "start": 11227,
+          "end": 11229,
+          "context_start": 11167,
+          "context_end": 11289,
+          "context": "words(mode.keywords,language.case_insensitive)),mode.lexemes&&keywordPattern)throw new Error(\"ERR: Prefer `keywords.$patte"
+        },
+        {
+          "kind": "||",
+          "start": 11394,
+          "end": 11396,
+          "context_start": 11334,
+          "context_end": 11456,
+          "context": "(see mode reference) \");return keywordPattern=keywordPattern||mode.lexemes||/\\w+/,cmode.keywordPatternRe=langRe(keywordPat"
+        },
+        {
+          "kind": "||",
+          "start": 11408,
+          "end": 11410,
+          "context_start": 11348,
+          "context_end": 11470,
+          "context": "rence) \");return keywordPattern=keywordPattern||mode.lexemes||/\\w+/,cmode.keywordPatternRe=langRe(keywordPattern,!0),paren"
+        },
+        {
+          "kind": "&&",
+          "start": 11471,
+          "end": 11473,
+          "context_start": 11411,
+          "context_end": 11533,
+          "context": "\\w+/,cmode.keywordPatternRe=langRe(keywordPattern,!0),parent&&(mode.begin||(mode.begin=/\\B|\\b/),cmode.beginRe=langRe(mode."
+        },
+        {
+          "kind": "||",
+          "start": 11484,
+          "end": 11486,
+          "context_start": 11424,
+          "context_end": 11546,
+          "context": "ywordPatternRe=langRe(keywordPattern,!0),parent&&(mode.begin||(mode.begin=/\\B|\\b/),cmode.beginRe=langRe(mode.begin),mode.e"
+        },
+        {
+          "kind": "&&",
+          "start": 11559,
+          "end": 11561,
+          "context_start": 11499,
+          "context_end": 11621,
+          "context": "\\B|\\b/),cmode.beginRe=langRe(mode.begin),mode.endSameAsBegin&&(mode.end=mode.begin),!mode.end&&!mode.endsWithParent&&(mode"
+        },
+        {
+          "kind": "&&",
+          "start": 11592,
+          "end": 11594,
+          "context_start": 11532,
+          "context_end": 11654,
+          "context": ".begin),mode.endSameAsBegin&&(mode.end=mode.begin),!mode.end&&!mode.endsWithParent&&(mode.end=/\\B|\\b/),mode.end&&(cmode.en"
+        },
+        {
+          "kind": "&&",
+          "start": 11614,
+          "end": 11616,
+          "context_start": 11554,
+          "context_end": 11676,
+          "context": "Begin&&(mode.end=mode.begin),!mode.end&&!mode.endsWithParent&&(mode.end=/\\B|\\b/),mode.end&&(cmode.endRe=langRe(mode.end)),"
+        },
+        {
+          "kind": "&&",
+          "start": 11643,
+          "end": 11645,
+          "context_start": 11583,
+          "context_end": 11705,
+          "context": "!mode.end&&!mode.endsWithParent&&(mode.end=/\\B|\\b/),mode.end&&(cmode.endRe=langRe(mode.end)),cmode.terminatorEnd=source(mo"
+        },
+        {
+          "kind": "||",
+          "start": 11712,
+          "end": 11714,
+          "context_start": 11652,
+          "context_end": 11774,
+          "context": "endRe=langRe(mode.end)),cmode.terminatorEnd=source(mode.end)||\"\",mode.endsWithParent&&parent.terminatorEnd&&(cmode.termina"
+        },
+        {
+          "kind": "&&",
+          "start": 11736,
+          "end": 11738,
+          "context_start": 11676,
+          "context_end": 11798,
+          "context": "cmode.terminatorEnd=source(mode.end)||\"\",mode.endsWithParent&&parent.terminatorEnd&&(cmode.terminatorEnd+=(mode.end?\"|\":\"\""
+        },
+        {
+          "kind": "&&",
+          "start": 11758,
+          "end": 11760,
+          "context_start": 11698,
+          "context_end": 11820,
+          "context": "urce(mode.end)||\"\",mode.endsWithParent&&parent.terminatorEnd&&(cmode.terminatorEnd+=(mode.end?\"|\":\"\")+parent.terminatorEnd"
+        },
+        {
+          "kind": "?",
+          "start": 11791,
+          "end": 11792,
+          "context_start": 11731,
+          "context_end": 11852,
+          "context": "arent&&parent.terminatorEnd&&(cmode.terminatorEnd+=(mode.end?\"|\":\"\")+parent.terminatorEnd)),mode.illegal&&(cmode.illegalR"
+        },
+        {
+          "kind": "&&",
+          "start": 11835,
+          "end": 11837,
+          "context_start": 11775,
+          "context_end": 11897,
+          "context": "orEnd+=(mode.end?\"|\":\"\")+parent.terminatorEnd)),mode.illegal&&(cmode.illegalRe=langRe(mode.illegal)),mode.contains||(mode."
+        },
+        {
+          "kind": "||",
+          "start": 11889,
+          "end": 11891,
+          "context_start": 11829,
+          "context_end": 11951,
+          "context": "llegal&&(cmode.illegalRe=langRe(mode.illegal)),mode.contains||(mode.contains=[]),mode.contains=[].concat(...mode.contains."
+        },
+        {
+          "kind": "?",
+          "start": 12002,
+          "end": 12003,
+          "context_start": 11942,
+          "context_end": 12063,
+          "context": "contains.map(function(c){return expandOrCloneMode(c===\"self\"?mode:c)})),mode.contains.forEach(function(c){compileMode(c,c"
+        },
+        {
+          "kind": "&&",
+          "start": 12082,
+          "end": 12084,
+          "context_start": 12022,
+          "context_end": 12144,
+          "context": "tains.forEach(function(c){compileMode(c,cmode)}),mode.starts&&compileMode(mode.starts,parent),cmode.matcher=buildModeRegex"
+        },
+        {
+          "kind": "||",
+          "start": 12188,
+          "end": 12190,
+          "context_start": 12128,
+          "context_end": 12250,
+          "context": "r=buildModeRegex(cmode),cmode}if(language.compilerExtensions||(language.compilerExtensions=[]),language.contains&&language"
+        },
+        {
+          "kind": "&&",
+          "start": 12240,
+          "end": 12242,
+          "context_start": 12180,
+          "context_end": 12302,
+          "context": "tensions||(language.compilerExtensions=[]),language.contains&&language.contains.includes(\"self\"))throw new Error(\"ERR: con"
+        },
+        {
+          "kind": "||",
+          "start": 12452,
+          "end": 12454,
+          "context_start": 12392,
+          "context_end": 12514,
+          "context": " language.classNameAliases=inherit(language.classNameAliases||{}),compileMode(language)}function dependencyOnParent(mode){"
+        },
+        {
+          "kind": "?",
+          "start": 12525,
+          "end": 12526,
+          "context_start": 12465,
+          "context_end": 12586,
+          "context": "Mode(language)}function dependencyOnParent(mode){return mode?mode.endsWithParent||dependencyOnParent(mode.starts):!1}func"
+        },
+        {
+          "kind": "||",
+          "start": 12545,
+          "end": 12547,
+          "context_start": 12485,
+          "context_end": 12607,
+          "context": "ion dependencyOnParent(mode){return mode?mode.endsWithParent||dependencyOnParent(mode.starts):!1}function expandOrCloneMod"
+        },
+        {
+          "kind": "&&",
+          "start": 12635,
+          "end": 12637,
+          "context_start": 12575,
+          "context_end": 12697,
+          "context": "ts):!1}function expandOrCloneMode(mode){return mode.variants&&!mode.cachedVariants&&(mode.cachedVariants=mode.variants.map"
+        },
+        {
+          "kind": "&&",
+          "start": 12657,
+          "end": 12659,
+          "context_start": 12597,
+          "context_end": 12719,
+          "context": "OrCloneMode(mode){return mode.variants&&!mode.cachedVariants&&(mode.cachedVariants=mode.variants.map(function(variant){ret"
+        },
+        {
+          "kind": "?",
+          "start": 12783,
+          "end": 12784,
+          "context_start": 12723,
+          "context_end": 12844,
+          "context": "inherit(mode,{variants:null},variant)})),mode.cachedVariants?mode.cachedVariants:dependencyOnParent(mode)?inherit(mode,{s"
+        },
+        {
+          "kind": "?",
+          "start": 12828,
+          "end": 12829,
+          "context_start": 12768,
+          "context_end": 12889,
+          "context": ".cachedVariants?mode.cachedVariants:dependencyOnParent(mode)?inherit(mode,{starts:mode.starts?inherit(mode.starts):null})"
+        },
+        {
+          "kind": "?",
+          "start": 12861,
+          "end": 12862,
+          "context_start": 12801,
+          "context_end": 12922,
+          "context": "ts:dependencyOnParent(mode)?inherit(mode,{starts:mode.starts?inherit(mode.starts):null}):Object.isFrozen(mode)?inherit(mo"
+        },
+        {
+          "kind": "?",
+          "start": 12911,
+          "end": 12912,
+          "context_start": 12851,
+          "context_end": 12972,
+          "context": "ode.starts?inherit(mode.starts):null}):Object.isFrozen(mode)?inherit(mode):mode}var version=\"10.7.3\";function hasValueOrE"
+        },
+        {
+          "kind": "||",
+          "start": 13007,
+          "end": 13009,
+          "context_start": 12947,
+          "context_end": 13069,
+          "context": "7.3\";function hasValueOrEmptyAttribute(value){return!!(value||value===\"\")}function BuildVuePlugin(hljs){let Component={pro"
+        },
+        {
+          "kind": "?",
+          "start": 13218,
+          "end": 13219,
+          "context_start": 13158,
+          "context_end": 13279,
+          "context": "guage:!1}},computed:{className(){return this.unknownLanguage?\"\":\"hljs \"+this.detectedLanguage},highlighted(){if(!this.aut"
+        },
+        {
+          "kind": "&&",
+          "start": 13286,
+          "end": 13288,
+          "context_start": 13226,
+          "context_end": 13348,
+          "context": "s \"+this.detectedLanguage},highlighted(){if(!this.autoDetect&&!hljs.getLanguage(this.language))return console.warn(`The la"
+        },
+        {
+          "kind": "?",
+          "start": 13492,
+          "end": 13493,
+          "context_start": 13432,
+          "context_end": 13553,
+          "context": "0,escapeHTML(this.code);let result={};return this.autoDetect?(result=hljs.highlightAuto(this.code),this.detectedLanguage="
+        },
+        {
+          "kind": "||",
+          "start": 13722,
+          "end": 13724,
+          "context_start": 13662,
+          "context_end": 13784,
+          "context": "is.language),result.value},autoDetect(){return!this.language||hasValueOrEmptyAttribute(this.autodetect)},ignoreIllegals(){"
+        },
+        {
+          "kind": "?",
+          "start": 14518,
+          "end": 14519,
+          "context_start": 14458,
+          "context_end": 14579,
+          "context": ".firstChild;child;child=child.nextSibling)child.nodeType===3?offset+=child.nodeValue.length:child.nodeType===1&&(result.p"
+        },
+        {
+          "kind": "&&",
+          "start": 14568,
+          "end": 14570,
+          "context_start": 14508,
+          "context_end": 14630,
+          "context": "deType===3?offset+=child.nodeValue.length:child.nodeType===1&&(result.push({event:\"start\",offset,node:child}),offset=_node"
+        },
+        {
+          "kind": "||",
+          "start": 14686,
+          "end": 14688,
+          "context_start": 14626,
+          "context_end": 14748,
+          "context": "nodeStream(child,offset),tag(child).match(/br|hr|img|input/)||result.push({event:\"stop\",offset,node:child}));return offset"
+        },
+        {
+          "kind": "||",
+          "start": 14901,
+          "end": 14903,
+          "context_start": 14841,
+          "context_end": 14963,
+          "context": ",nodeStack=[];function selectStream(){return!original.length||!highlighted.length?original.length?original:highlighted:ori"
+        },
+        {
+          "kind": "?",
+          "start": 14922,
+          "end": 14923,
+          "context_start": 14862,
+          "context_end": 14983,
+          "context": "n selectStream(){return!original.length||!highlighted.length?original.length?original:highlighted:original[0].offset!==hi"
+        },
+        {
+          "kind": "?",
+          "start": 14938,
+          "end": 14939,
+          "context_start": 14878,
+          "context_end": 14999,
+          "context": "{return!original.length||!highlighted.length?original.length?original:highlighted:original[0].offset!==highlighted[0].off"
+        },
+        {
+          "kind": "?",
+          "start": 15002,
+          "end": 15003,
+          "context_start": 14942,
+          "context_end": 15063,
+          "context": "ginal:highlighted:original[0].offset!==highlighted[0].offset?original[0].offset<highlighted[0].offset?original:highlighte"
+        },
+        {
+          "kind": "?",
+          "start": 15043,
+          "end": 15044,
+          "context_start": 14983,
+          "context_end": 15104,
+          "context": "ghlighted[0].offset?original[0].offset<highlighted[0].offset?original:highlighted:highlighted[0].event===\"start\"?original"
+        },
+        {
+          "kind": "?",
+          "start": 15095,
+          "end": 15096,
+          "context_start": 15035,
+          "context_end": 15156,
+          "context": "].offset?original:highlighted:highlighted[0].event===\"start\"?original:highlighted}function open(node){function attributeS"
+        },
+        {
+          "kind": "?",
+          "start": 15397,
+          "end": 15398,
+          "context_start": 15337,
+          "context_end": 15458,
+          "context": "+tag(node)+\">\"}function render(event){(event.event===\"start\"?open:close)(event.node)}for(;original.length||highlighted.le"
+        },
+        {
+          "kind": "||",
+          "start": 15442,
+          "end": 15444,
+          "context_start": 15382,
+          "context_end": 15504,
+          "context": "event===\"start\"?open:close)(event.node)}for(;original.length||highlighted.length;){let stream=selectStream();if(result+=es"
+        },
+        {
+          "kind": "&&",
+          "start": 15717,
+          "end": 15719,
+          "context_start": 15657,
+          "context_end": 15779,
+          "context": "plice(0,1)[0]),stream=selectStream();while(stream===original&&stream.length&&stream[0].offset===processed);nodeStack.rever"
+        },
+        {
+          "kind": "&&",
+          "start": 15732,
+          "end": 15734,
+          "context_start": 15672,
+          "context_end": 15794,
+          "context": "stream=selectStream();while(stream===original&&stream.length&&stream[0].offset===processed);nodeStack.reverse().forEach(op"
+        },
+        {
+          "kind": "?",
+          "start": 15828,
+          "end": 15829,
+          "context_start": 15768,
+          "context_end": 15889,
+          "context": "Stack.reverse().forEach(open)}else stream[0].event===\"start\"?nodeStack.push(stream[0].node):nodeStack.pop(),render(stream"
+        },
+        {
+          "kind": "||",
+          "start": 16160,
+          "end": 16162,
+          "context_start": 16100,
+          "context_end": 16222,
+          "context": "rsion2,message)=>{seenDeprecations[`${version2}/${message}`]||(console.log(`Deprecated as of ${version2}. ${message}`),see"
+        },
+        {
+          "kind": "?",
+          "start": 17008,
+          "end": 17009,
+          "context_start": 16948,
+          "context_end": 17069,
+          "context": "k){let classes=block.className+\" \";classes+=block.parentNode?block.parentNode.className:\"\";let match=options.languageDete"
+        },
+        {
+          "kind": "||",
+          "start": 17148,
+          "end": 17150,
+          "context_start": 17088,
+          "context_end": 17210,
+          "context": "if(match){let language=getLanguage(match[1]);return language||(warn(LANGUAGE_NOT_FOUND.replace(\"{}\",match[1])),warn(\"Falli"
+        },
+        {
+          "kind": "?",
+          "start": 17272,
+          "end": 17273,
+          "context_start": 17212,
+          "context_end": 17333,
+          "context": " back to no-highlight mode for this block.\",block)),language?match[1]:\"no-highlight\"}return classes.split(/\\s+/).find(_cl"
+        },
+        {
+          "kind": "||",
+          "start": 17364,
+          "end": 17366,
+          "context_start": 17304,
+          "context_end": 17426,
+          "context": "classes.split(/\\s+/).find(_class=>shouldNotHighlight(_class)||getLanguage(_class))}function highlight2(codeOrlanguageName,"
+        },
+        {
+          "kind": "?",
+          "start": 17527,
+          "end": 17528,
+          "context_start": 17467,
+          "context_end": 17588,
+          "context": "){let code=\"\",languageName=\"\";typeof optionsOrCode==\"object\"?(code=codeOrlanguageName,ignoreIllegals=optionsOrCode.ignore"
+        },
+        {
+          "kind": "?",
+          "start": 18005,
+          "end": 18006,
+          "context_start": 17945,
+          "context_end": 18066,
+          "context": "};fire(\"before:highlight\",context);let result=context.result?context.result:_highlight(context.language,context.code,igno"
+        },
+        {
+          "kind": "?",
+          "start": 18311,
+          "end": 18312,
+          "context_start": 18251,
+          "context_end": 18372,
+          "context": "wordData(mode,match){let matchText=language.case_insensitive?match[0].toLowerCase():match[0];return Object.prototype.hasO"
+        },
+        {
+          "kind": "&&",
+          "start": 18412,
+          "end": 18414,
+          "context_start": 18352,
+          "context_end": 18474,
+          "context": "bject.prototype.hasOwnProperty.call(mode.keywords,matchText)&&mode.keywords[matchText]}function processKeywords(){if(!top."
+        },
+        {
+          "kind": "||",
+          "start": 18901,
+          "end": 18903,
+          "context_start": 18841,
+          "context_end": 18963,
+          "context": "+=match[0];else{let cssClass=language.classNameAliases[kind]||kind;emitter.addKeyword(match[0],cssClass)}}else buf+=match["
+        },
+        {
+          "kind": "?",
+          "start": 19467,
+          "end": 19468,
+          "context_start": 19407,
+          "context_end": 19528,
+          "context": "else result2=highlightAuto(modeBuffer,top.subLanguage.length?top.subLanguage:null);top.relevance>0&&(relevance+=result2.r"
+        },
+        {
+          "kind": "&&",
+          "start": 19505,
+          "end": 19507,
+          "context_start": 19445,
+          "context_end": 19567,
+          "context": "top.subLanguage.length?top.subLanguage:null);top.relevance>0&&(relevance+=result2.relevance),emitter.addSublanguage(result"
+        },
+        {
+          "kind": "?",
+          "start": 19641,
+          "end": 19642,
+          "context_start": 19581,
+          "context_end": 19702,
+          "context": "lt2.language)}function processBuffer(){top.subLanguage!=null?processSubLanguage():processKeywords(),modeBuffer=\"\"}functio"
+        },
+        {
+          "kind": "&&",
+          "start": 19744,
+          "end": 19746,
+          "context_start": 19684,
+          "context_end": 19806,
+          "context": "eBuffer=\"\"}function startNewMode(mode){return mode.className&&emitter.openNode(language.classNameAliases[mode.className]||"
+        },
+        {
+          "kind": "||",
+          "start": 19804,
+          "end": 19806,
+          "context_start": 19744,
+          "context_end": 19866,
+          "context": "&&emitter.openNode(language.classNameAliases[mode.className]||mode.className),top=Object.create(mode,{parent:{value:top}})"
+        },
+        {
+          "kind": "&&",
+          "start": 20080,
+          "end": 20082,
+          "context_start": 20020,
+          "context_end": 20142,
+          "context": "esponse(mode);mode[\"on:end\"](match,resp),resp.isMatchIgnored&&(matched=!1)}if(matched){for(;mode.endsParent&&mode.parent;)"
+        },
+        {
+          "kind": "&&",
+          "start": 20127,
+          "end": 20129,
+          "context_start": 20067,
+          "context_end": 20189,
+          "context": "sMatchIgnored&&(matched=!1)}if(matched){for(;mode.endsParent&&mode.parent;)mode=mode.parent;return mode}}if(mode.endsWithP"
+        },
+        {
+          "kind": "?",
+          "start": 20309,
+          "end": 20310,
+          "context_start": 20249,
+          "context_end": 20370,
+          "context": "}function doIgnore(lexeme){return top.matcher.regexIndex===0?(modeBuffer+=lexeme[0],1):(resumeScanAtSamePosition=!0,0)}fu"
+        },
+        {
+          "kind": "&&",
+          "start": 20558,
+          "end": 20560,
+          "context_start": 20498,
+          "context_end": 20620,
+          "context": "gin,newMode[\"on:begin\"]];for(let cb of beforeCallbacks)if(cb&&(cb(match,resp),resp.isMatchIgnored))return doIgnore(lexeme)"
+        },
+        {
+          "kind": "&&",
+          "start": 20635,
+          "end": 20637,
+          "context_start": 20575,
+          "context_end": 20697,
+          "context": ",resp.isMatchIgnored))return doIgnore(lexeme);return newMode&&newMode.endSameAsBegin&&(newMode.endRe=escape(lexeme)),newMo"
+        },
+        {
+          "kind": "&&",
+          "start": 20659,
+          "end": 20661,
+          "context_start": 20599,
+          "context_end": 20721,
+          "context": "turn doIgnore(lexeme);return newMode&&newMode.endSameAsBegin&&(newMode.endRe=escape(lexeme)),newMode.skip?modeBuffer+=lexe"
+        },
+        {
+          "kind": "?",
+          "start": 20704,
+          "end": 20705,
+          "context_start": 20644,
+          "context_end": 20765,
+          "context": ".endSameAsBegin&&(newMode.endRe=escape(lexeme)),newMode.skip?modeBuffer+=lexeme:(newMode.excludeBegin&&(modeBuffer+=lexem"
+        },
+        {
+          "kind": "&&",
+          "start": 20745,
+          "end": 20747,
+          "context_start": 20685,
+          "context_end": 20807,
+          "context": "xeme)),newMode.skip?modeBuffer+=lexeme:(newMode.excludeBegin&&(modeBuffer+=lexeme),processBuffer(),!newMode.returnBegin&&!"
+        },
+        {
+          "kind": "&&",
+          "start": 20804,
+          "end": 20806,
+          "context_start": 20744,
+          "context_end": 20866,
+          "context": "n&&(modeBuffer+=lexeme),processBuffer(),!newMode.returnBegin&&!newMode.excludeBegin&&(modeBuffer=lexeme)),startNewMode(new"
+        },
+        {
+          "kind": "&&",
+          "start": 20827,
+          "end": 20829,
+          "context_start": 20767,
+          "context_end": 20889,
+          "context": ",processBuffer(),!newMode.returnBegin&&!newMode.excludeBegin&&(modeBuffer=lexeme)),startNewMode(newMode),newMode.returnBeg"
+        },
+        {
+          "kind": "?",
+          "start": 20891,
+          "end": 20892,
+          "context_start": 20831,
+          "context_end": 20952,
+          "context": "odeBuffer=lexeme)),startNewMode(newMode),newMode.returnBegin?0:lexeme.length}function doEndMatch(match){let lexeme=match["
+        },
+        {
+          "kind": "?",
+          "start": 21112,
+          "end": 21113,
+          "context_start": 21052,
+          "context_end": 21173,
+          "context": "nder);if(!endMode)return NO_MATCH;let origin=top;origin.skip?modeBuffer+=lexeme:(origin.returnEnd||origin.excludeEnd||(mo"
+        },
+        {
+          "kind": "||",
+          "start": 21149,
+          "end": 21151,
+          "context_start": 21089,
+          "context_end": 21211,
+          "context": " origin=top;origin.skip?modeBuffer+=lexeme:(origin.returnEnd||origin.excludeEnd||(modeBuffer+=lexeme),processBuffer(),orig"
+        },
+        {
+          "kind": "||",
+          "start": 21168,
+          "end": 21170,
+          "context_start": 21108,
+          "context_end": 21230,
+          "context": "skip?modeBuffer+=lexeme:(origin.returnEnd||origin.excludeEnd||(modeBuffer+=lexeme),processBuffer(),origin.excludeEnd&&(mod"
+        },
+        {
+          "kind": "&&",
+          "start": 21224,
+          "end": 21226,
+          "context_start": 21164,
+          "context_end": 21286,
+          "context": "eEnd||(modeBuffer+=lexeme),processBuffer(),origin.excludeEnd&&(modeBuffer=lexeme));do top.className&&emitter.closeNode(),!"
+        },
+        {
+          "kind": "&&",
+          "start": 21263,
+          "end": 21265,
+          "context_start": 21203,
+          "context_end": 21325,
+          "context": "r(),origin.excludeEnd&&(modeBuffer=lexeme));do top.className&&emitter.closeNode(),!top.skip&&!top.subLanguage&&(relevance+"
+        },
+        {
+          "kind": "&&",
+          "start": 21294,
+          "end": 21296,
+          "context_start": 21234,
+          "context_end": 21356,
+          "context": "fer=lexeme));do top.className&&emitter.closeNode(),!top.skip&&!top.subLanguage&&(relevance+=top.relevance),top=top.parent;"
+        },
+        {
+          "kind": "&&",
+          "start": 21312,
+          "end": 21314,
+          "context_start": 21252,
+          "context_end": 21374,
+          "context": "p.className&&emitter.closeNode(),!top.skip&&!top.subLanguage&&(relevance+=top.relevance),top=top.parent;while(top!==endMod"
+        },
+        {
+          "kind": "&&",
+          "start": 21405,
+          "end": 21407,
+          "context_start": 21345,
+          "context_end": 21467,
+          "context": "top.parent;while(top!==endMode.parent);return endMode.starts&&(endMode.endSameAsBegin&&(endMode.starts.endRe=endMode.endRe"
+        },
+        {
+          "kind": "&&",
+          "start": 21430,
+          "end": 21432,
+          "context_start": 21370,
+          "context_end": 21492,
+          "context": "dMode.parent);return endMode.starts&&(endMode.endSameAsBegin&&(endMode.starts.endRe=endMode.endRe),startNewMode(endMode.st"
+        },
+        {
+          "kind": "?",
+          "start": 21515,
+          "end": 21516,
+          "context_start": 21455,
+          "context_end": 21576,
+          "context": "ndMode.endRe),startNewMode(endMode.starts)),origin.returnEnd?0:lexeme.length}function processContinuations(){let list=[];"
+        },
+        {
+          "kind": "&&",
+          "start": 21655,
+          "end": 21657,
+          "context_start": 21595,
+          "context_end": 21717,
+          "context": ";current!==language;current=current.parent)current.className&&list.unshift(current.className);list.forEach(item=>emitter.o"
+        },
+        {
+          "kind": "&&",
+          "start": 21811,
+          "end": 21813,
+          "context_start": 21751,
+          "context_end": 21873,
+          "context": "nction processLexeme(textBeforeMatch,match){let lexeme=match&&match[0];if(modeBuffer+=textBeforeMatch,lexeme==null)return "
+        },
+        {
+          "kind": "&&",
+          "start": 21918,
+          "end": 21920,
+          "context_start": 21858,
+          "context_end": 21980,
+          "context": "e==null)return processBuffer(),0;if(lastMatch.type===\"begin\"&&match.type===\"end\"&&lastMatch.index===match.index&&lexeme==="
+        },
+        {
+          "kind": "&&",
+          "start": 21938,
+          "end": 21940,
+          "context_start": 21878,
+          "context_end": 22000,
+          "context": "ssBuffer(),0;if(lastMatch.type===\"begin\"&&match.type===\"end\"&&lastMatch.index===match.index&&lexeme===\"\"){if(modeBuffer+=c"
+        },
+        {
+          "kind": "&&",
+          "start": 21969,
+          "end": 21971,
+          "context_start": 21909,
+          "context_end": 22031,
+          "context": "==\"begin\"&&match.type===\"end\"&&lastMatch.index===match.index&&lexeme===\"\"){if(modeBuffer+=codeToHighlight.slice(match.inde"
+        },
+        {
+          "kind": "&&",
+          "start": 22269,
+          "end": 22271,
+          "context_start": 22209,
+          "context_end": 22331,
+          "context": "\"begin\")return doBeginMatch(match);if(match.type===\"illegal\"&&!ignoreIllegals){let err=new Error('Illegal lexeme \"'+lexeme"
+        },
+        {
+          "kind": "||",
+          "start": 22361,
+          "end": 22363,
+          "context_start": 22301,
+          "context_end": 22423,
+          "context": "rror('Illegal lexeme \"'+lexeme+'\" for mode \"'+(top.className||\"<unnamed>\")+'\"');throw err.mode=top,err}else if(match.type="
+        },
+        {
+          "kind": "&&",
+          "start": 22530,
+          "end": 22532,
+          "context_start": 22470,
+          "context_end": 22592,
+          "context": "cessed!==NO_MATCH)return processed}if(match.type===\"illegal\"&&lexeme===\"\")return 1;if(iterations>1e5&&iterations>match.ind"
+        },
+        {
+          "kind": "&&",
+          "start": 22570,
+          "end": 22572,
+          "context_start": 22510,
+          "context_end": 22632,
+          "context": "tch.type===\"illegal\"&&lexeme===\"\")return 1;if(iterations>1e5&&iterations>match.index*3)throw new Error(\"potential infinite"
+        },
+        {
+          "kind": "||",
+          "start": 22944,
+          "end": 22946,
+          "context_start": 22884,
+          "context_end": 23006,
+          "context": "mpileLanguage(language,{plugins}),result=\"\",top=continuation||md,continuations={},emitter=new options.__emitter(options);p"
+        },
+        {
+          "kind": "?",
+          "start": 23181,
+          "end": 23182,
+          "context_start": 23121,
+          "context_end": 23242,
+          "context": "tcher.considerAll();;){iterations++,resumeScanAtSamePosition?resumeScanAtSamePosition=!1:top.matcher.considerAll(),top.ma"
+        },
+        {
+          "kind": "&&",
+          "start": 23702,
+          "end": 23704,
+          "context_start": 23642,
+          "context_end": 23764,
+          "context": "nguageName,illegal:!1,emitter,top}}catch(err){if(err.message&&err.message.includes(\"Illegal\"))return{illegal:!0,illegalBy:"
+        },
+        {
+          "kind": "||",
+          "start": 24324,
+          "end": 24326,
+          "context_start": 24264,
+          "context_end": 24386,
+          "context": "lightAuto(code,languageSubset){languageSubset=languageSubset||options.languages||Object.keys(languages);let plaintext=just"
+        },
+        {
+          "kind": "||",
+          "start": 24343,
+          "end": 24345,
+          "context_start": 24283,
+          "context_end": 24405,
+          "context": "uageSubset){languageSubset=languageSubset||options.languages||Object.keys(languages);let plaintext=justTextHighlightResult"
+        },
+        {
+          "kind": "&&",
+          "start": 24645,
+          "end": 24647,
+          "context_start": 24585,
+          "context_end": 24707,
+          "context": "e!==b.relevance)return b.relevance-a.relevance;if(a.language&&b.language){if(getLanguage(a.language).supersetOf===b.langua"
+        },
+        {
+          "kind": "||",
+          "start": 24921,
+          "end": 24923,
+          "context_start": 24861,
+          "context_end": 24983,
+          "context": "st,result}function fixMarkup(html){return options.tabReplace||options.useBR?html.replace(fixMarkupRe,match=>match===`\n`?op"
+        },
+        {
+          "kind": "?",
+          "start": 24936,
+          "end": 24937,
+          "context_start": 24876,
+          "context_end": 24997,
+          "context": "ion fixMarkup(html){return options.tabReplace||options.useBR?html.replace(fixMarkupRe,match=>match===`\n`?options.useBR?\"<"
+        },
+        {
+          "kind": "?",
+          "start": 24980,
+          "end": 24981,
+          "context_start": 24920,
+          "context_end": 25041,
+          "context": "e||options.useBR?html.replace(fixMarkupRe,match=>match===`\n`?options.useBR?\"<br>\":match:options.tabReplace?match.replace("
+        },
+        {
+          "kind": "?",
+          "start": 24994,
+          "end": 24995,
+          "context_start": 24934,
+          "context_end": 25055,
+          "context": "BR?html.replace(fixMarkupRe,match=>match===`\n`?options.useBR?\"<br>\":match:options.tabReplace?match.replace(/\\t/g,options."
+        },
+        {
+          "kind": "?",
+          "start": 25026,
+          "end": 25027,
+          "context_start": 24966,
+          "context_end": 25087,
+          "context": "h=>match===`\n`?options.useBR?\"<br>\":match:options.tabReplace?match.replace(/\\t/g,options.tabReplace):match):html}function"
+        },
+        {
+          "kind": "?",
+          "start": 25160,
+          "end": 25161,
+          "context_start": 25100,
+          "context_end": 25221,
+          "context": "ame(element,currentLang,resultLang){let language=currentLang?aliases[currentLang]:resultLang;element.classList.add(\"hljs\""
+        },
+        {
+          "kind": "&&",
+          "start": 25231,
+          "end": 25233,
+          "context_start": 25171,
+          "context_end": 25293,
+          "context": "rrentLang]:resultLang;element.classList.add(\"hljs\"),language&&element.classList.add(language)}let brPlugin={\"before:highli"
+        },
+        {
+          "kind": "&&",
+          "start": 25327,
+          "end": 25329,
+          "context_start": 25267,
+          "context_end": 25389,
+          "context": "t brPlugin={\"before:highlightElement\":({el})=>{options.useBR&&(el.innerHTML=el.innerHTML.replace(/\\n/g,\"\").replace(/<br[ /"
+        },
+        {
+          "kind": "&&",
+          "start": 25453,
+          "end": 25455,
+          "context_start": 25393,
+          "context_end": 25515,
+          "context": "g,`\n`))},\"after:highlightElement\":({result})=>{options.useBR&&(result.value=result.value.replace(/\\n/g,\"<br>\"))}},TAB_REPL"
+        },
+        {
+          "kind": "&&",
+          "start": 25615,
+          "end": 25617,
+          "context_start": 25555,
+          "context_end": 25677,
+          "context": "in={\"after:highlightElement\":({result})=>{options.tabReplace&&(result.value=result.value.replace(TAB_REPLACE_RE,m=>m.repla"
+        },
+        {
+          "kind": "?",
+          "start": 25938,
+          "end": 25939,
+          "context_start": 25878,
+          "context_end": 25999,
+          "context": "age}),node=element;let text=node.textContent,result=language?highlight2(text,{language,ignoreIllegals:!0}):highlightAuto("
+        },
+        {
+          "kind": "&&",
+          "start": 26249,
+          "end": 26251,
+          "context_start": 26189,
+          "context_end": 26311,
+          "context": "ult.relevance,relavance:result.relevance},result.second_best&&(element.second_best={language:result.second_best.language,r"
+        },
+        {
+          "kind": "&&",
+          "start": 26432,
+          "end": 26434,
+          "context_start": 26372,
+          "context_end": 26494,
+          "context": "elevance})}function configure(userOptions){userOptions.useBR&&(deprecated(\"10.3.0\",\"'useBR' will be removed entirely in v1"
+        },
+        {
+          "kind": "&&",
+          "start": 27213,
+          "end": 27215,
+          "context_start": 27153,
+          "context_end": 27275,
+          "context": "e\").forEach(highlightElement)}function boot(){wantsHighlight&&highlightAll()}typeof window<\"u\"&&window.addEventListener&&w"
+        },
+        {
+          "kind": "&&",
+          "start": 27247,
+          "end": 27249,
+          "context_start": 27187,
+          "context_end": 27309,
+          "context": "tion boot(){wantsHighlight&&highlightAll()}typeof window<\"u\"&&window.addEventListener&&window.addEventListener(\"DOMContent"
+        },
+        {
+          "kind": "&&",
+          "start": 27272,
+          "end": 27274,
+          "context_start": 27212,
+          "context_end": 27334,
+          "context": "t&&highlightAll()}typeof window<\"u\"&&window.addEventListener&&window.addEventListener(\"DOMContentLoaded\",boot,!1);function"
+        },
+        {
+          "kind": "||",
+          "start": 27618,
+          "end": 27620,
+          "context_start": 27558,
+          "context_end": 27680,
+          "context": "rror$1);else throw error$1;lang=PLAINTEXT_LANGUAGE}lang.name||(lang.name=languageName),languages[languageName]=lang,lang.r"
+        },
+        {
+          "kind": "&&",
+          "start": 27740,
+          "end": 27742,
+          "context_start": 27680,
+          "context_end": 27802,
+          "context": "awDefinition=languageDefinition.bind(null,hljs),lang.aliases&&registerAliases(lang.aliases,{languageName})}function unregi"
+        },
+        {
+          "kind": "&&",
+          "start": 27927,
+          "end": 27929,
+          "context_start": 27867,
+          "context_end": 27989,
+          "context": " alias of Object.keys(aliases))aliases[alias]===languageName&&delete aliases[alias]}function listLanguages(){return Object"
+        },
+        {
+          "kind": "||",
+          "start": 28373,
+          "end": 28375,
+          "context_start": 28313,
+          "context_end": 28435,
+          "context": "ace(\"{}\",name))}function getLanguage(name){return name=(name||\"\").toLowerCase(),languages[name]||languages[aliases[name]]}"
+        },
+        {
+          "kind": "||",
+          "start": 28408,
+          "end": 28410,
+          "context_start": 28348,
+          "context_end": 28470,
+          "context": "e(name){return name=(name||\"\").toLowerCase(),languages[name]||languages[aliases[name]]}function registerAliases(aliasList,"
+        },
+        {
+          "kind": "&&",
+          "start": 28512,
+          "end": 28514,
+          "context_start": 28452,
+          "context_end": 28574,
+          "context": "Aliases(aliasList,{languageName}){typeof aliasList==\"string\"&&(aliasList=[aliasList]),aliasList.forEach(alias=>{aliases[al"
+        },
+        {
+          "kind": "&&",
+          "start": 28675,
+          "end": 28677,
+          "context_start": 28615,
+          "context_end": 28737,
+          "context": "n autoDetection(name){let lang=getLanguage(name);return lang&&!lang.disableAutodetect}function upgradePluginAPI(plugin){pl"
+        },
+        {
+          "kind": "&&",
+          "start": 28766,
+          "end": 28768,
+          "context_start": 28706,
+          "context_end": 28828,
+          "context": "ion upgradePluginAPI(plugin){plugin[\"before:highlightBlock\"]&&!plugin[\"before:highlightElement\"]&&(plugin[\"before:highligh"
+        },
+        {
+          "kind": "&&",
+          "start": 28802,
+          "end": 28804,
+          "context_start": 28742,
+          "context_end": 28864,
+          "context": "\"before:highlightBlock\"]&&!plugin[\"before:highlightElement\"]&&(plugin[\"before:highlightElement\"]=data=>{plugin[\"before:hig"
+        },
+        {
+          "kind": "&&",
+          "start": 28947,
+          "end": 28949,
+          "context_start": 28887,
+          "context_end": 29009,
+          "context": "sign({block:data.el},data))}),plugin[\"after:highlightBlock\"]&&!plugin[\"after:highlightElement\"]&&(plugin[\"after:highlightE"
+        },
+        {
+          "kind": "&&",
+          "start": 28982,
+          "end": 28984,
+          "context_start": 28922,
+          "context_end": 29044,
+          "context": "n[\"after:highlightBlock\"]&&!plugin[\"after:highlightElement\"]&&(plugin[\"after:highlightElement\"]=data=>{plugin[\"after:highl"
+        },
+        {
+          "kind": "&&",
+          "start": 29250,
+          "end": 29252,
+          "context_start": 29190,
+          "context_end": 29312,
+          "context": "gs){let cb=event;plugins.forEach(function(plugin){plugin[cb]&&plugin[cb](args)})}function deprecateFixMarkup(arg){return d"
+        },
+        {
+          "kind": "&&",
+          "start": 30212,
+          "end": 30214,
+          "context_start": 30152,
+          "context_end": 30274,
+          "context": "ing=version;for(let key in MODES)typeof MODES[key]==\"object\"&&deepFreezeEs6(MODES[key]);return Object.assign(hljs,MODES),h"
+        },
+        {
+          "kind": "?",
+          "start": 30540,
+          "end": 30541,
+          "context_start": 30480,
+          "context_end": 30601,
+          "context": "uages/bash.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function concat(...arg"
+        },
+        {
+          "kind": "?",
+          "start": 30560,
+          "end": 30561,
+          "context_start": 30500,
+          "context_end": 30621,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function concat(...args){return args.map(x"
+        },
+        {
+          "kind": "?",
+          "start": 32941,
+          "end": 32942,
+          "context_start": 32881,
+          "context_end": 33002,
+          "context": "anguages/c.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function optional(re){"
+        },
+        {
+          "kind": "?",
+          "start": 32961,
+          "end": 32962,
+          "context_start": 32901,
+          "context_end": 33022,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function optional(re){return concat(\"(\",re"
+        },
+        {
+          "kind": "?",
+          "start": 38252,
+          "end": 38253,
+          "context_start": 38192,
+          "context_end": 38313,
+          "context": "guages/cpp.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 38272,
+          "end": 38273,
+          "context_start": 38212,
+          "context_end": 38333,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "?",
+          "start": 52452,
+          "end": 52453,
+          "context_start": 52392,
+          "context_end": 52513,
+          "context": "ges/groovy.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 52472,
+          "end": 52473,
+          "context_start": 52412,
+          "context_end": 52533,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "?",
+          "start": 58689,
+          "end": 58690,
+          "context_start": 58629,
+          "context_end": 58750,
+          "context": "N_VARIABLES,TYPES,ERROR_TYPES);function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 58709,
+          "end": 58710,
+          "context_start": 58649,
+          "context_end": 58770,
+          "context": "ROR_TYPES);function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "&&",
+          "start": 59287,
+          "end": 59289,
+          "context_start": 59227,
+          "context_end": 59349,
+          "context": "nextChar===\"<\"){response.ignoreMatch();return}nextChar===\">\"&&(hasClosingTag(match,{after:afterMatchIndex})||response.igno"
+        },
+        {
+          "kind": "||",
+          "start": 59334,
+          "end": 59336,
+          "context_start": 59274,
+          "context_end": 59396,
+          "context": "extChar===\">\"&&(hasClosingTag(match,{after:afterMatchIndex})||response.ignoreMatch())}},KEYWORDS$1={$pattern:IDENT_RE,keyw"
+        },
+        {
+          "kind": "?",
+          "start": 71748,
+          "end": 71749,
+          "context_start": 71688,
+          "context_end": 71809,
+          "context": "uages/perl.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function concat(...arg"
+        },
+        {
+          "kind": "?",
+          "start": 71768,
+          "end": 71769,
+          "context_start": 71708,
+          "context_end": 71829,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function concat(...args){return args.map(x"
+        },
+        {
+          "kind": "?",
+          "start": 74518,
+          "end": 74519,
+          "context_start": 74458,
+          "context_end": 74579,
+          "context": "UBLE_RE=(prefix,open,close=\"\\\\1\")=>{let middle=close===\"\\\\1\"?close:concat(close,open);return concat(concat(\"(?:\",prefix,\""
+        },
+        {
+          "kind": "?",
+          "start": 81281,
+          "end": 81282,
+          "context_start": 81221,
+          "context_end": 81342,
+          "context": "ges/python.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 81301,
+          "end": 81302,
+          "context_start": 81241,
+          "context_end": 81362,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "?",
+          "start": 85172,
+          "end": 85173,
+          "context_start": 85112,
+          "context_end": 85233,
+          "context": "uages/ruby.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 85192,
+          "end": 85193,
+          "context_start": 85132,
+          "context_end": 85253,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "?",
+          "start": 93506,
+          "end": 93507,
+          "context_start": 93446,
+          "context_end": 93567,
+          "context": "ages/swift.js\"(exports,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 93526,
+          "end": 93527,
+          "context_start": 93466,
+          "context_end": 93587,
+          "context": "ts,module){function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "?",
+          "start": 93799,
+          "end": 93800,
+          "context_start": 93739,
+          "context_end": 93860,
+          "context": "wordWrapper=keyword=>concat(/\\b/,keyword,/\\w$/.test(keyword)?/\\b/:/\\B/),dotKeywords=[\"Protocol\",\"Type\"].map(keywordWrappe"
+        },
+        {
+          "kind": "?",
+          "start": 105411,
+          "end": 105412,
+          "context_start": 105351,
+          "context_end": 105472,
+          "context": "N_VARIABLES,TYPES,ERROR_TYPES);function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re)"
+        },
+        {
+          "kind": "?",
+          "start": 105431,
+          "end": 105432,
+          "context_start": 105371,
+          "context_end": 105492,
+          "context": "ROR_TYPES);function source(re){return re?typeof re==\"string\"?re:re.source:null}function lookahead(re){return concat(\"(?=\""
+        },
+        {
+          "kind": "&&",
+          "start": 106009,
+          "end": 106011,
+          "context_start": 105949,
+          "context_end": 106071,
+          "context": "nextChar===\"<\"){response.ignoreMatch();return}nextChar===\">\"&&(hasClosingTag(match,{after:afterMatchIndex})||response.igno"
+        },
+        {
+          "kind": "||",
+          "start": 106056,
+          "end": 106058,
+          "context_start": 105996,
+          "context_end": 106118,
+          "context": "extChar===\">\"&&(hasClosingTag(match,{after:afterMatchIndex})||response.ignoreMatch())}},KEYWORDS$1={$pattern:IDENT_RE,keyw"
+        }
+      ],
+      "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants.",
+      "callbacks": [
+        {
+          "kind": "addEventListener",
+          "start": 27280,
+          "end": 27325,
+          "raw_source": ".addEventListener(\"DOMContentLoaded\",boot,!1)"
+        }
+      ],
+      "named_function_scopes": [
+        {
+          "name": "deepFreeze",
+          "start": 247,
+          "end": 637,
+          "line": 2
+        },
+        {
+          "name": "escapeHTML",
+          "start": 871,
+          "end": 1021,
+          "line": 2
+        },
+        {
+          "name": "inherit",
+          "start": 1021,
+          "end": 1226,
+          "line": 2
+        },
+        {
+          "name": "escape",
+          "start": 3104,
+          "end": 3196,
+          "line": 2
+        },
+        {
+          "name": "source",
+          "start": 3196,
+          "end": 3264,
+          "line": 2
+        },
+        {
+          "name": "concat",
+          "start": 3264,
+          "end": 3328,
+          "line": 2
+        },
+        {
+          "name": "either",
+          "start": 3328,
+          "end": 3400,
+          "line": 2
+        },
+        {
+          "name": "countMatchGroups",
+          "start": 3400,
+          "end": 3485,
+          "line": 2
+        },
+        {
+          "name": "startsWith",
+          "start": 3485,
+          "end": 3576,
+          "line": 2
+        },
+        {
+          "name": "join",
+          "start": 3640,
+          "end": 4101,
+          "line": 2
+        },
+        {
+          "name": "skipIfhasPrecedingDot",
+          "start": 6928,
+          "end": 7032,
+          "line": 2
+        },
+        {
+          "name": "beginKeywords",
+          "start": 7032,
+          "end": 7337,
+          "line": 2
+        },
+        {
+          "name": "compileIllegal",
+          "start": 7337,
+          "end": 7443,
+          "line": 2
+        },
+        {
+          "name": "compileMatch",
+          "start": 7443,
+          "end": 7619,
+          "line": 2
+        },
+        {
+          "name": "compileRelevance",
+          "start": 7619,
+          "end": 7703,
+          "line": 2
+        },
+        {
+          "name": "compileKeywords",
+          "start": 7830,
+          "end": 8514,
+          "line": 2
+        },
+        {
+          "name": "compileList",
+          "start": 8261,
+          "end": 8513,
+          "line": 2
+        },
+        {
+          "name": "scoreForKeyword",
+          "start": 8514,
+          "end": 8632,
+          "line": 2
+        },
+        {
+          "name": "commonKeyword",
+          "start": 8632,
+          "end": 8719,
+          "line": 2
+        },
+        {
+          "name": "compileLanguage",
+          "start": 8719,
+          "end": 12480,
+          "line": 2
+        },
+        {
+          "name": "langRe",
+          "start": 8764,
+          "end": 8882,
+          "line": 2
+        },
+        {
+          "name": "buildModeRegex",
+          "start": 10422,
+          "end": 10690,
+          "line": 2
+        },
+        {
+          "name": "compileMode",
+          "start": 10690,
+          "end": 12158,
+          "line": 2
+        },
+        {
+          "name": "dependencyOnParent",
+          "start": 12480,
+          "end": 12582,
+          "line": 2
+        },
+        {
+          "name": "expandOrCloneMode",
+          "start": 12582,
+          "end": 12931,
+          "line": 2
+        },
+        {
+          "name": "hasValueOrEmptyAttribute",
+          "start": 12952,
+          "end": 13021,
+          "line": 2
+        },
+        {
+          "name": "BuildVuePlugin",
+          "start": 13021,
+          "end": 14018,
+          "line": 2
+        },
+        {
+          "name": "tag",
+          "start": 14303,
+          "end": 14357,
+          "line": 2
+        },
+        {
+          "name": "nodeStream",
+          "start": 14357,
+          "end": 14766,
+          "line": 2
+        },
+        {
+          "name": "_nodeStream",
+          "start": 14404,
+          "end": 14749,
+          "line": 2
+        },
+        {
+          "name": "mergeStreams",
+          "start": 14766,
+          "end": 15956,
+          "line": 2
+        },
+        {
+          "name": "selectStream",
+          "start": 14855,
+          "end": 15117,
+          "line": 2
+        },
+        {
+          "name": "open",
+          "start": 15117,
+          "end": 15304,
+          "line": 2
+        },
+        {
+          "name": "attributeString",
+          "start": 15137,
+          "end": 15224,
+          "line": 2
+        },
+        {
+          "name": "close",
+          "start": 15304,
+          "end": 15352,
+          "line": 2
+        },
+        {
+          "name": "render",
+          "start": 15352,
+          "end": 15422,
+          "line": 2
+        },
+        {
+          "name": "shouldNotHighlight",
+          "start": 16831,
+          "end": 16921,
+          "line": 2
+        },
+        {
+          "name": "blockLanguage",
+          "start": 16921,
+          "end": 17387,
+          "line": 2
+        },
+        {
+          "name": "highlight2",
+          "start": 17387,
+          "end": 18161,
+          "line": 2
+        },
+        {
+          "name": "_highlight",
+          "start": 18161,
+          "end": 24050,
+          "line": 3
+        },
+        {
+          "name": "keywordData",
+          "start": 18239,
+          "end": 18439,
+          "line": 3
+        },
+        {
+          "name": "processKeywords",
+          "start": 18439,
+          "end": 19106,
+          "line": 3
+        },
+        {
+          "name": "processSubLanguage",
+          "start": 19106,
+          "end": 19595,
+          "line": 3
+        },
+        {
+          "name": "processBuffer",
+          "start": 19595,
+          "end": 19695,
+          "line": 3
+        },
+        {
+          "name": "startNewMode",
+          "start": 19695,
+          "end": 19871,
+          "line": 3
+        },
+        {
+          "name": "endOfMode",
+          "start": 19871,
+          "end": 20250,
+          "line": 3
+        },
+        {
+          "name": "doIgnore",
+          "start": 20250,
+          "end": 20368,
+          "line": 3
+        },
+        {
+          "name": "doBeginMatch",
+          "start": 20368,
+          "end": 20908,
+          "line": 3
+        },
+        {
+          "name": "doEndMatch",
+          "start": 20908,
+          "end": 21532,
+          "line": 3
+        },
+        {
+          "name": "processContinuations",
+          "start": 21532,
+          "end": 21732,
+          "line": 3
+        },
+        {
+          "name": "processLexeme",
+          "start": 21749,
+          "end": 22714,
+          "line": 3
+        },
+        {
+          "name": "justTextHighlightResult",
+          "start": 24050,
+          "end": 24251,
+          "line": 3
+        },
+        {
+          "name": "highlightAuto",
+          "start": 24251,
+          "end": 24871,
+          "line": 3
+        },
+        {
+          "name": "fixMarkup",
+          "start": 24871,
+          "end": 25079,
+          "line": 3
+        },
+        {
+          "name": "updateClassName",
+          "start": 25079,
+          "end": 25265,
+          "line": 4
+        },
+        {
+          "name": "highlightElement",
+          "start": 25710,
+          "end": 26383,
+          "line": 5
+        },
+        {
+          "name": "configure",
+          "start": 26383,
+          "end": 26630,
+          "line": 5
+        },
+        {
+          "name": "initHighlightingOnLoad",
+          "start": 26868,
+          "end": 27012,
+          "line": 5
+        },
+        {
+          "name": "highlightAll",
+          "start": 27034,
+          "end": 27183,
+          "line": 5
+        },
+        {
+          "name": "boot",
+          "start": 27183,
+          "end": 27230,
+          "line": 5
+        },
+        {
+          "name": "registerLanguage",
+          "start": 27326,
+          "end": 27787,
+          "line": 5
+        },
+        {
+          "name": "unregisterLanguage",
+          "start": 27787,
+          "end": 27951,
+          "line": 5
+        },
+        {
+          "name": "listLanguages",
+          "start": 27951,
+          "end": 28006,
+          "line": 5
+        },
+        {
+          "name": "requireLanguage",
+          "start": 28006,
+          "end": 28329,
+          "line": 5
+        },
+        {
+          "name": "getLanguage",
+          "start": 28329,
+          "end": 28435,
+          "line": 5
+        },
+        {
+          "name": "registerAliases",
+          "start": 28435,
+          "end": 28608,
+          "line": 5
+        },
+        {
+          "name": "autoDetection",
+          "start": 28608,
+          "end": 28701,
+          "line": 5
+        },
+        {
+          "name": "upgradePluginAPI",
+          "start": 28701,
+          "end": 29095,
+          "line": 5
+        },
+        {
+          "name": "addPlugin",
+          "start": 29095,
+          "end": 29168,
+          "line": 5
+        },
+        {
+          "name": "fire",
+          "start": 29168,
+          "end": 29271,
+          "line": 5
+        },
+        {
+          "name": "deprecateFixMarkup",
+          "start": 29271,
+          "end": 29483,
+          "line": 5
+        },
+        {
+          "name": "deprecateHighlightBlock",
+          "start": 29483,
+          "end": 29676,
+          "line": 5
+        },
+        {
+          "name": "source",
+          "start": 30511,
+          "end": 30579,
+          "line": 5
+        },
+        {
+          "name": "concat",
+          "start": 30579,
+          "end": 30643,
+          "line": 5
+        },
+        {
+          "name": "bash",
+          "start": 30643,
+          "end": 32800,
+          "line": 5
+        },
+        {
+          "name": "source",
+          "start": 32912,
+          "end": 32980,
+          "line": 5
+        },
+        {
+          "name": "optional",
+          "start": 32980,
+          "end": 33029,
+          "line": 5
+        },
+        {
+          "name": "concat",
+          "start": 33029,
+          "end": 33093,
+          "line": 5
+        },
+        {
+          "name": "c",
+          "start": 33093,
+          "end": 38110,
+          "line": 5
+        },
+        {
+          "name": "source",
+          "start": 38223,
+          "end": 38291,
+          "line": 5
+        },
+        {
+          "name": "lookahead",
+          "start": 38291,
+          "end": 38342,
+          "line": 5
+        },
+        {
+          "name": "optional",
+          "start": 38342,
+          "end": 38391,
+          "line": 5
+        },
+        {
+          "name": "concat",
+          "start": 38391,
+          "end": 38455,
+          "line": 5
+        },
+        {
+          "name": "cpp",
+          "start": 38455,
+          "end": 44086,
+          "line": 5
+        },
+        {
+          "name": "csharp",
+          "start": 44207,
+          "end": 48956,
+          "line": 5
+        },
+        {
+          "name": "dart",
+          "start": 49076,
+          "end": 51217,
+          "line": 5
+        },
+        {
+          "name": "go",
+          "start": 51331,
+          "end": 52303,
+          "line": 5
+        },
+        {
+          "name": "source",
+          "start": 52423,
+          "end": 52491,
+          "line": 5
+        },
+        {
+          "name": "lookahead",
+          "start": 52491,
+          "end": 52542,
+          "line": 5
+        },
+        {
+          "name": "concat",
+          "start": 52542,
+          "end": 52606,
+          "line": 5
+        },
+        {
+          "name": "variants",
+          "start": 52606,
+          "end": 52676,
+          "line": 5
+        },
+        {
+          "name": "groovy",
+          "start": 52676,
+          "end": 54195,
+          "line": 5
+        },
+        {
+          "name": "java",
+          "start": 54973,
+          "end": 57214,
+          "line": 5
+        },
+        {
+          "name": "source",
+          "start": 58660,
+          "end": 58728,
+          "line": 5
+        },
+        {
+          "name": "lookahead",
+          "start": 58728,
+          "end": 58779,
+          "line": 5
+        },
+        {
+          "name": "concat",
+          "start": 58779,
+          "end": 58843,
+          "line": 5
+        },
+        {
+          "name": "javascript",
+          "start": 58843,
+          "end": 63668,
+          "line": 5
+        },
+        {
+          "name": "json",
+          "start": 63792,
+          "end": 64506,
+          "line": 5
+        },
+        {
+          "name": "kotlin",
+          "start": 65286,
+          "end": 68568,
+          "line": 5
+        },
+        {
+          "name": "lua",
+          "start": 68686,
+          "end": 70776,
+          "line": 6
+        },
+        {
+          "name": "nix",
+          "start": 70891,
+          "end": 71602,
+          "line": 6
+        },
+        {
+          "name": "source",
+          "start": 71719,
+          "end": 71787,
+          "line": 6
+        },
+        {
+          "name": "concat",
+          "start": 71787,
+          "end": 71851,
+          "line": 6
+        },
+        {
+          "name": "either",
+          "start": 71851,
+          "end": 71923,
+          "line": 6
+        },
+        {
+          "name": "perl",
+          "start": 71923,
+          "end": 76643,
+          "line": 6
+        },
+        {
+          "name": "php",
+          "start": 76759,
+          "end": 81131,
+          "line": 6
+        },
+        {
+          "name": "source",
+          "start": 81252,
+          "end": 81320,
+          "line": 6
+        },
+        {
+          "name": "lookahead",
+          "start": 81320,
+          "end": 81371,
+          "line": 6
+        },
+        {
+          "name": "concat",
+          "start": 81371,
+          "end": 81435,
+          "line": 6
+        },
+        {
+          "name": "python",
+          "start": 81435,
+          "end": 85023,
+          "line": 6
+        },
+        {
+          "name": "source",
+          "start": 85143,
+          "end": 85211,
+          "line": 6
+        },
+        {
+          "name": "lookahead",
+          "start": 85211,
+          "end": 85262,
+          "line": 6
+        },
+        {
+          "name": "concat",
+          "start": 85262,
+          "end": 85326,
+          "line": 6
+        },
+        {
+          "name": "ruby",
+          "start": 85326,
+          "end": 89203,
+          "line": 6
+        },
+        {
+          "name": "rust",
+          "start": 89321,
+          "end": 91617,
+          "line": 6
+        },
+        {
+          "name": "scala",
+          "start": 91737,
+          "end": 93356,
+          "line": 6
+        },
+        {
+          "name": "source",
+          "start": 93477,
+          "end": 93545,
+          "line": 6
+        },
+        {
+          "name": "lookahead",
+          "start": 93545,
+          "end": 93596,
+          "line": 6
+        },
+        {
+          "name": "concat",
+          "start": 93596,
+          "end": 93660,
+          "line": 6
+        },
+        {
+          "name": "either",
+          "start": 93660,
+          "end": 93732,
+          "line": 6
+        },
+        {
+          "name": "swift",
+          "start": 97621,
+          "end": 103935,
+          "line": 6
+        },
+        {
+          "name": "source",
+          "start": 105382,
+          "end": 105450,
+          "line": 6
+        },
+        {
+          "name": "lookahead",
+          "start": 105450,
+          "end": 105501,
+          "line": 6
+        },
+        {
+          "name": "concat",
+          "start": 105501,
+          "end": 105565,
+          "line": 6
+        },
+        {
+          "name": "javascript",
+          "start": 105565,
+          "end": 110390,
+          "line": 6
+        },
+        {
+          "name": "typescript",
+          "start": 110390,
+          "end": 111740,
+          "line": 6
+        }
+      ],
+      "interpolation_operator_primitives": [
+        {
+          "start": 1558,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 1577,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 1750,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 4076,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 13356,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16064,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16136,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16148,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16193,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16206,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16237,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 16249,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 31539,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 50124,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54361,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54471,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54490,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54506,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54525,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54567,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54586,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54633,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54666,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54713,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54732,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54750,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54774,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 54862,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59488,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59610,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59630,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59646,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59665,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59700,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59723,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 59742,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64674,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64784,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64803,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64819,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64838,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64880,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64899,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64946,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 64979,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 65026,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 65045,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 65063,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 65087,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 65175,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83683,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83702,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83720,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83800,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83815,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83840,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 83873,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 84073,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 86985,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 87001,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 87024,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 98775,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 98955,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 98977,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 99007,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 99046,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 99064,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 99090,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 100346,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106210,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106332,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106352,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106368,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106387,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106422,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106445,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        },
+        {
+          "start": 106464,
+          "primitives": {
+            "controls": [],
+            "catches": [],
+            "error_calls": [],
+            "promise_catches": [],
+            "finalizers": [],
+            "shortcircuit_ternary_operators": [],
+            "qualification": "Source-only control headers and &&/||/??/ternary operator contexts; no path solver or execution. Exact manual trigger states branch polarity and deferred use of definition constants."
+          }
+        }
+      ]
+    },
+    "comments": [],
+    "exports": {
+      "start": 111769,
+      "end": 112076,
+      "raw_source": "export{require_core,require_bash,require_c,require_cpp,require_csharp,require_dart,require_go,require_groovy,require_java,require_javascript,require_json,require_kotlin,require_lua,require_nix,require_perl,require_php,require_python,require_ruby,require_rust,require_scala,require_swift,require_typescript};",
+      "line": 6,
+      "column": 43226
+    },
+    "scope": "Full local highlight core plus21 eager grammars, imported all-language/terminal/native graph bounded."
+  },
+  "bounded_support_excerpts": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "start": 420153,
+      "end": 420261,
+      "raw_source": "for(let[name,language]of Object.entries(eagerLanguages))import_core.default.registerLanguage(name,language);",
+      "line": 122,
+      "column": 3582,
+      "claim": "Compiled terminal registers eager grammar factories on same core singleton; bounded excerpt only.",
+      "coverage": "bounded exact source only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "start": 422488,
+      "end": 422776,
+      "raw_source": "function highlight(code,options={}){let html=options.language?import_core.default.highlight(code,{language:options.language,ignoreIllegals:options.ignoreIllegals}).value:import_core.default.highlightAuto(code,options.languageSubset).value;return renderHighlightedHtml(html,options.theme)}",
+      "line": 125,
+      "column": 599,
+      "claim": "Compiled renderer reads result.value, does not render errorRaised or illegalBy.msg.",
+      "coverage": "bounded exact source only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "start": 457860,
+      "end": 458181,
+      "raw_source": "function highlightCode(code,lang){let validLang=lang&&supportsLanguage(lang)?lang:void 0;if(!validLang)return code.split(`\n`).map(line=>theme.fg(\"mdCodeBlock\",line));let opts={language:validLang,ignoreIllegals:!0,theme:getCliHighlightTheme(theme)};try{return highlight(code,opts).split(`\n`)}catch{return code.split(`\n`)}}",
+      "line": 125,
+      "column": 35971,
+      "claim": "Actual terminal code renderer validates language, ignores illegals, catches thrown error to raw input lines.",
+      "coverage": "bounded exact source only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "start": 420285,
+      "end": 420500,
+      "raw_source": "function loadAllHighlightLanguages(){return allLanguagesPromise||(allLanguagesPromise=new Promise(resolve=>{setImmediate(()=>{import(\"./lib-4AVRLBHM.js\").then(()=>resolve(),()=>{resolve()})})})),allLanguagesPromise}",
+      "line": 122,
+      "column": 3714,
+      "claim": "Optional all-language lazy import rejection suppressed by resolving; imported registration console errors independently possible.",
+      "coverage": "bounded exact source only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/lib-4AVRLBHM.js",
+      "start": 966120,
+      "end": 966177,
+      "raw_source": "hljs.registerLanguage(\"typescript\",require_typescript());",
+      "line": 9,
+      "column": 68182,
+      "claim": "All-language registry invokes same eager typescript factory; other grammar bodies pending separate assigned unit.",
+      "coverage": "bounded exact source only"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:upstream/pi.lock.json",
+      "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+      "git_blob_sha1": "8fb30b6e5192d43ffcded8569a696565fb898788",
+      "coverage": "pin/root import only"
+    },
+    {
+      "source": "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:package-lock.json",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+      "git_blob_sha1": "b71bc0c61af4a1f4fe2b6abb986f1b9313ea46d4",
+      "coverage": "pin/root import only"
+    },
+    {
+      "source": "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "git_blob_sha1": "97ef3313123007e937e6a52064ed6e089e250b57",
+      "coverage": "pin/root import only"
+    }
+  ],
+  "direct_import_edges": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "target": "dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "start": 136,
+      "end": 161,
+      "raw_source": "from\"./chunk-JXWJOIH4.js\""
+    }
+  ],
+  "reverse_import_edges": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 546,
+      "end": 571,
+      "raw_source": "from\"./chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 536,
+      "end": 570,
+      "raw_source": "import\"./chunks/chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/easter-egg-3d-RMLF7AC4.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 389,
+      "end": 416,
+      "raw_source": "import\"./chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/execute-MT7QEDSI.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 566,
+      "end": 593,
+      "raw_source": "import\"./chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 3610,
+      "end": 3644,
+      "raw_source": "import\"./chunks/chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/lib-4AVRLBHM.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 424,
+      "end": 449,
+      "raw_source": "from\"./chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 536,
+      "end": 570,
+      "raw_source": "import\"./chunks/chunk-5AGIVGSV.js\""
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "target": "dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "start": 590,
+      "end": 617,
+      "raw_source": "import\"./chunk-5AGIVGSV.js\""
+    }
+  ],
+  "counts": {
+    "full_bodies": 1,
+    "full_bytes": 112077,
+    "physical_lines": 6,
+    "ast_line_starts": 7,
+    "root_nodes": 2817,
+    "primary": 27,
+    "exclusions": 2790,
+    "boundaries": 36,
+    "scopes": 7,
+    "catches": 2,
+    "promise_catches": 0,
+    "finalizers": 0,
+    "callbacks": 1,
+    "direct_import_edges": 1,
+    "reverse_import_edges": 8,
+    "jouzu_catalog_ids": 0,
+    "lf_count_regressions": 4
+  },
+  "limits": [
+    "Compiled highlight.js10.7.3 core plus21 eager grammar factories. Module exports CommonJS factory initializers; terminal-theme calls require_core and registers eager grammars, lib lazy registers the all-language set. Optional compiled consumers and direct exported factories/API only; ordinary Jouzu unbundled dot entry is distinct.",
+    "Own errors are direct library API throw/rethrow or returned illegalBy.msg/errorRaised metadata. error helper uses console.error; warn/deprecated use console.log, Vue uses console.warn. Compiled highlightCode checks supportsLanguage, uses ignoreIllegals true and only result.value, catches thrown errors to raw code; no automatic painting of diagnostic metadata. Direct API/custom grammar/DOM/Vue/debug paths separately qualified.",
+    "Exact raw templates/fragments retained without evaluation. Grammar keywords/names/aliases/patterns/CSS class names/HTML/code/API/event/version/URL/protected selectors remain technical values; dynamic source code/DOM/plugin/error/native reasons externally owned. No audited JS, DOM, UI or initializer executed; imported graph bounded.",
+    "Only local highlight core/eager grammars full. All-language and terminal bodies bounded here and assigned separately, no imported full promotion. Explicit API factory vs initializer vs side-effect imports distinguished.",
+    "Own console diagnostics are conditional API/DOM/deprecation paths; native console formatting and dynamic plugin/code/DOM content external. Terminal reads value only and catches thrown errors. No default ordinary Jouzu parity claimed."
+  ]
+}

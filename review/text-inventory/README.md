@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 36 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 71 compiled bodies;
-10 compiled bodies remain pending. The
+universe with 37 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 72 compiled bodies;
+9 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1437,6 +1437,22 @@ review only to one body. Canonical archive, installed copies, 31 corruption
 controls and four LF-count regression cases pass. Foreign native/global/file/
 payload/caller graphs remain bounded; no stream, file, form, abort, request or
 native UI operation runs.
+
+[pi-bundle-highlight-core.csv](pi-bundle-highlight-core.csv) records 27 qualified
+definitions across the complete highlighting core and 21 eager grammars
+(112,077 bytes). The 2,790 [exclusions](pi-bundle-highlight-core-exclusions.csv)
+complete the 2,817-node partition. Thirty-six
+[boundaries](pi-bundle-highlight-core-boundaries.csv) retain compiler/API guards,
+safe/debug behavior, parser metadata, conditional console warnings and browser
+integration guidance. The inspected terminal wrapper validates the language,
+ignores illegal syntax, reads the returned value and falls back to raw code on
+failure. Fixed local construction preempts private Map/Set freezing guards and
+the TypeScript label-swap guard. Grammar words/names/aliases/regexes and generated
+markup remain protected. The [scope](pi-bundle-highlight-core-scope.csv) grants
+complete local review only to one compiled body. Canonical archive, installed
+copies, 31 corruption controls and four LF-count cases pass. Foreign/native/DOM/
+callback/renderer payloads remain bounded; no highlighting, browser, parser,
+code rendering or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2825,6 +2841,7 @@ node review/text-inventory/verify-pi-ai-auth-device-text.cjs --node-modules <roo
 python -B review/text-inventory/verify-pi-ai-pi-messages-adapter.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-nonchat-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-web-streams.py
+python -B review/text-inventory/verify-pi-bundle-highlight-core.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
