@@ -2284,6 +2284,10 @@ operation runs; whole main-host and wider caller coverage remain open.
 
 [pi-published-json-metadata.csv](pi-published-json-metadata.csv) inventories 297 annotations, navigation labels, package descriptions and explicitly qualified optional npm echo outputs in 26 packaged JSON assets (85,406 canonical bytes). Typed token spans, 3,547 exclusions, canonical/installed manifest transforms and shell/configuration conditions are preserved. Schema metadata and optional commands do not imply automatic interactive display.
 
+[pi-optional-sdk-examples.csv](pi-optional-sdk-examples.csv) inventories 528 qualified occurrences across 61 fully read optional SDK, extension, provider and standalone example TypeScript bodies (246,226 bytes). The 2,174 exclusions, 61 payload boundaries and exact producer/consumer evidence preserve explicit loading, standalone scripts, no-UI behavior, suppressed failures, request/export routes and protected control spelling. These packaged examples are retained source surfaces, not automatically active Jouzu features or a count of translatable UI strings.
+
+[locale-review-boundary-census-scope.csv](locale-review-boundary-census-scope.csv) reconciles the remaining 44 BASE Git paths: thirty non-English catalog counterparts and fourteen archived/proposed review artifacts. Fluent IDs, retained Latin fragments and archived fields are linked to their exact source identities and qualified current counterparts. This navigation creates no new English definitions, active producer owners, proposal-adoption claims or translation-quality conclusions.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -3766,6 +3770,8 @@ python -B review/text-inventory/verify-pi-bundle-main-host-complete.py
 python -B review/text-inventory/verify-pi-native-clipboard-text.py
 python -B review/text-inventory/verify-pi-native-binary-corpus.py
 python -B review/text-inventory/verify-pi-published-json-metadata.py
+node review/text-inventory/verify-pi-optional-sdk-examples.cjs
+python -B review/text-inventory/verify-locale-review-boundary-census.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
