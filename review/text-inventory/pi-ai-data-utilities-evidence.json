@@ -1,0 +1,5462 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit": "pi-ai-data-utilities",
+  "coverage_boundary": "Thirteen complete BASE local bodies only. No audited import or provider/model/stream/timer/crypto/environment/native/UI operation. Foreign/native errors and values, optional callers and renderer dependencies retain separate boundaries.",
+  "counts": {
+    "full_files": 13,
+    "physical_lines": 612,
+    "bytes": 22231,
+    "primary": 6,
+    "lexical_nodes": 125,
+    "exclusions": 119,
+    "boundaries": 13,
+    "zero_primary_bodies": 10
+  },
+  "source_proof_checker": "verify-pi-package-source-census.py",
+  "source_proof_checker_sha256": "a08b34fba22d27d85f4e289e5d4bc440e90e274c45b4c189c9a0ab42b4958284",
+  "source_proof_snapshot_sha256": "4bd5b730a2042dc07209b83ce881f9f0ee17b9ccf1fe646f13b61006ab0ffc11",
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort-signals.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "1088",
+      "physical_lines": "34",
+      "root_sha256": "9f68d51e0862b3deafc21bc0349d652410a8b283688af72c937272cb7b87cdc5",
+      "cli_resolved_sha256": "9f68d51e0862b3deafc21bc0349d652410a8b283688af72c937272cb7b87cdc5",
+      "archive_sha256": "9f68d51e0862b3deafc21bc0349d652410a8b283688af72c937272cb7b87cdc5",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "3752",
+      "physical_lines": "95",
+      "root_sha256": "b5b606011ab0dce2a5db309dd812c9b8ddd0bbcbc9416de699fb9cd087cc84d6",
+      "cli_resolved_sha256": "b5b606011ab0dce2a5db309dd812c9b8ddd0bbcbc9416de699fb9cd087cc84d6",
+      "archive_sha256": "b5b606011ab0dce2a5db309dd812c9b8ddd0bbcbc9416de699fb9cd087cc84d6",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "4027",
+      "physical_lines": "124",
+      "root_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+      "cli_resolved_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+      "archive_sha256": "fe0d774b75db25ff0149d4267884bc4fd34db82d53c26843758d0eda2467ce65",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/hash.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "595",
+      "physical_lines": "14",
+      "root_sha256": "7dd6b602e479f30b32d1babeacb1fcb96bd234b13355991caa169013f7885d57",
+      "cli_resolved_sha256": "7dd6b602e479f30b32d1babeacb1fcb96bd234b13355991caa169013f7885d57",
+      "archive_sha256": "7dd6b602e479f30b32d1babeacb1fcb96bd234b13355991caa169013f7885d57",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/headers.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "694",
+      "physical_lines": "20",
+      "root_sha256": "69a355967b3e735a9b22d46f4cf41b901eb2ce29c2c438b20d46de67668533c7",
+      "cli_resolved_sha256": "69a355967b3e735a9b22d46f4cf41b901eb2ce29c2c438b20d46de67668533c7",
+      "archive_sha256": "69a355967b3e735a9b22d46f4cf41b901eb2ce29c2c438b20d46de67668533c7",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "4327",
+      "physical_lines": "138",
+      "root_sha256": "ffb5960ed8ba38a01ea338e129dbca589088c211c9da623ffb61102a1d27ce56",
+      "cli_resolved_sha256": "ffb5960ed8ba38a01ea338e129dbca589088c211c9da623ffb61102a1d27ce56",
+      "archive_sha256": "ffb5960ed8ba38a01ea338e129dbca589088c211c9da623ffb61102a1d27ce56",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "1696",
+      "physical_lines": "44",
+      "root_sha256": "e1f64c60f0fde39a3a649e541d8248a85fdeefe414ff8b4dddf5f1be962d47e6",
+      "cli_resolved_sha256": "e1f64c60f0fde39a3a649e541d8248a85fdeefe414ff8b4dddf5f1be962d47e6",
+      "archive_sha256": "e1f64c60f0fde39a3a649e541d8248a85fdeefe414ff8b4dddf5f1be962d47e6",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "1204",
+      "physical_lines": "26",
+      "root_sha256": "77cb844b43f502cc24b25ef284ec5a6f6ac375ac994bcf688275848e1475bc80",
+      "cli_resolved_sha256": "77cb844b43f502cc24b25ef284ec5a6f6ac375ac994bcf688275848e1475bc80",
+      "archive_sha256": "77cb844b43f502cc24b25ef284ec5a6f6ac375ac994bcf688275848e1475bc80",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sleep.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "478",
+      "physical_lines": "15",
+      "root_sha256": "c09f7f9033a4516bfc3ec5796d587dea958c1bc0fc5d3fe4b847ca10bddbed4f",
+      "cli_resolved_sha256": "c09f7f9033a4516bfc3ec5796d587dea958c1bc0fc5d3fe4b847ca10bddbed4f",
+      "archive_sha256": "c09f7f9033a4516bfc3ec5796d587dea958c1bc0fc5d3fe4b847ca10bddbed4f",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "1421",
+      "physical_lines": "36",
+      "root_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "cli_resolved_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "archive_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "724",
+      "physical_lines": "21",
+      "root_sha256": "f423ce8a95ab8342b05a16c3c516049ee7d9979d0ef1d2ba484eb3b169c482e5",
+      "cli_resolved_sha256": "f423ce8a95ab8342b05a16c3c516049ee7d9979d0ef1d2ba484eb3b169c482e5",
+      "archive_sha256": "f423ce8a95ab8342b05a16c3c516049ee7d9979d0ef1d2ba484eb3b169c482e5",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "2045",
+      "physical_lines": "42",
+      "root_sha256": "4e444c68e031550dfd534bf2cf2f123ba5a1053dd0953005ee720ef4e0487bf5",
+      "cli_resolved_sha256": "4e444c68e031550dfd534bf2cf2f123ba5a1053dd0953005ee720ef4e0487bf5",
+      "archive_sha256": "4e444c68e031550dfd534bf2cf2f123ba5a1053dd0953005ee720ef4e0487bf5",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "180",
+      "physical_lines": "3",
+      "root_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+      "cli_resolved_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+      "archive_sha256": "ea6a3455dc4fd0dbf9414c31a58d2baab2c7e7e4830526842f8ef27ccf4d0912",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    }
+  ],
+  "parser": {
+    "typescript": "6.0.3",
+    "source_only": true
+  },
+  "verifier_sha256": "596a321c345d23a31955d4e7a21f7a0d1ed7e8a4abfe70156f3f988f31a7f8a5",
+  "lexical_partition": [
+    {
+      "token_id": "pi-ai-data-utilities.abort-signals.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort-signals.js",
+      "start": 729,
+      "end": 736,
+      "line": 22,
+      "column": 33,
+      "raw": "\"abort\"",
+      "kind": "StringLiteral",
+      "decoded": "abort",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.abort-signals.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort-signals.js",
+      "start": 993,
+      "end": 1000,
+      "line": 29,
+      "column": 44,
+      "raw": "\"abort\"",
+      "kind": "StringLiteral",
+      "decoded": "abort",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.abort-signals.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort-signals.js",
+      "start": 1047,
+      "end": 1088,
+      "line": 34,
+      "column": 1,
+      "raw": "//# sourceMappingURL=abort-signals.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 37,
+      "end": 48,
+      "line": 1,
+      "column": 38,
+      "raw": "\"./text.js\"",
+      "kind": "StringLiteral",
+      "decoded": "./text.js",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 348,
+      "end": 359,
+      "line": 9,
+      "column": 41,
+      "raw": "\"undefined\"",
+      "kind": "StringLiteral",
+      "decoded": "undefined",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 394,
+      "end": 412,
+      "line": 12,
+      "column": 16,
+      "raw": "\"[unserializable]\"",
+      "kind": "StringLiteral",
+      "decoded": "[unserializable]",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 502,
+      "end": 510,
+      "line": 16,
+      "column": 28,
+      "raw": "\"string\"",
+      "kind": "StringLiteral",
+      "decoded": "string",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 627,
+      "end": 633,
+      "line": 20,
+      "column": 33,
+      "raw": "\"text\"",
+      "kind": "StringLiteral",
+      "decoded": "text",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 1036,
+      "end": 1044,
+      "line": 31,
+      "column": 26,
+      "raw": "\"system\"",
+      "kind": "StringLiteral",
+      "decoded": "system",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 1257,
+      "end": 1263,
+      "line": 36,
+      "column": 26,
+      "raw": "\"user\"",
+      "kind": "StringLiteral",
+      "decoded": "user",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 1357,
+      "end": 1369,
+      "line": 38,
+      "column": 26,
+      "raw": "\"toolResult\"",
+      "kind": "StringLiteral",
+      "decoded": "toolResult",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 1508,
+      "end": 1514,
+      "line": 41,
+      "column": 28,
+      "raw": "\"text\"",
+      "kind": "StringLiteral",
+      "decoded": "text",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 1600,
+      "end": 1610,
+      "line": 44,
+      "column": 33,
+      "raw": "\"thinking\"",
+      "kind": "StringLiteral",
+      "decoded": "thinking",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 2070,
+      "end": 2081,
+      "line": 58,
+      "column": 30,
+      "raw": "\"assistant\"",
+      "kind": "StringLiteral",
+      "decoded": "assistant",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.12",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 2136,
+      "end": 2210,
+      "line": 60,
+      "column": 13,
+      "raw": "// A newer prefix message was inserted after this response (for example, a",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.13",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 2223,
+      "end": 2295,
+      "line": 61,
+      "column": 13,
+      "raw": "// compaction summary), so its usage cannot describe the current prefix.",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.14",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 2464,
+      "end": 2473,
+      "line": 64,
+      "column": 42,
+      "raw": "\"aborted\"",
+      "kind": "StringLiteral",
+      "decoded": "aborted",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.15",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 2518,
+      "end": 2525,
+      "line": 65,
+      "column": 42,
+      "raw": "\"error\"",
+      "kind": "StringLiteral",
+      "decoded": "error",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.16",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 2866,
+      "end": 2876,
+      "line": 75,
+      "column": 22,
+      "raw": "\"messages\"",
+      "kind": "StringLiteral",
+      "decoded": "messages",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.estimate.17",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/estimate.js",
+      "start": 3716,
+      "end": 3752,
+      "line": 95,
+      "column": 1,
+      "raw": "//# sourceMappingURL=estimate.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 433,
+      "end": 482,
+      "line": 19,
+      "column": 1,
+      "raw": "// Generic event stream class for async iteration",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 1135,
+      "end": 1177,
+      "line": 42,
+      "column": 9,
+      "raw": "// Deliver to waiting consumer or queue it",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 1521,
+      "end": 1568,
+      "line": 56,
+      "column": 9,
+      "raw": "// Notify all waiting consumers that we're done",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 2267,
+      "end": 2714,
+      "line": 82,
+      "column": 1,
+      "raw": "/**\n * Event stream of one assistant response. It also times the response: the final message (`done` or `error` event, or\n * the result passed to `end()`) gets `durationMs`, measured with a monotonic clock from the stream's creation, unless\n * the message already has one or its `timestamp` predates the stream. A stream that forwards a response which started\n * elsewhere, such as a deferred result fetched later, therefore leaves it untimed.\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 2912,
+      "end": 2918,
+      "line": 92,
+      "column": 41,
+      "raw": "\"done\"",
+      "kind": "StringLiteral",
+      "decoded": "done",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 2937,
+      "end": 2944,
+      "line": 92,
+      "column": 66,
+      "raw": "\"error\"",
+      "kind": "StringLiteral",
+      "decoded": "error",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 2990,
+      "end": 2996,
+      "line": 93,
+      "column": 32,
+      "raw": "\"done\"",
+      "kind": "StringLiteral",
+      "decoded": "done",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 3088,
+      "end": 3095,
+      "line": 96,
+      "column": 37,
+      "raw": "\"error\"",
+      "kind": "StringLiteral",
+      "decoded": "error",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 3177,
+      "end": 3217,
+      "line": 99,
+      "column": 29,
+      "raw": "\"Unexpected event type for final result\"",
+      "kind": "StringLiteral",
+      "decoded": "Unexpected event type for final result",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 3283,
+      "end": 3289,
+      "line": 103,
+      "column": 28,
+      "raw": "\"done\"",
+      "kind": "StringLiteral",
+      "decoded": "done",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 3362,
+      "end": 3369,
+      "line": 105,
+      "column": 33,
+      "raw": "\"error\"",
+      "kind": "StringLiteral",
+      "decoded": "error",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.12",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 3805,
+      "end": 3884,
+      "line": 120,
+      "column": 1,
+      "raw": "/** Factory function for AssistantMessageEventStream (for use in extensions) */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.event-stream.13",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/event-stream.js",
+      "start": 3987,
+      "end": 4027,
+      "line": 124,
+      "column": 1,
+      "raw": "//# sourceMappingURL=event-stream.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.hash.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/hash.js",
+      "start": 0,
+      "end": 54,
+      "line": 1,
+      "column": 1,
+      "raw": "/** Fast deterministic hash to shorten long strings */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.hash.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/hash.js",
+      "start": 563,
+      "end": 595,
+      "line": 14,
+      "column": 1,
+      "raw": "//# sourceMappingURL=hash.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.headers.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/headers.js",
+      "start": 659,
+      "end": 694,
+      "line": 20,
+      "column": 1,
+      "raw": "//# sourceMappingURL=headers.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 38,
+      "end": 52,
+      "line": 1,
+      "column": 39,
+      "raw": "\"partial-json\"",
+      "kind": "StringLiteral",
+      "decoded": "partial-json",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 90,
+      "end": 93,
+      "line": 2,
+      "column": 37,
+      "raw": "'\"'",
+      "kind": "StringLiteral",
+      "decoded": "\"",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 95,
+      "end": 99,
+      "line": 2,
+      "column": 42,
+      "raw": "\"\\\\\"",
+      "kind": "StringLiteral",
+      "decoded": "\\",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 101,
+      "end": 104,
+      "line": 2,
+      "column": 48,
+      "raw": "\"/\"",
+      "kind": "StringLiteral",
+      "decoded": "/",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 106,
+      "end": 109,
+      "line": 2,
+      "column": 53,
+      "raw": "\"b\"",
+      "kind": "StringLiteral",
+      "decoded": "b",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 111,
+      "end": 114,
+      "line": 2,
+      "column": 58,
+      "raw": "\"f\"",
+      "kind": "StringLiteral",
+      "decoded": "f",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 116,
+      "end": 119,
+      "line": 2,
+      "column": 63,
+      "raw": "\"n\"",
+      "kind": "StringLiteral",
+      "decoded": "n",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 121,
+      "end": 124,
+      "line": 2,
+      "column": 68,
+      "raw": "\"r\"",
+      "kind": "StringLiteral",
+      "decoded": "r",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 126,
+      "end": 129,
+      "line": 2,
+      "column": 73,
+      "raw": "\"t\"",
+      "kind": "StringLiteral",
+      "decoded": "t",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 365,
+      "end": 369,
+      "line": 9,
+      "column": 14,
+      "raw": "\"\\b\"",
+      "kind": "StringLiteral",
+      "decoded": "\b",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 390,
+      "end": 395,
+      "line": 10,
+      "column": 20,
+      "raw": "\"\\\\b\"",
+      "kind": "StringLiteral",
+      "decoded": "\\b",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.12",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 410,
+      "end": 414,
+      "line": 11,
+      "column": 14,
+      "raw": "\"\\f\"",
+      "kind": "StringLiteral",
+      "decoded": "\f",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.13",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 435,
+      "end": 440,
+      "line": 12,
+      "column": 20,
+      "raw": "\"\\\\f\"",
+      "kind": "StringLiteral",
+      "decoded": "\\f",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.14",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 455,
+      "end": 459,
+      "line": 13,
+      "column": 14,
+      "raw": "\"\\n\"",
+      "kind": "StringLiteral",
+      "decoded": "\n",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.15",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 480,
+      "end": 485,
+      "line": 14,
+      "column": 20,
+      "raw": "\"\\\\n\"",
+      "kind": "StringLiteral",
+      "decoded": "\\n",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.16",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 500,
+      "end": 504,
+      "line": 15,
+      "column": 14,
+      "raw": "\"\\r\"",
+      "kind": "StringLiteral",
+      "decoded": "\r",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.17",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 525,
+      "end": 530,
+      "line": 16,
+      "column": 20,
+      "raw": "\"\\\\r\"",
+      "kind": "StringLiteral",
+      "decoded": "\\r",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.18",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 545,
+      "end": 549,
+      "line": 17,
+      "column": 14,
+      "raw": "\"\\t\"",
+      "kind": "StringLiteral",
+      "decoded": "\t",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.19",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 570,
+      "end": 575,
+      "line": 18,
+      "column": 20,
+      "raw": "\"\\\\t\"",
+      "kind": "StringLiteral",
+      "decoded": "\\t",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.20",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 613,
+      "end": 681,
+      "line": 20,
+      "column": 20,
+      "raw": "`\\\\u${char.codePointAt(0)?.toString(16).padStart(4, \"0\") ?? \"0000\"}`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.21",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 665,
+      "end": 668,
+      "line": 20,
+      "column": 72,
+      "raw": "\"0\"",
+      "kind": "StringLiteral",
+      "decoded": "0",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.22",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 673,
+      "end": 679,
+      "line": 20,
+      "column": 80,
+      "raw": "\"0000\"",
+      "kind": "StringLiteral",
+      "decoded": "0000",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.23",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 691,
+      "end": 855,
+      "line": 23,
+      "column": 1,
+      "raw": "/**\n * Repairs malformed JSON string literals by:\n * - escaping raw control characters inside strings\n * - doubling backslashes before invalid escape characters\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.24",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 910,
+      "end": 912,
+      "line": 29,
+      "column": 20,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.25",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1110,
+      "end": 1113,
+      "line": 35,
+      "column": 26,
+      "raw": "'\"'",
+      "kind": "StringLiteral",
+      "decoded": "\"",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1217,
+      "end": 1220,
+      "line": 40,
+      "column": 22,
+      "raw": "'\"'",
+      "kind": "StringLiteral",
+      "decoded": "\"",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.27",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1337,
+      "end": 1341,
+      "line": 45,
+      "column": 22,
+      "raw": "\"\\\\\"",
+      "kind": "StringLiteral",
+      "decoded": "\\",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.28",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1461,
+      "end": 1467,
+      "line": 48,
+      "column": 29,
+      "raw": "\"\\\\\\\\\"",
+      "kind": "StringLiteral",
+      "decoded": "\\\\",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.29",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1538,
+      "end": 1541,
+      "line": 51,
+      "column": 30,
+      "raw": "\"u\"",
+      "kind": "StringLiteral",
+      "decoded": "u",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.30",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1637,
+      "end": 1655,
+      "line": 53,
+      "column": 21,
+      "raw": "/^[0-9a-fA-F]{4}$/",
+      "kind": "RegularExpressionLiteral",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.31",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1711,
+      "end": 1732,
+      "line": 54,
+      "column": 33,
+      "raw": "`\\\\u${unicodeDigits}`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.32",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 1908,
+      "end": 1923,
+      "line": 60,
+      "column": 29,
+      "raw": "`\\\\${nextChar}`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.33",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 2017,
+      "end": 2023,
+      "line": 64,
+      "column": 25,
+      "raw": "\"\\\\\\\\\"",
+      "kind": "StringLiteral",
+      "decoded": "\\\\",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.34",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 2451,
+      "end": 2893,
+      "line": 83,
+      "column": 1,
+      "raw": "/**\n * Parses the model's complete arguments text of a finished tool call.\n *\n * Unlike {@link parseStreamingJson}, this never keeps a partially parsed prefix: once the call is\n * finished, text that is not a valid JSON object means the model sent malformed arguments. In that\n * case `arguments` is `{}` and `argumentsError` describes the problem, including the text the\n * model sent, so tool validation can report it back to the model.\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.35",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 3088,
+      "end": 3096,
+      "line": 96,
+      "column": 31,
+      "raw": "\"object\"",
+      "kind": "StringLiteral",
+      "decoded": "object",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.36",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 3172,
+      "end": 3210,
+      "line": 97,
+      "column": 29,
+      "raw": "\"Tool arguments must be a JSON object\"",
+      "kind": "StringLiteral",
+      "decoded": "Tool arguments must be a JSON object",
+      "disposition": "primary:pi-ai-data-utilities.json-object"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.37",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 3359,
+      "end": 3450,
+      "line": 104,
+      "column": 29,
+      "raw": "`${error instanceof Error ? error.message : String(error)}\\n\\nReceived arguments:\\n${json}`",
+      "kind": "TemplateExpression",
+      "disposition": "primary:pi-ai-data-utilities.json-received"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.38",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 3471,
+      "end": 3734,
+      "line": 108,
+      "column": 1,
+      "raw": "/**\n * Attempts to parse potentially incomplete JSON during streaming.\n * Always returns a valid object, even if the JSON is incomplete.\n *\n * @param partialJson The partial JSON string from streaming\n * @returns Parsed object or empty object if parsing fails\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.39",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 3832,
+      "end": 3834,
+      "line": 116,
+      "column": 48,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.json-parse.40",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/json-parse.js",
+      "start": 4289,
+      "end": 4327,
+      "line": 138,
+      "column": 1,
+      "raw": "//# sourceMappingURL=json-parse.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 25,
+      "end": 506,
+      "line": 2,
+      "column": 1,
+      "raw": "/**\n * Fallback for https://github.com/oven-sh/bun/issues/27802.\n * Bun compiled binaries can expose an empty process.env inside Linux sandboxes\n * even though /proc/self/environ contains the environment.\n *\n * This intentionally duplicates restoreSandboxEnv() in\n * packages/coding-agent/src/bun/restore-sandbox-env.ts. The ai package can be\n * used directly, without going through that entrypoint, so provider env lookup\n * must not depend on process.env having been patched.\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 573,
+      "end": 584,
+      "line": 13,
+      "column": 28,
+      "raw": "\"undefined\"",
+      "kind": "StringLiteral",
+      "decoded": "undefined",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 811,
+      "end": 820,
+      "line": 19,
+      "column": 46,
+      "raw": "\"node:fs\"",
+      "kind": "StringLiteral",
+      "decoded": "node:fs",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 861,
+      "end": 881,
+      "line": 20,
+      "column": 39,
+      "raw": "\"/proc/self/environ\"",
+      "kind": "StringLiteral",
+      "decoded": "/proc/self/environ",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 883,
+      "end": 890,
+      "line": 20,
+      "column": 61,
+      "raw": "\"utf-8\"",
+      "kind": "StringLiteral",
+      "decoded": "utf-8",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 936,
+      "end": 940,
+      "line": 21,
+      "column": 44,
+      "raw": "\"\\0\"",
+      "kind": "StringLiteral",
+      "decoded": "\u0000",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 987,
+      "end": 990,
+      "line": 22,
+      "column": 43,
+      "raw": "\"=\"",
+      "kind": "StringLiteral",
+      "decoded": "=",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 1175,
+      "end": 1234,
+      "line": 29,
+      "column": 13,
+      "raw": "// /proc/self/environ may not exist or may not be readable.",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 1288,
+      "end": 1442,
+      "line": 34,
+      "column": 1,
+      "raw": "/**\n * Resolve a provider env value from scoped overrides, normal process.env, then\n * the duplicated Bun sandbox fallback for direct pi-ai consumers.\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 1547,
+      "end": 1558,
+      "line": 40,
+      "column": 29,
+      "raw": "\"undefined\"",
+      "kind": "StringLiteral",
+      "decoded": "undefined",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.provider-env.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/provider-env.js",
+      "start": 1656,
+      "end": 1696,
+      "line": 44,
+      "column": 1,
+      "raw": "//# sourceMappingURL=provider-env.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sanitize-unicode.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "start": 0,
+      "end": 834,
+      "line": 1,
+      "column": 1,
+      "raw": "/**\n * Removes unpaired Unicode surrogate characters from a string.\n *\n * Unpaired surrogates (high surrogates 0xD800-0xDBFF without matching low surrogates 0xDC00-0xDFFF,\n * or vice versa) cause JSON serialization errors in many API providers.\n *\n * Valid emoji and other characters outside the Basic Multilingual Plane use properly paired\n * surrogates and will NOT be affected by this function.\n *\n * @param text - The text to sanitize\n * @returns The sanitized text with unpaired surrogates removed\n *\n * @example\n * // Valid emoji (properly paired surrogates) are preserved\n * sanitizeSurrogates(\"Hello 🙈 World\") // => \"Hello 🙈 World\"\n *\n * // Unpaired high surrogate is removed\n * const unpaired = String.fromCharCode(0xD83D); // high surrogate without low\n * sanitizeSurrogates(`Text ${unpaired} here`) // => \"Text  here\"\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sanitize-unicode.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "start": 882,
+      "end": 963,
+      "line": 22,
+      "column": 5,
+      "raw": "// Replace unpaired high surrogates (0xD800-0xDBFF not followed by low surrogate)",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sanitize-unicode.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "start": 968,
+      "end": 1049,
+      "line": 23,
+      "column": 5,
+      "raw": "// Replace unpaired low surrogates (0xDC00-0xDFFF not preceded by high surrogate)",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sanitize-unicode.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "start": 1074,
+      "end": 1147,
+      "line": 24,
+      "column": 25,
+      "raw": "/[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?<![\\uD800-\\uDBFF])[\\uDC00-\\uDFFF]/g",
+      "kind": "RegularExpressionLiteral",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sanitize-unicode.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "start": 1149,
+      "end": 1151,
+      "line": 24,
+      "column": 100,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sanitize-unicode.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sanitize-unicode.js",
+      "start": 1156,
+      "end": 1200,
+      "line": 26,
+      "column": 1,
+      "raw": "//# sourceMappingURL=sanitize-unicode.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sleep.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sleep.js",
+      "start": 310,
+      "end": 317,
+      "line": 9,
+      "column": 40,
+      "raw": "\"abort\"",
+      "kind": "StringLiteral",
+      "decoded": "abort",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sleep.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sleep.js",
+      "start": 400,
+      "end": 407,
+      "line": 12,
+      "column": 33,
+      "raw": "\"abort\"",
+      "kind": "StringLiteral",
+      "decoded": "abort",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.sleep.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/sleep.js",
+      "start": 445,
+      "end": 478,
+      "line": 15,
+      "column": 1,
+      "raw": "//# sourceMappingURL=sleep.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 0,
+      "end": 50,
+      "line": 1,
+      "column": 1,
+      "raw": "/** Extract and join text from message content. */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 100,
+      "end": 104,
+      "line": 2,
+      "column": 50,
+      "raw": "\"\\n\"",
+      "kind": "StringLiteral",
+      "decoded": "\n",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 135,
+      "end": 143,
+      "line": 3,
+      "column": 28,
+      "raw": "\"string\"",
+      "kind": "StringLiteral",
+      "decoded": "string",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 230,
+      "end": 236,
+      "line": 6,
+      "column": 43,
+      "raw": "\"text\"",
+      "kind": "StringLiteral",
+      "decoded": "text",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 302,
+      "end": 392,
+      "line": 10,
+      "column": 1,
+      "raw": "/** Render a system message as a complete prompt: its content followed by its sections. */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 674,
+      "end": 680,
+      "line": 17,
+      "column": 57,
+      "raw": "\"\\n\\n\"",
+      "kind": "StringLiteral",
+      "decoded": "\n\n",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 685,
+      "end": 940,
+      "line": 19,
+      "column": 1,
+      "raw": "/**\n * Render a later system message for APIs that accept system messages mid-conversation.\n * Section changes are framed by name so the model can relate them to the leading prompt.\n * This framing is request-time only and may change between versions.\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 1236,
+      "end": 1278,
+      "line": 31,
+      "column": 15,
+      "raw": "`Removed system prompt section \"${name}\".`",
+      "kind": "TemplateExpression",
+      "disposition": "primary:pi-ai-data-utilities.section-removed"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 1293,
+      "end": 1347,
+      "line": 32,
+      "column": 15,
+      "raw": "`Updated system prompt section \"${name}\":\\n\\n${value}`",
+      "kind": "TemplateExpression",
+      "disposition": "primary:pi-ai-data-utilities.section-updated"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 1378,
+      "end": 1384,
+      "line": 34,
+      "column": 23,
+      "raw": "\"\\n\\n\"",
+      "kind": "StringLiteral",
+      "decoded": "\n\n",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.text.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "start": 1389,
+      "end": 1421,
+      "line": 36,
+      "column": 1,
+      "raw": "//# sourceMappingURL=text.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.typebox-helpers.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "start": 21,
+      "end": 30,
+      "line": 1,
+      "column": 22,
+      "raw": "\"typebox\"",
+      "kind": "StringLiteral",
+      "decoded": "typebox",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.typebox-helpers.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "start": 32,
+      "end": 415,
+      "line": 2,
+      "column": 1,
+      "raw": "/**\n * Creates a string enum schema compatible with Google's API and other providers\n * that don't support anyOf/const patterns.\n *\n * @example\n * const OperationSchema = StringEnum([\"add\", \"subtract\", \"multiply\", \"divide\"], {\n *   description: \"The operation to perform\"\n * });\n *\n * type Operation = Static<typeof OperationSchema>; // \"add\" | \"subtract\" | \"multiply\" | \"divide\"\n */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.typebox-helpers.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "start": 501,
+      "end": 509,
+      "line": 15,
+      "column": 15,
+      "raw": "\"string\"",
+      "kind": "StringLiteral",
+      "decoded": "string",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.typebox-helpers.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/typebox-helpers.js",
+      "start": 681,
+      "end": 724,
+      "line": 21,
+      "column": 1,
+      "raw": "//# sourceMappingURL=typebox-helpers.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 131,
+      "end": 221,
+      "line": 5,
+      "column": 1,
+      "raw": "/** Generate a time-ordered UUIDv7. A supplied timestamp is preserved for follower ids. */",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 468,
+      "end": 544,
+      "line": 9,
+      "column": 30,
+      "raw": "`UUIDv7 timestamp must be an integer between 0 and ${MAX_UUID_V7_TIMESTAMP}`",
+      "kind": "TemplateExpression",
+      "disposition": "primary:pi-ai-data-utilities.uuid-timestamp"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1197,
+      "end": 1234,
+      "line": 26,
+      "column": 34,
+      "raw": "\"UUIDv7 generator sequence exhausted\"",
+      "kind": "StringLiteral",
+      "decoded": "UUIDv7 generator sequence exhausted",
+      "disposition": "primary:pi-ai-data-utilities.uuid-sequence"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1851,
+      "end": 1854,
+      "line": 39,
+      "column": 75,
+      "raw": "\"0\"",
+      "kind": "StringLiteral",
+      "decoded": "0",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1869,
+      "end": 2009,
+      "line": 40,
+      "column": 12,
+      "raw": "`${hex.slice(0, 4).join(\"\")}-${hex.slice(4, 6).join(\"\")}-${hex.slice(6, 8).join(\"\")}-${hex.slice(8, 10).join(\"\")}-${hex.slice(10).join(\"\")}`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1893,
+      "end": 1895,
+      "line": 40,
+      "column": 36,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1921,
+      "end": 1923,
+      "line": 40,
+      "column": 64,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1949,
+      "end": 1951,
+      "line": 40,
+      "column": 92,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 1978,
+      "end": 1980,
+      "line": 40,
+      "column": 121,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 2004,
+      "end": 2006,
+      "line": 40,
+      "column": 147,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.uuid.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/uuid.js",
+      "start": 2013,
+      "end": 2045,
+      "line": 42,
+      "column": 1,
+      "raw": "//# sourceMappingURL=uuid.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.version.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "start": 0,
+      "end": 106,
+      "line": 1,
+      "column": 1,
+      "raw": "// The @earendil-works/pi-ai package version. scripts/sync-versions.js keeps it in sync with package.json.",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.version.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "start": 136,
+      "end": 143,
+      "line": 2,
+      "column": 30,
+      "raw": "\"1.4.0\"",
+      "kind": "StringLiteral",
+      "decoded": "1.4.0",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-data-utilities.version.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/version.js",
+      "start": 145,
+      "end": 180,
+      "line": 3,
+      "column": 1,
+      "raw": "//# sourceMappingURL=version.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    }
+  ],
+  "source_ast": [
+    {
+      "name": "abort-signals",
+      "lexical": [
+        {
+          "start": 729,
+          "end": 736,
+          "line": 22,
+          "column": 33,
+          "raw": "\"abort\"",
+          "kind": "StringLiteral",
+          "decoded": "abort"
+        },
+        {
+          "start": 993,
+          "end": 1000,
+          "line": 29,
+          "column": 44,
+          "raw": "\"abort\"",
+          "kind": "StringLiteral",
+          "decoded": "abort"
+        },
+        {
+          "start": 1047,
+          "end": 1088,
+          "line": 34,
+          "column": 1,
+          "raw": "//# sourceMappingURL=abort-signals.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 73,
+          "end": 121,
+          "line": 2,
+          "column": 27,
+          "raw": "signals.filter((signal) => signal !== undefined)",
+          "kind": "CallExpression",
+          "callee": "signals.filter"
+        },
+        {
+          "start": 473,
+          "end": 504,
+          "line": 13,
+          "column": 13,
+          "raw": "controller.abort(signal.reason)",
+          "kind": "CallExpression",
+          "callee": "controller.abort"
+        },
+        {
+          "start": 607,
+          "end": 620,
+          "line": 18,
+          "column": 13,
+          "raw": "abort(signal)",
+          "kind": "CallExpression",
+          "callee": "abort"
+        },
+        {
+          "start": 682,
+          "end": 695,
+          "line": 21,
+          "column": 32,
+          "raw": "abort(signal)",
+          "kind": "CallExpression",
+          "callee": "abort"
+        },
+        {
+          "start": 705,
+          "end": 763,
+          "line": 22,
+          "column": 9,
+          "raw": "signal.addEventListener(\"abort\", listener, { once: true })",
+          "kind": "CallExpression",
+          "callee": "signal.addEventListener"
+        },
+        {
+          "start": 773,
+          "end": 809,
+          "line": 23,
+          "column": 9,
+          "raw": "listeners.push({ signal, listener })",
+          "kind": "CallExpression",
+          "callee": "listeners.push"
+        },
+        {
+          "start": 966,
+          "end": 1011,
+          "line": 29,
+          "column": 17,
+          "raw": "signal.removeEventListener(\"abort\", listener)",
+          "kind": "CallExpression",
+          "callee": "signal.removeEventListener"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 338,
+          "end": 359,
+          "line": 9,
+          "column": 24,
+          "raw": "new AbortController()",
+          "kind": "NewExpression",
+          "callee": "AbortController"
+        }
+      ],
+      "throws": [],
+      "catches": [],
+      "controls": [
+        {
+          "start": 127,
+          "end": 205,
+          "line": 3,
+          "column": 5,
+          "raw": "if (activeSignals.length === 0) {\n        return { cleanup: () => { } };\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 210,
+          "end": 314,
+          "line": 6,
+          "column": 5,
+          "raw": "if (activeSignals.length === 1) {\n        return { signal: activeSignals[0], cleanup: () => { } };\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 427,
+          "end": 515,
+          "line": 12,
+          "column": 9,
+          "raw": "if (!controller.signal.aborted) {\n            controller.abort(signal.reason);\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 527,
+          "end": 816,
+          "line": 16,
+          "column": 5,
+          "raw": "for (const signal of activeSignals) {\n        if (signal.aborted) {\n            abort(signal);\n            break;\n        }\n        const listener = () => abort(signal);\n        signal.addEventListener(\"abort\", listener, { once: true });\n        listeners.push({ signal, listener });\n    }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 573,
+          "end": 650,
+          "line": 17,
+          "column": 9,
+          "raw": "if (signal.aborted) {\n            abort(signal);\n            break;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 902,
+          "end": 1026,
+          "line": 28,
+          "column": 13,
+          "raw": "for (const { signal, listener } of listeners) {\n                signal.removeEventListener(\"abort\", listener);\n            }",
+          "kind": "ForOfStatement"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 34
+    },
+    {
+      "name": "estimate",
+      "lexical": [
+        {
+          "start": 37,
+          "end": 48,
+          "line": 1,
+          "column": 38,
+          "raw": "\"./text.js\"",
+          "kind": "StringLiteral",
+          "decoded": "./text.js"
+        },
+        {
+          "start": 348,
+          "end": 359,
+          "line": 9,
+          "column": 41,
+          "raw": "\"undefined\"",
+          "kind": "StringLiteral",
+          "decoded": "undefined"
+        },
+        {
+          "start": 394,
+          "end": 412,
+          "line": 12,
+          "column": 16,
+          "raw": "\"[unserializable]\"",
+          "kind": "StringLiteral",
+          "decoded": "[unserializable]"
+        },
+        {
+          "start": 502,
+          "end": 510,
+          "line": 16,
+          "column": 28,
+          "raw": "\"string\"",
+          "kind": "StringLiteral",
+          "decoded": "string"
+        },
+        {
+          "start": 627,
+          "end": 633,
+          "line": 20,
+          "column": 33,
+          "raw": "\"text\"",
+          "kind": "StringLiteral",
+          "decoded": "text"
+        },
+        {
+          "start": 1036,
+          "end": 1044,
+          "line": 31,
+          "column": 26,
+          "raw": "\"system\"",
+          "kind": "StringLiteral",
+          "decoded": "system"
+        },
+        {
+          "start": 1257,
+          "end": 1263,
+          "line": 36,
+          "column": 26,
+          "raw": "\"user\"",
+          "kind": "StringLiteral",
+          "decoded": "user"
+        },
+        {
+          "start": 1357,
+          "end": 1369,
+          "line": 38,
+          "column": 26,
+          "raw": "\"toolResult\"",
+          "kind": "StringLiteral",
+          "decoded": "toolResult"
+        },
+        {
+          "start": 1508,
+          "end": 1514,
+          "line": 41,
+          "column": 28,
+          "raw": "\"text\"",
+          "kind": "StringLiteral",
+          "decoded": "text"
+        },
+        {
+          "start": 1600,
+          "end": 1610,
+          "line": 44,
+          "column": 33,
+          "raw": "\"thinking\"",
+          "kind": "StringLiteral",
+          "decoded": "thinking"
+        },
+        {
+          "start": 2070,
+          "end": 2081,
+          "line": 58,
+          "column": 30,
+          "raw": "\"assistant\"",
+          "kind": "StringLiteral",
+          "decoded": "assistant"
+        },
+        {
+          "start": 2136,
+          "end": 2210,
+          "line": 60,
+          "column": 13,
+          "raw": "// A newer prefix message was inserted after this response (for example, a",
+          "kind": "Comment"
+        },
+        {
+          "start": 2223,
+          "end": 2295,
+          "line": 61,
+          "column": 13,
+          "raw": "// compaction summary), so its usage cannot describe the current prefix.",
+          "kind": "Comment"
+        },
+        {
+          "start": 2464,
+          "end": 2473,
+          "line": 64,
+          "column": 42,
+          "raw": "\"aborted\"",
+          "kind": "StringLiteral",
+          "decoded": "aborted"
+        },
+        {
+          "start": 2518,
+          "end": 2525,
+          "line": 65,
+          "column": 42,
+          "raw": "\"error\"",
+          "kind": "StringLiteral",
+          "decoded": "error"
+        },
+        {
+          "start": 2866,
+          "end": 2876,
+          "line": 75,
+          "column": 22,
+          "raw": "\"messages\"",
+          "kind": "StringLiteral",
+          "decoded": "messages"
+        },
+        {
+          "start": 3716,
+          "end": 3752,
+          "line": 95,
+          "column": 1,
+          "raw": "//# sourceMappingURL=estimate.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 323,
+          "end": 344,
+          "line": 9,
+          "column": 16,
+          "raw": "JSON.stringify(value)",
+          "kind": "CallExpression",
+          "callee": "JSON.stringify"
+        },
+        {
+          "start": 753,
+          "end": 793,
+          "line": 24,
+          "column": 12,
+          "raw": "Math.ceil(text.length / CHARS_PER_TOKEN)",
+          "kind": "CallExpression",
+          "callee": "Math.ceil"
+        },
+        {
+          "start": 869,
+          "end": 939,
+          "line": 27,
+          "column": 12,
+          "raw": "Math.ceil(estimateTextAndImageContentChars(content) / CHARS_PER_TOKEN)",
+          "kind": "CallExpression",
+          "callee": "Math.ceil"
+        },
+        {
+          "start": 879,
+          "end": 920,
+          "line": 27,
+          "column": 22,
+          "raw": "estimateTextAndImageContentChars(content)",
+          "kind": "CallExpression",
+          "callee": "estimateTextAndImageContentChars"
+        },
+        {
+          "start": 1064,
+          "end": 1113,
+          "line": 32,
+          "column": 17,
+          "raw": "estimateTextTokens(getSystemMessageText(message))",
+          "kind": "CallExpression",
+          "callee": "estimateTextTokens"
+        },
+        {
+          "start": 1083,
+          "end": 1112,
+          "line": 32,
+          "column": 36,
+          "raw": "getSystemMessageText(message)",
+          "kind": "CallExpression",
+          "callee": "getSystemMessageText"
+        },
+        {
+          "start": 1128,
+          "end": 1167,
+          "line": 33,
+          "column": 13,
+          "raw": "estimateToolsTokens(message.toolsAdded)",
+          "kind": "CallExpression",
+          "callee": "estimateToolsTokens"
+        },
+        {
+          "start": 1182,
+          "end": 1223,
+          "line": 34,
+          "column": 13,
+          "raw": "estimateToolsTokens(message.toolsRemoved)",
+          "kind": "CallExpression",
+          "callee": "estimateToolsTokens"
+        },
+        {
+          "start": 1280,
+          "end": 1330,
+          "line": 37,
+          "column": 16,
+          "raw": "estimateTextAndImageContentTokens(message.content)",
+          "kind": "CallExpression",
+          "callee": "estimateTextAndImageContentTokens"
+        },
+        {
+          "start": 1386,
+          "end": 1436,
+          "line": 39,
+          "column": 16,
+          "raw": "estimateTextAndImageContentTokens(message.content)",
+          "kind": "CallExpression",
+          "callee": "estimateTextAndImageContentTokens"
+        },
+        {
+          "start": 1724,
+          "end": 1758,
+          "line": 48,
+          "column": 42,
+          "raw": "safeJsonStringify(block.arguments)",
+          "kind": "CallExpression",
+          "callee": "safeJsonStringify"
+        },
+        {
+          "start": 1794,
+          "end": 1828,
+          "line": 51,
+          "column": 12,
+          "raw": "Math.ceil(chars / CHARS_PER_TOKEN)",
+          "kind": "CallExpression",
+          "callee": "Math.ceil"
+        },
+        {
+          "start": 2545,
+          "end": 2584,
+          "line": 66,
+          "column": 17,
+          "raw": "calculateContextTokens(assistant.usage)",
+          "kind": "CallExpression",
+          "callee": "calculateContextTokens"
+        },
+        {
+          "start": 2714,
+          "end": 2764,
+          "line": 70,
+          "column": 33,
+          "raw": "Math.max(latestPrefixTimestamp, message.timestamp)",
+          "kind": "CallExpression",
+          "callee": "Math.max"
+        },
+        {
+          "start": 2940,
+          "end": 2975,
+          "line": 76,
+          "column": 23,
+          "raw": "getLastAssistantUsageInfo(messages)",
+          "kind": "CallExpression",
+          "callee": "getLastAssistantUsageInfo"
+        },
+        {
+          "start": 3026,
+          "end": 3065,
+          "line": 78,
+          "column": 29,
+          "raw": "calculateContextTokens(usageInfo.usage)",
+          "kind": "CallExpression",
+          "callee": "calculateContextTokens"
+        },
+        {
+          "start": 3199,
+          "end": 3233,
+          "line": 81,
+          "column": 31,
+          "raw": "estimateMessageTokens(messages[i])",
+          "kind": "CallExpression",
+          "callee": "estimateMessageTokens"
+        },
+        {
+          "start": 3444,
+          "end": 3474,
+          "line": 87,
+          "column": 19,
+          "raw": "estimateMessageTokens(message)",
+          "kind": "CallExpression",
+          "callee": "estimateMessageTokens"
+        },
+        {
+          "start": 3668,
+          "end": 3712,
+          "line": 93,
+          "column": 12,
+          "raw": "estimateTextTokens(safeJsonStringify(tools))",
+          "kind": "CallExpression",
+          "callee": "estimateTextTokens"
+        },
+        {
+          "start": 3687,
+          "end": 3711,
+          "line": 93,
+          "column": 31,
+          "raw": "safeJsonStringify(tools)",
+          "kind": "CallExpression",
+          "callee": "safeJsonStringify"
+        }
+      ],
+      "constructors": [],
+      "throws": [],
+      "catches": [
+        {
+          "start": 371,
+          "end": 419,
+          "line": 11,
+          "column": 5,
+          "raw": "catch {\n        return \"[unserializable]\";\n    }",
+          "kind": "CatchClause"
+        }
+      ],
+      "controls": [
+        {
+          "start": 174,
+          "end": 258,
+          "line": 5,
+          "column": 12,
+          "raw": "usage.totalTokens || usage.input + usage.output + usage.cacheRead + usage.cacheWrite",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 323,
+          "end": 359,
+          "line": 9,
+          "column": 16,
+          "raw": "JSON.stringify(value) ?? \"undefined\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 479,
+          "end": 542,
+          "line": 16,
+          "column": 5,
+          "raw": "if (typeof content === \"string\")\n        return content.length;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 566,
+          "end": 678,
+          "line": 19,
+          "column": 5,
+          "raw": "for (const block of content)\n        chars += block.type === \"text\" ? block.text.length : ESTIMATED_IMAGE_CHARS;",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 612,
+          "end": 677,
+          "line": 20,
+          "column": 18,
+          "raw": "block.type === \"text\" ? block.text.length : ESTIMATED_IMAGE_CHARS",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 1015,
+          "end": 1231,
+          "line": 31,
+          "column": 5,
+          "raw": "if (message.role === \"system\") {\n        return (estimateTextTokens(getSystemMessageText(message)) +\n            estimateToolsTokens(message.toolsAdded) +\n            estimateToolsTokens(message.toolsRemoved));\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1236,
+          "end": 1331,
+          "line": 36,
+          "column": 5,
+          "raw": "if (message.role === \"user\")\n        return estimateTextAndImageContentTokens(message.content);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1336,
+          "end": 1437,
+          "line": 38,
+          "column": 5,
+          "raw": "if (message.role === \"toolResult\")\n        return estimateTextAndImageContentTokens(message.content);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1442,
+          "end": 1782,
+          "line": 40,
+          "column": 5,
+          "raw": "for (const block of message.content) {\n        if (block.type === \"text\") {\n            chars += block.text.length;\n        }\n        else if (block.type === \"thinking\") {\n            chars += block.thinking.length;\n        }\n        else {\n            chars += block.name.length + safeJsonStringify(block.arguments).length;\n        }\n    }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 1489,
+          "end": 1776,
+          "line": 41,
+          "column": 9,
+          "raw": "if (block.type === \"text\") {\n            chars += block.text.length;\n        }\n        else if (block.type === \"thinking\") {\n            chars += block.thinking.length;\n        }\n        else {\n            chars += block.name.length + safeJsonStringify(block.arguments).length;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1581,
+          "end": 1776,
+          "line": 44,
+          "column": 14,
+          "raw": "if (block.type === \"thinking\") {\n            chars += block.thinking.length;\n        }\n        else {\n            chars += block.name.length + safeJsonStringify(block.arguments).length;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1960,
+          "end": 2771,
+          "line": 56,
+          "column": 5,
+          "raw": "for (let i = 0; i < messages.length; i++) {\n        const message = messages[i];\n        if (message.role === \"assistant\") {\n            const assistant = message;\n            // A newer prefix message was inserted after this response (for example, a\n            // compaction summary), so its usage cannot describe the current prefix.\n            const usageAppliesToPrefix = assistant.timestamp >= latestPrefixTimestamp;\n            if (usageAppliesToPrefix &&\n                assistant.stopReason !== \"aborted\" &&\n                assistant.stopReason !== \"error\" &&\n                calculateContextTokens(assistant.usage) > 0) {\n                usageInfo = { usage: assistant.usage, index: i };\n            }\n        }\n        latestPrefixTimestamp = Math.max(latestPrefixTimestamp, message.timestamp);\n    }",
+          "kind": "ForStatement"
+        },
+        {
+          "start": 2049,
+          "end": 2681,
+          "line": 58,
+          "column": 9,
+          "raw": "if (message.role === \"assistant\") {\n            const assistant = message;\n            // A newer prefix message was inserted after this response (for example, a\n            // compaction summary), so its usage cannot describe the current prefix.\n            const usageAppliesToPrefix = assistant.timestamp >= latestPrefixTimestamp;\n            if (usageAppliesToPrefix &&\n                assistant.stopReason !== \"aborted\" &&\n                assistant.stopReason !== \"error\" &&\n                calculateContextTokens(assistant.usage) > 0) {\n                usageInfo = { usage: assistant.usage, index: i };\n            }\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2395,
+          "end": 2671,
+          "line": 63,
+          "column": 13,
+          "raw": "if (usageAppliesToPrefix &&\n                assistant.stopReason !== \"aborted\" &&\n                assistant.stopReason !== \"error\" &&\n                calculateContextTokens(assistant.usage) > 0) {\n                usageInfo = { usage: assistant.usage, index: i };\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2399,
+          "end": 2588,
+          "line": 63,
+          "column": 17,
+          "raw": "usageAppliesToPrefix &&\n                assistant.stopReason !== \"aborted\" &&\n                assistant.stopReason !== \"error\" &&\n                calculateContextTokens(assistant.usage) > 0",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 2399,
+          "end": 2525,
+          "line": 63,
+          "column": 17,
+          "raw": "usageAppliesToPrefix &&\n                assistant.stopReason !== \"aborted\" &&\n                assistant.stopReason !== \"error\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 2399,
+          "end": 2473,
+          "line": 63,
+          "column": 17,
+          "raw": "usageAppliesToPrefix &&\n                assistant.stopReason !== \"aborted\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 2866,
+          "end": 2916,
+          "line": 75,
+          "column": 22,
+          "raw": "\"messages\" in context ? context.messages : context",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 2981,
+          "end": 3369,
+          "line": 77,
+          "column": 5,
+          "raw": "if (usageInfo) {\n        const usageTokens = calculateContextTokens(usageInfo.usage);\n        let trailingTokens = 0;\n        for (let i = usageInfo.index + 1; i < messages.length; i++) {\n            trailingTokens += estimateMessageTokens(messages[i]);\n        }\n        return { tokens: usageTokens + trailingTokens, usageTokens, trailingTokens, lastUsageIndex: usageInfo.index };\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3107,
+          "end": 3244,
+          "line": 80,
+          "column": 9,
+          "raw": "for (let i = usageInfo.index + 1; i < messages.length; i++) {\n            trailingTokens += estimateMessageTokens(messages[i]);\n        }",
+          "kind": "ForStatement"
+        },
+        {
+          "start": 3394,
+          "end": 3475,
+          "line": 86,
+          "column": 5,
+          "raw": "for (const message of messages)\n        tokens += estimateMessageTokens(message);",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 3605,
+          "end": 3656,
+          "line": 91,
+          "column": 5,
+          "raw": "if (!tools || tools.length === 0)\n        return 0;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3609,
+          "end": 3637,
+          "line": 91,
+          "column": 9,
+          "raw": "!tools || tools.length === 0",
+          "kind": "BinaryExpression"
+        }
+      ],
+      "imports": [
+        {
+          "start": 0,
+          "end": 49,
+          "line": 1,
+          "column": 1,
+          "raw": "import { getSystemMessageText } from \"./text.js\";",
+          "kind": "ImportDeclaration"
+        }
+      ],
+      "ast_line_starts": 95
+    },
+    {
+      "name": "event-stream",
+      "lexical": [
+        {
+          "start": 433,
+          "end": 482,
+          "line": 19,
+          "column": 1,
+          "raw": "// Generic event stream class for async iteration",
+          "kind": "Comment"
+        },
+        {
+          "start": 1135,
+          "end": 1177,
+          "line": 42,
+          "column": 9,
+          "raw": "// Deliver to waiting consumer or queue it",
+          "kind": "Comment"
+        },
+        {
+          "start": 1521,
+          "end": 1568,
+          "line": 56,
+          "column": 9,
+          "raw": "// Notify all waiting consumers that we're done",
+          "kind": "Comment"
+        },
+        {
+          "start": 2267,
+          "end": 2714,
+          "line": 82,
+          "column": 1,
+          "raw": "/**\n * Event stream of one assistant response. It also times the response: the final message (`done` or `error` event, or\n * the result passed to `end()`) gets `durationMs`, measured with a monotonic clock from the stream's creation, unless\n * the message already has one or its `timestamp` predates the stream. A stream that forwards a response which started\n * elsewhere, such as a deferred result fetched later, therefore leaves it untimed.\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 2912,
+          "end": 2918,
+          "line": 92,
+          "column": 41,
+          "raw": "\"done\"",
+          "kind": "StringLiteral",
+          "decoded": "done"
+        },
+        {
+          "start": 2937,
+          "end": 2944,
+          "line": 92,
+          "column": 66,
+          "raw": "\"error\"",
+          "kind": "StringLiteral",
+          "decoded": "error"
+        },
+        {
+          "start": 2990,
+          "end": 2996,
+          "line": 93,
+          "column": 32,
+          "raw": "\"done\"",
+          "kind": "StringLiteral",
+          "decoded": "done"
+        },
+        {
+          "start": 3088,
+          "end": 3095,
+          "line": 96,
+          "column": 37,
+          "raw": "\"error\"",
+          "kind": "StringLiteral",
+          "decoded": "error"
+        },
+        {
+          "start": 3177,
+          "end": 3217,
+          "line": 99,
+          "column": 29,
+          "raw": "\"Unexpected event type for final result\"",
+          "kind": "StringLiteral",
+          "decoded": "Unexpected event type for final result"
+        },
+        {
+          "start": 3283,
+          "end": 3289,
+          "line": 103,
+          "column": 28,
+          "raw": "\"done\"",
+          "kind": "StringLiteral",
+          "decoded": "done"
+        },
+        {
+          "start": 3362,
+          "end": 3369,
+          "line": 105,
+          "column": 33,
+          "raw": "\"error\"",
+          "kind": "StringLiteral",
+          "decoded": "error"
+        },
+        {
+          "start": 3805,
+          "end": 3884,
+          "line": 120,
+          "column": 1,
+          "raw": "/** Factory function for AssistantMessageEventStream (for use in extensions) */",
+          "kind": "Comment"
+        },
+        {
+          "start": 3987,
+          "end": 4027,
+          "line": 124,
+          "column": 1,
+          "raw": "//# sourceMappingURL=event-stream.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 170,
+          "end": 195,
+          "line": 8,
+          "column": 9,
+          "raw": "this.incoming.push(value)",
+          "kind": "CallExpression",
+          "callee": "this.incoming.push"
+        },
+        {
+          "start": 324,
+          "end": 363,
+          "line": 13,
+          "column": 17,
+          "raw": "this.outgoing.push(this.incoming.pop())",
+          "kind": "CallExpression",
+          "callee": "this.outgoing.push"
+        },
+        {
+          "start": 343,
+          "end": 362,
+          "line": 13,
+          "column": 36,
+          "raw": "this.incoming.pop()",
+          "kind": "CallExpression",
+          "callee": "this.incoming.pop"
+        },
+        {
+          "start": 404,
+          "end": 423,
+          "line": 16,
+          "column": 16,
+          "raw": "this.outgoing.pop()",
+          "kind": "CallExpression",
+          "callee": "this.outgoing.pop"
+        },
+        {
+          "start": 997,
+          "end": 1019,
+          "line": 38,
+          "column": 13,
+          "raw": "this.isComplete(event)",
+          "kind": "CallExpression",
+          "callee": "this.isComplete"
+        },
+        {
+          "start": 1065,
+          "end": 1115,
+          "line": 40,
+          "column": 13,
+          "raw": "this.resolveFinalResult(this.extractResult(event))",
+          "kind": "CallExpression",
+          "callee": "this.resolveFinalResult"
+        },
+        {
+          "start": 1089,
+          "end": 1114,
+          "line": 40,
+          "column": 37,
+          "raw": "this.extractResult(event)",
+          "kind": "CallExpression",
+          "callee": "this.extractResult"
+        },
+        {
+          "start": 1201,
+          "end": 1223,
+          "line": 43,
+          "column": 24,
+          "raw": "this.waiting.dequeue()",
+          "kind": "CallExpression",
+          "callee": "this.waiting.dequeue"
+        },
+        {
+          "start": 1259,
+          "end": 1296,
+          "line": 45,
+          "column": 13,
+          "raw": "waiter({ value: event, done: false })",
+          "kind": "CallExpression",
+          "callee": "waiter"
+        },
+        {
+          "start": 1335,
+          "end": 1360,
+          "line": 48,
+          "column": 13,
+          "raw": "this.queue.enqueue(event)",
+          "kind": "CallExpression",
+          "callee": "this.queue.enqueue"
+        },
+        {
+          "start": 1470,
+          "end": 1501,
+          "line": 54,
+          "column": 13,
+          "raw": "this.resolveFinalResult(result)",
+          "kind": "CallExpression",
+          "callee": "this.resolveFinalResult"
+        },
+        {
+          "start": 1638,
+          "end": 1660,
+          "line": 58,
+          "column": 28,
+          "raw": "this.waiting.dequeue()",
+          "kind": "CallExpression",
+          "callee": "this.waiting.dequeue"
+        },
+        {
+          "start": 1674,
+          "end": 1714,
+          "line": 59,
+          "column": 13,
+          "raw": "waiter({ value: undefined, done: true })",
+          "kind": "CallExpression",
+          "callee": "waiter"
+        },
+        {
+          "start": 1856,
+          "end": 1876,
+          "line": 65,
+          "column": 23,
+          "raw": "this.queue.dequeue()",
+          "kind": "CallExpression",
+          "callee": "this.queue.dequeue"
+        },
+        {
+          "start": 2045,
+          "end": 2074,
+          "line": 71,
+          "column": 63,
+          "raw": "this.waiting.enqueue(resolve)",
+          "kind": "CallExpression",
+          "callee": "this.waiting.enqueue"
+        },
+        {
+          "start": 2795,
+          "end": 2805,
+          "line": 89,
+          "column": 18,
+          "raw": "Date.now()",
+          "kind": "CallExpression",
+          "callee": "Date.now"
+        },
+        {
+          "start": 2833,
+          "end": 2850,
+          "line": 90,
+          "column": 27,
+          "raw": "performance.now()",
+          "kind": "CallExpression",
+          "callee": "performance.now"
+        },
+        {
+          "start": 2880,
+          "end": 3230,
+          "line": 92,
+          "column": 9,
+          "raw": "super((event) => event.type === \"done\" || event.type === \"error\", (event) => {\n            if (event.type === \"done\") {\n                return event.message;\n            }\n            else if (event.type === \"error\") {\n                return event.error;\n            }\n            throw new Error(\"Unexpected event type for final result\");\n        })",
+          "kind": "CallExpression",
+          "callee": "super"
+        },
+        {
+          "start": 3303,
+          "end": 3328,
+          "line": 104,
+          "column": 13,
+          "raw": "this.#time(event.message)",
+          "kind": "CallExpression",
+          "callee": "this.#time"
+        },
+        {
+          "start": 3383,
+          "end": 3406,
+          "line": 106,
+          "column": 13,
+          "raw": "this.#time(event.error)",
+          "kind": "CallExpression",
+          "callee": "this.#time"
+        },
+        {
+          "start": 3416,
+          "end": 3433,
+          "line": 107,
+          "column": 9,
+          "raw": "super.push(event)",
+          "kind": "CallExpression",
+          "callee": "super.push"
+        },
+        {
+          "start": 3505,
+          "end": 3523,
+          "line": 111,
+          "column": 13,
+          "raw": "this.#time(result)",
+          "kind": "CallExpression",
+          "callee": "this.#time"
+        },
+        {
+          "start": 3533,
+          "end": 3550,
+          "line": 112,
+          "column": 9,
+          "raw": "super.end(result)",
+          "kind": "CallExpression",
+          "callee": "super.end"
+        },
+        {
+          "start": 3726,
+          "end": 3795,
+          "line": 117,
+          "column": 30,
+          "raw": "Math.max(0, Math.round(performance.now() - this.#startedAtMonotonic))",
+          "kind": "CallExpression",
+          "callee": "Math.max"
+        },
+        {
+          "start": 3738,
+          "end": 3794,
+          "line": 117,
+          "column": 42,
+          "raw": "Math.round(performance.now() - this.#startedAtMonotonic)",
+          "kind": "CallExpression",
+          "callee": "Math.round"
+        },
+        {
+          "start": 3749,
+          "end": 3766,
+          "line": 117,
+          "column": 53,
+          "raw": "performance.now()",
+          "kind": "CallExpression",
+          "callee": "performance.now"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 522,
+          "end": 537,
+          "line": 21,
+          "column": 13,
+          "raw": "new FifoQueue()",
+          "kind": "NewExpression",
+          "callee": "FifoQueue"
+        },
+        {
+          "start": 553,
+          "end": 568,
+          "line": 22,
+          "column": 15,
+          "raw": "new FifoQueue()",
+          "kind": "NewExpression",
+          "callee": "FifoQueue"
+        },
+        {
+          "start": 832,
+          "end": 916,
+          "line": 31,
+          "column": 35,
+          "raw": "new Promise((resolve) => {\n            this.resolveFinalResult = resolve;\n        })",
+          "kind": "NewExpression",
+          "callee": "Promise"
+        },
+        {
+          "start": 2020,
+          "end": 2075,
+          "line": 71,
+          "column": 38,
+          "raw": "new Promise((resolve) => this.waiting.enqueue(resolve))",
+          "kind": "NewExpression",
+          "callee": "Promise"
+        },
+        {
+          "start": 3167,
+          "end": 3218,
+          "line": 99,
+          "column": 19,
+          "raw": "new Error(\"Unexpected event type for final result\")",
+          "kind": "NewExpression",
+          "callee": "Error"
+        },
+        {
+          "start": 3950,
+          "end": 3983,
+          "line": 122,
+          "column": 12,
+          "raw": "new AssistantMessageEventStream()",
+          "kind": "NewExpression",
+          "callee": "AssistantMessageEventStream"
+        }
+      ],
+      "throws": [
+        {
+          "start": 3161,
+          "end": 3219,
+          "line": 99,
+          "column": 13,
+          "raw": "throw new Error(\"Unexpected event type for final result\");",
+          "kind": "ThrowStatement"
+        }
+      ],
+      "catches": [],
+      "controls": [
+        {
+          "start": 227,
+          "end": 388,
+          "line": 11,
+          "column": 9,
+          "raw": "if (this.outgoing.length === 0) {\n            while (this.incoming.length > 0) {\n                this.outgoing.push(this.incoming.pop());\n            }\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 273,
+          "end": 378,
+          "line": 12,
+          "column": 13,
+          "raw": "while (this.incoming.length > 0) {\n                this.outgoing.push(this.incoming.pop());\n            }",
+          "kind": "WhileStatement"
+        },
+        {
+          "start": 950,
+          "end": 984,
+          "line": 36,
+          "column": 9,
+          "raw": "if (this.done)\n            return;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 993,
+          "end": 1126,
+          "line": 38,
+          "column": 9,
+          "raw": "if (this.isComplete(event)) {\n            this.done = true;\n            this.resolveFinalResult(this.extractResult(event));\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1233,
+          "end": 1371,
+          "line": 44,
+          "column": 9,
+          "raw": "if (waiter) {\n            waiter({ value: event, done: false });\n        }\n        else {\n            this.queue.enqueue(event);\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1430,
+          "end": 1512,
+          "line": 53,
+          "column": 9,
+          "raw": "if (result !== undefined) {\n            this.resolveFinalResult(result);\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1577,
+          "end": 1725,
+          "line": 57,
+          "column": 9,
+          "raw": "while (this.waiting.length > 0) {\n            const waiter = this.waiting.dequeue();\n            waiter({ value: undefined, done: true });\n        }",
+          "kind": "WhileStatement"
+        },
+        {
+          "start": 1778,
+          "end": 2197,
+          "line": 63,
+          "column": 9,
+          "raw": "while (true) {\n            if (this.queue.length > 0) {\n                yield this.queue.dequeue();\n            }\n            else if (this.done) {\n                return;\n            }\n            else {\n                const result = await new Promise((resolve) => this.waiting.enqueue(resolve));\n                if (result.done)\n                    return;\n                yield result.value;\n            }\n        }",
+          "kind": "WhileStatement"
+        },
+        {
+          "start": 1805,
+          "end": 2187,
+          "line": 64,
+          "column": 13,
+          "raw": "if (this.queue.length > 0) {\n                yield this.queue.dequeue();\n            }\n            else if (this.done) {\n                return;\n            }\n            else {\n                const result = await new Promise((resolve) => this.waiting.enqueue(resolve));\n                if (result.done)\n                    return;\n                yield result.value;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1909,
+          "end": 2187,
+          "line": 67,
+          "column": 18,
+          "raw": "if (this.done) {\n                return;\n            }\n            else {\n                const result = await new Promise((resolve) => this.waiting.enqueue(resolve));\n                if (result.done)\n                    return;\n                yield result.value;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2093,
+          "end": 2137,
+          "line": 72,
+          "column": 17,
+          "raw": "if (result.done)\n                    return;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2897,
+          "end": 2944,
+          "line": 92,
+          "column": 26,
+          "raw": "event.type === \"done\" || event.type === \"error\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 2971,
+          "end": 3148,
+          "line": 93,
+          "column": 13,
+          "raw": "if (event.type === \"done\") {\n                return event.message;\n            }\n            else if (event.type === \"error\") {\n                return event.error;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3069,
+          "end": 3148,
+          "line": 96,
+          "column": 18,
+          "raw": "if (event.type === \"error\") {\n                return event.error;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3264,
+          "end": 3407,
+          "line": 103,
+          "column": 9,
+          "raw": "if (event.type === \"done\")\n            this.#time(event.message);\n        else if (event.type === \"error\")\n            this.#time(event.error);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3343,
+          "end": 3407,
+          "line": 105,
+          "column": 14,
+          "raw": "if (event.type === \"error\")\n            this.#time(event.error);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3467,
+          "end": 3524,
+          "line": 110,
+          "column": 9,
+          "raw": "if (result !== undefined)\n            this.#time(result);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3587,
+          "end": 3696,
+          "line": 115,
+          "column": 9,
+          "raw": "if (this.done || message.durationMs !== undefined || message.timestamp < this.#startedAt)\n            return;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3591,
+          "end": 3675,
+          "line": 115,
+          "column": 13,
+          "raw": "this.done || message.durationMs !== undefined || message.timestamp < this.#startedAt",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3591,
+          "end": 3636,
+          "line": 115,
+          "column": 13,
+          "raw": "this.done || message.durationMs !== undefined",
+          "kind": "BinaryExpression"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 124
+    },
+    {
+      "name": "hash",
+      "lexical": [
+        {
+          "start": 0,
+          "end": 54,
+          "line": 1,
+          "column": 1,
+          "raw": "/** Fast deterministic hash to shorten long strings */",
+          "kind": "Comment"
+        },
+        {
+          "start": 563,
+          "end": 595,
+          "line": 14,
+          "column": 1,
+          "raw": "//# sourceMappingURL=hash.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 200,
+          "end": 217,
+          "line": 6,
+          "column": 20,
+          "raw": "str.charCodeAt(i)",
+          "kind": "CallExpression",
+          "callee": "str.charCodeAt"
+        },
+        {
+          "start": 232,
+          "end": 262,
+          "line": 7,
+          "column": 14,
+          "raw": "Math.imul(h1 ^ ch, 2654435761)",
+          "kind": "CallExpression",
+          "callee": "Math.imul"
+        },
+        {
+          "start": 277,
+          "end": 307,
+          "line": 8,
+          "column": 14,
+          "raw": "Math.imul(h2 ^ ch, 1597334677)",
+          "kind": "CallExpression",
+          "callee": "Math.imul"
+        },
+        {
+          "start": 324,
+          "end": 363,
+          "line": 10,
+          "column": 10,
+          "raw": "Math.imul(h1 ^ (h1 >>> 16), 2246822507)",
+          "kind": "CallExpression",
+          "callee": "Math.imul"
+        },
+        {
+          "start": 366,
+          "end": 405,
+          "line": 10,
+          "column": 52,
+          "raw": "Math.imul(h2 ^ (h2 >>> 13), 3266489909)",
+          "kind": "CallExpression",
+          "callee": "Math.imul"
+        },
+        {
+          "start": 416,
+          "end": 455,
+          "line": 11,
+          "column": 10,
+          "raw": "Math.imul(h2 ^ (h2 >>> 16), 2246822507)",
+          "kind": "CallExpression",
+          "callee": "Math.imul"
+        },
+        {
+          "start": 458,
+          "end": 497,
+          "line": 11,
+          "column": 52,
+          "raw": "Math.imul(h1 ^ (h1 >>> 13), 3266489909)",
+          "kind": "CallExpression",
+          "callee": "Math.imul"
+        },
+        {
+          "start": 510,
+          "end": 533,
+          "line": 12,
+          "column": 12,
+          "raw": "(h2 >>> 0).toString(36)",
+          "kind": "CallExpression",
+          "callee": "(h2 >>> 0).toString"
+        },
+        {
+          "start": 536,
+          "end": 559,
+          "line": 12,
+          "column": 38,
+          "raw": "(h1 >>> 0).toString(36)",
+          "kind": "CallExpression",
+          "callee": "(h1 >>> 0).toString"
+        }
+      ],
+      "constructors": [],
+      "throws": [],
+      "catches": [],
+      "controls": [
+        {
+          "start": 142,
+          "end": 314,
+          "line": 5,
+          "column": 5,
+          "raw": "for (let i = 0; i < str.length; i++) {\n        const ch = str.charCodeAt(i);\n        h1 = Math.imul(h1 ^ ch, 2654435761);\n        h2 = Math.imul(h2 ^ ch, 1597334677);\n    }",
+          "kind": "ForStatement"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 14
+    },
+    {
+      "name": "headers",
+      "lexical": [
+        {
+          "start": 659,
+          "end": 694,
+          "line": 20,
+          "column": 1,
+          "raw": "//# sourceMappingURL=headers.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 97,
+          "end": 114,
+          "line": 3,
+          "column": 32,
+          "raw": "headers.entries()",
+          "kind": "CallExpression",
+          "callee": "headers.entries"
+        },
+        {
+          "start": 342,
+          "end": 370,
+          "line": 11,
+          "column": 37,
+          "raw": "Object.entries(source ?? {})",
+          "kind": "CallExpression",
+          "callee": "Object.entries"
+        },
+        {
+          "start": 409,
+          "end": 427,
+          "line": 12,
+          "column": 36,
+          "raw": "name.toLowerCase()",
+          "kind": "CallExpression",
+          "callee": "name.toLowerCase"
+        },
+        {
+          "start": 441,
+          "end": 470,
+          "line": 13,
+          "column": 13,
+          "raw": "merged.delete(normalizedName)",
+          "kind": "CallExpression",
+          "callee": "merged.delete"
+        },
+        {
+          "start": 520,
+          "end": 561,
+          "line": 15,
+          "column": 17,
+          "raw": "merged.set(normalizedName, [name, value])",
+          "kind": "CallExpression",
+          "callee": "merged.set"
+        },
+        {
+          "start": 608,
+          "end": 643,
+          "line": 18,
+          "column": 30,
+          "raw": "Object.fromEntries(merged.values())",
+          "kind": "CallExpression",
+          "callee": "Object.fromEntries"
+        },
+        {
+          "start": 627,
+          "end": 642,
+          "line": 18,
+          "column": 49,
+          "raw": "merged.values()",
+          "kind": "CallExpression",
+          "callee": "merged.values"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 253,
+          "end": 262,
+          "line": 9,
+          "column": 20,
+          "raw": "new Map()",
+          "kind": "NewExpression",
+          "callee": "Map"
+        }
+      ],
+      "throws": [],
+      "catches": [],
+      "controls": [
+        {
+          "start": 70,
+          "end": 152,
+          "line": 3,
+          "column": 5,
+          "raw": "for (const [key, value] of headers.entries()) {\n        result[key] = value;\n    }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 268,
+          "end": 578,
+          "line": 10,
+          "column": 5,
+          "raw": "for (const source of headerSources) {\n        for (const [name, value] of Object.entries(source ?? {})) {\n            const normalizedName = name.toLowerCase();\n            merged.delete(normalizedName);\n            if (value !== null)\n                merged.set(normalizedName, [name, value]);\n        }\n    }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 314,
+          "end": 572,
+          "line": 11,
+          "column": 9,
+          "raw": "for (const [name, value] of Object.entries(source ?? {})) {\n            const normalizedName = name.toLowerCase();\n            merged.delete(normalizedName);\n            if (value !== null)\n                merged.set(normalizedName, [name, value]);\n        }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 357,
+          "end": 369,
+          "line": 11,
+          "column": 52,
+          "raw": "source ?? {}",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 484,
+          "end": 562,
+          "line": 14,
+          "column": 13,
+          "raw": "if (value !== null)\n                merged.set(normalizedName, [name, value]);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 590,
+          "end": 655,
+          "line": 18,
+          "column": 12,
+          "raw": "merged.size > 0 ? Object.fromEntries(merged.values()) : undefined",
+          "kind": "ConditionalExpression"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 20
+    },
+    {
+      "name": "json-parse",
+      "lexical": [
+        {
+          "start": 38,
+          "end": 52,
+          "line": 1,
+          "column": 39,
+          "raw": "\"partial-json\"",
+          "kind": "StringLiteral",
+          "decoded": "partial-json"
+        },
+        {
+          "start": 90,
+          "end": 93,
+          "line": 2,
+          "column": 37,
+          "raw": "'\"'",
+          "kind": "StringLiteral",
+          "decoded": "\""
+        },
+        {
+          "start": 95,
+          "end": 99,
+          "line": 2,
+          "column": 42,
+          "raw": "\"\\\\\"",
+          "kind": "StringLiteral",
+          "decoded": "\\"
+        },
+        {
+          "start": 101,
+          "end": 104,
+          "line": 2,
+          "column": 48,
+          "raw": "\"/\"",
+          "kind": "StringLiteral",
+          "decoded": "/"
+        },
+        {
+          "start": 106,
+          "end": 109,
+          "line": 2,
+          "column": 53,
+          "raw": "\"b\"",
+          "kind": "StringLiteral",
+          "decoded": "b"
+        },
+        {
+          "start": 111,
+          "end": 114,
+          "line": 2,
+          "column": 58,
+          "raw": "\"f\"",
+          "kind": "StringLiteral",
+          "decoded": "f"
+        },
+        {
+          "start": 116,
+          "end": 119,
+          "line": 2,
+          "column": 63,
+          "raw": "\"n\"",
+          "kind": "StringLiteral",
+          "decoded": "n"
+        },
+        {
+          "start": 121,
+          "end": 124,
+          "line": 2,
+          "column": 68,
+          "raw": "\"r\"",
+          "kind": "StringLiteral",
+          "decoded": "r"
+        },
+        {
+          "start": 126,
+          "end": 129,
+          "line": 2,
+          "column": 73,
+          "raw": "\"t\"",
+          "kind": "StringLiteral",
+          "decoded": "t"
+        },
+        {
+          "start": 365,
+          "end": 369,
+          "line": 9,
+          "column": 14,
+          "raw": "\"\\b\"",
+          "kind": "StringLiteral",
+          "decoded": "\b"
+        },
+        {
+          "start": 390,
+          "end": 395,
+          "line": 10,
+          "column": 20,
+          "raw": "\"\\\\b\"",
+          "kind": "StringLiteral",
+          "decoded": "\\b"
+        },
+        {
+          "start": 410,
+          "end": 414,
+          "line": 11,
+          "column": 14,
+          "raw": "\"\\f\"",
+          "kind": "StringLiteral",
+          "decoded": "\f"
+        },
+        {
+          "start": 435,
+          "end": 440,
+          "line": 12,
+          "column": 20,
+          "raw": "\"\\\\f\"",
+          "kind": "StringLiteral",
+          "decoded": "\\f"
+        },
+        {
+          "start": 455,
+          "end": 459,
+          "line": 13,
+          "column": 14,
+          "raw": "\"\\n\"",
+          "kind": "StringLiteral",
+          "decoded": "\n"
+        },
+        {
+          "start": 480,
+          "end": 485,
+          "line": 14,
+          "column": 20,
+          "raw": "\"\\\\n\"",
+          "kind": "StringLiteral",
+          "decoded": "\\n"
+        },
+        {
+          "start": 500,
+          "end": 504,
+          "line": 15,
+          "column": 14,
+          "raw": "\"\\r\"",
+          "kind": "StringLiteral",
+          "decoded": "\r"
+        },
+        {
+          "start": 525,
+          "end": 530,
+          "line": 16,
+          "column": 20,
+          "raw": "\"\\\\r\"",
+          "kind": "StringLiteral",
+          "decoded": "\\r"
+        },
+        {
+          "start": 545,
+          "end": 549,
+          "line": 17,
+          "column": 14,
+          "raw": "\"\\t\"",
+          "kind": "StringLiteral",
+          "decoded": "\t"
+        },
+        {
+          "start": 570,
+          "end": 575,
+          "line": 18,
+          "column": 20,
+          "raw": "\"\\\\t\"",
+          "kind": "StringLiteral",
+          "decoded": "\\t"
+        },
+        {
+          "start": 613,
+          "end": 681,
+          "line": 20,
+          "column": 20,
+          "raw": "`\\\\u${char.codePointAt(0)?.toString(16).padStart(4, \"0\") ?? \"0000\"}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 665,
+          "end": 668,
+          "line": 20,
+          "column": 72,
+          "raw": "\"0\"",
+          "kind": "StringLiteral",
+          "decoded": "0"
+        },
+        {
+          "start": 673,
+          "end": 679,
+          "line": 20,
+          "column": 80,
+          "raw": "\"0000\"",
+          "kind": "StringLiteral",
+          "decoded": "0000"
+        },
+        {
+          "start": 691,
+          "end": 855,
+          "line": 23,
+          "column": 1,
+          "raw": "/**\n * Repairs malformed JSON string literals by:\n * - escaping raw control characters inside strings\n * - doubling backslashes before invalid escape characters\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 910,
+          "end": 912,
+          "line": 29,
+          "column": 20,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 1110,
+          "end": 1113,
+          "line": 35,
+          "column": 26,
+          "raw": "'\"'",
+          "kind": "StringLiteral",
+          "decoded": "\""
+        },
+        {
+          "start": 1217,
+          "end": 1220,
+          "line": 40,
+          "column": 22,
+          "raw": "'\"'",
+          "kind": "StringLiteral",
+          "decoded": "\""
+        },
+        {
+          "start": 1337,
+          "end": 1341,
+          "line": 45,
+          "column": 22,
+          "raw": "\"\\\\\"",
+          "kind": "StringLiteral",
+          "decoded": "\\"
+        },
+        {
+          "start": 1461,
+          "end": 1467,
+          "line": 48,
+          "column": 29,
+          "raw": "\"\\\\\\\\\"",
+          "kind": "StringLiteral",
+          "decoded": "\\\\"
+        },
+        {
+          "start": 1538,
+          "end": 1541,
+          "line": 51,
+          "column": 30,
+          "raw": "\"u\"",
+          "kind": "StringLiteral",
+          "decoded": "u"
+        },
+        {
+          "start": 1637,
+          "end": 1655,
+          "line": 53,
+          "column": 21,
+          "raw": "/^[0-9a-fA-F]{4}$/",
+          "kind": "RegularExpressionLiteral"
+        },
+        {
+          "start": 1711,
+          "end": 1732,
+          "line": 54,
+          "column": 33,
+          "raw": "`\\\\u${unicodeDigits}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 1908,
+          "end": 1923,
+          "line": 60,
+          "column": 29,
+          "raw": "`\\\\${nextChar}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 2017,
+          "end": 2023,
+          "line": 64,
+          "column": 25,
+          "raw": "\"\\\\\\\\\"",
+          "kind": "StringLiteral",
+          "decoded": "\\\\"
+        },
+        {
+          "start": 2451,
+          "end": 2893,
+          "line": 83,
+          "column": 1,
+          "raw": "/**\n * Parses the model's complete arguments text of a finished tool call.\n *\n * Unlike {@link parseStreamingJson}, this never keeps a partially parsed prefix: once the call is\n * finished, text that is not a valid JSON object means the model sent malformed arguments. In that\n * case `arguments` is `{}` and `argumentsError` describes the problem, including the text the\n * model sent, so tool validation can report it back to the model.\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 3088,
+          "end": 3096,
+          "line": 96,
+          "column": 31,
+          "raw": "\"object\"",
+          "kind": "StringLiteral",
+          "decoded": "object"
+        },
+        {
+          "start": 3172,
+          "end": 3210,
+          "line": 97,
+          "column": 29,
+          "raw": "\"Tool arguments must be a JSON object\"",
+          "kind": "StringLiteral",
+          "decoded": "Tool arguments must be a JSON object"
+        },
+        {
+          "start": 3359,
+          "end": 3450,
+          "line": 104,
+          "column": 29,
+          "raw": "`${error instanceof Error ? error.message : String(error)}\\n\\nReceived arguments:\\n${json}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 3471,
+          "end": 3734,
+          "line": 108,
+          "column": 1,
+          "raw": "/**\n * Attempts to parse potentially incomplete JSON during streaming.\n * Always returns a valid object, even if the JSON is incomplete.\n *\n * @param partialJson The partial JSON string from streaming\n * @returns Parsed object or empty object if parsing fails\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 3832,
+          "end": 3834,
+          "line": 116,
+          "column": 48,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 4289,
+          "end": 4327,
+          "line": 138,
+          "column": 1,
+          "raw": "//# sourceMappingURL=json-parse.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 191,
+          "end": 210,
+          "line": 4,
+          "column": 23,
+          "raw": "char.codePointAt(0)",
+          "kind": "CallExpression",
+          "callee": "char.codePointAt"
+        },
+        {
+          "start": 619,
+          "end": 669,
+          "line": 20,
+          "column": 26,
+          "raw": "char.codePointAt(0)?.toString(16).padStart(4, \"0\")",
+          "kind": "CallExpression",
+          "callee": "char.codePointAt(0)?.toString(16).padStart"
+        },
+        {
+          "start": 619,
+          "end": 652,
+          "line": 20,
+          "column": 26,
+          "raw": "char.codePointAt(0)?.toString(16)",
+          "kind": "CallExpression",
+          "callee": "char.codePointAt(0)?.toString"
+        },
+        {
+          "start": 619,
+          "end": 638,
+          "line": 20,
+          "column": 26,
+          "raw": "char.codePointAt(0)",
+          "kind": "CallExpression",
+          "callee": "char.codePointAt"
+        },
+        {
+          "start": 1583,
+          "end": 1615,
+          "line": 52,
+          "column": 39,
+          "raw": "json.slice(index + 2, index + 6)",
+          "kind": "CallExpression",
+          "callee": "json.slice"
+        },
+        {
+          "start": 1637,
+          "end": 1675,
+          "line": 53,
+          "column": 21,
+          "raw": "/^[0-9a-fA-F]{4}$/.test(unicodeDigits)",
+          "kind": "CallExpression",
+          "callee": "/^[0-9a-fA-F]{4}$/.test"
+        },
+        {
+          "start": 1844,
+          "end": 1876,
+          "line": 59,
+          "column": 17,
+          "raw": "VALID_JSON_ESCAPES.has(nextChar)",
+          "kind": "CallExpression",
+          "callee": "VALID_JSON_ESCAPES.has"
+        },
+        {
+          "start": 2077,
+          "end": 2101,
+          "line": 67,
+          "column": 21,
+          "raw": "isControlCharacter(char)",
+          "kind": "CallExpression",
+          "callee": "isControlCharacter"
+        },
+        {
+          "start": 2104,
+          "end": 2132,
+          "line": 67,
+          "column": 48,
+          "raw": "escapeControlCharacter(char)",
+          "kind": "CallExpression",
+          "callee": "escapeControlCharacter"
+        },
+        {
+          "start": 2239,
+          "end": 2255,
+          "line": 73,
+          "column": 16,
+          "raw": "JSON.parse(json)",
+          "kind": "CallExpression",
+          "callee": "JSON.parse"
+        },
+        {
+          "start": 2312,
+          "end": 2328,
+          "line": 76,
+          "column": 30,
+          "raw": "repairJson(json)",
+          "kind": "CallExpression",
+          "callee": "repairJson"
+        },
+        {
+          "start": 2386,
+          "end": 2410,
+          "line": 78,
+          "column": 20,
+          "raw": "JSON.parse(repairedJson)",
+          "kind": "CallExpression",
+          "callee": "JSON.parse"
+        },
+        {
+          "start": 2950,
+          "end": 2962,
+          "line": 92,
+          "column": 10,
+          "raw": "json?.trim()",
+          "kind": "CallExpression",
+          "callee": "json?.trim"
+        },
+        {
+          "start": 3031,
+          "end": 3056,
+          "line": 95,
+          "column": 24,
+          "raw": "parseJsonWithRepair(json)",
+          "kind": "CallExpression",
+          "callee": "parseJsonWithRepair"
+        },
+        {
+          "start": 3119,
+          "end": 3140,
+          "line": 96,
+          "column": 62,
+          "raw": "Array.isArray(parsed)",
+          "kind": "CallExpression",
+          "callee": "Array.isArray"
+        },
+        {
+          "start": 3403,
+          "end": 3416,
+          "line": 104,
+          "column": 73,
+          "raw": "String(error)",
+          "kind": "CallExpression",
+          "callee": "String"
+        },
+        {
+          "start": 3809,
+          "end": 3827,
+          "line": 116,
+          "column": 25,
+          "raw": "partialJson.trim()",
+          "kind": "CallExpression",
+          "callee": "partialJson.trim"
+        },
+        {
+          "start": 3888,
+          "end": 3920,
+          "line": 120,
+          "column": 16,
+          "raw": "parseJsonWithRepair(partialJson)",
+          "kind": "CallExpression",
+          "callee": "parseJsonWithRepair"
+        },
+        {
+          "start": 3981,
+          "end": 4006,
+          "line": 124,
+          "column": 28,
+          "raw": "partialParse(partialJson)",
+          "kind": "CallExpression",
+          "callee": "partialParse"
+        },
+        {
+          "start": 4118,
+          "end": 4155,
+          "line": 129,
+          "column": 32,
+          "raw": "partialParse(repairJson(partialJson))",
+          "kind": "CallExpression",
+          "callee": "partialParse"
+        },
+        {
+          "start": 4131,
+          "end": 4154,
+          "line": 129,
+          "column": 45,
+          "raw": "repairJson(partialJson)",
+          "kind": "CallExpression",
+          "callee": "repairJson"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 81,
+          "end": 131,
+          "line": 2,
+          "column": 28,
+          "raw": "new Set(['\"', \"\\\\\", \"/\", \"b\", \"f\", \"n\", \"r\", \"t\"])",
+          "kind": "NewExpression",
+          "callee": "Set"
+        },
+        {
+          "start": 3162,
+          "end": 3211,
+          "line": 97,
+          "column": 19,
+          "raw": "new Error(\"Tool arguments must be a JSON object\")",
+          "kind": "NewExpression",
+          "callee": "Error"
+        }
+      ],
+      "throws": [
+        {
+          "start": 2430,
+          "end": 2442,
+          "line": 80,
+          "column": 9,
+          "raw": "throw error;",
+          "kind": "ThrowStatement"
+        },
+        {
+          "start": 3156,
+          "end": 3212,
+          "line": 97,
+          "column": 13,
+          "raw": "throw new Error(\"Tool arguments must be a JSON object\");",
+          "kind": "ThrowStatement"
+        }
+      ],
+      "catches": [
+        {
+          "start": 2267,
+          "end": 2448,
+          "line": 75,
+          "column": 5,
+          "raw": "catch (error) {\n        const repairedJson = repairJson(json);\n        if (repairedJson !== json) {\n            return JSON.parse(repairedJson);\n        }\n        throw error;\n    }",
+          "kind": "CatchClause"
+        },
+        {
+          "start": 3271,
+          "end": 3468,
+          "line": 101,
+          "column": 5,
+          "raw": "catch (error) {\n        return {\n            arguments: {},\n            argumentsError: `${error instanceof Error ? error.message : String(error)}\\n\\nReceived arguments:\\n${json}`,\n        };\n    }",
+          "kind": "CatchClause"
+        },
+        {
+          "start": 3932,
+          "end": 4286,
+          "line": 122,
+          "column": 5,
+          "raw": "catch {\n        try {\n            const result = partialParse(partialJson);\n            return (result ?? {});\n        }\n        catch {\n            try {\n                const result = partialParse(repairJson(partialJson));\n                return (result ?? {});\n            }\n            catch {\n                return {};\n            }\n        }\n    }",
+          "kind": "CatchClause"
+        },
+        {
+          "start": 4061,
+          "end": 4280,
+          "line": 127,
+          "column": 9,
+          "raw": "catch {\n            try {\n                const result = partialParse(repairJson(partialJson));\n                return (result ?? {});\n            }\n            catch {\n                return {};\n            }\n        }",
+          "kind": "CatchClause"
+        },
+        {
+          "start": 4222,
+          "end": 4270,
+          "line": 132,
+          "column": 13,
+          "raw": "catch {\n                return {};\n            }",
+          "kind": "CatchClause"
+        }
+      ],
+      "controls": [
+        {
+          "start": 223,
+          "end": 288,
+          "line": 5,
+          "column": 12,
+          "raw": "codePoint !== undefined && codePoint >= 0x00 && codePoint <= 0x1f",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 223,
+          "end": 267,
+          "line": 5,
+          "column": 12,
+          "raw": "codePoint !== undefined && codePoint >= 0x00",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 336,
+          "end": 688,
+          "line": 8,
+          "column": 5,
+          "raw": "switch (char) {\n        case \"\\b\":\n            return \"\\\\b\";\n        case \"\\f\":\n            return \"\\\\f\";\n        case \"\\n\":\n            return \"\\\\n\";\n        case \"\\r\":\n            return \"\\\\r\";\n        case \"\\t\":\n            return \"\\\\t\";\n        default:\n            return `\\\\u${char.codePointAt(0)?.toString(16).padStart(4, \"0\") ?? \"0000\"}`;\n    }",
+          "kind": "SwitchStatement"
+        },
+        {
+          "start": 619,
+          "end": 679,
+          "line": 20,
+          "column": 26,
+          "raw": "char.codePointAt(0)?.toString(16).padStart(4, \"0\") ?? \"0000\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 944,
+          "end": 2146,
+          "line": 31,
+          "column": 5,
+          "raw": "for (let index = 0; index < json.length; index++) {\n        const char = json[index];\n        if (!inString) {\n            repaired += char;\n            if (char === '\"') {\n                inString = true;\n            }\n            continue;\n        }\n        if (char === '\"') {\n            repaired += char;\n            inString = false;\n            continue;\n        }\n        if (char === \"\\\\\") {\n            const nextChar = json[index + 1];\n            if (nextChar === undefined) {\n                repaired += \"\\\\\\\\\";\n                continue;\n            }\n            if (nextChar === \"u\") {\n                const unicodeDigits = json.slice(index + 2, index + 6);\n                if (/^[0-9a-fA-F]{4}$/.test(unicodeDigits)) {\n                    repaired += `\\\\u${unicodeDigits}`;\n                    index += 5;\n                    continue;\n                }\n            }\n            if (VALID_JSON_ESCAPES.has(nextChar)) {\n                repaired += `\\\\${nextChar}`;\n                index += 1;\n                continue;\n            }\n            repaired += \"\\\\\\\\\";\n            continue;\n        }\n        repaired += isControlCharacter(char) ? escapeControlCharacter(char) : char;\n    }",
+          "kind": "ForStatement"
+        },
+        {
+          "start": 1038,
+          "end": 1195,
+          "line": 33,
+          "column": 9,
+          "raw": "if (!inString) {\n            repaired += char;\n            if (char === '\"') {\n                inString = true;\n            }\n            continue;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1097,
+          "end": 1163,
+          "line": 35,
+          "column": 13,
+          "raw": "if (char === '\"') {\n                inString = true;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1204,
+          "end": 1315,
+          "line": 40,
+          "column": 9,
+          "raw": "if (char === '\"') {\n            repaired += char;\n            inString = false;\n            continue;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1324,
+          "end": 2056,
+          "line": 45,
+          "column": 9,
+          "raw": "if (char === \"\\\\\") {\n            const nextChar = json[index + 1];\n            if (nextChar === undefined) {\n                repaired += \"\\\\\\\\\";\n                continue;\n            }\n            if (nextChar === \"u\") {\n                const unicodeDigits = json.slice(index + 2, index + 6);\n                if (/^[0-9a-fA-F]{4}$/.test(unicodeDigits)) {\n                    repaired += `\\\\u${unicodeDigits}`;\n                    index += 5;\n                    continue;\n                }\n            }\n            if (VALID_JSON_ESCAPES.has(nextChar)) {\n                repaired += `\\\\${nextChar}`;\n                index += 1;\n                continue;\n            }\n            repaired += \"\\\\\\\\\";\n            continue;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1403,
+          "end": 1508,
+          "line": 47,
+          "column": 13,
+          "raw": "if (nextChar === undefined) {\n                repaired += \"\\\\\\\\\";\n                continue;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1521,
+          "end": 1827,
+          "line": 51,
+          "column": 13,
+          "raw": "if (nextChar === \"u\") {\n                const unicodeDigits = json.slice(index + 2, index + 6);\n                if (/^[0-9a-fA-F]{4}$/.test(unicodeDigits)) {\n                    repaired += `\\\\u${unicodeDigits}`;\n                    index += 5;\n                    continue;\n                }\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1633,
+          "end": 1813,
+          "line": 53,
+          "column": 17,
+          "raw": "if (/^[0-9a-fA-F]{4}$/.test(unicodeDigits)) {\n                    repaired += `\\\\u${unicodeDigits}`;\n                    index += 5;\n                    continue;\n                }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1840,
+          "end": 1992,
+          "line": 59,
+          "column": 13,
+          "raw": "if (VALID_JSON_ESCAPES.has(nextChar)) {\n                repaired += `\\\\${nextChar}`;\n                index += 1;\n                continue;\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2077,
+          "end": 2139,
+          "line": 67,
+          "column": 21,
+          "raw": "isControlCharacter(char) ? escapeControlCharacter(char) : char",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 2338,
+          "end": 2421,
+          "line": 77,
+          "column": 9,
+          "raw": "if (repairedJson !== json) {\n            return JSON.parse(repairedJson);\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2945,
+          "end": 2997,
+          "line": 92,
+          "column": 5,
+          "raw": "if (!json?.trim())\n        return { arguments: {} };",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3066,
+          "end": 3222,
+          "line": 96,
+          "column": 9,
+          "raw": "if (typeof parsed !== \"object\" || parsed === null || Array.isArray(parsed)) {\n            throw new Error(\"Tool arguments must be a JSON object\");\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3070,
+          "end": 3140,
+          "line": 96,
+          "column": 13,
+          "raw": "typeof parsed !== \"object\" || parsed === null || Array.isArray(parsed)",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3070,
+          "end": 3115,
+          "line": 96,
+          "column": 13,
+          "raw": "typeof parsed !== \"object\" || parsed === null",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3362,
+          "end": 3416,
+          "line": 104,
+          "column": 32,
+          "raw": "error instanceof Error ? error.message : String(error)",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 3789,
+          "end": 3862,
+          "line": 116,
+          "column": 5,
+          "raw": "if (!partialJson || partialJson.trim() === \"\") {\n        return {};\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3793,
+          "end": 3834,
+          "line": 116,
+          "column": 9,
+          "raw": "!partialJson || partialJson.trim() === \"\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 4028,
+          "end": 4040,
+          "line": 125,
+          "column": 21,
+          "raw": "result ?? {}",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 4181,
+          "end": 4193,
+          "line": 130,
+          "column": 25,
+          "raw": "result ?? {}",
+          "kind": "BinaryExpression"
+        }
+      ],
+      "imports": [
+        {
+          "start": 0,
+          "end": 53,
+          "line": 1,
+          "column": 1,
+          "raw": "import { parse as partialParse } from \"partial-json\";",
+          "kind": "ImportDeclaration"
+        }
+      ],
+      "ast_line_starts": 138
+    },
+    {
+      "name": "provider-env",
+      "lexical": [
+        {
+          "start": 25,
+          "end": 506,
+          "line": 2,
+          "column": 1,
+          "raw": "/**\n * Fallback for https://github.com/oven-sh/bun/issues/27802.\n * Bun compiled binaries can expose an empty process.env inside Linux sandboxes\n * even though /proc/self/environ contains the environment.\n *\n * This intentionally duplicates restoreSandboxEnv() in\n * packages/coding-agent/src/bun/restore-sandbox-env.ts. The ai package can be\n * used directly, without going through that entrypoint, so provider env lookup\n * must not depend on process.env having been patched.\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 573,
+          "end": 584,
+          "line": 13,
+          "column": 28,
+          "raw": "\"undefined\"",
+          "kind": "StringLiteral",
+          "decoded": "undefined"
+        },
+        {
+          "start": 811,
+          "end": 820,
+          "line": 19,
+          "column": 46,
+          "raw": "\"node:fs\"",
+          "kind": "StringLiteral",
+          "decoded": "node:fs"
+        },
+        {
+          "start": 861,
+          "end": 881,
+          "line": 20,
+          "column": 39,
+          "raw": "\"/proc/self/environ\"",
+          "kind": "StringLiteral",
+          "decoded": "/proc/self/environ"
+        },
+        {
+          "start": 883,
+          "end": 890,
+          "line": 20,
+          "column": 61,
+          "raw": "\"utf-8\"",
+          "kind": "StringLiteral",
+          "decoded": "utf-8"
+        },
+        {
+          "start": 936,
+          "end": 940,
+          "line": 21,
+          "column": 44,
+          "raw": "\"\\0\"",
+          "kind": "StringLiteral",
+          "decoded": "\u0000"
+        },
+        {
+          "start": 987,
+          "end": 990,
+          "line": 22,
+          "column": 43,
+          "raw": "\"=\"",
+          "kind": "StringLiteral",
+          "decoded": "="
+        },
+        {
+          "start": 1175,
+          "end": 1234,
+          "line": 29,
+          "column": 13,
+          "raw": "// /proc/self/environ may not exist or may not be readable.",
+          "kind": "Comment"
+        },
+        {
+          "start": 1288,
+          "end": 1442,
+          "line": 34,
+          "column": 1,
+          "raw": "/**\n * Resolve a provider env value from scoped overrides, normal process.env, then\n * the duplicated Bun sandbox fallback for direct pi-ai consumers.\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 1547,
+          "end": 1558,
+          "line": 40,
+          "column": 29,
+          "raw": "\"undefined\"",
+          "kind": "StringLiteral",
+          "decoded": "undefined"
+        },
+        {
+          "start": 1656,
+          "end": 1696,
+          "line": 44,
+          "column": 1,
+          "raw": "//# sourceMappingURL=provider-env.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 614,
+          "end": 638,
+          "line": 13,
+          "column": 69,
+          "raw": "Object.keys(process.env)",
+          "kind": "CallExpression",
+          "callee": "Object.keys"
+        },
+        {
+          "start": 803,
+          "end": 821,
+          "line": 19,
+          "column": 38,
+          "raw": "require(\"node:fs\")",
+          "kind": "CallExpression",
+          "callee": "require"
+        },
+        {
+          "start": 848,
+          "end": 891,
+          "line": 20,
+          "column": 26,
+          "raw": "readFileSync(\"/proc/self/environ\", \"utf-8\")",
+          "kind": "CallExpression",
+          "callee": "readFileSync"
+        },
+        {
+          "start": 925,
+          "end": 941,
+          "line": 21,
+          "column": 33,
+          "raw": "data.split(\"\\0\")",
+          "kind": "CallExpression",
+          "callee": "data.split"
+        },
+        {
+          "start": 973,
+          "end": 991,
+          "line": 22,
+          "column": 29,
+          "raw": "entry.indexOf(\"=\")",
+          "kind": "CallExpression",
+          "callee": "entry.indexOf"
+        },
+        {
+          "start": 1044,
+          "end": 1103,
+          "line": 24,
+          "column": 21,
+          "raw": "procEnvCache.set(entry.slice(0, idx), entry.slice(idx + 1))",
+          "kind": "CallExpression",
+          "callee": "procEnvCache.set"
+        },
+        {
+          "start": 1061,
+          "end": 1080,
+          "line": 24,
+          "column": 38,
+          "raw": "entry.slice(0, idx)",
+          "kind": "CallExpression",
+          "callee": "entry.slice"
+        },
+        {
+          "start": 1082,
+          "end": 1102,
+          "line": 24,
+          "column": 59,
+          "raw": "entry.slice(idx + 1)",
+          "kind": "CallExpression",
+          "callee": "entry.slice"
+        },
+        {
+          "start": 1262,
+          "end": 1284,
+          "line": 32,
+          "column": 12,
+          "raw": "procEnvCache.get(name)",
+          "kind": "CallExpression",
+          "callee": "procEnvCache.get"
+        },
+        {
+          "start": 1603,
+          "end": 1630,
+          "line": 41,
+          "column": 9,
+          "raw": "getBunSandboxEnvValue(name)",
+          "kind": "CallExpression",
+          "callee": "getBunSandboxEnvValue"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 741,
+          "end": 750,
+          "line": 17,
+          "column": 24,
+          "raw": "new Map()",
+          "kind": "NewExpression",
+          "callee": "Map"
+        }
+      ],
+      "throws": [],
+      "catches": [
+        {
+          "start": 1155,
+          "end": 1244,
+          "line": 28,
+          "column": 9,
+          "raw": "catch {\n            // /proc/self/environ may not exist or may not be readable.\n        }",
+          "kind": "CatchClause"
+        }
+      ],
+      "controls": [
+        {
+          "start": 550,
+          "end": 684,
+          "line": 13,
+          "column": 5,
+          "raw": "if (typeof process === \"undefined\" || !process.versions?.bun || Object.keys(process.env).length > 0) {\n        return undefined;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 554,
+          "end": 649,
+          "line": 13,
+          "column": 9,
+          "raw": "typeof process === \"undefined\" || !process.versions?.bun || Object.keys(process.env).length > 0",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 554,
+          "end": 610,
+          "line": 13,
+          "column": 9,
+          "raw": "typeof process === \"undefined\" || !process.versions?.bun",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 689,
+          "end": 1250,
+          "line": 16,
+          "column": 5,
+          "raw": "if (procEnvCache === null) {\n        procEnvCache = new Map();\n        try {\n            const { readFileSync } = require(\"node:fs\");\n            const data = readFileSync(\"/proc/self/environ\", \"utf-8\");\n            for (const entry of data.split(\"\\0\")) {\n                const idx = entry.indexOf(\"=\");\n                if (idx > 0) {\n                    procEnvCache.set(entry.slice(0, idx), entry.slice(idx + 1));\n                }\n            }\n        }\n        catch {\n            // /proc/self/environ may not exist or may not be readable.\n        }\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 905,
+          "end": 1136,
+          "line": 21,
+          "column": 13,
+          "raw": "for (const entry of data.split(\"\\0\")) {\n                const idx = entry.indexOf(\"=\");\n                if (idx > 0) {\n                    procEnvCache.set(entry.slice(0, idx), entry.slice(idx + 1));\n                }\n            }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 1009,
+          "end": 1122,
+          "line": 23,
+          "column": 17,
+          "raw": "if (idx > 0) {\n                    procEnvCache.set(entry.slice(0, idx), entry.slice(idx + 1));\n                }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1504,
+          "end": 1651,
+          "line": 39,
+          "column": 13,
+          "raw": "env?.[name] ||\n        (typeof process !== \"undefined\" ? process.env[name] : undefined) ||\n        getBunSandboxEnvValue(name) ||\n        undefined",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 1504,
+          "end": 1630,
+          "line": 39,
+          "column": 13,
+          "raw": "env?.[name] ||\n        (typeof process !== \"undefined\" ? process.env[name] : undefined) ||\n        getBunSandboxEnvValue(name)",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 1504,
+          "end": 1591,
+          "line": 39,
+          "column": 13,
+          "raw": "env?.[name] ||\n        (typeof process !== \"undefined\" ? process.env[name] : undefined)",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 1528,
+          "end": 1590,
+          "line": 40,
+          "column": 10,
+          "raw": "typeof process !== \"undefined\" ? process.env[name] : undefined",
+          "kind": "ConditionalExpression"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 44
+    },
+    {
+      "name": "sanitize-unicode",
+      "lexical": [
+        {
+          "start": 0,
+          "end": 834,
+          "line": 1,
+          "column": 1,
+          "raw": "/**\n * Removes unpaired Unicode surrogate characters from a string.\n *\n * Unpaired surrogates (high surrogates 0xD800-0xDBFF without matching low surrogates 0xDC00-0xDFFF,\n * or vice versa) cause JSON serialization errors in many API providers.\n *\n * Valid emoji and other characters outside the Basic Multilingual Plane use properly paired\n * surrogates and will NOT be affected by this function.\n *\n * @param text - The text to sanitize\n * @returns The sanitized text with unpaired surrogates removed\n *\n * @example\n * // Valid emoji (properly paired surrogates) are preserved\n * sanitizeSurrogates(\"Hello 🙈 World\") // => \"Hello 🙈 World\"\n *\n * // Unpaired high surrogate is removed\n * const unpaired = String.fromCharCode(0xD83D); // high surrogate without low\n * sanitizeSurrogates(`Text ${unpaired} here`) // => \"Text  here\"\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 882,
+          "end": 963,
+          "line": 22,
+          "column": 5,
+          "raw": "// Replace unpaired high surrogates (0xD800-0xDBFF not followed by low surrogate)",
+          "kind": "Comment"
+        },
+        {
+          "start": 968,
+          "end": 1049,
+          "line": 23,
+          "column": 5,
+          "raw": "// Replace unpaired low surrogates (0xDC00-0xDFFF not preceded by high surrogate)",
+          "kind": "Comment"
+        },
+        {
+          "start": 1074,
+          "end": 1147,
+          "line": 24,
+          "column": 25,
+          "raw": "/[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?<![\\uD800-\\uDBFF])[\\uDC00-\\uDFFF]/g",
+          "kind": "RegularExpressionLiteral"
+        },
+        {
+          "start": 1149,
+          "end": 1151,
+          "line": 24,
+          "column": 100,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 1156,
+          "end": 1200,
+          "line": 26,
+          "column": 1,
+          "raw": "//# sourceMappingURL=sanitize-unicode.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 1061,
+          "end": 1152,
+          "line": 24,
+          "column": 12,
+          "raw": "text.replace(/[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?<![\\uD800-\\uDBFF])[\\uDC00-\\uDFFF]/g, \"\")",
+          "kind": "CallExpression",
+          "callee": "text.replace"
+        }
+      ],
+      "constructors": [],
+      "throws": [],
+      "catches": [],
+      "controls": [],
+      "imports": [],
+      "ast_line_starts": 26
+    },
+    {
+      "name": "sleep",
+      "lexical": [
+        {
+          "start": 310,
+          "end": 317,
+          "line": 9,
+          "column": 40,
+          "raw": "\"abort\"",
+          "kind": "StringLiteral",
+          "decoded": "abort"
+        },
+        {
+          "start": 400,
+          "end": 407,
+          "line": 12,
+          "column": 33,
+          "raw": "\"abort\"",
+          "kind": "StringLiteral",
+          "decoded": "abort"
+        },
+        {
+          "start": 445,
+          "end": 478,
+          "line": 15,
+          "column": 1,
+          "raw": "//# sourceMappingURL=sleep.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 90,
+          "end": 113,
+          "line": 3,
+          "column": 9,
+          "raw": "signal.throwIfAborted()",
+          "kind": "CallExpression",
+          "callee": "signal.throwIfAborted"
+        },
+        {
+          "start": 159,
+          "end": 180,
+          "line": 5,
+          "column": 13,
+          "raw": "clearTimeout(timeout)",
+          "kind": "CallExpression",
+          "callee": "clearTimeout"
+        },
+        {
+          "start": 194,
+          "end": 215,
+          "line": 6,
+          "column": 13,
+          "raw": "reject(signal.reason)",
+          "kind": "CallExpression",
+          "callee": "reject"
+        },
+        {
+          "start": 252,
+          "end": 366,
+          "line": 8,
+          "column": 25,
+          "raw": "setTimeout(() => {\n            signal.removeEventListener(\"abort\", onAbort);\n            resolve();\n        }, ms)",
+          "kind": "CallExpression",
+          "callee": "setTimeout"
+        },
+        {
+          "start": 283,
+          "end": 327,
+          "line": 9,
+          "column": 13,
+          "raw": "signal.removeEventListener(\"abort\", onAbort)",
+          "kind": "CallExpression",
+          "callee": "signal.removeEventListener"
+        },
+        {
+          "start": 341,
+          "end": 350,
+          "line": 10,
+          "column": 13,
+          "raw": "resolve()",
+          "kind": "CallExpression",
+          "callee": "resolve"
+        },
+        {
+          "start": 376,
+          "end": 433,
+          "line": 12,
+          "column": 9,
+          "raw": "signal.addEventListener(\"abort\", onAbort, { once: true })",
+          "kind": "CallExpression",
+          "callee": "signal.addEventListener"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 47,
+          "end": 441,
+          "line": 2,
+          "column": 12,
+          "raw": "new Promise((resolve, reject) => {\n        signal.throwIfAborted();\n        const onAbort = () => {\n            clearTimeout(timeout);\n            reject(signal.reason);\n        };\n        const timeout = setTimeout(() => {\n            signal.removeEventListener(\"abort\", onAbort);\n            resolve();\n        }, ms);\n        signal.addEventListener(\"abort\", onAbort, { once: true });\n    })",
+          "kind": "NewExpression",
+          "callee": "Promise"
+        }
+      ],
+      "throws": [],
+      "catches": [],
+      "controls": [],
+      "imports": [],
+      "ast_line_starts": 15
+    },
+    {
+      "name": "text",
+      "lexical": [
+        {
+          "start": 0,
+          "end": 50,
+          "line": 1,
+          "column": 1,
+          "raw": "/** Extract and join text from message content. */",
+          "kind": "Comment"
+        },
+        {
+          "start": 100,
+          "end": 104,
+          "line": 2,
+          "column": 50,
+          "raw": "\"\\n\"",
+          "kind": "StringLiteral",
+          "decoded": "\n"
+        },
+        {
+          "start": 135,
+          "end": 143,
+          "line": 3,
+          "column": 28,
+          "raw": "\"string\"",
+          "kind": "StringLiteral",
+          "decoded": "string"
+        },
+        {
+          "start": 230,
+          "end": 236,
+          "line": 6,
+          "column": 43,
+          "raw": "\"text\"",
+          "kind": "StringLiteral",
+          "decoded": "text"
+        },
+        {
+          "start": 302,
+          "end": 392,
+          "line": 10,
+          "column": 1,
+          "raw": "/** Render a system message as a complete prompt: its content followed by its sections. */",
+          "kind": "Comment"
+        },
+        {
+          "start": 674,
+          "end": 680,
+          "line": 17,
+          "column": 57,
+          "raw": "\"\\n\\n\"",
+          "kind": "StringLiteral",
+          "decoded": "\n\n"
+        },
+        {
+          "start": 685,
+          "end": 940,
+          "line": 19,
+          "column": 1,
+          "raw": "/**\n * Render a later system message for APIs that accept system messages mid-conversation.\n * Section changes are framed by name so the model can relate them to the leading prompt.\n * This framing is request-time only and may change between versions.\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 1236,
+          "end": 1278,
+          "line": 31,
+          "column": 15,
+          "raw": "`Removed system prompt section \"${name}\".`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 1293,
+          "end": 1347,
+          "line": 32,
+          "column": 15,
+          "raw": "`Updated system prompt section \"${name}\":\\n\\n${value}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 1378,
+          "end": 1384,
+          "line": 34,
+          "column": 23,
+          "raw": "\"\\n\\n\"",
+          "kind": "StringLiteral",
+          "decoded": "\n\n"
+        },
+        {
+          "start": 1389,
+          "end": 1421,
+          "line": 36,
+          "column": 1,
+          "raw": "//# sourceMappingURL=text.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 180,
+          "end": 298,
+          "line": 5,
+          "column": 12,
+          "raw": "content\n        .filter((block) => block.type === \"text\")\n        .map((block) => block.text)\n        .join(separator)",
+          "kind": "CallExpression",
+          "callee": "content\n        .filter((block) => block.type === \"text\")\n        .map((block) => block.text)\n        .join"
+        },
+        {
+          "start": 180,
+          "end": 273,
+          "line": 5,
+          "column": 12,
+          "raw": "content\n        .filter((block) => block.type === \"text\")\n        .map((block) => block.text)",
+          "kind": "CallExpression",
+          "callee": "content\n        .filter((block) => block.type === \"text\")\n        .map"
+        },
+        {
+          "start": 180,
+          "end": 237,
+          "line": 5,
+          "column": 12,
+          "raw": "content\n        .filter((block) => block.type === \"text\")",
+          "kind": "CallExpression",
+          "callee": "content\n        .filter"
+        },
+        {
+          "start": 460,
+          "end": 488,
+          "line": 12,
+          "column": 20,
+          "raw": "contentText(message.content)",
+          "kind": "CallExpression",
+          "callee": "contentText"
+        },
+        {
+          "start": 514,
+          "end": 551,
+          "line": 13,
+          "column": 24,
+          "raw": "Object.values(message.sections ?? {})",
+          "kind": "CallExpression",
+          "callee": "Object.values"
+        },
+        {
+          "start": 594,
+          "end": 610,
+          "line": 15,
+          "column": 13,
+          "raw": "parts.push(text)",
+          "kind": "CallExpression",
+          "callee": "parts.push"
+        },
+        {
+          "start": 629,
+          "end": 681,
+          "line": 17,
+          "column": 12,
+          "raw": "parts.filter((part) => part.length > 0).join(\"\\n\\n\")",
+          "kind": "CallExpression",
+          "callee": "parts.filter((part) => part.length > 0).join"
+        },
+        {
+          "start": 629,
+          "end": 668,
+          "line": 17,
+          "column": 12,
+          "raw": "parts.filter((part) => part.length > 0)",
+          "kind": "CallExpression",
+          "callee": "parts.filter"
+        },
+        {
+          "start": 1033,
+          "end": 1061,
+          "line": 26,
+          "column": 18,
+          "raw": "contentText(message.content)",
+          "kind": "CallExpression",
+          "callee": "contentText"
+        },
+        {
+          "start": 1096,
+          "end": 1112,
+          "line": 28,
+          "column": 9,
+          "raw": "parts.push(text)",
+          "kind": "CallExpression",
+          "callee": "parts.push"
+        },
+        {
+          "start": 1146,
+          "end": 1184,
+          "line": 29,
+          "column": 33,
+          "raw": "Object.entries(message.sections ?? {})",
+          "kind": "CallExpression",
+          "callee": "Object.entries"
+        },
+        {
+          "start": 1196,
+          "end": 1348,
+          "line": 30,
+          "column": 9,
+          "raw": "parts.push(value === null\n            ? `Removed system prompt section \"${name}\".`\n            : `Updated system prompt section \"${name}\":\\n\\n${value}`)",
+          "kind": "CallExpression",
+          "callee": "parts.push"
+        },
+        {
+          "start": 1367,
+          "end": 1385,
+          "line": 34,
+          "column": 12,
+          "raw": "parts.join(\"\\n\\n\")",
+          "kind": "CallExpression",
+          "callee": "parts.join"
+        }
+      ],
+      "constructors": [],
+      "throws": [],
+      "catches": [],
+      "controls": [
+        {
+          "start": 112,
+          "end": 168,
+          "line": 3,
+          "column": 5,
+          "raw": "if (typeof content === \"string\")\n        return content;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 495,
+          "end": 617,
+          "line": 13,
+          "column": 5,
+          "raw": "for (const text of Object.values(message.sections ?? {})) {\n        if (text !== null)\n            parts.push(text);\n    }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 528,
+          "end": 550,
+          "line": 13,
+          "column": 38,
+          "raw": "message.sections ?? {}",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 563,
+          "end": 611,
+          "line": 14,
+          "column": 9,
+          "raw": "if (text !== null)\n            parts.push(text);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1067,
+          "end": 1113,
+          "line": 27,
+          "column": 5,
+          "raw": "if (text.length > 0)\n        parts.push(text);",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1118,
+          "end": 1355,
+          "line": 29,
+          "column": 5,
+          "raw": "for (const [name, value] of Object.entries(message.sections ?? {})) {\n        parts.push(value === null\n            ? `Removed system prompt section \"${name}\".`\n            : `Updated system prompt section \"${name}\":\\n\\n${value}`);\n    }",
+          "kind": "ForOfStatement"
+        },
+        {
+          "start": 1161,
+          "end": 1183,
+          "line": 29,
+          "column": 48,
+          "raw": "message.sections ?? {}",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 1207,
+          "end": 1347,
+          "line": 30,
+          "column": 20,
+          "raw": "value === null\n            ? `Removed system prompt section \"${name}\".`\n            : `Updated system prompt section \"${name}\":\\n\\n${value}`",
+          "kind": "ConditionalExpression"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 36
+    },
+    {
+      "name": "typebox-helpers",
+      "lexical": [
+        {
+          "start": 21,
+          "end": 30,
+          "line": 1,
+          "column": 22,
+          "raw": "\"typebox\"",
+          "kind": "StringLiteral",
+          "decoded": "typebox"
+        },
+        {
+          "start": 32,
+          "end": 415,
+          "line": 2,
+          "column": 1,
+          "raw": "/**\n * Creates a string enum schema compatible with Google's API and other providers\n * that don't support anyOf/const patterns.\n *\n * @example\n * const OperationSchema = StringEnum([\"add\", \"subtract\", \"multiply\", \"divide\"], {\n *   description: \"The operation to perform\"\n * });\n *\n * type Operation = Static<typeof OperationSchema>; // \"add\" | \"subtract\" | \"multiply\" | \"divide\"\n */",
+          "kind": "Comment"
+        },
+        {
+          "start": 501,
+          "end": 509,
+          "line": 15,
+          "column": 15,
+          "raw": "\"string\"",
+          "kind": "StringLiteral",
+          "decoded": "string"
+        },
+        {
+          "start": 681,
+          "end": 724,
+          "line": 21,
+          "column": 1,
+          "raw": "//# sourceMappingURL=typebox-helpers.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 473,
+          "end": 677,
+          "line": 14,
+          "column": 12,
+          "raw": "Type.Unsafe({\n        type: \"string\",\n        enum: values,\n        ...(options?.description && { description: options.description }),\n        ...(options?.default && { default: options.default }),\n    })",
+          "kind": "CallExpression",
+          "callee": "Type.Unsafe"
+        }
+      ],
+      "constructors": [],
+      "throws": [],
+      "catches": [],
+      "controls": [
+        {
+          "start": 545,
+          "end": 605,
+          "line": 17,
+          "column": 13,
+          "raw": "options?.description && { description: options.description }",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 620,
+          "end": 668,
+          "line": 18,
+          "column": 13,
+          "raw": "options?.default && { default: options.default }",
+          "kind": "BinaryExpression"
+        }
+      ],
+      "imports": [
+        {
+          "start": 0,
+          "end": 31,
+          "line": 1,
+          "column": 1,
+          "raw": "import { Type } from \"typebox\";",
+          "kind": "ImportDeclaration"
+        }
+      ],
+      "ast_line_starts": 21
+    },
+    {
+      "name": "uuid",
+      "lexical": [
+        {
+          "start": 131,
+          "end": 221,
+          "line": 5,
+          "column": 1,
+          "raw": "/** Generate a time-ordered UUIDv7. A supplied timestamp is preserved for follower ids. */",
+          "kind": "Comment"
+        },
+        {
+          "start": 468,
+          "end": 544,
+          "line": 9,
+          "column": 30,
+          "raw": "`UUIDv7 timestamp must be an integer between 0 and ${MAX_UUID_V7_TIMESTAMP}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 1197,
+          "end": 1234,
+          "line": 26,
+          "column": 34,
+          "raw": "\"UUIDv7 generator sequence exhausted\"",
+          "kind": "StringLiteral",
+          "decoded": "UUIDv7 generator sequence exhausted"
+        },
+        {
+          "start": 1851,
+          "end": 1854,
+          "line": 39,
+          "column": 75,
+          "raw": "\"0\"",
+          "kind": "StringLiteral",
+          "decoded": "0"
+        },
+        {
+          "start": 1869,
+          "end": 2009,
+          "line": 40,
+          "column": 12,
+          "raw": "`${hex.slice(0, 4).join(\"\")}-${hex.slice(4, 6).join(\"\")}-${hex.slice(6, 8).join(\"\")}-${hex.slice(8, 10).join(\"\")}-${hex.slice(10).join(\"\")}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 1893,
+          "end": 1895,
+          "line": 40,
+          "column": 36,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 1921,
+          "end": 1923,
+          "line": 40,
+          "column": 64,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 1949,
+          "end": 1951,
+          "line": 40,
+          "column": 92,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 1978,
+          "end": 1980,
+          "line": 40,
+          "column": 121,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 2004,
+          "end": 2006,
+          "line": 40,
+          "column": 147,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 2013,
+          "end": 2045,
+          "line": 42,
+          "column": 1,
+          "raw": "//# sourceMappingURL=uuid.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 306,
+          "end": 316,
+          "line": 7,
+          "column": 47,
+          "raw": "Date.now()",
+          "kind": "CallExpression",
+          "callee": "Date.now"
+        },
+        {
+          "start": 327,
+          "end": 363,
+          "line": 8,
+          "column": 10,
+          "raw": "Number.isInteger(requestedTimestamp)",
+          "kind": "CallExpression",
+          "callee": "Number.isInteger"
+        },
+        {
+          "start": 612,
+          "end": 663,
+          "line": 11,
+          "column": 60,
+          "raw": "Math.max(requestedTimestamp, lastOrdinaryTimestamp)",
+          "kind": "CallExpression",
+          "callee": "Math.max"
+        },
+        {
+          "start": 808,
+          "end": 848,
+          "line": 15,
+          "column": 5,
+          "raw": "globalThis.crypto.getRandomValues(bytes)",
+          "kind": "CallExpression",
+          "callee": "globalThis.crypto.getRandomValues"
+        },
+        {
+          "start": 916,
+          "end": 932,
+          "line": 18,
+          "column": 14,
+          "raw": "BigInt(bytes[1])",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 960,
+          "end": 976,
+          "line": 19,
+          "column": 18,
+          "raw": "BigInt(bytes[2])",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 1004,
+          "end": 1020,
+          "line": 20,
+          "column": 18,
+          "raw": "BigInt(bytes[3])",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 1048,
+          "end": 1064,
+          "line": 21,
+          "column": 18,
+          "raw": "BigInt(bytes[4])",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 1090,
+          "end": 1106,
+          "line": 22,
+          "column": 17,
+          "raw": "BigInt(bytes[5])",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 1285,
+          "end": 1311,
+          "line": 29,
+          "column": 23,
+          "raw": "BigInt(effectiveTimestamp)",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 1383,
+          "end": 1427,
+          "line": 31,
+          "column": 24,
+          "raw": "Number(timestamp >> BigInt((5 - index) * 8))",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1403,
+          "end": 1426,
+          "line": 31,
+          "column": 44,
+          "raw": "BigInt((5 - index) * 8)",
+          "kind": "CallExpression",
+          "callee": "BigInt"
+        },
+        {
+          "start": 1464,
+          "end": 1497,
+          "line": 33,
+          "column": 23,
+          "raw": "Number((sequence >> 37n) & 0x0fn)",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1514,
+          "end": 1547,
+          "line": 34,
+          "column": 16,
+          "raw": "Number((sequence >> 29n) & 0xffn)",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1571,
+          "end": 1604,
+          "line": 35,
+          "column": 23,
+          "raw": "Number((sequence >> 23n) & 0x3fn)",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1621,
+          "end": 1654,
+          "line": 36,
+          "column": 16,
+          "raw": "Number((sequence >> 15n) & 0xffn)",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1672,
+          "end": 1704,
+          "line": 37,
+          "column": 17,
+          "raw": "Number((sequence >> 7n) & 0xffn)",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1722,
+          "end": 1754,
+          "line": 38,
+          "column": 17,
+          "raw": "Number((sequence & 0x7fn) << 1n)",
+          "kind": "CallExpression",
+          "callee": "Number"
+        },
+        {
+          "start": 1793,
+          "end": 1856,
+          "line": 39,
+          "column": 17,
+          "raw": "Array.from(bytes, (byte) => byte.toString(16).padStart(2, \"0\"))",
+          "kind": "CallExpression",
+          "callee": "Array.from"
+        },
+        {
+          "start": 1821,
+          "end": 1855,
+          "line": 39,
+          "column": 45,
+          "raw": "byte.toString(16).padStart(2, \"0\")",
+          "kind": "CallExpression",
+          "callee": "byte.toString(16).padStart"
+        },
+        {
+          "start": 1821,
+          "end": 1838,
+          "line": 39,
+          "column": 45,
+          "raw": "byte.toString(16)",
+          "kind": "CallExpression",
+          "callee": "byte.toString"
+        },
+        {
+          "start": 1872,
+          "end": 1896,
+          "line": 40,
+          "column": 15,
+          "raw": "hex.slice(0, 4).join(\"\")",
+          "kind": "CallExpression",
+          "callee": "hex.slice(0, 4).join"
+        },
+        {
+          "start": 1872,
+          "end": 1887,
+          "line": 40,
+          "column": 15,
+          "raw": "hex.slice(0, 4)",
+          "kind": "CallExpression",
+          "callee": "hex.slice"
+        },
+        {
+          "start": 1900,
+          "end": 1924,
+          "line": 40,
+          "column": 43,
+          "raw": "hex.slice(4, 6).join(\"\")",
+          "kind": "CallExpression",
+          "callee": "hex.slice(4, 6).join"
+        },
+        {
+          "start": 1900,
+          "end": 1915,
+          "line": 40,
+          "column": 43,
+          "raw": "hex.slice(4, 6)",
+          "kind": "CallExpression",
+          "callee": "hex.slice"
+        },
+        {
+          "start": 1928,
+          "end": 1952,
+          "line": 40,
+          "column": 71,
+          "raw": "hex.slice(6, 8).join(\"\")",
+          "kind": "CallExpression",
+          "callee": "hex.slice(6, 8).join"
+        },
+        {
+          "start": 1928,
+          "end": 1943,
+          "line": 40,
+          "column": 71,
+          "raw": "hex.slice(6, 8)",
+          "kind": "CallExpression",
+          "callee": "hex.slice"
+        },
+        {
+          "start": 1956,
+          "end": 1981,
+          "line": 40,
+          "column": 99,
+          "raw": "hex.slice(8, 10).join(\"\")",
+          "kind": "CallExpression",
+          "callee": "hex.slice(8, 10).join"
+        },
+        {
+          "start": 1956,
+          "end": 1972,
+          "line": 40,
+          "column": 99,
+          "raw": "hex.slice(8, 10)",
+          "kind": "CallExpression",
+          "callee": "hex.slice"
+        },
+        {
+          "start": 1985,
+          "end": 2007,
+          "line": 40,
+          "column": 128,
+          "raw": "hex.slice(10).join(\"\")",
+          "kind": "CallExpression",
+          "callee": "hex.slice(10).join"
+        },
+        {
+          "start": 1985,
+          "end": 1998,
+          "line": 40,
+          "column": 128,
+          "raw": "hex.slice(10)",
+          "kind": "CallExpression",
+          "callee": "hex.slice"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 453,
+          "end": 545,
+          "line": 9,
+          "column": 15,
+          "raw": "new RangeError(`UUIDv7 timestamp must be an integer between 0 and ${MAX_UUID_V7_TIMESTAMP}`)",
+          "kind": "NewExpression",
+          "callee": "RangeError"
+        },
+        {
+          "start": 784,
+          "end": 802,
+          "line": 14,
+          "column": 19,
+          "raw": "new Uint8Array(16)",
+          "kind": "NewExpression",
+          "callee": "Uint8Array"
+        },
+        {
+          "start": 1182,
+          "end": 1235,
+          "line": 26,
+          "column": 19,
+          "raw": "new RangeError(\"UUIDv7 generator sequence exhausted\")",
+          "kind": "NewExpression",
+          "callee": "RangeError"
+        }
+      ],
+      "throws": [
+        {
+          "start": 447,
+          "end": 546,
+          "line": 9,
+          "column": 9,
+          "raw": "throw new RangeError(`UUIDv7 timestamp must be an integer between 0 and ${MAX_UUID_V7_TIMESTAMP}`);",
+          "kind": "ThrowStatement"
+        },
+        {
+          "start": 1176,
+          "end": 1236,
+          "line": 26,
+          "column": 13,
+          "raw": "throw new RangeError(\"UUIDv7 generator sequence exhausted\");",
+          "kind": "ThrowStatement"
+        }
+      ],
+      "catches": [],
+      "controls": [
+        {
+          "start": 291,
+          "end": 316,
+          "line": 7,
+          "column": 32,
+          "raw": "timestampMs ?? Date.now()",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 322,
+          "end": 552,
+          "line": 8,
+          "column": 5,
+          "raw": "if (!Number.isInteger(requestedTimestamp) || requestedTimestamp < 0 || requestedTimestamp > MAX_UUID_V7_TIMESTAMP) {\n        throw new RangeError(`UUIDv7 timestamp must be an integer between 0 and ${MAX_UUID_V7_TIMESTAMP}`);\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 326,
+          "end": 435,
+          "line": 8,
+          "column": 9,
+          "raw": "!Number.isInteger(requestedTimestamp) || requestedTimestamp < 0 || requestedTimestamp > MAX_UUID_V7_TIMESTAMP",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 326,
+          "end": 389,
+          "line": 8,
+          "column": 9,
+          "raw": "!Number.isInteger(requestedTimestamp) || requestedTimestamp < 0",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 584,
+          "end": 677,
+          "line": 11,
+          "column": 32,
+          "raw": "timestampMs === undefined ? Math.max(requestedTimestamp, lastOrdinaryTimestamp) : timestampMs",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 683,
+          "end": 765,
+          "line": 12,
+          "column": 5,
+          "raw": "if (timestampMs === undefined)\n        lastOrdinaryTimestamp = effectiveTimestamp;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 854,
+          "end": 1262,
+          "line": 16,
+          "column": 5,
+          "raw": "if (sequence === undefined) {\n        sequence =\n            (BigInt(bytes[1]) << 32n) |\n                (BigInt(bytes[2]) << 24n) |\n                (BigInt(bytes[3]) << 16n) |\n                (BigInt(bytes[4]) << 8n) |\n                BigInt(bytes[5]);\n    }\n    else {\n        if (sequence === MAX_SEQUENCE)\n            throw new RangeError(\"UUIDv7 generator sequence exhausted\");\n        sequence++;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1133,
+          "end": 1236,
+          "line": 25,
+          "column": 9,
+          "raw": "if (sequence === MAX_SEQUENCE)\n            throw new RangeError(\"UUIDv7 generator sequence exhausted\");",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1317,
+          "end": 1441,
+          "line": 30,
+          "column": 5,
+          "raw": "for (let index = 5; index >= 0; index--) {\n        bytes[index] = Number(timestamp >> BigInt((5 - index) * 8)) & 0xff;\n    }",
+          "kind": "ForStatement"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 42
+    },
+    {
+      "name": "version",
+      "lexical": [
+        {
+          "start": 0,
+          "end": 106,
+          "line": 1,
+          "column": 1,
+          "raw": "// The @earendil-works/pi-ai package version. scripts/sync-versions.js keeps it in sync with package.json.",
+          "kind": "Comment"
+        },
+        {
+          "start": 136,
+          "end": 143,
+          "line": 2,
+          "column": 30,
+          "raw": "\"1.4.0\"",
+          "kind": "StringLiteral",
+          "decoded": "1.4.0"
+        },
+        {
+          "start": 145,
+          "end": 180,
+          "line": 3,
+          "column": 1,
+          "raw": "//# sourceMappingURL=version.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [],
+      "constructors": [],
+      "throws": [],
+      "catches": [],
+      "controls": [],
+      "imports": [],
+      "ast_line_starts": 3
+    }
+  ],
+  "artifact_sha256": {
+    "pi-ai-data-utilities.csv": "c2921eb56e491adfeb33fe2ef12e33ca487f183208d82ba2445a915363cb0211",
+    "pi-ai-data-utilities-exclusions.csv": "423c239e8f42562ad3363cca65b2e1adfe39850ed5f7c540ce85dba38a00fd72",
+    "pi-ai-data-utilities-boundaries.csv": "c94bfb390e52b0d4fcdee8f41d80e5242ec1aebb1585971778acbc78341abb5f",
+    "pi-ai-data-utilities-scope.csv": "779aa8f456741cb67284c87dcc1a5c5d0c82aa06fc626079e72129ad80ee0e42"
+  },
+  "audited_execution": false
+}
