@@ -16,6 +16,7 @@
   "scope_inputs_sha256_utf8_lf": {
     "pi-ai-faux-text-scope.csv": "5acb3d05a8c2255e5a8aa84ca01209849823785211d8a7c5e078195519fe395c",
     "pi-ai-catalog-data-scope.csv": "f063ac6044d3df7e0c491c91890835e755166035e311cee2360f48520e7ab777",
+    "pi-bundle-chat-adapters-scope.csv": "0885cfdd4e696386edaa421c76b8c5c64a39b581a5cd65bbcc450939f9f3fd2d",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",

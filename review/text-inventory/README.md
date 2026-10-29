@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 28 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 46 compiled bodies;
-35 compiled bodies remain pending. The
+universe with 29 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 50 compiled bodies;
+31 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -979,6 +979,20 @@ The [scope](pi-ai-catalog-data-scope.csv) grants complete local JSON data review
 without changing the 200-file JavaScript census. Three canonical archives,
 both installed trees, public patch evidence and 24 corruption controls pass.
 No catalog, provider, model, authentication or native UI operation runs.
+
+[pi-bundle-chat-adapters.csv](pi-bundle-chat-adapters.csv) records 93 qualified
+error, prompt and API definitions across four complete compiled adapter bodies
+(119,422 bytes). The 891 [exclusions](pi-bundle-chat-adapters-exclusions.csv)
+complete the 984-literal/template/regex partition. Fifty-eight
+[boundaries](pi-bundle-chat-adapters-boundaries.csv) distinguish selected compiled
+API routes, request mutation, authentication, stream settlement, cancellation,
+classifier results and terminal/export consumers. Native SDK error payloads and
+callback failures remain external. Provider-error body clipping is not a global
+message bound: preserved originals and raw metadata appendices have separate
+routes. The [scope](pi-bundle-chat-adapters-scope.csv) grants complete local review
+only to four bodies; imported SDKs and caller excerpts remain bounded. Canonical
+archive, both installed trees and 34 corruption controls pass. Compiled API
+availability does not establish default Jouzu activation; no provider or UI runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2338,6 +2352,7 @@ python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
 python -B review/text-inventory/verify-pi-ai-faux-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-catalog-data.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-bundle-chat-adapters.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
