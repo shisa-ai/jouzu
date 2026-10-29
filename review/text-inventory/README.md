@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 32 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 64 compiled bodies;
-17 compiled bodies remain pending. The
+universe with 33 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 66 compiled bodies;
+15 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1115,6 +1115,21 @@ complete local review to one compiled body. The bundled SDK version marker and
 public dependency lock are pinned without claiming source equivalence to other
 SDK bodies. Canonical archive, installed copies and 31 corruption controls pass.
 No shell, file-state, skill, memory, model, network or native UI operation runs.
+
+[pi-bundle-http-transport.csv](pi-bundle-http-transport.csv) records 47 qualified
+expressions across the complete compiled proxy and node-fetch bodies
+(56,129 bytes). The 646 [exclusions](pi-bundle-http-transport-exclusions.csv)
+complete the 693-node partition. Forty-eight
+[boundaries](pi-bundle-http-transport-boundaries.csv) retain custom-fetch/browser
+precedence, explicit agents, proxy eligibility, response/body timing, redirects,
+abort, debug filtering and Node deprecation-warning behavior. Gaxios can wrap
+messages, retry and apply a configured error redactor before returning failure;
+the transport has no independent native view. The
+[scope](pi-bundle-http-transport-scope.csv) grants complete local review to two
+bodies and keeps Gaxios/auth/TLS/stream/native callers bounded. Canonical archive,
+both installed trees and 31 corruption controls pass. Compiled dependency routes
+do not establish default Jouzu activation or parity with unbundled libraries.
+No proxy, HTTP, request, process or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2483,6 +2498,7 @@ node review/text-inventory/verify-pi-server-protocol-text.cjs
 python -B review/text-inventory/verify-pi-ai-google-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-execution-runtime.py
 python -B review/text-inventory/verify-pi-bundle-anthropic-node-tools.py
+python -B review/text-inventory/verify-pi-bundle-http-transport.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
