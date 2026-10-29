@@ -1,0 +1,4 @@
+kind,source_location,raw,disposition
+StringLiteral,npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js:447,"""string""",Protected JavaScript typeof result; not translatable prose
+Comment,npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js:444,// Google OpenAI-compatible routes require this opaque signature on replay.,Source-only comment; no runtime English definition
+Comment,npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js:445,"// It can arrive separately from the function arguments, keyed by stream index.",Source-only comment; no runtime English definition

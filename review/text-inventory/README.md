@@ -33,6 +33,22 @@ resource paths have complete byte-delta proofs. The
 these navigation links do not promote supporting records, close target callers
 or qualify newly patched dependencies. Existing base tables keep their source pin.
 
+[main-update-pi-runtime-parity.csv](main-update-pi-runtime-parity.csv) separately
+reconciles the 689 locked dependency source identities with the fetched target.
+After product-version metadata is accounted for, dependency locks are unchanged;
+the Pi pin differs only in the exact provider-receipt manifest digest. Of those
+source bodies, 688 retain their qualified BASE identities. The remaining
+OpenAI-completions body is reconstructed in memory using the target transform's
+two added literal replacements and matches the target manifest's complete
+after-hash. Removing those two calls restores the complete BASE transform bytes.
+The [delta](main-update-pi-runtime-parity-delta.csv) contains one protected
+JavaScript type-check string and two source comments, adding zero fixed runtime
+English definitions. The [snapshot](main-update-pi-runtime-parity-snapshot.json)
+pins source, lock, manifest and transformation proofs. Eight corruption controls
+and an independent reconstruction review pass. This is expected target source
+identity, not a target installation, execution, visibility or caller-equivalence
+claim; new native/service payloads retain their external boundaries.
+
 [main-update-resource-delta.csv](main-update-resource-delta.csv) accounts for
 every changed byte in twenty fetched-main resource files: 31 hunks, with 25
 removed and 41 added lines. Applying the retained changes to the exact base
@@ -3098,6 +3114,7 @@ node review/text-inventory/verify-pi-bundle-main-host-model-runtime.cjs
 node review/text-inventory/verify-pi-bundle-main-host-model-selectors.cjs
 python -B review/text-inventory/verify-pi-ai-entry-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-bundle-openai-client.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-main-update-pi-runtime-parity.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-bundle-main-host-ai-runtime-helpers.cjs
 node review/text-inventory/verify-pi-bundle-main-host-mcp.cjs
 node review/text-inventory/verify-pi-bundle-main-host-settings-cli.cjs

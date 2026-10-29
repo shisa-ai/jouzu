@@ -1,0 +1,92 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "source_files": 689,
+  "unchanged_source_files": 688,
+  "reconstructed_source_files": 1,
+  "new_fixed_runtime_english_definitions": 0,
+  "base_source_bytes": 65550,
+  "reconstructed_target_bytes": 66290,
+  "base_source_sha256": "6d22aaa0f56fd33641a6cdf04e74564ebcccb65932df2ee0d7f5e461fee884ea",
+  "target_source_sha256": "41397ad02120f534c33aea5a467729ac223474a33bbba89304ad0b168ee336b2",
+  "lock_hashes": {
+    "package-lock.json": {
+      "base_sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+      "target_sha256": "bf01077526a3cf35ad1c4c1e4032d22f6550d95e0da3923ce4cb5429d33d3af6"
+    },
+    "packages/cli/package-lock.json": {
+      "base_sha256": "92edb4d2479ede3b9442389ae6dc189ce6ec2872759371d142f1e00ae6e261bc",
+      "target_sha256": "1768efd095d5d89f646a0fdb052f2b5e4468a58e80fce300551af4d1dfb39e35"
+    }
+  },
+  "base_pi_pin_sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+  "target_pi_pin_sha256": "c2e70adc89e1a03681a33c26f09720ee15a401bbf18c0cdf27af1edcafbd2a9c",
+  "target_deviation_manifest_sha256": {
+    "upstream/vcc-goals/patch.lock.json": "d8092c252e571ce6cc59b02b2d33c748ffab0892c93f3859d1d7df143446c147",
+    "upstream/pi-content-policy/patch.lock.json": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f",
+    "upstream/pi-flow-control/patch.lock.json": "debe9e6a8b86f3ff2f92fac0984294826a49d2904c3c7c261c9e1d0b5c84908d",
+    "upstream/pi-provider-receipts/patch.lock.json": "81429a4e4a901ee35a7b29e22da7d194d92c0063e67afbd70054756b7bf9c40e",
+    "upstream/pi-terminal-clipboard/patch.lock.json": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+    "upstream/pi-path-utils/patch.lock.json": "911cead1717198080583834e47b21759fda52518fe3ffadfe8dd68a1c50cb14f",
+    "upstream/background-flow/patch.lock.json": "701ffe0a79ad2dd45dbc1a4e3b1a6cddc54a11076916cf7f41d2deee233dfc80",
+    "upstream/multiloop-wait-skill/patch.lock.json": "93c6496f99524a886e9d27d5a5fef1d5d1cd38e3a92df653f3cf128ec8c9cc0d",
+    "upstream/task-flow/patch.lock.json": "527b9e1cc2a1d5c9aedffcc59a333a6250a11d55f44ad8b75929127e8ff8a577",
+    "upstream/code-previews/patch.lock.json": "998be81efca44a32e3a56bcab7fa6c53856bc92419e0f04d00263ad93f28b75e"
+  },
+  "base_transform_sha256": "190af57eeea46229b68237b7be080c44e249c2d8421a18f243086ee099989dfc",
+  "target_transform_sha256": "de09b21bc93a42f2a12afc20b510dfcfd0c126a793c6570accd70a2281bf1114",
+  "literal_transformations": [
+    {
+      "start": 2667,
+      "end": 3328,
+      "line": 52,
+      "column": 3,
+      "raw": "change(\n\t\t\t\"                            const block = ensureToolCallBlock(toolCall);\",\n\t\t\t`                            const block = ensureToolCallBlock(toolCall);\n                            // Google OpenAI-compatible routes require this opaque signature on replay.\n                            // It can arrive separately from the function arguments, keyed by stream index.\n                            const thoughtSignature = toolCall.extra_content?.google?.thought_signature;\n                            if (typeof thoughtSignature === \"string\" && thoughtSignature.length > 0)\n                                block.thoughtSignature = thoughtSignature;`,\n\t\t)",
+      "pair": [
+        "                            const block = ensureToolCallBlock(toolCall);",
+        "                            const block = ensureToolCallBlock(toolCall);\n                            // Google OpenAI-compatible routes require this opaque signature on replay.\n                            // It can arrive separately from the function arguments, keyed by stream index.\n                            const thoughtSignature = toolCall.extra_content?.google?.thought_signature;\n                            if (typeof thoughtSignature === \"string\" && thoughtSignature.length > 0)\n                                block.thoughtSignature = thoughtSignature;"
+      ]
+    },
+    {
+      "start": 3332,
+      "end": 3953,
+      "line": 61,
+      "column": 3,
+      "raw": "change(\n\t\t\t`                        function: {\n                            name: tc.name,\n                            arguments: JSON.stringify(tc.arguments),\n                        },`,\n\t\t\t`                        function: {\n                            name: tc.name,\n                            arguments: JSON.stringify(tc.arguments),\n                        },\n                        ...(tc.thoughtSignature && !parseLegacyEncryptedReasoningDetail(tc.thoughtSignature)\n                            ? { extra_content: { google: { thought_signature: tc.thoughtSignature } } }\n                            : {}),`,\n\t\t)",
+      "pair": [
+        "                        function: {\n                            name: tc.name,\n                            arguments: JSON.stringify(tc.arguments),\n                        },",
+        "                        function: {\n                            name: tc.name,\n                            arguments: JSON.stringify(tc.arguments),\n                        },\n                        ...(tc.thoughtSignature && !parseLegacyEncryptedReasoningDetail(tc.thoughtSignature)\n                            ? { extra_content: { google: { thought_signature: tc.thoughtSignature } } }\n                            : {}),"
+      ]
+    }
+  ],
+  "lexical_delta": [
+    {
+      "kind": "StringLiteral",
+      "source_location": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js:447",
+      "raw": "\"string\"",
+      "disposition": "Protected JavaScript typeof result; not translatable prose"
+    },
+    {
+      "kind": "Comment",
+      "source_location": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js:444",
+      "raw": "// Google OpenAI-compatible routes require this opaque signature on replay.",
+      "disposition": "Source-only comment; no runtime English definition"
+    },
+    {
+      "kind": "Comment",
+      "source_location": "npm:@earendil-works/pi-ai@1.4.0/dist/api/openai-completions.js:445",
+      "raw": "// It can arrive separately from the function arguments, keyed by stream index.",
+      "disposition": "Source-only comment; no runtime English definition"
+    }
+  ],
+  "typescript": "6.0.3",
+  "base_source_proof_sha256": "a08b34fba22d27d85f4e289e5d4bc440e90e274c45b4c189c9a0ab42b4958284",
+  "base_source_snapshot_sha256": "4bd5b730a2042dc07209b83ce881f9f0ee17b9ccf1fe646f13b61006ab0ffc11",
+  "verifier_sha256": "2b4e9f58c897dc77f238df02d280b5347f7cdfc72fbb27d78f043cfdb36b2e83",
+  "qualification": "Reconstructed target source identity and exact lexical delta only. No target installation, audited module import, provider request, UI, cross-platform behavior or complete caller/foreign graph proof. Unchanged source retains its original qualified inventory scope.",
+  "audited_execution": false,
+  "artifact_sha256": {
+    "main-update-pi-runtime-parity.csv": "5ad2b25f766391daa6648525ce4209ca96f3c41ca9fbb474ad8045b5cf6f1185",
+    "main-update-pi-runtime-parity-delta.csv": "caf04358d0286df2ea055047d02cab864c35249d05ce1b79c8a7554916ac2c78"
+  }
+}
