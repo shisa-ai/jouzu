@@ -1406,6 +1406,23 @@ twenty corruption controls pass. Remote protocol payloads and custom registry/
 extension/native consumers remain bounded; no request, provider, model, stream
 or native UI operation runs.
 
+[pi-ai-nonchat-adapters.csv](pi-ai-nonchat-adapters.csv) records 69 qualified
+definitions across fourteen complete classifier/image/Cloudflare bodies
+(1,104 lines; 51,444 bytes). The 221
+[exclusions](pi-ai-nonchat-adapters-exclusions.csv) complete the 290-string/template
+partition; six regexes remain protected. Eight
+[boundaries](pi-ai-nonchat-adapters-boundaries.csv) retain model/input assertions,
+auth, HTTP/model-context prose, depth escalation, refusal/format parsing, callbacks
+and returned result errors. Nonchat results require their own API/tool consumers;
+the optional native CodeMode preview/renderer retains activation and clipping
+gates, including Jouzu's inspected no-op override. Llama tokenization/template
+requests omit payload/response observation; completion observes the server-returned
+prompt and can repeat hooks during escalation. The
+[scope](pi-ai-nonchat-adapters-scope.csv) grants complete local review only to
+fourteen bodies. Four archives, installed copies, public patch checks and nineteen
+corruption controls pass. SDK/binding/custom-fetch/model/native payloads remain
+bounded; no classifier, image request, binding, model, tool or native UI runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -1486,8 +1503,8 @@ Pi AI JavaScript runtime files (931,910 installed bytes; 20,585 physical lines).
 Both installed trees match: 184 files equal the canonical archive and sixteen
 equal exact public patch after-hashes, with archive before-hashes checked. The
 [snapshot](pi-ai-runtime-census-snapshot.json) pins the transitive package-lock
-authority, public patch manifest and nested package-list transform. There are 173
-files with explicit complete local review owners; 27 files (93,121 bytes)
+authority, public patch manifest and nested package-list transform. There are 187
+files with explicit complete local review owners; 13 files (41,677 bytes)
 remain pending in this census. File identity does not establish wording or
 caller closure. This separate Pi AI universe does not change the 384-source
 coding-agent/TUI census; non-JavaScript package resources remain outside it.
@@ -2791,6 +2808,7 @@ python -B review/text-inventory/verify-pi-ai-mistral-adapter.py --node-modules <
 node review/text-inventory/verify-pi-ai-auth-callback-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-ai-auth-device-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-pi-ai-pi-messages-adapter.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-ai-nonchat-adapters.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
