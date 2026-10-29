@@ -1037,6 +1037,21 @@ consumer evidence. Canonical archive, installed copies and twelve corruption
 controls pass. This package is separate from both runtime censuses; no server,
 transport, authentication, browser or native UI operation runs.
 
+[pi-telemetry-runtime-text.csv](pi-telemetry-runtime-text.csv) records 55 qualified
+renderer and conformance definitions across all eight telemetry runtime bodies
+(37,607 bytes). The 189 [exclusions](pi-telemetry-runtime-text-exclusions.csv)
+complete the 244-text/regex/comment partition. Fifteen
+[boundaries](pi-telemetry-runtime-text-boundaries.csv) distinguish explicit
+renderer/adapter selection, supplied context, metrics and exported conformance
+tests. Six expressions format stored spans; 49 describe conformance cases,
+assertions, fixtures or cleanup. All thirteen Error/SuppressedError constructors
+belong to conformance code. The package supplies no global adapter registration
+API or automatic reporter; native model-runtime requests bypass the separate
+Pi AI observer. The [scope](pi-telemetry-runtime-text-scope.csv) grants complete
+local review only to the eight bodies. Canonical archive, installed copies and
+twelve corruption controls pass without running telemetry or conformance tests.
+This package is separate from both runtime censuses.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2399,6 +2414,7 @@ python -B review/text-inventory/verify-pi-bundle-chat-adapters.py
 python -B review/text-inventory/verify-pi-bundle-utility-runtime.py
 node review/text-inventory/verify-pi-codemode-runtime-text.cjs
 node review/text-inventory/verify-pi-mcp-runtime-text.cjs
+node review/text-inventory/verify-pi-telemetry-runtime-text.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
