@@ -1052,6 +1052,23 @@ local review only to the eight bodies. Canonical archive, installed copies and
 twelve corruption controls pass without running telemetry or conformance tests.
 This package is separate from both runtime censuses.
 
+[pi-server-protocol-text.csv](pi-server-protocol-text.csv) records 131 qualified
+source contexts across all 24 server/protocol runtime bodies (92,257 bytes).
+Its 118 primary components and 253
+[exclusions](pi-server-protocol-text-exclusions.csv) partition 371 text, regex
+and comment nodes. Fifty-two
+[boundaries](pi-server-protocol-text-boundaries.csv) retain protocol validation,
+session/approval/workspace/authentication routes and entry-point linkage.
+Ordinary inspected Node ESM server entries cannot link: five requested Chord
+names are absent from the selected canonical root export in both dependency
+contexts. Server definitions carry that precondition; independently usable
+protocol and context APIs keep their own routes. The dynamic loader diagnostic
+is external, with no invented exact wording or observed execution claim. The
+[scope](pi-server-protocol-text-scope.csv) pins full bodies plus bounded conditional
+exports and actual server-local dependency resolution. Locked archives, installed
+copies and twenty corruption controls pass. This package pair is separate from
+both runtime censuses; no server, protocol exchange or native operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2415,6 +2432,7 @@ python -B review/text-inventory/verify-pi-bundle-utility-runtime.py
 node review/text-inventory/verify-pi-codemode-runtime-text.cjs
 node review/text-inventory/verify-pi-mcp-runtime-text.cjs
 node review/text-inventory/verify-pi-telemetry-runtime-text.cjs
+node review/text-inventory/verify-pi-server-protocol-text.cjs
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1

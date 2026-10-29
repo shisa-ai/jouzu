@@ -21,6 +21,7 @@
     "pi-codemode-runtime-text-scope.csv": "74b6cf81853b8e26e5d63f88e145ee7beed4f58dc57c455e68a3ffa72c096ea8",
     "pi-mcp-runtime-text-scope.csv": "c2db2f1c54cbcbfa92616326bec0cef96c39f96d58d76cb8c8f49cba661802ce",
     "pi-telemetry-runtime-text-scope.csv": "d2f3d4ebb07b2b45f9c21bb420385afd5e27237cfaf7d4bf5d2bb46990f1dd39",
+    "pi-server-protocol-text-scope.csv": "d5eeea4336c6983a2952409732495aca1bdf9e4e36b4c2b559876a57520e98f7",
     "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
     "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
