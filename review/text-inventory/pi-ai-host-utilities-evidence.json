@@ -1,0 +1,2135 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit": "pi-ai-host-utilities",
+  "coverage_boundary": "Two complete BASE helper bodies only. Exact proxy API and OAuth HTML definitions, with bounded request/callback/browser/native consumers. No audited code, environment, proxy, URL constructor, HTML renderer, authentication, server, browser, request or native UI operation runs.",
+  "counts": {
+    "full_files": 2,
+    "physical_lines": 238,
+    "bytes": 11213,
+    "primary": 8,
+    "primary_brand_components": 1,
+    "lexical_nodes": 51,
+    "exclusions": 43,
+    "boundaries": 9
+  },
+  "parser": {
+    "typescript": "6.0.3",
+    "source_only": true,
+    "helper": "verify-pi-ai-data-utilities.py",
+    "helper_sha256": "596a321c345d23a31955d4e7a21f7a0d1ed7e8a4abfe70156f3f988f31a7f8a5"
+  },
+  "verifier_sha256": "a9baa9ce79984f18329f391a6fdf1fec8c56f63e37977b939e34e501d4311154",
+  "source_ast": [
+    {
+      "name": "node-http-proxy",
+      "lexical": [
+        {
+          "start": 36,
+          "end": 55,
+          "line": 1,
+          "column": 37,
+          "raw": "\"./provider-env.js\"",
+          "kind": "StringLiteral",
+          "decoded": "./provider-env.js"
+        },
+        {
+          "start": 460,
+          "end": 462,
+          "line": 17,
+          "column": 9,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 732,
+          "end": 735,
+          "line": 31,
+          "column": 28,
+          "raw": "\"[\"",
+          "kind": "StringLiteral",
+          "decoded": "["
+        },
+        {
+          "start": 754,
+          "end": 757,
+          "line": 31,
+          "column": 50,
+          "raw": "\"]\"",
+          "kind": "StringLiteral",
+          "decoded": "]"
+        },
+        {
+          "start": 944,
+          "end": 947,
+          "line": 37,
+          "column": 28,
+          "raw": "\"[\"",
+          "kind": "StringLiteral",
+          "decoded": "["
+        },
+        {
+          "start": 999,
+          "end": 1002,
+          "line": 38,
+          "column": 48,
+          "raw": "\"]\"",
+          "kind": "StringLiteral",
+          "decoded": "]"
+        },
+        {
+          "start": 1193,
+          "end": 1196,
+          "line": 42,
+          "column": 33,
+          "raw": "\":\"",
+          "kind": "StringLiteral",
+          "decoded": ":"
+        },
+        {
+          "start": 1429,
+          "end": 1432,
+          "line": 49,
+          "column": 26,
+          "raw": "\":\"",
+          "kind": "StringLiteral",
+          "decoded": ":"
+        },
+        {
+          "start": 1451,
+          "end": 1454,
+          "line": 49,
+          "column": 48,
+          "raw": "\":\"",
+          "kind": "StringLiteral",
+          "decoded": ":"
+        },
+        {
+          "start": 1562,
+          "end": 1565,
+          "line": 52,
+          "column": 44,
+          "raw": "\":\"",
+          "kind": "StringLiteral",
+          "decoded": ":"
+        },
+        {
+          "start": 1628,
+          "end": 1631,
+          "line": 53,
+          "column": 61,
+          "raw": "\":\"",
+          "kind": "StringLiteral",
+          "decoded": ":"
+        },
+        {
+          "start": 1971,
+          "end": 1981,
+          "line": 63,
+          "column": 33,
+          "raw": "\"no_proxy\"",
+          "kind": "StringLiteral",
+          "decoded": "no_proxy"
+        },
+        {
+          "start": 2070,
+          "end": 2073,
+          "line": 67,
+          "column": 21,
+          "raw": "\"*\"",
+          "kind": "StringLiteral",
+          "decoded": "*"
+        },
+        {
+          "start": 2202,
+          "end": 2209,
+          "line": 71,
+          "column": 26,
+          "raw": "/[,\\s]/",
+          "kind": "RegularExpressionLiteral"
+        },
+        {
+          "start": 2502,
+          "end": 2506,
+          "line": 80,
+          "column": 31,
+          "raw": "\"*.\"",
+          "kind": "StringLiteral",
+          "decoded": "*."
+        },
+        {
+          "start": 2594,
+          "end": 2597,
+          "line": 83,
+          "column": 36,
+          "raw": "\".\"",
+          "kind": "StringLiteral",
+          "decoded": "."
+        },
+        {
+          "start": 2620,
+          "end": 2623,
+          "line": 83,
+          "column": 62,
+          "raw": "\"*\"",
+          "kind": "StringLiteral",
+          "decoded": "*"
+        },
+        {
+          "start": 2859,
+          "end": 2871,
+          "line": 92,
+          "column": 43,
+          "raw": "`.${domain}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 3105,
+          "end": 3107,
+          "line": 101,
+          "column": 16,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 3161,
+          "end": 3164,
+          "line": 103,
+          "column": 47,
+          "raw": "\":\"",
+          "kind": "StringLiteral",
+          "decoded": ":"
+        },
+        {
+          "start": 3253,
+          "end": 3260,
+          "line": 104,
+          "column": 81,
+          "raw": "/:\\d*$/",
+          "kind": "RegularExpressionLiteral"
+        },
+        {
+          "start": 3262,
+          "end": 3264,
+          "line": 104,
+          "column": 90,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 3428,
+          "end": 3430,
+          "line": 107,
+          "column": 16,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 3466,
+          "end": 3485,
+          "line": 109,
+          "column": 29,
+          "raw": "`${protocol}_proxy`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 3507,
+          "end": 3518,
+          "line": 109,
+          "column": 70,
+          "raw": "\"all_proxy\"",
+          "kind": "StringLiteral",
+          "decoded": "all_proxy"
+        },
+        {
+          "start": 3559,
+          "end": 3564,
+          "line": 110,
+          "column": 34,
+          "raw": "\"://\"",
+          "kind": "StringLiteral",
+          "decoded": "://"
+        },
+        {
+          "start": 3585,
+          "end": 3609,
+          "line": 111,
+          "column": 17,
+          "raw": "`${protocol}://${proxy}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 3687,
+          "end": 3792,
+          "line": 115,
+          "column": 51,
+          "raw": "\"Unsupported proxy protocol. SOCKS and PAC proxy URLs are not supported; use an HTTP or HTTPS proxy URL.\"",
+          "kind": "StringLiteral",
+          "decoded": "Unsupported proxy protocol. SOCKS and PAC proxy URLs are not supported; use an HTTP or HTTPS proxy URL."
+        },
+        {
+          "start": 4070,
+          "end": 4173,
+          "line": 126,
+          "column": 25,
+          "raw": "`Invalid proxy URL ${JSON.stringify(proxy)}: ${error instanceof Error ? error.message : String(error)}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 4212,
+          "end": 4219,
+          "line": 128,
+          "column": 31,
+          "raw": "\"http:\"",
+          "kind": "StringLiteral",
+          "decoded": "http:"
+        },
+        {
+          "start": 4245,
+          "end": 4253,
+          "line": 128,
+          "column": 64,
+          "raw": "\"https:\"",
+          "kind": "StringLiteral",
+          "decoded": "https:"
+        },
+        {
+          "start": 4281,
+          "end": 4345,
+          "line": 129,
+          "column": 25,
+          "raw": "`${UNSUPPORTED_PROXY_PROTOCOL_MESSAGE} Got ${proxyUrl.protocol}`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 4377,
+          "end": 4420,
+          "line": 133,
+          "column": 1,
+          "raw": "//# sourceMappingURL=node-http-proxy.js.map",
+          "kind": "Comment"
+        }
+      ],
+      "calls": [
+        {
+          "start": 233,
+          "end": 250,
+          "line": 11,
+          "column": 26,
+          "raw": "key.toLowerCase()",
+          "kind": "CallExpression",
+          "callee": "key.toLowerCase"
+        },
+        {
+          "start": 277,
+          "end": 294,
+          "line": 12,
+          "column": 26,
+          "raw": "key.toUpperCase()",
+          "kind": "CallExpression",
+          "callee": "key.toUpperCase"
+        },
+        {
+          "start": 370,
+          "end": 403,
+          "line": 15,
+          "column": 9,
+          "raw": "getProviderEnvValue(lowercaseKey)",
+          "kind": "CallExpression",
+          "callee": "getProviderEnvValue"
+        },
+        {
+          "start": 415,
+          "end": 448,
+          "line": 16,
+          "column": 9,
+          "raw": "getProviderEnvValue(uppercaseKey)",
+          "kind": "CallExpression",
+          "callee": "getProviderEnvValue"
+        },
+        {
+          "start": 716,
+          "end": 736,
+          "line": 31,
+          "column": 12,
+          "raw": "host.startsWith(\"[\")",
+          "kind": "CallExpression",
+          "callee": "host.startsWith"
+        },
+        {
+          "start": 740,
+          "end": 758,
+          "line": 31,
+          "column": 36,
+          "raw": "host.endsWith(\"]\")",
+          "kind": "CallExpression",
+          "callee": "host.endsWith"
+        },
+        {
+          "start": 761,
+          "end": 778,
+          "line": 31,
+          "column": 57,
+          "raw": "host.slice(1, -1)",
+          "kind": "CallExpression",
+          "callee": "host.slice"
+        },
+        {
+          "start": 845,
+          "end": 871,
+          "line": 34,
+          "column": 21,
+          "raw": "entry.trim().toLowerCase()",
+          "kind": "CallExpression",
+          "callee": "entry.trim().toLowerCase"
+        },
+        {
+          "start": 845,
+          "end": 857,
+          "line": 34,
+          "column": 21,
+          "raw": "entry.trim()",
+          "kind": "CallExpression",
+          "callee": "entry.trim"
+        },
+        {
+          "start": 925,
+          "end": 948,
+          "line": 37,
+          "column": 9,
+          "raw": "trimmed.startsWith(\"[\")",
+          "kind": "CallExpression",
+          "callee": "trimmed.startsWith"
+        },
+        {
+          "start": 983,
+          "end": 1003,
+          "line": 38,
+          "column": 32,
+          "raw": "trimmed.indexOf(\"]\")",
+          "kind": "CallExpression",
+          "callee": "trimmed.indexOf"
+        },
+        {
+          "start": 1067,
+          "end": 1099,
+          "line": 40,
+          "column": 26,
+          "raw": "trimmed.slice(1, closingBracket)",
+          "kind": "CallExpression",
+          "callee": "trimmed.slice"
+        },
+        {
+          "start": 1126,
+          "end": 1159,
+          "line": 41,
+          "column": 26,
+          "raw": "trimmed.slice(closingBracket + 1)",
+          "kind": "CallExpression",
+          "callee": "trimmed.slice"
+        },
+        {
+          "start": 1177,
+          "end": 1197,
+          "line": 42,
+          "column": 17,
+          "raw": "rest.startsWith(\":\")",
+          "kind": "CallExpression",
+          "callee": "rest.startsWith"
+        },
+        {
+          "start": 1230,
+          "end": 1264,
+          "line": 43,
+          "column": 30,
+          "raw": "Number.parseInt(rest.slice(1), 10)",
+          "kind": "CallExpression",
+          "callee": "Number.parseInt"
+        },
+        {
+          "start": 1246,
+          "end": 1259,
+          "line": 43,
+          "column": 46,
+          "raw": "rest.slice(1)",
+          "kind": "CallExpression",
+          "callee": "rest.slice"
+        },
+        {
+          "start": 1303,
+          "end": 1321,
+          "line": 44,
+          "column": 38,
+          "raw": "Number.isNaN(port)",
+          "kind": "CallExpression",
+          "callee": "Number.isNaN"
+        },
+        {
+          "start": 1412,
+          "end": 1433,
+          "line": 49,
+          "column": 9,
+          "raw": "trimmed.includes(\":\")",
+          "kind": "CallExpression",
+          "callee": "trimmed.includes"
+        },
+        {
+          "start": 1437,
+          "end": 1455,
+          "line": 49,
+          "column": 34,
+          "raw": "trimmed.split(\":\")",
+          "kind": "CallExpression",
+          "callee": "trimmed.split"
+        },
+        {
+          "start": 1542,
+          "end": 1566,
+          "line": 52,
+          "column": 24,
+          "raw": "trimmed.lastIndexOf(\":\")",
+          "kind": "CallExpression",
+          "callee": "trimmed.lastIndexOf"
+        },
+        {
+          "start": 1612,
+          "end": 1632,
+          "line": 53,
+          "column": 45,
+          "raw": "trimmed.indexOf(\":\")",
+          "kind": "CallExpression",
+          "callee": "trimmed.indexOf"
+        },
+        {
+          "start": 1657,
+          "end": 1685,
+          "line": 54,
+          "column": 22,
+          "raw": "trimmed.slice(0, colonIndex)",
+          "kind": "CallExpression",
+          "callee": "trimmed.slice"
+        },
+        {
+          "start": 1708,
+          "end": 1758,
+          "line": 55,
+          "column": 22,
+          "raw": "Number.parseInt(trimmed.slice(colonIndex + 1), 10)",
+          "kind": "CallExpression",
+          "callee": "Number.parseInt"
+        },
+        {
+          "start": 1724,
+          "end": 1753,
+          "line": 55,
+          "column": 38,
+          "raw": "trimmed.slice(colonIndex + 1)",
+          "kind": "CallExpression",
+          "callee": "trimmed.slice"
+        },
+        {
+          "start": 1773,
+          "end": 1791,
+          "line": 56,
+          "column": 14,
+          "raw": "Number.isNaN(port)",
+          "kind": "CallExpression",
+          "callee": "Number.isNaN"
+        },
+        {
+          "start": 1959,
+          "end": 2001,
+          "line": 63,
+          "column": 21,
+          "raw": "getProxyEnv(\"no_proxy\", env).toLowerCase()",
+          "kind": "CallExpression",
+          "callee": "getProxyEnv(\"no_proxy\", env).toLowerCase"
+        },
+        {
+          "start": 1959,
+          "end": 1987,
+          "line": 63,
+          "column": 21,
+          "raw": "getProxyEnv(\"no_proxy\", env)",
+          "kind": "CallExpression",
+          "callee": "getProxyEnv"
+        },
+        {
+          "start": 2138,
+          "end": 2175,
+          "line": 70,
+          "column": 34,
+          "raw": "stripBrackets(hostname.toLowerCase())",
+          "kind": "CallExpression",
+          "callee": "stripBrackets"
+        },
+        {
+          "start": 2152,
+          "end": 2174,
+          "line": 70,
+          "column": 48,
+          "raw": "hostname.toLowerCase()",
+          "kind": "CallExpression",
+          "callee": "hostname.toLowerCase"
+        },
+        {
+          "start": 2188,
+          "end": 2939,
+          "line": 71,
+          "column": 12,
+          "raw": "noProxy.split(/[,\\s]/).every((entry) => {\n        const parsed = parseNoProxyEntry(entry);\n        if (!parsed) {\n            return true;\n        }\n        if (parsed.port && parsed.port !== port) {\n            return true;\n        }\n        let domain = stripBrackets(parsed.host);\n        if (domain.startsWith(\"*.\")) {\n            domain = domain.slice(2);\n        }\n        else if (domain.startsWith(\".\") || domain.startsWith(\"*\")) {\n            domain = domain.slice(1);\n        }\n        if (!domain) {\n            return true;\n        }\n        if (normalizedTargetHost === domain) {\n            return false;\n        }\n        if (normalizedTargetHost.endsWith(`.${domain}`)) {\n            return false;\n        }\n        return true;\n    })",
+          "kind": "CallExpression",
+          "callee": "noProxy.split(/[,\\s]/).every"
+        },
+        {
+          "start": 2188,
+          "end": 2210,
+          "line": 71,
+          "column": 12,
+          "raw": "noProxy.split(/[,\\s]/)",
+          "kind": "CallExpression",
+          "callee": "noProxy.split"
+        },
+        {
+          "start": 2253,
+          "end": 2277,
+          "line": 72,
+          "column": 24,
+          "raw": "parseNoProxyEntry(entry)",
+          "kind": "CallExpression",
+          "callee": "parseNoProxyEntry"
+        },
+        {
+          "start": 2444,
+          "end": 2470,
+          "line": 79,
+          "column": 22,
+          "raw": "stripBrackets(parsed.host)",
+          "kind": "CallExpression",
+          "callee": "stripBrackets"
+        },
+        {
+          "start": 2484,
+          "end": 2507,
+          "line": 80,
+          "column": 13,
+          "raw": "domain.startsWith(\"*.\")",
+          "kind": "CallExpression",
+          "callee": "domain.startsWith"
+        },
+        {
+          "start": 2532,
+          "end": 2547,
+          "line": 81,
+          "column": 22,
+          "raw": "domain.slice(2)",
+          "kind": "CallExpression",
+          "callee": "domain.slice"
+        },
+        {
+          "start": 2576,
+          "end": 2598,
+          "line": 83,
+          "column": 18,
+          "raw": "domain.startsWith(\".\")",
+          "kind": "CallExpression",
+          "callee": "domain.startsWith"
+        },
+        {
+          "start": 2602,
+          "end": 2624,
+          "line": 83,
+          "column": 44,
+          "raw": "domain.startsWith(\"*\")",
+          "kind": "CallExpression",
+          "callee": "domain.startsWith"
+        },
+        {
+          "start": 2649,
+          "end": 2664,
+          "line": 84,
+          "column": 22,
+          "raw": "domain.slice(1)",
+          "kind": "CallExpression",
+          "callee": "domain.slice"
+        },
+        {
+          "start": 2829,
+          "end": 2872,
+          "line": 92,
+          "column": 13,
+          "raw": "normalizedTargetHost.endsWith(`.${domain}`)",
+          "kind": "CallExpression",
+          "callee": "normalizedTargetHost.endsWith"
+        },
+        {
+          "start": 3007,
+          "end": 3037,
+          "line": 99,
+          "column": 23,
+          "raw": "parseProxyTargetUrl(targetUrl)",
+          "kind": "CallExpression",
+          "callee": "parseProxyTargetUrl"
+        },
+        {
+          "start": 3136,
+          "end": 3168,
+          "line": 103,
+          "column": 22,
+          "raw": "parsedUrl.protocol.split(\":\", 1)",
+          "kind": "CallExpression",
+          "callee": "parsedUrl.protocol.split"
+        },
+        {
+          "start": 3194,
+          "end": 3266,
+          "line": 104,
+          "column": 22,
+          "raw": "stripBrackets(parsedUrl.hostname || parsedUrl.host.replace(/:\\d*$/, \"\"))",
+          "kind": "CallExpression",
+          "callee": "stripBrackets"
+        },
+        {
+          "start": 3230,
+          "end": 3265,
+          "line": 104,
+          "column": 58,
+          "raw": "parsedUrl.host.replace(/:\\d*$/, \"\")",
+          "kind": "CallExpression",
+          "callee": "parsedUrl.host.replace"
+        },
+        {
+          "start": 3285,
+          "end": 3320,
+          "line": 105,
+          "column": 18,
+          "raw": "Number.parseInt(parsedUrl.port, 10)",
+          "kind": "CallExpression",
+          "callee": "Number.parseInt"
+        },
+        {
+          "start": 3369,
+          "end": 3409,
+          "line": 106,
+          "column": 10,
+          "raw": "shouldProxyHostname(hostname, port, env)",
+          "kind": "CallExpression",
+          "callee": "shouldProxyHostname"
+        },
+        {
+          "start": 3454,
+          "end": 3491,
+          "line": 109,
+          "column": 17,
+          "raw": "getProxyEnv(`${protocol}_proxy`, env)",
+          "kind": "CallExpression",
+          "callee": "getProxyEnv"
+        },
+        {
+          "start": 3495,
+          "end": 3524,
+          "line": 109,
+          "column": 58,
+          "raw": "getProxyEnv(\"all_proxy\", env)",
+          "kind": "CallExpression",
+          "callee": "getProxyEnv"
+        },
+        {
+          "start": 3544,
+          "end": 3565,
+          "line": 110,
+          "column": 19,
+          "raw": "proxy.includes(\"://\")",
+          "kind": "CallExpression",
+          "callee": "proxy.includes"
+        },
+        {
+          "start": 3875,
+          "end": 3905,
+          "line": 117,
+          "column": 19,
+          "raw": "getProxyForUrl(targetUrl, env)",
+          "kind": "CallExpression",
+          "callee": "getProxyForUrl"
+        },
+        {
+          "start": 4091,
+          "end": 4112,
+          "line": 126,
+          "column": 46,
+          "raw": "JSON.stringify(proxy)",
+          "kind": "CallExpression",
+          "callee": "JSON.stringify"
+        },
+        {
+          "start": 4158,
+          "end": 4171,
+          "line": 126,
+          "column": 113,
+          "raw": "String(error)",
+          "kind": "CallExpression",
+          "callee": "String"
+        }
+      ],
+      "constructors": [
+        {
+          "start": 602,
+          "end": 620,
+          "line": 24,
+          "column": 16,
+          "raw": "new URL(targetUrl)",
+          "kind": "NewExpression",
+          "callee": "URL"
+        },
+        {
+          "start": 4004,
+          "end": 4018,
+          "line": 123,
+          "column": 20,
+          "raw": "new URL(proxy)",
+          "kind": "NewExpression",
+          "callee": "URL"
+        },
+        {
+          "start": 4060,
+          "end": 4174,
+          "line": 126,
+          "column": 15,
+          "raw": "new Error(`Invalid proxy URL ${JSON.stringify(proxy)}: ${error instanceof Error ? error.message : String(error)}`)",
+          "kind": "NewExpression",
+          "callee": "Error"
+        },
+        {
+          "start": 4271,
+          "end": 4346,
+          "line": 129,
+          "column": 15,
+          "raw": "new Error(`${UNSUPPORTED_PROXY_PROTOCOL_MESSAGE} Got ${proxyUrl.protocol}`)",
+          "kind": "NewExpression",
+          "callee": "Error"
+        }
+      ],
+      "throws": [
+        {
+          "start": 4054,
+          "end": 4175,
+          "line": 126,
+          "column": 9,
+          "raw": "throw new Error(`Invalid proxy URL ${JSON.stringify(proxy)}: ${error instanceof Error ? error.message : String(error)}`);",
+          "kind": "ThrowStatement"
+        },
+        {
+          "start": 4265,
+          "end": 4347,
+          "line": 129,
+          "column": 9,
+          "raw": "throw new Error(`${UNSUPPORTED_PROXY_PROTOCOL_MESSAGE} Got ${proxyUrl.protocol}`);",
+          "kind": "ThrowStatement"
+        }
+      ],
+      "catches": [
+        {
+          "start": 632,
+          "end": 671,
+          "line": 26,
+          "column": 5,
+          "raw": "catch {\n        return undefined;\n    }",
+          "kind": "CatchClause"
+        },
+        {
+          "start": 4030,
+          "end": 4181,
+          "line": 125,
+          "column": 5,
+          "raw": "catch (error) {\n        throw new Error(`Invalid proxy URL ${JSON.stringify(proxy)}: ${error instanceof Error ? error.message : String(error)}`);\n    }",
+          "kind": "CatchClause"
+        }
+      ],
+      "controls": [
+        {
+          "start": 308,
+          "end": 462,
+          "line": 13,
+          "column": 13,
+          "raw": "env?.[lowercaseKey] ||\n        env?.[uppercaseKey] ||\n        getProviderEnvValue(lowercaseKey) ||\n        getProviderEnvValue(uppercaseKey) ||\n        \"\"",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 308,
+          "end": 448,
+          "line": 13,
+          "column": 13,
+          "raw": "env?.[lowercaseKey] ||\n        env?.[uppercaseKey] ||\n        getProviderEnvValue(lowercaseKey) ||\n        getProviderEnvValue(uppercaseKey)",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 308,
+          "end": 403,
+          "line": 13,
+          "column": 13,
+          "raw": "env?.[lowercaseKey] ||\n        env?.[uppercaseKey] ||\n        getProviderEnvValue(lowercaseKey)",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 308,
+          "end": 358,
+          "line": 13,
+          "column": 13,
+          "raw": "env?.[lowercaseKey] ||\n        env?.[uppercaseKey]",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 513,
+          "end": 576,
+          "line": 20,
+          "column": 5,
+          "raw": "if (targetUrl instanceof URL) {\n        return targetUrl;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 716,
+          "end": 785,
+          "line": 31,
+          "column": 12,
+          "raw": "host.startsWith(\"[\") && host.endsWith(\"]\") ? host.slice(1, -1) : host",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 716,
+          "end": 758,
+          "line": 31,
+          "column": 12,
+          "raw": "host.startsWith(\"[\") && host.endsWith(\"]\")",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 877,
+          "end": 916,
+          "line": 35,
+          "column": 5,
+          "raw": "if (!trimmed)\n        return undefined;",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 921,
+          "end": 1403,
+          "line": 37,
+          "column": 5,
+          "raw": "if (trimmed.startsWith(\"[\")) {\n        const closingBracket = trimmed.indexOf(\"]\");\n        if (closingBracket !== -1) {\n            const host = trimmed.slice(1, closingBracket);\n            const rest = trimmed.slice(closingBracket + 1);\n            if (rest.startsWith(\":\")) {\n                const port = Number.parseInt(rest.slice(1), 10);\n                return { host, port: Number.isNaN(port) ? 0 : port };\n            }\n            return { host, port: 0 };\n        }\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1013,
+          "end": 1397,
+          "line": 39,
+          "column": 9,
+          "raw": "if (closingBracket !== -1) {\n            const host = trimmed.slice(1, closingBracket);\n            const rest = trimmed.slice(closingBracket + 1);\n            if (rest.startsWith(\":\")) {\n                const port = Number.parseInt(rest.slice(1), 10);\n                return { host, port: Number.isNaN(port) ? 0 : port };\n            }\n            return { host, port: 0 };\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1173,
+          "end": 1349,
+          "line": 42,
+          "column": 13,
+          "raw": "if (rest.startsWith(\":\")) {\n                const port = Number.parseInt(rest.slice(1), 10);\n                return { host, port: Number.isNaN(port) ? 0 : port };\n            }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1303,
+          "end": 1332,
+          "line": 44,
+          "column": 38,
+          "raw": "Number.isNaN(port) ? 0 : port",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 1408,
+          "end": 1518,
+          "line": 49,
+          "column": 5,
+          "raw": "if (trimmed.includes(\":\") && trimmed.split(\":\").length > 2) {\n        return { host: trimmed, port: 0 };\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1412,
+          "end": 1466,
+          "line": 49,
+          "column": 9,
+          "raw": "trimmed.includes(\":\") && trimmed.split(\":\").length > 2",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 1572,
+          "end": 1845,
+          "line": 53,
+          "column": 5,
+          "raw": "if (colonIndex !== -1 && colonIndex === trimmed.indexOf(\":\")) {\n        const host = trimmed.slice(0, colonIndex);\n        const port = Number.parseInt(trimmed.slice(colonIndex + 1), 10);\n        if (!Number.isNaN(port)) {\n            return { host, port };\n        }\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 1576,
+          "end": 1632,
+          "line": 53,
+          "column": 9,
+          "raw": "colonIndex !== -1 && colonIndex === trimmed.indexOf(\":\")",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 1768,
+          "end": 1839,
+          "line": 56,
+          "column": 9,
+          "raw": "if (!Number.isNaN(port)) {\n            return { host, port };\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2007,
+          "end": 2049,
+          "line": 64,
+          "column": 5,
+          "raw": "if (!noProxy) {\n        return true;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2054,
+          "end": 2104,
+          "line": 67,
+          "column": 5,
+          "raw": "if (noProxy === \"*\") {\n        return false;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2287,
+          "end": 2336,
+          "line": 73,
+          "column": 9,
+          "raw": "if (!parsed) {\n            return true;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2345,
+          "end": 2422,
+          "line": 76,
+          "column": 9,
+          "raw": "if (parsed.port && parsed.port !== port) {\n            return true;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2349,
+          "end": 2384,
+          "line": 76,
+          "column": 13,
+          "raw": "parsed.port && parsed.port !== port",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 2480,
+          "end": 2675,
+          "line": 80,
+          "column": 9,
+          "raw": "if (domain.startsWith(\"*.\")) {\n            domain = domain.slice(2);\n        }\n        else if (domain.startsWith(\".\") || domain.startsWith(\"*\")) {\n            domain = domain.slice(1);\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2572,
+          "end": 2675,
+          "line": 83,
+          "column": 14,
+          "raw": "if (domain.startsWith(\".\") || domain.startsWith(\"*\")) {\n            domain = domain.slice(1);\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2576,
+          "end": 2624,
+          "line": 83,
+          "column": 18,
+          "raw": "domain.startsWith(\".\") || domain.startsWith(\"*\")",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 2684,
+          "end": 2733,
+          "line": 86,
+          "column": 9,
+          "raw": "if (!domain) {\n            return true;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2742,
+          "end": 2816,
+          "line": 89,
+          "column": 9,
+          "raw": "if (normalizedTargetHost === domain) {\n            return false;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 2825,
+          "end": 2911,
+          "line": 92,
+          "column": 9,
+          "raw": "if (normalizedTargetHost.endsWith(`.${domain}`)) {\n            return false;\n        }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3043,
+          "end": 3114,
+          "line": 100,
+          "column": 5,
+          "raw": "if (!parsedUrl?.protocol || !parsedUrl.host) {\n        return \"\";\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3047,
+          "end": 3086,
+          "line": 100,
+          "column": 9,
+          "raw": "!parsedUrl?.protocol || !parsedUrl.host",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3208,
+          "end": 3265,
+          "line": 104,
+          "column": 36,
+          "raw": "parsedUrl.hostname || parsedUrl.host.replace(/:\\d*$/, \"\")",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3285,
+          "end": 3358,
+          "line": 105,
+          "column": 18,
+          "raw": "Number.parseInt(parsedUrl.port, 10) || DEFAULT_PROXY_PORTS[protocol] || 0",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3285,
+          "end": 3353,
+          "line": 105,
+          "column": 18,
+          "raw": "Number.parseInt(parsedUrl.port, 10) || DEFAULT_PROXY_PORTS[protocol]",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3364,
+          "end": 3437,
+          "line": 106,
+          "column": 5,
+          "raw": "if (!shouldProxyHostname(hostname, port, env)) {\n        return \"\";\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3454,
+          "end": 3524,
+          "line": 109,
+          "column": 17,
+          "raw": "getProxyEnv(`${protocol}_proxy`, env) || getProxyEnv(\"all_proxy\", env)",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3530,
+          "end": 3616,
+          "line": 110,
+          "column": 5,
+          "raw": "if (proxy && !proxy.includes(\"://\")) {\n        proxy = `${protocol}://${proxy}`;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 3534,
+          "end": 3565,
+          "line": 110,
+          "column": 9,
+          "raw": "proxy && !proxy.includes(\"://\")",
+          "kind": "BinaryExpression"
+        },
+        {
+          "start": 3911,
+          "end": 3956,
+          "line": 118,
+          "column": 5,
+          "raw": "if (!proxy) {\n        return undefined;\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 4117,
+          "end": 4171,
+          "line": 126,
+          "column": 72,
+          "raw": "error instanceof Error ? error.message : String(error)",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 4186,
+          "end": 4353,
+          "line": 128,
+          "column": 5,
+          "raw": "if (proxyUrl.protocol !== \"http:\" && proxyUrl.protocol !== \"https:\") {\n        throw new Error(`${UNSUPPORTED_PROXY_PROTOCOL_MESSAGE} Got ${proxyUrl.protocol}`);\n    }",
+          "kind": "IfStatement"
+        },
+        {
+          "start": 4190,
+          "end": 4253,
+          "line": 128,
+          "column": 9,
+          "raw": "proxyUrl.protocol !== \"http:\" && proxyUrl.protocol !== \"https:\"",
+          "kind": "BinaryExpression"
+        }
+      ],
+      "imports": [
+        {
+          "start": 0,
+          "end": 56,
+          "line": 1,
+          "column": 1,
+          "raw": "import { getProviderEnvValue } from \"./provider-env.js\";",
+          "kind": "ImportDeclaration"
+        }
+      ],
+      "ast_line_starts": 133
+    },
+    {
+      "name": "oauth-page",
+      "lexical": [
+        {
+          "start": 17,
+          "end": 3956,
+          "line": 1,
+          "column": 18,
+          "raw": "`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.36 -0.36 25.72 7.72\" role=\"img\" aria-label=\"Jouzu\"><circle cx=\"1\" cy=\"0\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"1\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"2\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"3\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"0\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"1\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"2\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"3\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"14\" cy=\"0\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"1\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"2\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"3\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"18.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"0\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"1\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"2\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"3\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"25\" cy=\"0\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"1\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"2\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"3\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"0\" cy=\"4\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"0\" cy=\"5\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"1\" cy=\"6\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"6\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"4\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"5\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"4\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"5\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"12\" cy=\"6\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"13\" cy=\"6\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"4\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"5\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"16.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"4\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"5\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"23\" cy=\"6\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"24\" cy=\"6\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"4\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"5\" r=\"0.36\" fill=\"rgb(244 114 182)\"/></svg>`",
+          "kind": "FirstTemplateToken",
+          "decoded": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.36 -0.36 25.72 7.72\" role=\"img\" aria-label=\"Jouzu\"><circle cx=\"1\" cy=\"0\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"1\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"2\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"3\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"0\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"1\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"2\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"3\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"14\" cy=\"0\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"1\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"2\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"3\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"18.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"0\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"1\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"2\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"3\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"25\" cy=\"0\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"1\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"2\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"3\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"0\" cy=\"4\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"0\" cy=\"5\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"1\" cy=\"6\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"6\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"4\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"5\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"4\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"5\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"12\" cy=\"6\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"13\" cy=\"6\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"4\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"5\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"16.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"4\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"5\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"23\" cy=\"6\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"24\" cy=\"6\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"4\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"5\" r=\"0.36\" fill=\"rgb(244 114 182)\"/></svg>"
+        },
+        {
+          "start": 4024,
+          "end": 4027,
+          "line": 4,
+          "column": 21,
+          "raw": "\"&\"",
+          "kind": "StringLiteral",
+          "decoded": "&"
+        },
+        {
+          "start": 4029,
+          "end": 4036,
+          "line": 4,
+          "column": 26,
+          "raw": "\"&amp;\"",
+          "kind": "StringLiteral",
+          "decoded": "&amp;"
+        },
+        {
+          "start": 4058,
+          "end": 4061,
+          "line": 5,
+          "column": 21,
+          "raw": "\"<\"",
+          "kind": "StringLiteral",
+          "decoded": "<"
+        },
+        {
+          "start": 4063,
+          "end": 4069,
+          "line": 5,
+          "column": 26,
+          "raw": "\"&lt;\"",
+          "kind": "StringLiteral",
+          "decoded": "&lt;"
+        },
+        {
+          "start": 4091,
+          "end": 4094,
+          "line": 6,
+          "column": 21,
+          "raw": "\">\"",
+          "kind": "StringLiteral",
+          "decoded": ">"
+        },
+        {
+          "start": 4096,
+          "end": 4102,
+          "line": 6,
+          "column": 26,
+          "raw": "\"&gt;\"",
+          "kind": "StringLiteral",
+          "decoded": "&gt;"
+        },
+        {
+          "start": 4124,
+          "end": 4127,
+          "line": 7,
+          "column": 21,
+          "raw": "'\"'",
+          "kind": "StringLiteral",
+          "decoded": "\""
+        },
+        {
+          "start": 4129,
+          "end": 4137,
+          "line": 7,
+          "column": 26,
+          "raw": "\"&quot;\"",
+          "kind": "StringLiteral",
+          "decoded": "&quot;"
+        },
+        {
+          "start": 4159,
+          "end": 4162,
+          "line": 8,
+          "column": 21,
+          "raw": "\"'\"",
+          "kind": "StringLiteral",
+          "decoded": "'"
+        },
+        {
+          "start": 4164,
+          "end": 4171,
+          "line": 8,
+          "column": 26,
+          "raw": "\"&#39;\"",
+          "kind": "StringLiteral",
+          "decoded": "&#39;"
+        },
+        {
+          "start": 4440,
+          "end": 6403,
+          "line": 15,
+          "column": 12,
+          "raw": "`<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <title>${title}</title>\n  <style>\n    :root {\n      --text: #c0caf5;\n      --text-dim: #a9b1d6;\n      --page-bg: #1a1b26;\n      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";\n      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n    }\n    * { box-sizing: border-box; }\n    html { color-scheme: dark; }\n    body {\n      margin: 0;\n      min-height: 100vh;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      padding: 24px;\n      background: var(--page-bg);\n      color: var(--text);\n      font-family: var(--font-sans);\n      text-align: center;\n    }\n    main {\n      width: 100%;\n      max-width: 560px;\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n    }\n    .logo {\n      width: min(100%, 352px);\n      height: auto;\n      display: block;\n      margin-bottom: 24px;\n    }\n    .logo svg { display: block; width: 100%; height: auto; }\n    h1 {\n      margin: 0 0 10px;\n      font-size: 28px;\n      line-height: 1.15;\n      font-weight: 650;\n      color: var(--text);\n    }\n    p {\n      margin: 0;\n      line-height: 1.7;\n      color: var(--text-dim);\n      font-size: 15px;\n    }\n    .details {\n      margin-top: 16px;\n      font-family: var(--font-mono);\n      font-size: 13px;\n      color: var(--text-dim);\n      white-space: pre-wrap;\n      word-break: break-word;\n    }\n  </style>\n</head>\n<body>\n  <main>\n    <div class=\"logo\">${LOGO_SVG}</div>\n    <h1>${heading}</h1>\n    <p>${message}</p>\n    ${details ? `<div class=\"details\">${details}</div>` : \"\"}\n  </main>\n</body>\n</html>`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 6331,
+          "end": 6370,
+          "line": 86,
+          "column": 17,
+          "raw": "`<div class=\"details\">${details}</div>`",
+          "kind": "TemplateExpression"
+        },
+        {
+          "start": 6373,
+          "end": 6375,
+          "line": 86,
+          "column": 59,
+          "raw": "\"\"",
+          "kind": "StringLiteral",
+          "decoded": ""
+        },
+        {
+          "start": 6490,
+          "end": 6517,
+          "line": 93,
+          "column": 16,
+          "raw": "\"Authentication successful\"",
+          "kind": "StringLiteral",
+          "decoded": "Authentication successful"
+        },
+        {
+          "start": 6536,
+          "end": 6563,
+          "line": 94,
+          "column": 18,
+          "raw": "\"Authentication successful\"",
+          "kind": "StringLiteral",
+          "decoded": "Authentication successful"
+        },
+        {
+          "start": 6682,
+          "end": 6705,
+          "line": 100,
+          "column": 16,
+          "raw": "\"Authentication failed\"",
+          "kind": "StringLiteral",
+          "decoded": "Authentication failed"
+        },
+        {
+          "start": 6724,
+          "end": 6747,
+          "line": 101,
+          "column": 18,
+          "raw": "\"Authentication failed\"",
+          "kind": "StringLiteral",
+          "decoded": "Authentication failed"
+        }
+      ],
+      "calls": [
+        {
+          "start": 3998,
+          "end": 4172,
+          "line": 3,
+          "column": 12,
+          "raw": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\")\n        .replaceAll('\"', \"&quot;\")\n        .replaceAll(\"'\", \"&#39;\")",
+          "kind": "CallExpression",
+          "callee": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\")\n        .replaceAll('\"', \"&quot;\")\n        .replaceAll"
+        },
+        {
+          "start": 3998,
+          "end": 4138,
+          "line": 3,
+          "column": 12,
+          "raw": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\")\n        .replaceAll('\"', \"&quot;\")",
+          "kind": "CallExpression",
+          "callee": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\")\n        .replaceAll"
+        },
+        {
+          "start": 3998,
+          "end": 4103,
+          "line": 3,
+          "column": 12,
+          "raw": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\")",
+          "kind": "CallExpression",
+          "callee": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll"
+        },
+        {
+          "start": 3998,
+          "end": 4070,
+          "line": 3,
+          "column": 12,
+          "raw": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")",
+          "kind": "CallExpression",
+          "callee": "value\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll"
+        },
+        {
+          "start": 3998,
+          "end": 4037,
+          "line": 3,
+          "column": 12,
+          "raw": "value\n        .replaceAll(\"&\", \"&amp;\")",
+          "kind": "CallExpression",
+          "callee": "value\n        .replaceAll"
+        },
+        {
+          "start": 4225,
+          "end": 4250,
+          "line": 11,
+          "column": 19,
+          "raw": "escapeHtml(options.title)",
+          "kind": "CallExpression",
+          "callee": "escapeHtml"
+        },
+        {
+          "start": 4272,
+          "end": 4299,
+          "line": 12,
+          "column": 21,
+          "raw": "escapeHtml(options.heading)",
+          "kind": "CallExpression",
+          "callee": "escapeHtml"
+        },
+        {
+          "start": 4321,
+          "end": 4348,
+          "line": 13,
+          "column": 21,
+          "raw": "escapeHtml(options.message)",
+          "kind": "CallExpression",
+          "callee": "escapeHtml"
+        },
+        {
+          "start": 4388,
+          "end": 4415,
+          "line": 14,
+          "column": 39,
+          "raw": "escapeHtml(options.details)",
+          "kind": "CallExpression",
+          "callee": "escapeHtml"
+        },
+        {
+          "start": 6462,
+          "end": 6588,
+          "line": 92,
+          "column": 12,
+          "raw": "renderPage({\n        title: \"Authentication successful\",\n        heading: \"Authentication successful\",\n        message,\n    })",
+          "kind": "CallExpression",
+          "callee": "renderPage"
+        },
+        {
+          "start": 6654,
+          "end": 6789,
+          "line": 99,
+          "column": 12,
+          "raw": "renderPage({\n        title: \"Authentication failed\",\n        heading: \"Authentication failed\",\n        message,\n        details,\n    })",
+          "kind": "CallExpression",
+          "callee": "renderPage"
+        }
+      ],
+      "constructors": [],
+      "throws": [],
+      "catches": [],
+      "controls": [
+        {
+          "start": 4370,
+          "end": 4427,
+          "line": 14,
+          "column": 21,
+          "raw": "options.details ? escapeHtml(options.details) : undefined",
+          "kind": "ConditionalExpression"
+        },
+        {
+          "start": 6321,
+          "end": 6375,
+          "line": 86,
+          "column": 7,
+          "raw": "details ? `<div class=\"details\">${details}</div>` : \"\"",
+          "kind": "ConditionalExpression"
+        }
+      ],
+      "imports": [],
+      "ast_line_starts": 106
+    }
+  ],
+  "lexical_partition": [
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 36,
+      "end": 55,
+      "line": 1,
+      "column": 37,
+      "raw": "\"./provider-env.js\"",
+      "kind": "StringLiteral",
+      "decoded": "./provider-env.js",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 460,
+      "end": 462,
+      "line": 17,
+      "column": 9,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 732,
+      "end": 735,
+      "line": 31,
+      "column": 28,
+      "raw": "\"[\"",
+      "kind": "StringLiteral",
+      "decoded": "[",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 754,
+      "end": 757,
+      "line": 31,
+      "column": 50,
+      "raw": "\"]\"",
+      "kind": "StringLiteral",
+      "decoded": "]",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 944,
+      "end": 947,
+      "line": 37,
+      "column": 28,
+      "raw": "\"[\"",
+      "kind": "StringLiteral",
+      "decoded": "[",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 999,
+      "end": 1002,
+      "line": 38,
+      "column": 48,
+      "raw": "\"]\"",
+      "kind": "StringLiteral",
+      "decoded": "]",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 1193,
+      "end": 1196,
+      "line": 42,
+      "column": 33,
+      "raw": "\":\"",
+      "kind": "StringLiteral",
+      "decoded": ":",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 1429,
+      "end": 1432,
+      "line": 49,
+      "column": 26,
+      "raw": "\":\"",
+      "kind": "StringLiteral",
+      "decoded": ":",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 1451,
+      "end": 1454,
+      "line": 49,
+      "column": 48,
+      "raw": "\":\"",
+      "kind": "StringLiteral",
+      "decoded": ":",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 1562,
+      "end": 1565,
+      "line": 52,
+      "column": 44,
+      "raw": "\":\"",
+      "kind": "StringLiteral",
+      "decoded": ":",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 1628,
+      "end": 1631,
+      "line": 53,
+      "column": 61,
+      "raw": "\":\"",
+      "kind": "StringLiteral",
+      "decoded": ":",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.12",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 1971,
+      "end": 1981,
+      "line": 63,
+      "column": 33,
+      "raw": "\"no_proxy\"",
+      "kind": "StringLiteral",
+      "decoded": "no_proxy",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.13",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 2070,
+      "end": 2073,
+      "line": 67,
+      "column": 21,
+      "raw": "\"*\"",
+      "kind": "StringLiteral",
+      "decoded": "*",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.14",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 2202,
+      "end": 2209,
+      "line": 71,
+      "column": 26,
+      "raw": "/[,\\s]/",
+      "kind": "RegularExpressionLiteral",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.15",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 2502,
+      "end": 2506,
+      "line": 80,
+      "column": 31,
+      "raw": "\"*.\"",
+      "kind": "StringLiteral",
+      "decoded": "*.",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.16",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 2594,
+      "end": 2597,
+      "line": 83,
+      "column": 36,
+      "raw": "\".\"",
+      "kind": "StringLiteral",
+      "decoded": ".",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.17",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 2620,
+      "end": 2623,
+      "line": 83,
+      "column": 62,
+      "raw": "\"*\"",
+      "kind": "StringLiteral",
+      "decoded": "*",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.18",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 2859,
+      "end": 2871,
+      "line": 92,
+      "column": 43,
+      "raw": "`.${domain}`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.19",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3105,
+      "end": 3107,
+      "line": 101,
+      "column": 16,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.20",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3161,
+      "end": 3164,
+      "line": 103,
+      "column": 47,
+      "raw": "\":\"",
+      "kind": "StringLiteral",
+      "decoded": ":",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.21",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3253,
+      "end": 3260,
+      "line": 104,
+      "column": 81,
+      "raw": "/:\\d*$/",
+      "kind": "RegularExpressionLiteral",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.22",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3262,
+      "end": 3264,
+      "line": 104,
+      "column": 90,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.23",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3428,
+      "end": 3430,
+      "line": 107,
+      "column": 16,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.24",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3466,
+      "end": 3485,
+      "line": 109,
+      "column": 29,
+      "raw": "`${protocol}_proxy`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.25",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3507,
+      "end": 3518,
+      "line": 109,
+      "column": 70,
+      "raw": "\"all_proxy\"",
+      "kind": "StringLiteral",
+      "decoded": "all_proxy",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.26",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3559,
+      "end": 3564,
+      "line": 110,
+      "column": 34,
+      "raw": "\"://\"",
+      "kind": "StringLiteral",
+      "decoded": "://",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.27",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3585,
+      "end": 3609,
+      "line": 111,
+      "column": 17,
+      "raw": "`${protocol}://${proxy}`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.28",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 3687,
+      "end": 3792,
+      "line": 115,
+      "column": 51,
+      "raw": "\"Unsupported proxy protocol. SOCKS and PAC proxy URLs are not supported; use an HTTP or HTTPS proxy URL.\"",
+      "kind": "StringLiteral",
+      "decoded": "Unsupported proxy protocol. SOCKS and PAC proxy URLs are not supported; use an HTTP or HTTPS proxy URL.",
+      "disposition": "primary:pi-ai-host-utilities.unsupported-protocol"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.29",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 4070,
+      "end": 4173,
+      "line": 126,
+      "column": 25,
+      "raw": "`Invalid proxy URL ${JSON.stringify(proxy)}: ${error instanceof Error ? error.message : String(error)}`",
+      "kind": "TemplateExpression",
+      "disposition": "primary:pi-ai-host-utilities.invalid-proxy"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.30",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 4212,
+      "end": 4219,
+      "line": 128,
+      "column": 31,
+      "raw": "\"http:\"",
+      "kind": "StringLiteral",
+      "decoded": "http:",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.31",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 4245,
+      "end": 4253,
+      "line": 128,
+      "column": 64,
+      "raw": "\"https:\"",
+      "kind": "StringLiteral",
+      "decoded": "https:",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.32",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 4281,
+      "end": 4345,
+      "line": 129,
+      "column": 25,
+      "raw": "`${UNSUPPORTED_PROXY_PROTOCOL_MESSAGE} Got ${proxyUrl.protocol}`",
+      "kind": "TemplateExpression",
+      "disposition": "primary:pi-ai-host-utilities.protocol-got"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.node-http-proxy.33",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "start": 4377,
+      "end": 4420,
+      "line": 133,
+      "column": 1,
+      "raw": "//# sourceMappingURL=node-http-proxy.js.map",
+      "kind": "Comment",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.1",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 17,
+      "end": 3956,
+      "line": 1,
+      "column": 18,
+      "raw": "`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.36 -0.36 25.72 7.72\" role=\"img\" aria-label=\"Jouzu\"><circle cx=\"1\" cy=\"0\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"1\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"2\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"3\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"0\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"1\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"2\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"3\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"14\" cy=\"0\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"1\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"2\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"3\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"18.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"0\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"1\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"2\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"3\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"25\" cy=\"0\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"1\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"2\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"3\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"0\" cy=\"4\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"0\" cy=\"5\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"1\" cy=\"6\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"6\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"4\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"5\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"4\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"5\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"12\" cy=\"6\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"13\" cy=\"6\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"4\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"5\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"16.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"4\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"5\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"23\" cy=\"6\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"24\" cy=\"6\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"4\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"5\" r=\"0.36\" fill=\"rgb(244 114 182)\"/></svg>`",
+      "kind": "FirstTemplateToken",
+      "decoded": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.36 -0.36 25.72 7.72\" role=\"img\" aria-label=\"Jouzu\"><circle cx=\"1\" cy=\"0\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"0\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"1\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"2\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"3\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"0\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"1\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"2\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"3\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"14\" cy=\"0\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"1\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"2\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"3\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"3\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"18.5\" cy=\"2\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"0\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"1\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"0\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"1\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"2\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"3\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"25\" cy=\"0\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"1\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"2\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"3\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"0\" cy=\"4\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"0\" cy=\"5\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"1\" cy=\"6\" r=\"0.36\" fill=\"rgb(34 211 238)\"/><circle cx=\"2\" cy=\"6\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"4\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"3\" cy=\"5\" r=\"0.36\" fill=\"rgb(57 200 232)\"/><circle cx=\"5.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"5.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"6.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(81 189 226)\"/><circle cx=\"7.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"8.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(104 179 219)\"/><circle cx=\"11\" cy=\"4\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"11\" cy=\"5\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"12\" cy=\"6\" r=\"0.36\" fill=\"rgb(127 168 213)\"/><circle cx=\"13\" cy=\"6\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"4\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"14\" cy=\"5\" r=\"0.36\" fill=\"rgb(151 157 207)\"/><circle cx=\"16.5\" cy=\"5\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"16.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"4\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"17.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(174 146 201)\"/><circle cx=\"18.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"19.5\" cy=\"6\" r=\"0.36\" fill=\"rgb(197 136 194)\"/><circle cx=\"22\" cy=\"4\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"22\" cy=\"5\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"23\" cy=\"6\" r=\"0.36\" fill=\"rgb(221 125 188)\"/><circle cx=\"24\" cy=\"6\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"4\" r=\"0.36\" fill=\"rgb(244 114 182)\"/><circle cx=\"25\" cy=\"5\" r=\"0.36\" fill=\"rgb(244 114 182)\"/></svg>",
+      "primary_component": {
+        "start": 114,
+        "end": 119,
+        "text": "Jouzu",
+        "role": "protected-brand-accessible-label",
+        "technical_svg_remainder_protected": true
+      },
+      "disposition": "primary:pi-ai-host-utilities.logo-label"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.2",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4024,
+      "end": 4027,
+      "line": 4,
+      "column": 21,
+      "raw": "\"&\"",
+      "kind": "StringLiteral",
+      "decoded": "&",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.3",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4029,
+      "end": 4036,
+      "line": 4,
+      "column": 26,
+      "raw": "\"&amp;\"",
+      "kind": "StringLiteral",
+      "decoded": "&amp;",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.4",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4058,
+      "end": 4061,
+      "line": 5,
+      "column": 21,
+      "raw": "\"<\"",
+      "kind": "StringLiteral",
+      "decoded": "<",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.5",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4063,
+      "end": 4069,
+      "line": 5,
+      "column": 26,
+      "raw": "\"&lt;\"",
+      "kind": "StringLiteral",
+      "decoded": "&lt;",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.6",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4091,
+      "end": 4094,
+      "line": 6,
+      "column": 21,
+      "raw": "\">\"",
+      "kind": "StringLiteral",
+      "decoded": ">",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.7",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4096,
+      "end": 4102,
+      "line": 6,
+      "column": 26,
+      "raw": "\"&gt;\"",
+      "kind": "StringLiteral",
+      "decoded": "&gt;",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.8",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4124,
+      "end": 4127,
+      "line": 7,
+      "column": 21,
+      "raw": "'\"'",
+      "kind": "StringLiteral",
+      "decoded": "\"",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.9",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4129,
+      "end": 4137,
+      "line": 7,
+      "column": 26,
+      "raw": "\"&quot;\"",
+      "kind": "StringLiteral",
+      "decoded": "&quot;",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.10",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4159,
+      "end": 4162,
+      "line": 8,
+      "column": 21,
+      "raw": "\"'\"",
+      "kind": "StringLiteral",
+      "decoded": "'",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.11",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4164,
+      "end": 4171,
+      "line": 8,
+      "column": 26,
+      "raw": "\"&#39;\"",
+      "kind": "StringLiteral",
+      "decoded": "&#39;",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.12",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 4440,
+      "end": 6403,
+      "line": 15,
+      "column": 12,
+      "raw": "`<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <title>${title}</title>\n  <style>\n    :root {\n      --text: #c0caf5;\n      --text-dim: #a9b1d6;\n      --page-bg: #1a1b26;\n      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";\n      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n    }\n    * { box-sizing: border-box; }\n    html { color-scheme: dark; }\n    body {\n      margin: 0;\n      min-height: 100vh;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      padding: 24px;\n      background: var(--page-bg);\n      color: var(--text);\n      font-family: var(--font-sans);\n      text-align: center;\n    }\n    main {\n      width: 100%;\n      max-width: 560px;\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n    }\n    .logo {\n      width: min(100%, 352px);\n      height: auto;\n      display: block;\n      margin-bottom: 24px;\n    }\n    .logo svg { display: block; width: 100%; height: auto; }\n    h1 {\n      margin: 0 0 10px;\n      font-size: 28px;\n      line-height: 1.15;\n      font-weight: 650;\n      color: var(--text);\n    }\n    p {\n      margin: 0;\n      line-height: 1.7;\n      color: var(--text-dim);\n      font-size: 15px;\n    }\n    .details {\n      margin-top: 16px;\n      font-family: var(--font-mono);\n      font-size: 13px;\n      color: var(--text-dim);\n      white-space: pre-wrap;\n      word-break: break-word;\n    }\n  </style>\n</head>\n<body>\n  <main>\n    <div class=\"logo\">${LOGO_SVG}</div>\n    <h1>${heading}</h1>\n    <p>${message}</p>\n    ${details ? `<div class=\"details\">${details}</div>` : \"\"}\n  </main>\n</body>\n</html>`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.13",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 6331,
+      "end": 6370,
+      "line": 86,
+      "column": 17,
+      "raw": "`<div class=\"details\">${details}</div>`",
+      "kind": "TemplateExpression",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.14",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 6373,
+      "end": 6375,
+      "line": 86,
+      "column": 59,
+      "raw": "\"\"",
+      "kind": "StringLiteral",
+      "decoded": "",
+      "disposition": "excluded"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.15",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 6490,
+      "end": 6517,
+      "line": 93,
+      "column": 16,
+      "raw": "\"Authentication successful\"",
+      "kind": "StringLiteral",
+      "decoded": "Authentication successful",
+      "disposition": "primary:pi-ai-host-utilities.success-title"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.16",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 6536,
+      "end": 6563,
+      "line": 94,
+      "column": 18,
+      "raw": "\"Authentication successful\"",
+      "kind": "StringLiteral",
+      "decoded": "Authentication successful",
+      "disposition": "primary:pi-ai-host-utilities.success-heading"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.17",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 6682,
+      "end": 6705,
+      "line": 100,
+      "column": 16,
+      "raw": "\"Authentication failed\"",
+      "kind": "StringLiteral",
+      "decoded": "Authentication failed",
+      "disposition": "primary:pi-ai-host-utilities.failure-title"
+    },
+    {
+      "token_id": "pi-ai-host-utilities.oauth-page.18",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "start": 6724,
+      "end": 6747,
+      "line": 101,
+      "column": 18,
+      "raw": "\"Authentication failed\"",
+      "kind": "StringLiteral",
+      "decoded": "Authentication failed",
+      "disposition": "primary:pi-ai-host-utilities.failure-heading"
+    }
+  ],
+  "source_proof_checker_sha256": "a08b34fba22d27d85f4e289e5d4bc440e90e274c45b4c189c9a0ab42b4958284",
+  "source_proof_snapshot_sha256": "4bd5b730a2042dc07209b83ce881f9f0ee17b9ccf1fe646f13b61006ab0ffc11",
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/node-http-proxy.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "4420",
+      "physical_lines": "133",
+      "root_sha256": "9f29307b06dd11207f7f1a30cf07801c9b12741f715b8c61b90807dfa730580a",
+      "cli_resolved_sha256": "9f29307b06dd11207f7f1a30cf07801c9b12741f715b8c61b90807dfa730580a",
+      "archive_sha256": "9f29307b06dd11207f7f1a30cf07801c9b12741f715b8c61b90807dfa730580a",
+      "provenance": "canonical-archive-identical",
+      "provenance_authority": "",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/oauth-page.js",
+      "package": "@earendil-works/pi-ai",
+      "package_version": "1.4.0",
+      "source_family": "dist-runtime-js",
+      "bytes": "6793",
+      "physical_lines": "105",
+      "root_sha256": "6d758fcb9fde90c98d1adf325f6421b51341becf7880057b09374c94210b387c",
+      "cli_resolved_sha256": "6d758fcb9fde90c98d1adf325f6421b51341becf7880057b09374c94210b387c",
+      "archive_sha256": "82ff736f89ccd7a5a780e97eba656aa73ee2a435eb231938b340ffd9167086c1",
+      "provenance": "public-patch-after",
+      "provenance_authority": "upstream/pi-provider-receipts/patch.lock.json",
+      "cli_lock_key": "node_modules/@earendil-works/pi-ai",
+      "review_boundary": "Source identity only; no semantic body, wording, caller, activation, translation or runtime coverage is granted. Preserve each separate inventory owner and external/native/resource boundary."
+    }
+  ],
+  "artifact_sha256": {
+    "pi-ai-host-utilities.csv": "290ee4d6e7226ca04076b7587b6f5cf85645235a7dd71b4e10a8436a51db7f50",
+    "pi-ai-host-utilities-exclusions.csv": "9d9ab396eb97e76b1201ffc5eefc0d244043b20df4b4c610bb8140ffc7c48820",
+    "pi-ai-host-utilities-scope.csv": "3d485d9b319c715ed0a70015c00972d71f4ed619d176410ce67edbc5028f2a91",
+    "pi-ai-host-utilities-boundaries.csv": "d613000ebe0844f57b1223e92c4270a6524e5aa2e89e880b0c16177e1a538273"
+  },
+  "audited_execution": false
+}
