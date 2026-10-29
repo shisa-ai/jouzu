@@ -1,16 +1,16 @@
 # Jouzu
 
-Jouzu is Shisa AI's terminal coding harness, built on [Pi coding agent](https://pi.dev/) 1.4.0.
+Jouzu is Shisa AI's "batteries included" terminal coding harness, built on [Pi](https://pi.dev/):
 
 - **Goals, loops, and scheduled work.** Track tasks, work toward a goal, run measured improvement loops, and schedule prompts.
 - **Background jobs.** Run shell jobs while you keep working; completions arrive as batched summaries.
-- **Child agents.** Give each agent its own model, tools, instructions, and workspace.
-- **Web search and fetch.** Fetch pages directly or through a browser that installs on first use.
+- **Subagents.** Give each agent its own model, tools, instructions, and workspace.
+- **Web search and fetch.** Fetch pages directly or via the Camoufox stealth browser.
 - **Local content scanning.** TextGuard checks skills and web results before they reach the model.
 - **Compaction with searchable history.** Defaults to [VCC](https://github.com/lllyasviel/VCC) for instant, deterministic compaction with agent-searchable history.
-- **Language choices.** English or Japanese (preview) interface, independent reply and artifact languages, and layout support for Japanese, Chinese, Korean, and emoji widths.
-- **Voice dictation.** Speak into the prompt with Shisa realtime transcription.
-- **Model picker.** Search providers and models, keep favorites, and save per-project defaults. Sign into [Shisa AI's API service](https://platform.shisa.ai/) for the latest open coding models.
+- **Language choices.** English or full Japanese localization, as well as layout support for Japanese, Chinese, Korean, and emoji widths.
+- **Voice dictation.** Speak into the prompt with Shisa AI's realtime transcription.
+- **Model picker.** Search providers and models, keep favorites, and save per-project defaults. Add any of your own models or sign into [Shisa AI's API service](https://platform.shisa.ai/) for the latest open coding models.
 
 Jouzu is **beta** software. Expect frequent updates and changes.
 
