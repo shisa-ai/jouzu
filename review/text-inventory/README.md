@@ -965,6 +965,21 @@ native rendering retain separate conditions. The
 Four archives, both installed trees, exact public patches and nineteen corruption
 controls pass without running providers, streams, timers, models or native UI.
 
+[pi-ai-catalog-data.csv](pi-ai-catalog-data.csv) records 1,794 qualified
+shipped metadata values across 43 complete JSON resources (990,090 bytes):
+1,713 model names, 49 nested Radius provider names and 32 lab brands.
+The 87,466 [exclusions](pi-ai-catalog-data-exclusions.csv) complete the
+89,260-key/scalar partition, with exact JSON pointers and source coordinates;
+11,876 containers are accounted for separately. Eight
+[boundaries](pi-ai-catalog-data-boundaries.csv) retain factory inclusion,
+authentication, catalog replacement, scoped selection, offering-name overrides
+and API-only metadata. Model names require an admitted, rendered picker row;
+raw metadata presence does not establish display or a translation requirement.
+The [scope](pi-ai-catalog-data-scope.csv) grants complete local JSON data review
+without changing the 200-file JavaScript census. Three canonical archives,
+both installed trees, public patch evidence and 24 corruption controls pass.
+No catalog, provider, model, authentication or native UI operation runs.
+
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
 [exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
@@ -2322,6 +2337,7 @@ python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <ro
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
 python -B review/text-inventory/verify-pi-ai-faux-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-ai-catalog-data.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
