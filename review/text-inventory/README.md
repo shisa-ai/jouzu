@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 39 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 74 compiled bodies;
-7 compiled bodies remain pending. The
+universe with 40 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 75 compiled bodies;
+6 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1498,6 +1498,22 @@ body and five foreign message/forwarding bodies local review; it does not close
 the compiler, schema-engine or custom-callback graph. Exact archive/lock and both
 installed copies match; fourteen corruption controls pass. No validator,
 formatter, schema, tool or model operation runs.
+
+[pi-bundle-terminal-theme.csv](pi-bundle-terminal-theme.csv) records 191 qualified
+definitions across the complete compiled terminal/theme body (462,868 bytes).
+Its 4,509 [exclusions](pi-bundle-terminal-theme-exclusions.csv) complete the
+4,700-node partition. Eighty-one
+[boundaries](pi-bundle-terminal-theme-boundaries.csv) retain terminal controls,
+rendering, input/editor/settings/search behavior, Markdown/math/highlighting,
+theme discovery/fallback/watchers and error suppression. Keybinding descriptions
+remain API metadata unless an actual help consumer is established. Marked HTML
+parser error handling differs from the terminal Markdown lexer/render path.
+Initial/fallback theme failures, setTheme return values, watcher suppression and
+width-crash paths retain their own guards; they are not a general UI error sink.
+The [scope](pi-bundle-terminal-theme-scope.csv) grants one complete local body and
+bounded import/caller proofs. Canonical archive and both installed copies match;
+31 corruption controls and four physical-LF regressions pass. No terminal,
+renderer, watcher, filesystem, theme, schema, clipboard or native UI operation runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2890,6 +2906,7 @@ python -B review/text-inventory/verify-pi-bundle-highlight-core.py
 python -B review/text-inventory/verify-pi-bundle-jiti-loader.py
 python -B review/text-inventory/verify-pi-bundle-schema-tools.py
 python -B review/text-inventory/verify-pi-ai-validation-text.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
+python -B review/text-inventory/verify-pi-bundle-terminal-theme.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
