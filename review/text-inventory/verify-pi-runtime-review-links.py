@@ -13,6 +13,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 SCOPES = [
+    'pi-bundle-schema-tools-scope.csv',
     'pi-bundle-jiti-loader-scope.csv',
     'pi-bundle-highlight-core-scope.csv',
     'pi-bundle-web-streams-scope.csv',
@@ -96,11 +97,11 @@ def generate(root_modules, nested_modules):
             json.dumps(baseline, ensure_ascii=False, separators=(',', ':')),
             json.dumps(followon[source], ensure_ascii=False, separators=(',', ':')), LIMIT])))
     pending = [row for row in rows if row['local_source_status'] == 'local-source-body-pending']
-    assert len(pending) == 8 and all(row['runtime_family'] == 'compiled-bundle-source' for row in pending)
+    assert len(pending) == 7 and all(row['runtime_family'] == 'compiled-bundle-source' for row in pending)
     snapshot = dict(source_revision='346d1e481757a55eb62fc066e43bbc7999b8e6dd',
-                    runtime_sources=384, local_source_owners_present=376,
-                    noncompiled_local_owners=303, compiled_local_owners=73,
-                    pending_compiled_bodies=8, pending_other_local_bodies=0,
+                    runtime_sources=384, local_source_owners_present=377,
+                    noncompiled_local_owners=303, compiled_local_owners=74,
+                    pending_compiled_bodies=7, pending_other_local_bodies=0,
                     pending_compiled_bytes=sum(int(by_source[row['source']]['bytes']) for row in pending),
                     original_census_unchanged=True, input_sha256_utf8_lf=inputs,
                     interpretation=LIMIT,

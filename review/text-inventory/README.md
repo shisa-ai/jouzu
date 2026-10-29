@@ -371,9 +371,9 @@ foreign dependency and consumer coverage retain their separate qualifications.
 No audited module, native build or example runs.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 38 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 73 compiled bodies;
-8 compiled bodies remain pending. The
+universe with 39 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 74 compiled bodies;
+7 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1467,6 +1467,21 @@ grants complete local review only to this loader, with bounded host proof.
 Canonical archive, installed copies, 31 corruption controls and four LF-count
 cases pass. Foreign resolver/native/module/cache consumers remain bounded;
 no loader, import, cache, process warning, environment or native UI operation runs.
+
+[pi-bundle-schema-tools.csv](pi-bundle-schema-tools.csv) records 94 qualified
+definitions across the complete compiled schema/shared-helper body (234,664 bytes).
+The 1,222 [exclusions](pi-bundle-schema-tools-exclusions.csv) complete the
+1,316-node partition. Twenty-eight
+[boundaries](pi-bundle-schema-tools-boundaries.csv) retain TypeBox/build/DSL/locale
+formatting, shared truncation, report/render/search helpers, retry and CodeMode
+activation. The error formatter reads keyword/parameter data; private schema
+descriptions do not thereby become diagnostics. Stable-message guards and retry
+normalization preempt private generic/abort headlines; provider-error patterns
+retain their recognition roles. The [scope](pi-bundle-schema-tools-scope.csv)
+grants complete local review only to one body, with bounded caller proof.
+Canonical archive, installed copies, 31 corruption controls and four LF-count
+cases pass. Foreign/native/grammar/callback/caller payloads remain bounded;
+no schema, build, formatter, report, search, retry, CodeMode or native UI runs.
 
 [pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
 expressions across all six Agent Core runtime bodies (1,515 lines). The 273
@@ -2857,6 +2872,7 @@ python -B review/text-inventory/verify-pi-ai-nonchat-adapters.py --node-modules 
 python -B review/text-inventory/verify-pi-bundle-web-streams.py
 python -B review/text-inventory/verify-pi-bundle-highlight-core.py
 python -B review/text-inventory/verify-pi-bundle-jiti-loader.py
+python -B review/text-inventory/verify-pi-bundle-schema-tools.py
 node review/text-inventory/verify-pi-agent-core-text.cjs
 python -B review/text-inventory/verify-pi-ai-provider-schemas.py
 node review/text-inventory/verify-pi-ai-provider-helpers.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
