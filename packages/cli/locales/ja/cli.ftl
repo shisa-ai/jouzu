@@ -21,10 +21,10 @@ jouzu-cli-error-generic = Jouzu の実行に失敗しました: { $message }
 jouzu-cli-error-update = Jouzu の自己更新に失敗しました: { $message }
 jouzu-cli-args-optionValueRequired = { $option } には値が必要です
 jouzu-cli-args-internalParserError = { $option } の内部パーサーエラー
-jouzu-cli-args-catalogOperationRequired = catalog には "status"、"refresh"、"accept"、"validate"、"conformance" のいずれかが必要です
-jouzu-cli-args-catalogAcceptOptionsRequireValues = catalog accept のオプションには値が必要です
-jouzu-cli-args-catalogUnknownAcceptOption = 不明な catalog accept オプション: { $option }
-jouzu-cli-args-catalogAcceptUsage = catalog accept には <revision> --digest <sha256> [--source <source-id>] が必要です
+jouzu-cli-args-catalogOperationRequired = catalog には "status"、"refresh"、"accept"、"reject"、"validate"、"conformance" のいずれかが必要です
+jouzu-cli-args-catalogAcceptOptionsRequireValues = catalog { $operation } のオプションには値が必要です
+jouzu-cli-args-catalogUnknownAcceptOption = 不明な catalog { $operation } オプション: { $option }
+jouzu-cli-args-catalogAcceptUsage = catalog { $operation } には <revision> --digest <sha256> [--source <source-id>] が必要です
 jouzu-cli-args-catalogFileRequired = catalog { $operation } にはファイルパス 1 つと省略可能な --json が必要です
 jouzu-cli-args-catalogUnknownOption = 不明な catalog { $operation } オプション: { $token }
 jouzu-cli-args-selfUpdateOperationRequired = self-update には "status"、"check"、"apply"、"policy" のいずれかが必要です
@@ -285,14 +285,28 @@ jouzu-cli-catalog-field-revision = リビジョン
 jouzu-cli-catalog-field-sequence = シーケンス
 jouzu-cli-catalog-field-validated = 検証日時
 jouzu-cli-catalog-field-credential = 資格情報
-jouzu-cli-catalog-field-quarantined = 隔離中の候補
+jouzu-cli-catalog-field-quarantined = 保留中の更新
 jouzu-cli-catalog-field-lastError = 最後のエラー
 jouzu-cli-catalog-valid = モデルカタログは有効です。
 jouzu-cli-catalog-invalid = モデルカタログが無効です: { $message }
 jouzu-cli-catalog-note-tokenMissing = トークン変数 { $name } が設定されておらず、このソースに保存されたトークンもありません。トークンが利用可能になるまで更新はスキップされます。
 jouzu-cli-catalog-note-registrationGaps = 提供モデル { $total } 件のうち { $complete } 件が、新しいモデルに必要な項目を備えています（{ $gaps }）。{ $effect }
 jouzu-cli-catalog-note-thinkingLevels = 提供モデル { $total } 件のうち { $count } 件が思考レベルを宣言していないため、Jouzu は推論の強度を制御できません。
-jouzu-cli-catalog-note-quarantined = { $count } 件の候補リビジョンが隔離されています。
+jouzu-cli-catalog-note-quarantined = 更新は確認待ちで保留されています。{ $summary } 使用するには { $accept } を実行するか、/catalogs で確認してください。破棄するには { $reject } を実行してください。
+jouzu-cli-catalog-held-summary = 新しいリビジョンのモデルは { $candidate } 件（追加 { $added } 件、削除 { $removed } 件）、有効なリビジョンのモデルは { $active } 件です。
+jouzu-cli-catalog-held-summaryEmpty = 新しいリビジョンにはモデルがありません。有効なリビジョンのモデルは { $active } 件です。空のカタログは通常、カタログサーバーの設定ミスを示します。
+jouzu-cli-catalog-held-summaryUnknown = このリビジョンと有効なリビジョンの差分は記録されていません。
+jouzu-cli-catalog-held-title = 保留中のカタログ更新: { $label }
+jouzu-cli-catalog-held-revision = リビジョン: { $revision }
+jouzu-cli-catalog-held-optionAccept = 承認して新しいカタログを使用
+jouzu-cli-catalog-held-optionReject = 拒否して現在のカタログを維持
+jouzu-cli-catalog-held-footer = { $confirm } 選択、{ $move } 移動、{ $cancel } 後で /catalogs で決定
+jouzu-cli-catalog-held-accepted = { $label } の保留中のカタログ更新を適用しました。
+jouzu-cli-catalog-held-rejected = { $label } の保留中のカタログ更新を拒否しました。現在のカタログを引き続き使用します。
+jouzu-cli-catalog-held-pending = { $label } のカタログ更新は保留中です。{ $summary } /catalogs で確認するか、{ $accept } を実行してください。
+jouzu-cli-catalog-held-failed = { $label } のカタログの決定を適用できませんでした: { $message }
+jouzu-cli-settings-hint-reviewUpdate = 更新を確認
+jouzu-cli-settings-heldWarning = カタログ更新が保留中です。{ $summary } { $key } で確認します。
 jouzu-cli-catalog-field-registrationValue = 提供モデル { $total } 件のうち { $complete } 件が、新しいモデルに必要な項目を備えています
 jouzu-cli-catalog-field-thinkingLevelsValue = 提供モデル { $total } 件のうち { $count } 件が思考レベルを宣言していません
 jouzu-cli-catalog-credential-environmentSet = 環境変数 { $name }（設定済み）
@@ -622,7 +636,7 @@ jouzu-cli-selfUpdate-channelValue-source = ソースチェックアウト
 jouzu-cli-selfUpdate-channelValue-other = その他
 
 jouzu-cli-usage-pinnedPiSelfUpdate = Jouzu は Pi 実行環境を固定しているため、Pi の自己更新を実行できません。代わりに Jouzu を更新してください。`jz update --extensions` などのパッケージのみの更新は引き続き利用できます。
-jouzu-cli-usage-catalogAcceptRevisionDigest = catalog accept には正確なリビジョンとダイジェストが必要です
+jouzu-cli-usage-catalogAcceptRevisionDigest = catalog { $operation } には正確なリビジョンとダイジェストが必要です
 jouzu-cli-usage-catalogFileRequired = catalog { $operation } にはファイルパスが必要です
 jouzu-cli-usage-selfUpdatePolicyValue = self-update policy には値が必要です
 
@@ -1111,7 +1125,7 @@ jouzu-cli-settings-hint-scroll = スクロール
 # Catalogs は「カタログ」、Settings は「設定」と表示する。`/catalogs` と
 # 識別子は翻訳しない。
 jouzu-cli-settings-warning = 警告: { $message }
-jouzu-cli-settings-savedQuarantined = { $label } を保存しました。カタログリビジョンは隔離されました: { $reasons }。
+jouzu-cli-settings-savedQuarantined = { $label } を保存しました。カタログ更新は確認待ちで保留されています: { $reasons }
 jouzu-cli-settings-savedWithCount = { $count ->
     [one] { $label } をモデル { $count } 件で保存しました。
    *[other] { $label } をモデル { $count } 件で保存しました。

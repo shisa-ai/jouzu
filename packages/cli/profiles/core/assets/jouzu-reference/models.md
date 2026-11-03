@@ -24,13 +24,13 @@ jz catalog refresh SOURCE_ID
 
 Use an actual ID from status; omit it to refresh all sources. Refresh contacts the server and updates cache. Doctor reads cached data. An external refresh does not prove a running registry reloaded; use in-session refresh or `/reload`.
 
-Startup, `/reload`, and Models `Ctrl+Shift+R` refresh catalogs. Missing credentials skip a source. Failures retain last-valid data and show degraded status. Large held revisions require review and exact identifiers: `jz catalog accept REVISION --digest SHA256 --source SOURCE_ID`.
+Startup, `/reload`, and Models `Ctrl+Shift+R` refresh catalogs. Missing credentials skip a source. Failures retain last-valid data and show degraded status. Jouzu activates revisions as delivered, except that a complete catalog with no models replacing a non-empty one is held. The terminal opens an Accept/Reject review; Esc defers it to `/catalogs` (`U` reviews). CLI: `jz catalog accept|reject REVISION --digest SHA256 --source SOURCE_ID`, with exact values from `jz catalog status`.
 
 Gateway catalogs override matching local routes, credentials, headers and overrides. Other catalogs update metadata while preserving local connection settings. `models.json` is never rewritten. Disabling a catalog reveals overridden local entries. Missing gateway credentials do not authorize fallback to a different provider.
 
 ## Sources and accounts
 
-User `/catalogs`: `A` adds, Enter edits, Space enables/disables, `R` refreshes, `D` removes after confirmation. Changes apply live. Removing a source deletes its token, not provider credentials, favorites or recents. Use HTTPS; HTTP exposes tokens.
+User `/catalogs`: `A` adds, Enter edits, Space enables/disables, `R` refreshes, `U` reviews a held update, `D` removes after confirmation. Changes apply live. Removing a source deletes its token, not provider credentials, favorites or recents. Use HTTPS; HTTP exposes tokens.
 
 Files in the configuration root: `catalogs.json`, `catalog-credentials.json`, `catalog-overrides.json`, `context-policy.json`. Environment authentication stores the variable name; its value overrides saved tokens. Do not print credential files.
 

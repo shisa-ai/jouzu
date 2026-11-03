@@ -27,10 +27,10 @@ jouzu-cli-error-generic = Jouzu 执行失败：{ $message }
 jouzu-cli-error-update = Jouzu 更新失败：{ $message }
 jouzu-cli-args-optionValueRequired = { $option } 需要一个值
 jouzu-cli-args-internalParserError = { $option } 的内部解析器错误
-jouzu-cli-args-catalogOperationRequired = catalog 需要 "status"、"refresh"、"accept"、"validate" 或 "conformance" 之一
-jouzu-cli-args-catalogAcceptOptionsRequireValues = catalog accept 的选项需要值
-jouzu-cli-args-catalogUnknownAcceptOption = 未知的 catalog accept 选项：{ $option }
-jouzu-cli-args-catalogAcceptUsage = catalog accept 需要 <revision> --digest <sha256> [--source <source-id>]
+jouzu-cli-args-catalogOperationRequired = catalog 需要 "status"、"refresh"、"accept"、"reject"、"validate" 或 "conformance" 之一
+jouzu-cli-args-catalogAcceptOptionsRequireValues = catalog { $operation } 的选项需要值
+jouzu-cli-args-catalogUnknownAcceptOption = 未知的 catalog { $operation } 选项：{ $option }
+jouzu-cli-args-catalogAcceptUsage = catalog { $operation } 需要 <revision> --digest <sha256> [--source <source-id>]
 jouzu-cli-args-catalogFileRequired = catalog { $operation } 需要一个文件路径以及可选的 --json
 jouzu-cli-args-catalogUnknownOption = 未知的 catalog { $operation } 选项：{ $token }
 jouzu-cli-args-selfUpdateOperationRequired = self-update 需要 "status"、"check"、"apply" 或 "policy" 之一
@@ -294,14 +294,28 @@ jouzu-cli-catalog-field-revision = 修订
 jouzu-cli-catalog-field-sequence = 序号
 jouzu-cli-catalog-field-validated = 已验证
 jouzu-cli-catalog-field-credential = 凭据
-jouzu-cli-catalog-field-quarantined = 已隔离的候选
+jouzu-cli-catalog-field-quarantined = 保留的更新
 jouzu-cli-catalog-field-lastError = 上次错误
 jouzu-cli-catalog-valid = 模型目录有效。
 jouzu-cli-catalog-invalid = 模型目录无效：{ $message }
 jouzu-cli-catalog-note-tokenMissing = 令牌变量 { $name } 未设置，且此源未保存令牌；在可用之前会跳过刷新。
 jouzu-cli-catalog-note-registrationGaps = { $total } 个提供项中有 { $complete } 个带有新模型所需的字段（{ $gaps }）。{ $effect }
 jouzu-cli-catalog-note-thinkingLevels = { $total } 个提供项中有 { $count } 个未声明级别，因此 Jouzu 无法控制其推理投入。
-jouzu-cli-catalog-note-quarantined = { $count } 个候选修订已隔离。
+jouzu-cli-catalog-note-quarantined = 更新已保留待审核。{ $summary } 要使用它，请运行 { $accept } 或在 /catalogs 中审核。要丢弃它，请运行 { $reject }。
+jouzu-cli-catalog-held-summary = 新修订列出 { $candidate } 个模型（新增 { $added } 个，移除 { $removed } 个）；当前修订列出 { $active } 个。
+jouzu-cli-catalog-held-summaryEmpty = 新修订不包含任何模型；当前修订列出 { $active } 个。空目录通常表示目录服务器配置有误。
+jouzu-cli-catalog-held-summaryUnknown = 未记录此修订与当前修订的差异。
+jouzu-cli-catalog-held-title = 目录更新已保留：{ $label }
+jouzu-cli-catalog-held-revision = 修订：{ $revision }
+jouzu-cli-catalog-held-optionAccept = 接受并使用新目录
+jouzu-cli-catalog-held-optionReject = 拒绝并保留当前目录
+jouzu-cli-catalog-held-footer = { $confirm } 选择，{ $move } 移动，{ $cancel } 稍后在 /catalogs 中决定
+jouzu-cli-catalog-held-accepted = 已应用 { $label } 的保留目录更新。
+jouzu-cli-catalog-held-rejected = 已拒绝 { $label } 的保留目录更新；当前目录保持有效。
+jouzu-cli-catalog-held-pending = { $label } 的目录更新已保留。{ $summary } 请在 /catalogs 中审核，或运行 { $accept }。
+jouzu-cli-catalog-held-failed = 无法应用 { $label } 的目录决定：{ $message }
+jouzu-cli-settings-hint-reviewUpdate = 审核更新
+jouzu-cli-settings-heldWarning = 目录更新已保留。{ $summary } 按 { $key } 审核。
 jouzu-cli-catalog-field-registrationValue = { $total } 个提供项中有 { $complete } 个带有新模型所需的字段
 jouzu-cli-catalog-field-thinkingLevelsValue = { $total } 个提供项中有 { $count } 个未声明级别
 jouzu-cli-catalog-credential-environmentSet = 环境变量 { $name }（已设置）
@@ -638,7 +652,7 @@ jouzu-cli-selfUpdate-channelValue-source = source
 jouzu-cli-selfUpdate-channelValue-other = other
 
 jouzu-cli-usage-pinnedPiSelfUpdate = Jouzu 固定了其 Pi 运行时，无法运行 Pi 自我更新。请改为升级 Jouzu；`jz update --extensions` 等仅更新包的操作仍然可用。
-jouzu-cli-usage-catalogAcceptRevisionDigest = catalog accept 需要确切的修订和摘要
+jouzu-cli-usage-catalogAcceptRevisionDigest = catalog { $operation } 需要确切的修订和摘要
 jouzu-cli-usage-catalogFileRequired = catalog { $operation } 需要一个文件路径
 jouzu-cli-usage-selfUpdatePolicyValue = self-update 策略需要一个值
 
@@ -1139,7 +1153,7 @@ jouzu-cli-settings-hint-scroll = 滚动
 # value; the view names stay English as Palette product nouns, by the owner
 # decision.
 jouzu-cli-settings-warning = 警告：{ $message }
-jouzu-cli-settings-savedQuarantined = 已保存 { $label }。目录修订已隔离：{ $reasons }。
+jouzu-cli-settings-savedQuarantined = 已保存 { $label }。目录更新已保留待审核：{ $reasons }
 jouzu-cli-settings-savedWithCount = { $count ->
     [one] 已保存 { $label }，包含 { $count } 个模型。
    *[other] 已保存 { $label }，包含 { $count } 个模型。

@@ -565,6 +565,7 @@ test("renders the pre-launch help and argument errors in the selected locale", (
 	assert.match(help.stdout, /Jouzu エージェント型 AI 環境/u);
 	// Protected values do not move into the catalog.
 	assert.match(help.stdout, /jouzu catalog accept <revision> --digest <sha256> \[--source <source-id>\]/u);
+	assert.match(help.stdout, /jouzu catalog reject <revision> --digest <sha256> \[--source <source-id>\]/u);
 	assert.match(help.stdout, /--jouzu-ui-locale <auto\|en\|ja\|zh-Hans\|zh-Hant>/u);
 
 	const error = run(["doctor", "--bogus"], { env: { JOUZU_UI_LOCALE: "ja" } });

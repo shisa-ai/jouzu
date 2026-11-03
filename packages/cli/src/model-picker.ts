@@ -8,6 +8,7 @@ import type {
 	Theme,
 } from "@earendil-works/pi-coding-agent";
 import { type Focusable, getKeybindings, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
+import { type HeldCatalogUpdate, heldCatalogUpdates, reviewHeldCatalogUpdates } from "./catalog-held.js";
 import { CatalogSettingsComponent, type CatalogSettingsOptions } from "./catalog-settings.js";
 import { catalogSourceCredentialAvailable } from "./catalog-sources.js";
 import { CatalogMessageId, catalogText, defaultCatalog } from "./cli-messages.js";
@@ -34,6 +35,7 @@ import {
 } from "./model-catalog-projection.js";
 import {
 	type ActiveModelCatalog,
+	type CatalogRefreshAllResult,
 	loadActiveModelCatalogs,
 	refreshAvailableModelCatalogs,
 } from "./model-catalog-sync.js";
@@ -1031,6 +1033,8 @@ export interface JouzuModelPickerIntegration {
 	activeAgentCount(): number;
 	/** Re-read activated catalog revisions after an external refresh. */
 	reloadCatalogs(): Promise<void>;
+	/** Ask the user about catalog revisions an external refresh held for review. */
+	reviewHeldCatalogs(result: CatalogRefreshAllResult | undefined): void;
 	/**
 	 * After a Settings sign-in or sign-out, refresh authenticated catalogs, re-project
 	 * them into providers, and refresh model availability without a restart.
@@ -1276,6 +1280,22 @@ export function createJouzuModelPicker(
 		for (const listener of catalogReloadListeners) listener();
 		if (selectDefault) await applyCatalogDefault(signal);
 	};
+	let pendingHeldUpdates: HeldCatalogUpdate[] = [];
+	/**
+	 * Open the held-update review without blocking the refresh that found it: a
+	 * refresh runs under a timeout, and the decision waits on the user. Updates
+	 * found before a session context exists wait for session start.
+	 */
+	const reviewHeld = (ctx: ExtensionContext | undefined, updates: HeldCatalogUpdate[]): void => {
+		if (updates.length === 0) return;
+		if (!ctx) {
+			pendingHeldUpdates.push(...updates);
+			return;
+		}
+		void reviewHeldCatalogUpdates(ctx, updates, { paths, env: catalogEnv, catalog: messageCatalog })
+			.then((changed) => (changed ? reloadCatalogs() : undefined))
+			.catch(() => {});
+	};
 	/**
 	 * The Settings account row signs in through the same device flow as Pi's OAuth
 	 * login, but Pi does not run its credential synchronization for that call. Fetch
@@ -1286,6 +1306,7 @@ export function createJouzuModelPicker(
 		const { signal } = change;
 		signal?.throwIfAborted();
 		const ctx = activeCtx;
+		let held: HeldCatalogUpdate[] = [];
 		if (change.signedIn) {
 			try {
 				const refreshed = await refreshAvailableModelCatalogs(paths, {
@@ -1296,6 +1317,7 @@ export function createJouzuModelPicker(
 					catalog: messageCatalog,
 				});
 				signal?.throwIfAborted();
+				held = heldCatalogUpdates(refreshed);
 				const failed = (refreshed?.results ?? [])
 					.filter(({ result }) => result.status === "error" || result.status === "rejected")
 					.map(({ source }) => sanitizeTerminalText(source.label));
@@ -1318,6 +1340,7 @@ export function createJouzuModelPicker(
 			}
 		}
 		await reloadCatalogs(true, signal);
+		reviewHeld(ctx, held);
 		if (!ctx) return;
 		try {
 			await ctx.modelRegistry.refresh({ allowNetwork: false, signal });
@@ -1619,6 +1642,7 @@ export function createJouzuModelPicker(
 							"warning",
 						);
 					} else {
+						reviewHeld(ctx, heldCatalogUpdates(catalogRefresh.value));
 						const failed = (catalogRefresh.value?.results ?? [])
 							.filter(({ result }) => result.status === "error" || result.status === "rejected")
 							.map(({ source }) => sanitizeTerminalText(source.label));
@@ -1635,6 +1659,11 @@ export function createJouzuModelPicker(
 					catalogProjection.sync(pi, ctx, catalogs);
 				}
 				syncSession(ctx);
+				if (pendingHeldUpdates.length > 0) {
+					const updates = pendingHeldUpdates;
+					pendingHeldUpdates = [];
+					reviewHeld(ctx, updates);
+				}
 				if (event.reason !== "reload") catalogDefaultEligible = false;
 				if (
 					(event.reason !== "startup" && event.reason !== "new") ||
@@ -2032,6 +2061,7 @@ export function createJouzuModelPicker(
 											}),
 										);
 									}
+									reviewHeld(ctx, heldCatalogUpdates(catalogRefresh.value));
 									const failed = (catalogRefresh.value?.results ?? [])
 										.filter(({ result }) => result.status === "error" || result.status === "rejected")
 										.map(({ source }) => sanitizeTerminalText(source.label));
@@ -2054,6 +2084,14 @@ export function createJouzuModelPicker(
 								env: catalogEnv,
 								sessionId: ctx.sessionManager?.getSessionId(),
 								onCatalogsChanged: reloadCatalogs,
+								onReviewHeldCatalog: async (updates) => {
+									const changed = await reviewHeldCatalogUpdates(ctx, updates, {
+										paths,
+										env: catalogEnv,
+										catalog: messageCatalog,
+									});
+									if (changed) await reloadCatalogs();
+								},
 								labelPolicy: createLabelPolicy(paths),
 								...(options.onDashboardChanged ? { onDashboardChanged: options.onDashboardChanged } : {}),
 								onAccountChanged: (change) => refreshShisaAccount(change),
@@ -2216,6 +2254,7 @@ export function createJouzuModelPicker(
 			}),
 		workflowService: workflow.service,
 		reloadCatalogs,
+		reviewHeldCatalogs: (result) => reviewHeld(activeCtx, heldCatalogUpdates(result)),
 		refreshShisaAccount,
 	};
 }

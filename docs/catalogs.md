@@ -104,12 +104,21 @@ Refresh behavior:
 - Never follows redirects, so a token cannot reach another origin.
 - Caches privately per source and account.
 
-## Large changes
+## Held updates
 
-Jouzu can hold back a valid catalog revision that adds or removes many models at once instead of applying it. Check `jouzu catalog status`, then accept the exact revision and digest it shows:
+Jouzu applies each valid catalog revision as the publisher delivers it, including revisions that add, remove, or rename most models. It holds one kind of revision for review: a complete catalog with no models that would replace a catalog that has models. An empty catalog usually means the catalog server is misconfigured.
+
+When an interactive refresh holds a revision (startup, `/reload`, Models `Ctrl+Shift+R`, or Catalogs `R`), Jouzu opens a review that shows the model counts:
+
+- **Accept** uses the new revision.
+- **Reject** discards it and keeps the current catalog. If the server still serves it, the next refresh holds it again.
+- **Esc** decides later. The source shows `update held` in `/catalogs`; select it and press `U` to reopen the review.
+
+`jouzu catalog status` prints the exact commands for each held revision:
 
 ```bash
 jouzu catalog accept REVISION --digest SHA256 --source SOURCE_ID
+jouzu catalog reject REVISION --digest SHA256 --source SOURCE_ID
 ```
 
 ## Single-source environment variables

@@ -2008,3 +2008,54 @@ test("a canceled response-language preview does not change the composed instruct
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+test("Catalogs refresh opens the held-update review and U reopens it", async () => {
+	const { root, paths, context } = setup({ rows: 40, columns: 120 });
+	try {
+		const url = "https://catalog.example/v1/jouzu/model-catalog";
+		const source = new CatalogSourceStore(paths, {}).add({ label: "Office", url, auth: { type: "none" } });
+		const filled = structuredClone(fixtureRaw);
+		filled.sequence = "1";
+		filled.revision = "fixture-filled";
+		assert.equal(
+			(await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(filled) })).status,
+			"activated",
+		);
+		const empty = structuredClone(fixtureRaw);
+		empty.sequence = "2";
+		empty.revision = "fixture-empty";
+		empty.modelOfferings = [];
+		const reviews = [];
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			refresh: (refreshPaths, refreshSource, options) =>
+				refreshCatalogSource(refreshPaths, refreshSource, { ...options, fetch: async () => response(empty) }),
+			onReviewHeldCatalog: async (updates) => {
+				reviews.push(updates);
+			},
+		});
+		openCatalogs(component);
+		component.handleInput("down");
+		component.handleInput("r");
+		for (let index = 0; index < 5; index++) await new Promise((resolve) => setImmediate(resolve));
+
+		assert.equal(reviews.length, 1);
+		assert.equal(reviews[0][0].source.id, source.id);
+		assert.equal(reviews[0][0].held.revision, "fixture-empty");
+		assert.deepEqual(reviews[0][0].held.changes, { activeCount: 1, candidateCount: 0, added: 0, removed: 1 });
+		const text = component.render(120).join("\n").replace(/\s+/g, " ");
+		assert.match(text, /update held/u);
+		assert.match(text, /Catalog update held\. The new revision lists no models; the active revision lists 1\./u);
+		assert.match(text, /Press U to review it\./u);
+		assert.match(text, /U review update/u);
+
+		component.handleInput("u");
+		await new Promise((resolve) => setImmediate(resolve));
+		assert.equal(reviews.length, 2);
+		assert.equal(reviews[1][0].held.digest, reviews[0][0].held.digest);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});

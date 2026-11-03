@@ -157,7 +157,7 @@ npm installs the exact `wreq-js` static transport on the consumer platform. The 
 
 Jouzu bundles two profiles, `core` (the language-neutral fallback) and `ja` (the optional Japanese-focused extension). Each profile declares its product-owned assets in `profiles/<id>/manifest.json`; `profile-manager.ts` plans and applies those assets into the isolated agent root. Core and JA use the same release-owned extension and five-skill set. JA adds only its response-language prompt asset.
 
-The optional model catalog is a model-metadata input, not an extension installer. With no configured endpoint, it performs no network work. A configured refresh streams at most 16 MiB, validates strict JSON and semantic references before activation, partitions cache by endpoint and account, quarantines bounded mass changes, and preserves the active last-known-good document on failure.
+The optional model catalog is a model-metadata input, not an extension installer. With no configured endpoint, it performs no network work. A configured refresh streams at most 16 MiB, validates strict JSON and semantic references before activation, partitions cache by endpoint and account, holds an empty replacement catalog for user review, and preserves the active last-known-good document on failure.
 
 A catalog cannot create a provider route. An offering that names a model Pi already provides only
 overrides fields, so it needs no particular field. An offering that names a model Pi does not

@@ -78,7 +78,7 @@ export type ParsedCommand =
 	| {
 			kind: "catalog";
 			options: JouzuOptions;
-			operation: "status" | "refresh" | "accept" | "validate" | "conformance";
+			operation: "status" | "refresh" | "accept" | "reject" | "validate" | "conformance";
 			json: boolean;
 			sourceId?: string;
 			path?: string;
@@ -136,28 +136,35 @@ function parseCatalogCommand(options: JouzuOptions, args: string[]): ParsedComma
 		operation !== "status" &&
 		operation !== "refresh" &&
 		operation !== "accept" &&
+		operation !== "reject" &&
 		operation !== "validate" &&
 		operation !== "conformance"
 	) {
 		throw new UsageError(humanMessage(CliMessageId.catalogOperationRequired));
 	}
-	if (operation === "accept") {
+	if (operation === "accept" || operation === "reject") {
 		const [revision, ...tokens] = remaining;
 		let digest: string | undefined;
 		let sourceId: string | undefined;
 		for (let index = 0; index < tokens.length; index += 2) {
 			const option = tokens[index];
 			const value = tokens[index + 1];
-			if (!value) throw new UsageError(humanMessage(CliMessageId.catalogAcceptOptionsRequireValues));
+			if (!value)
+				throw new UsageError(
+					humanMessage(CliMessageId.catalogAcceptOptionsRequireValues, { operation: protectedCommand(operation) }),
+				);
 			if (option === "--digest" && digest === undefined) digest = value;
 			else if (option === "--source" && sourceId === undefined) sourceId = value;
 			else
 				throw new UsageError(
-					humanMessage(CliMessageId.catalogUnknownAcceptOption, { option: protectedCommand(option) }),
+					humanMessage(CliMessageId.catalogUnknownAcceptOption, {
+						operation: protectedCommand(operation),
+						option: protectedCommand(option),
+					}),
 				);
 		}
 		if (!revision || !digest || !/^[0-9a-f]{64}$/u.test(digest)) {
-			throw new UsageError(humanMessage(CliMessageId.catalogAcceptUsage));
+			throw new UsageError(humanMessage(CliMessageId.catalogAcceptUsage, { operation: protectedCommand(operation) }));
 		}
 		return { kind: "catalog", options, operation, json: false, revision, digest, ...(sourceId ? { sourceId } : {}) };
 	}
@@ -440,6 +447,7 @@ const HELP_USAGE_LINES = [
 	"  jouzu catalog status [source-id] [--json]",
 	"  jouzu catalog refresh [source-id] [--json]",
 	"  jouzu catalog accept <revision> --digest <sha256> [--source <source-id>]",
+	"  jouzu catalog reject <revision> --digest <sha256> [--source <source-id>]",
 	"  jouzu catalog validate <file> [--json]",
 	"  jouzu catalog conformance <file> [--json]",
 	"  jouzu profile plan [--profile <core|ja>] [--json]",

@@ -15,6 +15,7 @@ import {
 	refreshAvailableModelCatalogs,
 	refreshModelCatalog,
 	refreshModelCatalogSources,
+	rejectHeldCatalog,
 } from "../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { acquireStateLock } from "../dist/state-lock.js";
@@ -493,71 +494,183 @@ test("network and invalid updates preserve the active last-known-good catalog", 
 	}
 });
 
-test("mass removal quarantines exact bytes until revision and digest are accepted", async () => {
-	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-quarantine-"));
+test("a revision that removes or renames most models activates as delivered", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-large-change-"));
 	try {
 		const jouzuPaths = paths(temporary);
 		const many = manyOfferings(60);
 		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, many)) });
-		const quarantined = await refreshModelCatalog(jouzuPaths, {
+		const removal = await refreshModelCatalog(jouzuPaths, {
 			env: env(),
-			fetch: async () => response(snapshot(4, many.slice(0, 40))),
+			fetch: async () => response(snapshot(4, many.slice(0, 5))),
+		});
+		assert.equal(removal.status, "activated");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.modelOfferings.length, 5);
+
+		// A namespace cutover replaces every ID: each old ID is removed and each new one added.
+		const renamed = manyOfferings(24, 100).map((offering) => ({ ...offering, id: `shisa/${offering.id}` }));
+		const cutover = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(5, renamed)),
+		});
+		assert.equal(cutover.status, "activated");
+		assert.equal(cutover.catalogStatus.quarantined, 0);
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-5");
+
+		const addition = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(6, [...renamed, ...manyOfferings(80, 200)])),
+		});
+		assert.equal(addition.status, "activated");
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("an empty catalog is held with its change summary until revision and digest are accepted", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-held-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const many = manyOfferings(60);
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, many)) });
+		const held = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(4, [])),
 			now: new Date("2026-08-26T04:00:00Z"),
 		});
-		assert.equal(quarantined.status, "quarantined");
-		assert.deepEqual(quarantined.reasons, ["mass_removal"]);
+		assert.equal(held.status, "quarantined");
+		assert.deepEqual(held.reasons, ["empty_catalog"]);
+		assert.deepEqual(held.changes, { activeCount: 60, candidateCount: 0, added: 0, removed: 60 });
 		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-3");
+		const status = getCatalogStatuses(jouzuPaths, env()).sources.find(
+			(source) => source.endpoint === env().JOUZU_MODEL_CATALOG_URL,
+		);
+		assert.equal(status.quarantined, 1);
+		assert.deepEqual(status.held, [
+			{
+				revision: "fixture-4",
+				digest: held.digest,
+				sequence: "4",
+				reasons: ["empty_catalog"],
+				receivedAt: "2026-08-26T04:00:00.000Z",
+				changes: { activeCount: 60, candidateCount: 0, added: 0, removed: 60 },
+			},
+		]);
 
 		const accepted = acceptQuarantinedCatalog(
 			jouzuPaths,
-			quarantined.revision,
-			quarantined.digest,
+			held.revision,
+			held.digest,
 			env(),
 			new Date("2026-08-26T05:00:00Z"),
 		);
 		assert.equal(accepted.status, "active");
 		assert.equal(accepted.quarantined, 0);
+		assert.equal(accepted.held, undefined);
+		assert.equal(accepted.lastError, undefined);
 		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-4");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
 });
 
-test("mass addition is quarantined while preserving the active catalog", async () => {
-	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-mass-addition-"));
+test("rejecting a held catalog keeps the active catalog and clears the hold", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-reject-"));
 	try {
 		const jouzuPaths = paths(temporary);
-		const existing = manyOfferings(60);
-		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, existing)) });
-		const result = await refreshModelCatalog(jouzuPaths, {
+		await refreshModelCatalog(jouzuPaths, {
 			env: env(),
-			fetch: async () => response(snapshot(4, [...existing, ...manyOfferings(50, existing.length)])),
+			fetch: async () => response(snapshot(3, manyOfferings(10))),
 		});
-		assert.equal(result.status, "quarantined");
-		assert.deepEqual(result.reasons, ["mass_addition"]);
+		const held = await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(4, [])) });
+		assert.equal(held.status, "quarantined");
+		const rejected = rejectHeldCatalog(jouzuPaths, held.revision, held.digest, env());
+		assert.equal(rejected.status, "active");
+		assert.equal(rejected.quarantined, 0);
+		assert.equal(rejected.lastError, undefined);
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-3");
+		assert.throws(
+			() => acceptQuarantinedCatalog(jouzuPaths, held.revision, held.digest, env()),
+			/exact quarantined catalog candidate was not found/u,
+		);
+		assert.throws(() => rejectHeldCatalog(jouzuPaths, held.revision, held.digest, env()), /was not found/u);
+		// The publisher still serves the empty catalog, so the next refresh holds it again.
+		const again = await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(4, [])) });
+		assert.equal(again.status, "quarantined");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
 });
 
-test("an older quarantined catalog cannot replace a newer active sequence", async () => {
-	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-stale-quarantine-"));
+test("a newer activation drops held revisions it supersedes", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-stale-held-"));
 	try {
 		const jouzuPaths = paths(temporary);
 		const many = manyOfferings(60);
 		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, many)) });
-		const quarantined = await refreshModelCatalog(jouzuPaths, {
+		const held = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(4, [])),
+		});
+		assert.equal(held.status, "quarantined");
+		const next = await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(5, many)) });
+		assert.equal(next.status, "activated");
+		assert.equal(next.catalogStatus.quarantined, 0);
+
+		assert.throws(
+			() => acceptQuarantinedCatalog(jouzuPaths, held.revision, held.digest, env()),
+			/exact quarantined catalog candidate was not found/u,
+		);
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-5");
+		const origin = catalogOriginDirectory(jouzuPaths);
+		const account = JSON.parse(readFileSync(join(origin, "origin.json"))).activeAccountRefHash;
+		assert.deepEqual(readdirSync(join(origin, "accounts", account, "quarantine")), []);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("a held revision recorded under an earlier rule activates on the next refresh", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-legacy-held-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const many = manyOfferings(60);
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, many)) });
+		const origin = catalogOriginDirectory(jouzuPaths);
+		const account = JSON.parse(readFileSync(join(origin, "origin.json"))).activeAccountRefHash;
+		const directory = join(origin, "accounts", account);
+		const statePath = join(directory, "state.json");
+		const candidate = JSON.stringify(snapshot(4, many.slice(0, 40)));
+		const digest = createHash("sha256").update(candidate).digest("hex");
+		mkdirSync(join(directory, "quarantine"), { recursive: true });
+		writeFileSync(join(directory, "quarantine", `${digest}.json`), candidate);
+		const state = JSON.parse(readFileSync(statePath));
+		state.quarantined = [
+			{
+				digest,
+				revision: "fixture-4",
+				sequence: "4",
+				document: `quarantine/${digest}.json`,
+				reasons: ["mass_removal"],
+				receivedAt: "2026-08-26T04:00:00.000Z",
+				bytes: Buffer.byteLength(candidate),
+			},
+		];
+		state.lastError = { code: "quarantined", message: "mass_removal", at: "2026-08-26T04:00:00.000Z" };
+		writeFileSync(statePath, JSON.stringify(state));
+		const before = getCatalogStatuses(jouzuPaths, env()).sources.find(
+			(source) => source.endpoint === env().JOUZU_MODEL_CATALOG_URL,
+		);
+		assert.equal(before.held?.[0]?.changes, undefined);
+
+		const refreshed = await refreshModelCatalog(jouzuPaths, {
 			env: env(),
 			fetch: async () => response(snapshot(4, many.slice(0, 40))),
 		});
-		assert.equal(quarantined.status, "quarantined");
-		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(5, many)) });
-
-		assert.throws(
-			() => acceptQuarantinedCatalog(jouzuPaths, quarantined.revision, quarantined.digest, env()),
-			/older than the active catalog/u,
-		);
-		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-5");
+		assert.equal(refreshed.status, "activated");
+		assert.equal(refreshed.catalogStatus.quarantined, 0);
+		assert.equal(refreshed.catalogStatus.lastError, undefined);
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-4");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
@@ -846,7 +959,7 @@ test("activated document retention keeps active and previous revisions", async (
 		);
 		const candidate = await refreshModelCatalog(jouzuPaths, {
 			env: env(),
-			fetch: async () => response(snapshot(6, manyOfferings(1))),
+			fetch: async () => response(snapshot(6, [])),
 		});
 		assert.equal(candidate.status, "quarantined");
 		acceptQuarantinedCatalog(jouzuPaths, candidate.revision, candidate.digest, env());

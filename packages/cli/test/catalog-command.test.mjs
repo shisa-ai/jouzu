@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 
 import { catalogStatus, formatCatalogStatus, validateCatalogFile } from "../dist/catalog-command.js";
+import { heldCatalogCommand, heldCatalogSummary } from "../dist/catalog-held.js";
 import { CatalogMessageId } from "../dist/cli-messages.js";
 import { loadCatalog } from "../dist/locale-catalog.js";
 import {
@@ -129,6 +130,23 @@ test("catalog status renders every hoisted note and gap field from the catalog",
 		credentialEnv: false,
 		credentialStored: false,
 		quarantined: 2,
+		held: [
+			{
+				revision: "sha256:held",
+				digest: "a".repeat(64),
+				sequence: "8",
+				reasons: ["empty_catalog"],
+				receivedAt: "2026-11-03T13:57:41.868Z",
+				changes: { activeCount: 36, candidateCount: 0, added: 0, removed: 36 },
+			},
+			{
+				revision: "sha256:legacy",
+				digest: "b".repeat(64),
+				sequence: "9",
+				reasons: ["mass_removal"],
+				receivedAt: "2026-11-03T13:58:41.868Z",
+			},
+		],
 	};
 	const text = formatCatalogStatus(status, RENDER);
 	assert.match(flat(text), /⚠ codex-pool This catalog uses HTTP, so its bearer token is sent in plain text/u);
@@ -144,12 +162,19 @@ test("catalog status renders every hoisted note and gap field from the catalog",
 		flat(text),
 		/⚠ codex-pool 1 of 36 offerings have no declared levels, so Jouzu cannot control their reasoning effort\./u,
 	);
-	assert.match(flat(text), /⚠ codex-pool 2 candidate revisions are quarantined\./u);
+	assert.match(
+		flat(text),
+		/⚠ codex-pool Update held for review\. The new revision lists no models; the active revision lists 36\. An empty catalog usually means the catalog server is misconfigured\. To use it, run jouzu catalog accept sha256:held --digest a{64} --source codex-pool or review it in \/catalogs\. To discard it, run jouzu catalog reject sha256:held --digest a{64} --source codex-pool/u,
+	);
+	assert.match(
+		flat(text),
+		/⚠ codex-pool Update held for review\. Jouzu did not record how this revision differs from the active one\. To use it, run jouzu catalog accept sha256:legacy --digest b{64} --source codex-pool/u,
+	);
 	assert.match(text, /^ +Registration {2,}35 of 36 offerings carry the fields a new model needs$/mu);
 	assert.match(flat(text), /aiand\/deepseek-ai\/deepseek-v4-flash — no text input, no maximum output tokens/u);
 	assert.match(text, /^ +Thinking levels {2,}1 of 36 offerings have no declared levels$/mu);
 	assert.match(text, /^ +Credential {2,}environment variable CODEX_POOL_KEY \(not set\)$/mu);
-	assert.match(text, /^ +Quarantined candidates {2,}2$/mu);
+	assert.match(text, /^ +Held updates {2,}2$/mu);
 });
 
 test("catalog status renders the migrated text from the Japanese catalog", () => {
@@ -169,6 +194,23 @@ test("catalog status renders the migrated text from the Japanese catalog", () =>
 		credentialEnv: false,
 		credentialStored: false,
 		quarantined: 2,
+		held: [
+			{
+				revision: "sha256:held",
+				digest: "a".repeat(64),
+				sequence: "8",
+				reasons: ["empty_catalog"],
+				receivedAt: "2026-11-03T13:57:41.868Z",
+				changes: { activeCount: 36, candidateCount: 0, added: 0, removed: 36 },
+			},
+			{
+				revision: "sha256:legacy",
+				digest: "b".repeat(64),
+				sequence: "9",
+				reasons: ["mass_removal"],
+				receivedAt: "2026-11-03T13:58:41.868Z",
+			},
+		],
 	};
 	const ja = loadCatalog("ja");
 	const text = formatCatalogStatus(status, { ...RENDER, catalog: ja, locale: "ja" });
@@ -182,7 +224,13 @@ test("catalog status renders the migrated text from the Japanese catalog", () =>
 			effect: describeCatalogRegistrationEffect(ja),
 		}),
 		ja.format(CatalogMessageId.catalogNoteThinkingLevels, { count: 1, total: 36 }),
-		ja.format(CatalogMessageId.catalogNoteQuarantined, { count: 2 }),
+		...status.held.map((held) =>
+			ja.format(CatalogMessageId.catalogNoteQuarantined, {
+				summary: heldCatalogSummary(ja, held),
+				accept: heldCatalogCommand("accept", status.sourceId, held),
+				reject: heldCatalogCommand("reject", status.sourceId, held),
+			}),
+		),
 		ja.format(CatalogMessageId.catalogFieldRegistrationValue, { complete: 35, total: 36 }),
 		ja.format(CatalogMessageId.catalogRegistrationGapDetail, {
 			model: "aiand/m",

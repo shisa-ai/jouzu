@@ -18,10 +18,10 @@ jouzu-cli-error-generic = Jouzu failed: { $message }
 jouzu-cli-error-update = Jouzu update failed: { $message }
 jouzu-cli-args-optionValueRequired = { $option } requires a value
 jouzu-cli-args-internalParserError = internal parser error for { $option }
-jouzu-cli-args-catalogOperationRequired = catalog requires "status", "refresh", "accept", "validate", or "conformance"
-jouzu-cli-args-catalogAcceptOptionsRequireValues = catalog accept options require values
-jouzu-cli-args-catalogUnknownAcceptOption = unknown catalog accept option: { $option }
-jouzu-cli-args-catalogAcceptUsage = catalog accept requires <revision> --digest <sha256> [--source <source-id>]
+jouzu-cli-args-catalogOperationRequired = catalog requires "status", "refresh", "accept", "reject", "validate", or "conformance"
+jouzu-cli-args-catalogAcceptOptionsRequireValues = catalog { $operation } options require values
+jouzu-cli-args-catalogUnknownAcceptOption = unknown catalog { $operation } option: { $option }
+jouzu-cli-args-catalogAcceptUsage = catalog { $operation } requires <revision> --digest <sha256> [--source <source-id>]
 jouzu-cli-args-catalogFileRequired = catalog { $operation } requires one file path and optional --json
 jouzu-cli-args-catalogUnknownOption = unknown catalog { $operation } option: { $token }
 jouzu-cli-args-selfUpdateOperationRequired = self-update requires "status", "check", "apply", or "policy"
@@ -285,14 +285,28 @@ jouzu-cli-catalog-field-revision = Revision
 jouzu-cli-catalog-field-sequence = Sequence
 jouzu-cli-catalog-field-validated = Validated
 jouzu-cli-catalog-field-credential = Credential
-jouzu-cli-catalog-field-quarantined = Quarantined candidates
+jouzu-cli-catalog-field-quarantined = Held updates
 jouzu-cli-catalog-field-lastError = Last error
 jouzu-cli-catalog-valid = Model catalog is valid.
 jouzu-cli-catalog-invalid = Model catalog is invalid: { $message }
 jouzu-cli-catalog-note-tokenMissing = token variable { $name } is not set and no token is saved for this source; refreshes are skipped until one is available.
 jouzu-cli-catalog-note-registrationGaps = { $complete } of { $total } offerings carry the fields a new model needs ({ $gaps }). { $effect }
 jouzu-cli-catalog-note-thinkingLevels = { $count } of { $total } offerings have no declared levels, so Jouzu cannot control their reasoning effort.
-jouzu-cli-catalog-note-quarantined = { $count } candidate revisions are quarantined.
+jouzu-cli-catalog-note-quarantined = Update held for review. { $summary } To use it, run { $accept } or review it in /catalogs. To discard it, run { $reject }
+jouzu-cli-catalog-held-summary = The new revision lists { $candidate } models ({ $added } added, { $removed } removed); the active revision lists { $active }.
+jouzu-cli-catalog-held-summaryEmpty = The new revision lists no models; the active revision lists { $active }. An empty catalog usually means the catalog server is misconfigured.
+jouzu-cli-catalog-held-summaryUnknown = Jouzu did not record how this revision differs from the active one.
+jouzu-cli-catalog-held-title = Catalog update held: { $label }
+jouzu-cli-catalog-held-revision = Revision: { $revision }
+jouzu-cli-catalog-held-optionAccept = Accept and use the new catalog
+jouzu-cli-catalog-held-optionReject = Reject and keep the current catalog
+jouzu-cli-catalog-held-footer = { $confirm } choose, { $move } move, { $cancel } decide later in /catalogs
+jouzu-cli-catalog-held-accepted = Applied the held catalog update for { $label }.
+jouzu-cli-catalog-held-rejected = Rejected the held catalog update for { $label }; the current catalog stays active.
+jouzu-cli-catalog-held-pending = Catalog update held for { $label }. { $summary } Review it in /catalogs, or run { $accept }
+jouzu-cli-catalog-held-failed = Could not apply the catalog decision for { $label }: { $message }
+jouzu-cli-settings-hint-reviewUpdate = review update
+jouzu-cli-settings-heldWarning = Catalog update held. { $summary } Press { $key } to review it.
 jouzu-cli-catalog-field-registrationValue = { $complete } of { $total } offerings carry the fields a new model needs
 jouzu-cli-catalog-field-thinkingLevelsValue = { $count } of { $total } offerings have no declared levels
 jouzu-cli-catalog-credential-environmentSet = environment variable { $name } (set)
@@ -629,7 +643,7 @@ jouzu-cli-selfUpdate-channelValue-source = source
 jouzu-cli-selfUpdate-channelValue-other = other
 
 jouzu-cli-usage-pinnedPiSelfUpdate = Jouzu pins its Pi runtime and cannot run Pi self-update. Upgrade Jouzu instead; package-only updates such as `jz update --extensions` remain available.
-jouzu-cli-usage-catalogAcceptRevisionDigest = catalog accept requires an exact revision and digest
+jouzu-cli-usage-catalogAcceptRevisionDigest = catalog { $operation } requires an exact revision and digest
 jouzu-cli-usage-catalogFileRequired = catalog { $operation } requires a file path
 jouzu-cli-usage-selfUpdatePolicyValue = self-update policy requires a value
 
@@ -1129,7 +1143,7 @@ jouzu-cli-settings-hint-scroll = scroll
 # value; the view names stay English as Palette product nouns, by the owner
 # decision.
 jouzu-cli-settings-warning = Warning: { $message }
-jouzu-cli-settings-savedQuarantined = Saved { $label }. Catalog revision quarantined: { $reasons }.
+jouzu-cli-settings-savedQuarantined = Saved { $label }. Catalog update held for review: { $reasons }
 jouzu-cli-settings-savedWithCount = { $count ->
     [one] Saved { $label } with { $count } model.
    *[other] Saved { $label } with { $count } models.

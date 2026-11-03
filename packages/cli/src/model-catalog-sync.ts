@@ -76,6 +76,14 @@ interface CatalogRevisionRef {
 	activatedAt: string;
 }
 
+/** How a held revision differs from the active revision, by model offering ID. */
+export interface CatalogRevisionChanges {
+	activeCount: number;
+	candidateCount: number;
+	added: number;
+	removed: number;
+}
+
 interface CatalogQuarantineRef {
 	digest: string;
 	revision: string;
@@ -84,6 +92,17 @@ interface CatalogQuarantineRef {
 	reasons: string[];
 	receivedAt: string;
 	bytes: number;
+	changes?: CatalogRevisionChanges;
+}
+
+/** A revision Jouzu fetched and validated but did not activate; the user accepts or rejects it. */
+export interface CatalogHeldRevision {
+	revision: string;
+	digest: string;
+	sequence: string;
+	reasons: string[];
+	receivedAt: string;
+	changes?: CatalogRevisionChanges;
 }
 
 interface CatalogAccountState {
@@ -139,6 +158,7 @@ export type CatalogSyncStatus =
 			credentialStored?: boolean;
 			credentialLogin?: boolean;
 			conflict?: string;
+			held?: CatalogHeldRevision[];
 			quarantined: number;
 	  };
 
@@ -154,7 +174,14 @@ export type CatalogRefreshResult =
 	| { status: "unconfigured"; catalogStatus: CatalogSyncStatus }
 	| { status: "not-modified"; catalogStatus: CatalogSyncStatus }
 	| { status: "activated"; catalogStatus: CatalogSyncStatus }
-	| { status: "quarantined"; catalogStatus: CatalogSyncStatus; revision: string; digest: string; reasons: string[] }
+	| {
+			status: "quarantined";
+			catalogStatus: CatalogSyncStatus;
+			revision: string;
+			digest: string;
+			reasons: string[];
+			changes: CatalogRevisionChanges;
+	  }
 	| { status: "rejected" | "error"; catalogStatus: CatalogSyncStatus; code: string; message: string };
 
 export interface CatalogSourceRefreshResult {
@@ -300,8 +327,28 @@ function validQuarantineRef(value: unknown): value is CatalogQuarantineRef {
 		record.reasons.every((reason) => typeof reason === "string") &&
 		typeof record.receivedAt === "string" &&
 		Number.isInteger(record.bytes) &&
-		Number(record.bytes) >= 0
+		Number(record.bytes) >= 0 &&
+		(record.changes === undefined || validRevisionChanges(record.changes))
 	);
+}
+
+function validRevisionChanges(value: unknown): value is CatalogRevisionChanges {
+	if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+	const record = value as Partial<CatalogRevisionChanges>;
+	return [record.activeCount, record.candidateCount, record.added, record.removed].every(
+		(count) => Number.isInteger(count) && Number(count) >= 0,
+	);
+}
+
+function heldRevision(entry: CatalogQuarantineRef): CatalogHeldRevision {
+	return {
+		revision: entry.revision,
+		digest: entry.digest,
+		sequence: entry.sequence,
+		reasons: [...entry.reasons],
+		receivedAt: entry.receivedAt,
+		...(entry.changes ? { changes: { ...entry.changes } } : {}),
+	};
 }
 
 function parseAccountState(value: unknown): CatalogAccountState | undefined {
@@ -417,6 +464,7 @@ export function getCatalogSourceStatus(
 			...(credential ? { credentialEnv: credential.envSet, credentialStored: credential.stored } : {}),
 			...(credential?.login ? { credentialLogin: true } : {}),
 			...(conflict ? { conflict } : {}),
+			...(account?.quarantined.length ? { held: account.quarantined.map(heldRevision) } : {}),
 			quarantined: account?.quarantined.length ?? 0,
 		};
 	} catch (error) {
@@ -489,15 +537,50 @@ function loadDocument(accountDirectory: string, reference: CatalogRevisionRef): 
 	return parseAndValidateModelCatalog(text, { remote: true });
 }
 
-function removedOfferingReasons(previous: ModelCatalogDocument | undefined, candidate: ModelCatalogDocument): string[] {
-	if (!previous || !candidate.scope.complete || !candidate.scope.includes.includes("modelOfferings")) return [];
-	const previousIds = new Set(previous.modelOfferings.map((offering) => offering.id));
-	const nextIds = new Set(candidate.modelOfferings.map((offering) => offering.id));
-	const removed = previous.modelOfferings.filter((offering) => !nextIds.has(offering.id)).length;
-	if (removed >= 10 && removed / Math.max(previous.modelOfferings.length, 1) > 0.2) return ["mass_removal"];
-	const additions = candidate.modelOfferings.filter((offering) => !previousIds.has(offering.id)).length;
-	if (additions >= 50 && additions / Math.max(previous.modelOfferings.length, 1) > 0.5) return ["mass_addition"];
-	return [];
+export function catalogRevisionChanges(
+	active: ModelCatalogDocument | undefined,
+	candidate: ModelCatalogDocument,
+): CatalogRevisionChanges {
+	const activeIds = new Set((active?.modelOfferings ?? []).map((offering) => offering.id));
+	const candidateIds = new Set(candidate.modelOfferings.map((offering) => offering.id));
+	return {
+		activeCount: activeIds.size,
+		candidateCount: candidateIds.size,
+		added: [...candidateIds].filter((id) => !activeIds.has(id)).length,
+		removed: [...activeIds].filter((id) => !candidateIds.has(id)).length,
+	};
+}
+
+/**
+ * The catalog publisher owns model membership: additions, removals, and renames
+ * activate as delivered. The one revision Jouzu holds for review is a complete
+ * catalog that would replace a non-empty active catalog with no models at all,
+ * which means a misconfigured publisher rather than an intended change.
+ */
+function heldRevisionReasons(previous: ModelCatalogDocument | undefined, candidate: ModelCatalogDocument): string[] {
+	if (!previous || previous.modelOfferings.length === 0) return [];
+	if (!candidate.scope.complete || !candidate.scope.includes.includes("modelOfferings")) return [];
+	return candidate.modelOfferings.length === 0 ? ["empty_catalog"] : [];
+}
+
+/**
+ * Drop held revisions an activation has superseded. A held revision whose
+ * sequence is not newer than the active one can never be accepted, so keeping
+ * it would only leave a stale review prompt behind.
+ */
+function dropSupersededHeld(state: CatalogAccountState, directory: string): void {
+	if (!state.active) return;
+	const active = BigInt(state.active.sequence);
+	const superseded = state.quarantined.filter((entry) => BigInt(entry.sequence) <= active);
+	if (superseded.length === 0) return;
+	state.quarantined = state.quarantined.filter((entry) => !superseded.includes(entry));
+	for (const entry of superseded) {
+		try {
+			rmSync(resolveRelative(directory, entry.document), { force: true });
+		} catch {
+			// A cleanup failure must not turn a committed activation into a failed refresh.
+		}
+	}
 }
 
 function trimQuarantine(entries: CatalogQuarantineRef[], accountDirectory: string): CatalogQuarantineRef[] {
@@ -728,7 +811,8 @@ function activateCatalogDocument(
 	}
 
 	const previous = state.active ? loadDocument(directory, state.active) : undefined;
-	const reasons = removedOfferingReasons(previous, document);
+	const reasons = heldRevisionReasons(previous, document);
+	const changes = catalogRevisionChanges(previous, document);
 	const candidatePath = join(directory, reasons.length > 0 ? "quarantine" : "documents", `${digest}.json`);
 	writeFilePrivateAtomic(candidatePath, text, catalogRoot(paths));
 	if (reasons.length > 0) {
@@ -743,6 +827,7 @@ function activateCatalogDocument(
 					reasons,
 					receivedAt: now.toISOString(),
 					bytes: Buffer.byteLength(text),
+					changes,
 				},
 			],
 			directory,
@@ -760,6 +845,7 @@ function activateCatalogDocument(
 			revision: document.revision,
 			digest,
 			reasons,
+			changes,
 		};
 	}
 	const activated: CatalogRevisionRef = {
@@ -775,6 +861,7 @@ function activateCatalogDocument(
 	state.validatedAt = now.toISOString();
 	state.lastError = undefined;
 	if (etag) state.etag = etag;
+	dropSupersededHeld(state, directory);
 	writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
 	const origin = { schemaVersion: 1, activeAccountRefHash: accountRefHash };
 	writeJson(originStatePath(paths, config.url), origin, catalogRoot(paths));
@@ -994,10 +1081,56 @@ export function acceptQuarantinedCatalog(
 			activatedAt: now.toISOString(),
 		};
 		state.quarantined = state.quarantined.filter((entry) => entry !== candidate);
+		dropSupersededHeld(state, directory);
 		state.lastError = undefined;
 		state.validatedAt = now.toISOString();
 		writeJson(accountStatePath(paths, config.url, origin.activeAccountRefHash), state, catalogRoot(paths));
 		pruneDocuments(directory, state);
+		return getCatalogSourceStatus(paths, source, now, env, catalog);
+	} finally {
+		release();
+	}
+}
+
+/**
+ * Discard one held revision and keep the active catalog. A later refresh that
+ * receives the same revision holds it again, so a publisher that keeps serving
+ * an empty catalog stays visible.
+ */
+export function rejectHeldCatalog(
+	paths: JouzuPaths,
+	revision: string,
+	digest: string,
+	env: NodeJS.ProcessEnv = process.env,
+	now = new Date(),
+	sourceId?: string,
+	catalog: CatalogBundle = defaultCatalog(),
+): CatalogSyncStatus {
+	const sources = resolveCatalogSources(paths, env, {}, catalog);
+	const source = sourceId
+		? sources.find((candidate) => candidate.id === sourceId)
+		: sources.find((candidate) => !automaticallySkipped(paths, candidate, env));
+	if (!source) return unconfiguredStatus();
+	const release = acquireStateLock({
+		path: lockPath(paths, source.url),
+		describe: "model catalog rejection",
+		now,
+		onBusy: (inspection) =>
+			new CatalogSyncError(catalogText(catalog, SYNC_MESSAGE_ID.operationBusy, { status: inspection.status })),
+	});
+	try {
+		const origin = readOriginState(paths, source.url);
+		if (!origin?.activeAccountRefHash)
+			throw new CatalogSyncError(catalogText(catalog, SYNC_MESSAGE_ID.noActiveAccount));
+		const directory = accountRoot(paths, source.url, origin.activeAccountRefHash);
+		const state = readAccountState(paths, source.url, origin.activeAccountRefHash);
+		if (!state) throw new CatalogSyncError("catalog account state is missing");
+		const candidate = state.quarantined.find((entry) => entry.revision === revision && entry.digest === digest);
+		if (!candidate) throw new CatalogSyncError("the exact held catalog revision was not found");
+		rmSync(resolveRelative(directory, candidate.document), { force: true });
+		state.quarantined = state.quarantined.filter((entry) => entry !== candidate);
+		if (state.lastError?.code === "quarantined" && state.quarantined.length === 0) state.lastError = undefined;
+		writeJson(accountStatePath(paths, source.url, origin.activeAccountRefHash), state, catalogRoot(paths));
 		return getCatalogSourceStatus(paths, source, now, env, catalog);
 	} finally {
 		release();

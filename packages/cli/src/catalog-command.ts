@@ -1,4 +1,5 @@
 import { existsSync, lstatSync, readFileSync } from "node:fs";
+import { heldCatalogCommand, heldCatalogSummary } from "./catalog-held.js";
 import { catalogInsecureTransportWarning, resolveCatalogSources } from "./catalog-sources.js";
 import {
 	CATALOG_FIELD_LABEL_IDS,
@@ -18,6 +19,7 @@ import {
 	type CommandReportStatus,
 	pluralize,
 } from "./command-report.js";
+import { protectedCommand } from "./human-messages.js";
 import type { CatalogBundle } from "./locale-catalog.js";
 import {
 	type CatalogConformanceResult,
@@ -111,6 +113,11 @@ function describeCredential(status: ConfiguredCatalogStatus, catalog: CatalogBun
 	return catalogText(catalog, CatalogMessageId.catalogCredentialEnvironmentNotSet, { name });
 }
 
+/** The recorded error only says a revision is held; the held-update note already covers it. */
+function heldOnly(status: ConfiguredCatalogStatus): boolean {
+	return status.lastError?.code === "quarantined" && (status.held?.length ?? 0) > 0;
+}
+
 /** Hoist every condition a user may need to act on, keyed by the source it came from. */
 function sourceNotes(status: CatalogSyncStatus, catalog: CatalogBundle): CommandReportEntry[] {
 	if (!status.configured) return [];
@@ -149,14 +156,18 @@ function sourceNotes(status: CatalogSyncStatus, catalog: CatalogBundle): Command
 		});
 	}
 	if (status.conflict) notes.push({ status: "warning", key, message: status.conflict });
-	if (status.quarantined > 0) {
+	for (const held of status.held ?? []) {
 		notes.push({
 			status: "warning",
 			key,
-			message: catalogText(catalog, CatalogMessageId.catalogNoteQuarantined, { count: status.quarantined }),
+			message: catalogText(catalog, CatalogMessageId.catalogNoteQuarantined, {
+				summary: heldCatalogSummary(catalog, held),
+				accept: protectedCommand(heldCatalogCommand("accept", status.sourceId, held)),
+				reject: protectedCommand(heldCatalogCommand("reject", status.sourceId, held)),
+			}),
 		});
 	}
-	if (status.lastError) {
+	if (status.lastError && !heldOnly(status)) {
 		notes.push({ status: "problem", key, message: `${status.lastError.code}: ${status.lastError.message}` });
 	}
 	return notes;
@@ -201,9 +212,13 @@ function sourceFields(status: ConfiguredCatalogStatus, catalog: CatalogBundle): 
 	if (status.validatedAt) fields.push({ label: label("Validated"), value: status.validatedAt });
 	const credential = describeCredential(status, catalog);
 	if (credential) fields.push({ label: label("Credential"), value: credential });
-	if (status.quarantined > 0)
-		fields.push({ label: label("Quarantined candidates"), value: String(status.quarantined) });
-	if (status.lastError) {
+	if (status.held?.length)
+		fields.push({
+			label: label("Held updates"),
+			value: String(status.held.length),
+			details: status.held.map((held) => held.revision),
+		});
+	if (status.lastError && !heldOnly(status)) {
 		fields.push({ label: label("Last error"), value: `${status.lastError.code}: ${status.lastError.message}` });
 	}
 	return fields;

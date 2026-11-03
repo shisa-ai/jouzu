@@ -106,6 +106,23 @@ test("parses optional catalog status, refresh, and file conformance commands", (
 	});
 	assert.throws(() => parseJouzuArgs(["catalog", "validate"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["catalog", "accept", "revision-2", "--digest", "bad"]), UsageError);
+	assert.deepEqual(parseJouzuArgs(["catalog", "reject", "revision-2", "--digest", digest, "--source", "office"]), {
+		kind: "catalog",
+		options: {},
+		operation: "reject",
+		revision: "revision-2",
+		digest,
+		sourceId: "office",
+		json: false,
+	});
+	assert.throws(
+		() => parseJouzuArgs(["catalog", "reject", "revision-2", "--digest", "bad"]),
+		/catalog reject requires <revision> --digest <sha256>/u,
+	);
+	assert.throws(
+		() => parseJouzuArgs(["catalog", "reject", "revision-2", "--force", "x"]),
+		/unknown catalog reject option: --force/u,
+	);
 	assert.throws(() => parseJouzuArgs(["catalog", "other"]), UsageError);
 });
 

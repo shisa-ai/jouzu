@@ -590,6 +590,13 @@
 	{
 		"file": "packages/cli/src/model-catalog-sync.ts",
 		"kind": "record-value",
+		"text": "model catalog rejection",
+		"category": "protected-values",
+		"reason": "An internal state-lock purpose label: acquireStateLock never renders describe, and the lock diagnostic reads the lock state from the catalog, so this identifier is not UI text."
+	},
+	{
+		"file": "packages/cli/src/model-catalog-sync.ts",
+		"kind": "record-value",
 		"text": "model catalog activation",
 		"category": "protected-values",
 		"reason": "An internal state-lock purpose label: acquireStateLock never renders describe, and the lock diagnostic reads the lock state from the catalog, so this identifier is not UI text."

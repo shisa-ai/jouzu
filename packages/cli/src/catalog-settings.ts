@@ -1,5 +1,6 @@
 import type { KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
+import { type HeldCatalogUpdate, heldCatalogSummary, heldCatalogUpdates } from "./catalog-held.js";
 import {
 	type CatalogEndpointDiscoveryOptions,
 	type CatalogEndpointDiscoveryResult,
@@ -128,6 +129,8 @@ export interface CatalogSettingsOptions {
 	onDashboardChanged?: () => void;
 	labelPolicy?: LabelPolicyStore;
 	onCatalogsChanged?: () => void;
+	/** Host hook that asks the user to accept or reject held catalog revisions. */
+	onReviewHeldCatalog?: (updates: HeldCatalogUpdate[]) => Promise<void>;
 	/** Host hook after a Shisa sign-in or sign-out: refresh providers, catalogs, and model availability. */
 	onAccountChanged?: (change: { signedIn: boolean }) => Promise<void> | void;
 	runtime?: Pick<RuntimeDiagnostics, "about">;
@@ -191,6 +194,16 @@ function warnHint(styles: SessionUiStyles, value: string, width: number, line: (
 	);
 }
 
+/** The selected-source warning for a held revision, with the key that opens its review. */
+function heldWarningText(catalog: CatalogBundle, status: CatalogSyncStatus): string | undefined {
+	const held = status.configured ? status.held?.[0] : undefined;
+	if (!held) return undefined;
+	return catalogText(catalog, CatalogMessageId.settingsHeldWarning, {
+		summary: heldCatalogSummary(catalog, held),
+		key: "U",
+	});
+}
+
 function sourceStatusText(view: SourceView): string {
 	const status = view.status;
 	if (status.configured && status.conflict) return "reserved-id conflict";
@@ -198,6 +211,7 @@ function sourceStatusText(view: SourceView): string {
 	if (status.configured && status.credentialName && status.credentialAvailable === false) {
 		return `${status.credentialName} not set`;
 	}
+	if (status.configured && status.held?.length) return "update held";
 	return status.status;
 }
 
@@ -208,6 +222,7 @@ function sourceStatusRole(view: SourceView): SessionUiStyleRole {
 	if (!view.source.enabled) return "palette.status.off";
 	if (status.configured && status.credentialName && status.credentialAvailable === false)
 		return "palette.status.attention";
+	if (status.configured && status.held?.length) return "palette.status.attention";
 	if (status.status === "active") return "palette.status.ready";
 	if (status.status === "stale") return "palette.status.attention";
 	return "palette.status.off";
@@ -346,6 +361,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly discover: CatalogSettingsOptions["discover"];
 	private readonly refreshSource: NonNullable<CatalogSettingsOptions["refresh"]>;
 	private readonly onCatalogsChanged?: () => void;
+	private readonly onReviewHeldCatalog?: (updates: HeldCatalogUpdate[]) => Promise<void>;
 	private readonly onAccountChanged?: (change: { signedIn: boolean }) => Promise<void> | void;
 	private readonly wordmark: string;
 	private readonly runtime?: Pick<RuntimeDiagnostics, "about">;
@@ -448,6 +464,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.discover = options.discover ?? discoverCatalogEndpoint;
 		this.refreshSource = options.refresh ?? refreshCatalogSource;
 		this.onCatalogsChanged = options.onCatalogsChanged;
+		this.onReviewHeldCatalog = options.onReviewHeldCatalog;
 		this.onAccountChanged = options.onAccountChanged;
 		this.wordmark = renderBrandWordmark(this.theme);
 		this.runtime = options.runtime;
@@ -798,6 +815,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const controller = new AbortController();
 		this.controller = controller;
 		this.tui.requestRender();
+		let heldUpdate: HeldCatalogUpdate[] = [];
 		try {
 			let discovered: CatalogEndpointDiscoveryResult | undefined;
 			if (!skipDiscovery) {
@@ -845,7 +863,14 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				refreshed?.status === "quarantined"
 					? catalogText(this.catalog, CatalogMessageId.settingsSavedQuarantined, {
 							label: sanitizeTerminalText(source.label),
-							reasons: refreshed.reasons.join(", "),
+							reasons: heldCatalogSummary(this.catalog, {
+								revision: refreshed.revision,
+								digest: refreshed.digest,
+								sequence: "",
+								reasons: refreshed.reasons,
+								receivedAt: "",
+								changes: refreshed.changes,
+							}),
 						})
 					: discovered
 						? catalogText(this.catalog, CatalogMessageId.settingsSavedWithCount, {
@@ -860,6 +885,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				text: composeCatalogSaveMessage(this.catalog, base, notes),
 			};
 			this.onCatalogsChanged?.();
+			if (refreshed) heldUpdate = heldCatalogUpdates([{ source, result: refreshed }]);
 		} catch (error) {
 			if (this.disposed || controller.signal.aborted) return;
 			this.message = {
@@ -873,6 +899,23 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			this.busy = false;
 			this.tui.requestRender();
 		}
+		if (heldUpdate.length > 0) await this.reviewHeld(heldUpdate);
+	}
+
+	/** Open the host's accept-or-reject review for held revisions, then show the result. */
+	private async reviewHeld(updates: HeldCatalogUpdate[]): Promise<void> {
+		if (this.disposed || updates.length === 0 || !this.onReviewHeldCatalog) return;
+		await this.onReviewHeldCatalog(updates);
+		if (this.disposed) return;
+		this.reloadViews(updates[0].source.id);
+		this.tui.requestRender();
+	}
+
+	/** The held revisions of the selected source, as review requests. */
+	private selectedHeld(): HeldCatalogUpdate[] {
+		const view = this.selected();
+		if (!view?.status.configured) return [];
+		return (view.status.held ?? []).map((held) => ({ source: view.source, held }));
 	}
 
 	private async refreshSelected(): Promise<void> {
@@ -886,18 +929,29 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			}),
 		};
 		this.tui.requestRender();
+		let held: HeldCatalogUpdate[] = [];
 		try {
 			const result = await this.refreshSource(this.paths, view.source, { env: this.env });
 			if (this.disposed) return;
 			if (result.status === "error" || result.status === "rejected") throw new Error(result.message);
 			this.reloadViews(view.source.id);
-			this.message = {
-				level: "info",
-				text:
-					result.status === "not-modified"
-						? catalogText(this.catalog, CatalogMessageId.settingsRefreshUpToDate)
-						: catalogText(this.catalog, CatalogMessageId.settingsRefreshStatus, { status: result.status }),
-			};
+			held = heldCatalogUpdates([{ source: view.source, result }]);
+			this.message =
+				held.length > 0
+					? {
+							level: "warning",
+							text: catalogText(this.catalog, CatalogMessageId.settingsHeldWarning, {
+								summary: heldCatalogSummary(this.catalog, held[0].held),
+								key: "U",
+							}),
+						}
+					: {
+							level: "info",
+							text:
+								result.status === "not-modified"
+									? catalogText(this.catalog, CatalogMessageId.settingsRefreshUpToDate)
+									: catalogText(this.catalog, CatalogMessageId.settingsRefreshStatus, { status: result.status }),
+						};
 			this.onCatalogsChanged?.();
 		} catch (error) {
 			if (this.disposed) return;
@@ -910,6 +964,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			this.busy = false;
 			this.tui.requestRender();
 		}
+		await this.reviewHeld(held);
 	}
 
 	private reloadContextPolicy(): void {
@@ -1899,6 +1954,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			void this.refreshSelected();
 			return;
 		}
+		if (data === "u" && !this.busy && this.selectedHeld().length > 0) {
+			void this.reviewHeld(this.selectedHeld());
+			return;
+		}
 		if (data === "d" && this.selected()) {
 			const selected = this.selected()?.source;
 			if (selected && this.store.isCodeOwned(selected)) {
@@ -2193,6 +2252,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			];
 		return [
 			{ key: confirm, label: text(CatalogMessageId.settingsHintEdit) },
+			...(this.selectedHeld().length > 0 ? [{ key: "U", label: text(CatalogMessageId.settingsHintReviewUpdate) }] : []),
 			{ key: "A", label: text(CatalogMessageId.settingsHintAdd) },
 			{ key: "R", label: text(CatalogMessageId.settingsHintRefresh) },
 			{ key: "D", label: text(CatalogMessageId.settingsHintRemove) },
@@ -2235,6 +2295,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (transportWarning) warning.push(...warnHint(this.styles, transportWarning, innerWidth, line));
 		const credentialWarning = credentialWarningText(this.catalog, status);
 		if (credentialWarning) warning.push(...warnHint(this.styles, credentialWarning, innerWidth, line));
+		const heldWarning = heldWarningText(this.catalog, status);
+		if (heldWarning) warning.push(...warnHint(this.styles, heldWarning, innerWidth, line));
 		const conflict: string[] = [];
 		if (status.configured && status.conflict) {
 			conflict.push(
@@ -2254,6 +2316,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const warnings = [
 			transportWarningText(this.catalog, selected.source.url),
 			credentialWarningText(this.catalog, selected.status),
+			heldWarningText(this.catalog, selected.status),
 		];
 		const warningLines = warnings.reduce(
 			(total, warning) => total + (warning ? wrapTextWithAnsi(warning, innerWidth).length : 0),

@@ -49,6 +49,7 @@ import {
 	refreshAvailableModelCatalogs,
 	refreshModelCatalog,
 	refreshModelCatalogSources,
+	rejectHeldCatalog,
 } from "./model-catalog-sync.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";
@@ -196,12 +197,15 @@ export async function runMainCli(args: string[]): Promise<void> {
 			if (result.status === "partial" || result.status === "failed") process.exitCode = 1;
 			return;
 		}
-		if (parsed.operation === "accept") {
+		if (parsed.operation === "accept" || parsed.operation === "reject") {
 			if (!parsed.revision || !parsed.digest)
-				throw new UsageError(catalogMessage(CatalogMessageId.usageCatalogAcceptRevisionDigest));
+				throw new UsageError(
+					catalogMessage(CatalogMessageId.usageCatalogAcceptRevisionDigest, { operation: parsed.operation }),
+				);
+			const decide = parsed.operation === "accept" ? acceptQuarantinedCatalog : rejectHeldCatalog;
 			console.log(
 				formatCatalogStatus(
-					acceptQuarantinedCatalog(
+					decide(
 						paths,
 						parsed.revision,
 						parsed.digest,
@@ -609,8 +613,10 @@ export async function runMainCli(args: string[]): Promise<void> {
 		// Best-effort catalog refresh in the background: a source is contacted only
 		// when its credential is available, and cached revisions keep serving.
 		void refreshAvailableModelCatalogs(paths, { catalog: preRuntime.catalog.bundle })
-			.then((result) => {
-				if (result) return modelPicker.reloadCatalogs();
+			.then(async (result) => {
+				if (!result) return;
+				await modelPicker.reloadCatalogs();
+				modelPicker.reviewHeldCatalogs(result);
 			})
 			.catch(() => {});
 	}
