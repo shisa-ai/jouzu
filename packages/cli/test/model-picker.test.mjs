@@ -121,7 +121,7 @@ test("active catalog metadata qualifies matching Pi models without changing loca
 	);
 });
 
-test("catalog offering ratings populate picker comparisons without importing prices", () => {
+test("catalog offering ratings and published prices populate separate picker fields", () => {
 	const document = JSON.parse(
 		readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
 	);
@@ -144,12 +144,79 @@ test("catalog offering ratings populate picker comparisons without importing pri
 		const snapshot = structuredClone(catalog);
 		const pickerModel = catalogPickerModel(model, catalog);
 		assert.deepEqual(pickerModel.comparison, { strength: tier, speed: tier, cost: tier });
-		assert.equal(pickerModel.price, undefined);
+		assert.deepEqual(pickerModel.price, { input: 99, output: 199 });
 		assert.equal(pickerModel.cost, undefined);
 		assert.deepEqual(catalog, snapshot, "reading ratings does not mutate the catalog");
 	}
 	assert.equal(catalogPickerModel(model).comparison, undefined);
 	assert.equal(catalogPickerModel({ ...model, id: "unlisted" }, document).comparison, undefined);
+});
+
+test("catalog prices preserve zero and partial rates without importing upstream references", () => {
+	const catalog = JSON.parse(
+		readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+	);
+	const model = { provider: "ai.example.gateway", id: "example-model", name: "Example" };
+	const price = {
+		currency: "USD",
+		unit: "per_1m_tokens",
+		input: 0,
+		output: 0.000001,
+		cacheRead: null,
+		cacheWrite: 0.125,
+		upstreamReference: { cacheRead: 99 },
+	};
+	catalog.modelOfferings[0].metadata = { price };
+	assert.deepEqual(catalogPickerModel(model, catalog).price, { input: 0, output: 0.000001, cacheWrite: 0.125 });
+	assert.equal(catalogPickerModel({ ...model, id: "unlisted" }, catalog).price, undefined);
+	for (const invalid of [
+		undefined,
+		null,
+		[],
+		{},
+		{ ...price, currency: "EUR" },
+		{ ...price, unit: "per_token" },
+		{ currency: "USD", unit: "per_1m_tokens", input: -1, output: "2", cacheRead: NaN, cacheWrite: Infinity },
+		{ currency: "USD", unit: "per_1m_tokens", upstreamReference: { input: 99 } },
+	]) {
+		catalog.modelOfferings[0].metadata = { price: invalid };
+		assert.equal(catalogPickerModel(model, catalog).price, undefined);
+	}
+});
+
+test("selected model prices wrap, follow selection, and disappear without known rates", () => {
+	const inventory = rows();
+	inventory[0].model.price = { input: 0, output: 0.000001, cacheRead: 0.25, cacheWrite: 1.25 };
+	const terminal = { rows: 40 };
+	for (const locale of ["en", "ja", "zh-Hans", "zh-Hant"]) {
+		const { component } = createComponent({
+			terminal,
+			catalog: resolveCatalog(locale).bundle,
+			getRows: () => inventory,
+		});
+		for (const width of [48, 80, 160]) {
+			const lines = component.render(width);
+			assert.ok(lines.every((line) => visibleWidth(line) <= width));
+			const text = stripSgr(lines.join("\n"));
+			for (const rate of ["$0", "$0.000001", "$0.25", "$1.25"]) assert.ok(text.includes(rate), text);
+			assert.match(text, /USD/u);
+			if (locale === "en" && width === 160) {
+				assert.match(text, /1K context \/ 100 output/u);
+				assert.match(text, /\$0.25 cached input/u);
+			}
+		}
+		component.handleInput("down");
+		assert.doesNotMatch(component.render(160).join("\n"), /USD/u);
+		component.handleInput("up");
+		for (const height of [16, 12, 8]) {
+			terminal.rows = height;
+			const lines = component.render(48);
+			assert.ok(lines.length <= paletteHeightBudget(height));
+			assert.ok(lines.every((line) => visibleWidth(line) <= 48));
+		}
+		terminal.rows = 40;
+		component.dispose();
+	}
 });
 
 test("catalog picker ratings ignore malformed metadata and invalid tiers independently", () => {
@@ -733,7 +800,7 @@ test("Models view confirms compaction before selecting a context-small model", a
 	assert.match(listing, /Name\s+Provider\s+Context/u, "the list has a column header");
 	assert.match(listing, /→ ●\s+Tiny context-small\s+small\s+1K/u, "the current row shows name, provider, and context");
 	assert.match(listing, /Large Model\s+large\s+200K/u);
-	assert.match(listing, /small\/tiny · context 1K/u, "the details line keeps the exact identity visible");
+	assert.match(listing, /small\/tiny · 1K context/u, "the details line keeps the exact identity visible");
 
 	component.handleInput("enter");
 	assert.deepEqual(calls.selected, []);
@@ -1112,7 +1179,7 @@ test("Models columns name the catalog for shared identities and drop on narrow t
 	const wide = stripSgr(component.render(96).join("\n"));
 	assert.match(wide, /→ {2}★ {2}Shisa V2\.1 70B\s+Shisa AI · Shisa API\s+65\.5K/u);
 	assert.match(wide, /Shisa V2\.1 70B\s+Shisa AI · codex-pool\s+65\.5K/u);
-	assert.match(wide, /shisa\/shisa-v2\.1-70b · Shisa API · context 65\.5K/u);
+	assert.match(wide, /shisa\/shisa-v2\.1-70b · Shisa API · 65\.5K context/u);
 	for (const width of [24, 48, 96]) {
 		assert.ok(
 			component.render(width).every((line) => visibleWidth(line) === width),

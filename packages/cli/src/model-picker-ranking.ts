@@ -15,6 +15,8 @@ export interface PickerModel extends ModelReference {
 	catalogLabel?: string;
 	contextWindow?: number;
 	maxTokens?: number;
+	/** Published USD rates per million tokens; missing fields are unknown. */
+	price?: { input?: number; output?: number; cacheRead?: number; cacheWrite?: number };
 	/** Comparable assessment tiers; absent values are unknown. */
 	comparison?: { strength?: number; speed?: number; cost?: number };
 	available: boolean;

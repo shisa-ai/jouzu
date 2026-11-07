@@ -163,3 +163,20 @@ Set optional `metadata.strength`, `metadata.speed`, and `metadata.cost` on each 
 ```
 
 Each rating must be an integer from 1 through 4. Higher values mean stronger, faster, or more expensive, respectively. Jouzu ignores missing or invalid ratings independently and displays `—` for them. Other metadata fields do not affect these ratings.
+
+### Token prices
+
+The Models view reads optional `metadata.price` from the selected offering:
+
+```json
+"price": {
+  "currency": "USD",
+  "unit": "per_1m_tokens",
+  "input": 1.65,
+  "output": 4.96,
+  "cacheRead": null,
+  "cacheWrite": null
+}
+```
+
+Rates must be finite, non-negative numbers. Zero is an explicit rate; `null`, missing, or invalid fields are unknown and omitted. Jouzu shows the price line only when at least one rate is known and the currency and unit match the values above. Nested `upstreamReference` prices are not used. These display-only prices do not change provider billing or session cost accounting.

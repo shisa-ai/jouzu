@@ -855,6 +855,27 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.rows.length === 0
 				? line(this.styles.apply("palette.empty", catalogText(this.catalog, CatalogMessageId.modelPickerEmpty)))
 				: line(this.headerText(columns));
+		const price = selected?.model.price;
+		const rateLabels = {
+			input: "jouzu.cli.modelPicker.priceInput",
+			output: "jouzu.cli.modelPicker.priceOutput",
+			cacheRead: "jouzu.cli.modelPicker.priceCacheRead",
+			cacheWrite: "jouzu.cli.modelPicker.priceCacheWrite",
+		} as const;
+		const rates = price
+			? (Object.keys(rateLabels) as Array<keyof typeof rateLabels>).flatMap((key) => {
+					const value = price[key];
+					return typeof value === "number" && Number.isFinite(value) && value >= 0
+						? [catalogText(this.catalog, rateLabels[key], { rate: String(value) })]
+						: [];
+				})
+			: [];
+		const priceLines = rates.length
+			? wrapTextWithAnsi(
+					catalogText(this.catalog, "jouzu.cli.modelPicker.prices", { rates: rates.join(" · ") }),
+					innerWidth,
+				).map((text) => line(this.theme.bg("selectedBg", padTerminalText(text, innerWidth))))
+			: [];
 		const headParts: Array<{ key: string; line: string }> = [
 			{ key: "title", line: renderTerminalFrameTitle(title, width, frameOptions) },
 			{ key: "tabs", line: line(renderPaletteTabs("models", this.theme, this.styles, this.catalog)) },
@@ -868,6 +889,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 				),
 			},
 			{ key: "detail", line: detailLine },
+			...priceLines.map((line, index) => ({ key: `price-${index}`, line })),
 			{ key: "blank", line: line() },
 			{ key: "columns", line: listHeaderLine },
 		];
@@ -941,7 +963,14 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.styles,
 			Math.max(1, height - 5 - messageReserve),
 		);
-		for (const key of ["blank", "detail", "divider", "columns", ...(messageReserve > 0 ? ["search"] : [])]) {
+		for (const key of [
+			"blank",
+			...priceLines.map((_, index) => `price-${index}`).reverse(),
+			"detail",
+			"divider",
+			"columns",
+			...(messageReserve > 0 ? ["search"] : []),
+		]) {
 			if (headParts.length + keyBar.length + 2 + messageReserve <= height) break;
 			const index = headParts.findIndex((part) => part.key === key);
 			if (index >= 0) headParts.splice(index, 1);
@@ -1102,6 +1131,20 @@ function hasConversationEntries(entries: readonly { type: string }[]): boolean {
 	return entries.some((entry) => ["message", "compaction", "branch_summary", "custom_message"].includes(entry.type));
 }
 
+function catalogPrice(metadata: unknown): PickerModel["price"] {
+	if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return undefined;
+	const price = (metadata as Record<string, unknown>).price;
+	if (!price || typeof price !== "object" || Array.isArray(price)) return undefined;
+	const record = price as Record<string, unknown>;
+	if (record.currency !== "USD" || record.unit !== "per_1m_tokens") return undefined;
+	const rates: NonNullable<PickerModel["price"]> = {};
+	for (const key of ["input", "output", "cacheRead", "cacheWrite"] as const) {
+		const value = record[key];
+		if (typeof value === "number" && Number.isFinite(value) && value >= 0) rates[key] = value;
+	}
+	return Object.keys(rates).length > 0 ? rates : undefined;
+}
+
 function catalogComparison(metadata: unknown): PickerModel["comparison"] {
 	if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return undefined;
 	const comparison: NonNullable<PickerModel["comparison"]> = {};
@@ -1119,6 +1162,7 @@ export function catalogPickerModel(
 ): PickerModel {
 	const offering = catalogOffering(catalog, model.provider, model.id);
 	const comparison = catalogComparison(offering?.metadata);
+	const price = catalogPrice(offering?.metadata);
 	const providerName = offering
 		? catalog?.providers.find((provider) => provider.id === offering.providerId)?.name
 		: undefined;
@@ -1127,6 +1171,7 @@ export function catalogPickerModel(
 		...(providerName ? { providerName: sanitizeTerminalText(providerName) } : {}),
 		...(offering && catalogLabel ? { catalogLabel: sanitizeTerminalText(catalogLabel) } : {}),
 		...(comparison ? { comparison } : {}),
+		...(price ? { price } : {}),
 		provider: model.provider,
 		modelId: model.id,
 		name: offering?.name ?? model.name,
