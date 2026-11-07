@@ -8,7 +8,7 @@ Jouzu is Shisa AI's "batteries included" terminal coding harness, built on [Pi](
 - **Web search and fetch.** Fetch pages directly or via the Camoufox stealth browser.
 - **Local content scanning.** TextGuard checks skills and web results before they reach the model.
 - **Compaction with searchable history.** Defaults to [VCC](https://github.com/lllyasviel/VCC) for instant, deterministic compaction with agent-searchable history.
-- **Language choices.** English or full Japanese localization, as well as layout support for Japanese, Chinese, Korean, and emoji widths.
+- **Language choices.** English and a Japanese interface preview, with layout support for Japanese, Chinese, Korean, and emoji widths.
 - **Voice dictation.** Speak into the prompt with Shisa AI's realtime transcription.
 - **Model picker.** Search providers and models, keep favorites, and save per-project defaults. Add any of your own models or sign into [Shisa AI's API service](https://platform.shisa.ai/) for the latest open coding models.
 

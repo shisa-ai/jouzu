@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.5 - 2026-11-08
+
+### Added
+
+- Show the selected catalog model's context window and maximum output together, with known input, output, cached-input, and cache-write prices in USD per million tokens. Omit unknown rates, preserve explicit zero rates, and wrap prices on narrow terminals. Published reference rates do not change billing or session cost accounting. See [Models](docs/models.md).
+- Add Accept and Reject controls for held catalog updates, with model-count summaries, Esc to defer, and `U` to reopen from Catalogs. `jouzu catalog status` prints exact accept/reject commands; `jouzu catalog reject` discards a held revision. See [Catalogs](docs/catalogs.md#held-updates).
+
+### Changed
+
+- Apply valid catalog revisions automatically, including large model additions, removals, and ID changes. Hold a complete empty revision only when it would replace a non-empty catalog.
+- Use muted provider labels and regular text for context and model ratings. Leave unknown ratings blank and show only rating columns present in the unfiltered model inventory; searching keeps the same columns.
+- Update the embedded Pi runtime to 1.5.0, including incremental streamed tool-argument parsing, cached terminal rendering, context-edit-aware branch summaries, and failed-session-write rollback. Preserve Jouzu's summary evidence and streamed Gemini signature handling. See [Pi update review](docs/PI-UPDATES.md).
+- Validate extension tool arguments through Pi's JSON Schema validator, pi-schema. TypeBox-only refinements, codecs, BigInt/Undefined schemas, and custom TypeBox formats no longer apply to tool arguments; extensions loaded through Pi retain TypeBox compatibility imports.
+
 ## 0.2.4 - 2026-10-29
 
 ### Added
