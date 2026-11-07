@@ -162,7 +162,7 @@ Set optional `metadata.strength`, `metadata.speed`, and `metadata.cost` on each 
 "metadata": { "strength": 4, "speed": 3, "cost": 2 }
 ```
 
-Each rating must be an integer from 1 through 4. Higher values mean stronger, faster, or more expensive, respectively. Jouzu ignores missing or invalid ratings independently and displays `—` for them. Other metadata fields do not affect these ratings.
+Each rating must be an integer from 1 through 4. Higher values mean stronger, faster, or more expensive, respectively. Jouzu ignores missing or invalid ratings independently and leaves their cells blank. When no offering in the Models list has a rating, Jouzu hides that column. Other metadata fields do not affect these ratings.
 
 ### Token prices
 

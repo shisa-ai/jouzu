@@ -182,7 +182,7 @@ function modelColumns(
 	const available = Math.max(1, innerWidth - ROW_MARKER_COLUMNS);
 	const provider = Math.min(MAX_PROVIDER_COLUMN, providerWidth);
 	const { strength, speed, cost } = comparisonWidths;
-	const comparisonSpace = strength + speed + cost + 3 * COLUMN_GAP;
+	const comparisonSpace = [strength, speed, cost].reduce((sum, width) => (width ? sum + width + COLUMN_GAP : sum), 0);
 	if (innerWidth >= 80 && available - provider - contextWidth - 2 * COLUMN_GAP - comparisonSpace >= MIN_NAME_COLUMN) {
 		return {
 			name: available - provider - contextWidth - 2 * COLUMN_GAP - comparisonSpace,
@@ -212,8 +212,12 @@ function contextLabel(contextWindow: number | undefined): string {
 	return contextWindow ? compactNumber(contextWindow) : "—";
 }
 
+function validComparison(value: number | undefined): value is number {
+	return Number.isInteger(value) && value !== undefined && value >= 1 && value <= 4;
+}
+
 function comparisonLabel(value: number | undefined, symbol: string): string {
-	return Number.isInteger(value) && value !== undefined && value >= 1 && value <= 4 ? symbol.repeat(value) : "—";
+	return validComparison(value) ? symbol.repeat(value) : "";
 }
 
 export function compactContextForModelSwitch(
@@ -265,6 +269,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private rows: PickerRow[] = [];
 	/** Provider/model pairs published by more than one catalog; their Provider cell names the catalog. */
 	private sharedIdentities = new Set<string>();
+	/** Rating columns that at least one model in the unfiltered inventory fills; filtering never toggles them. */
+	private ratedComparisons = { strength: false, speed: false, cost: false };
 	private searchFocused = false;
 	private totalCount = 0;
 	private selectedIndex = 0;
@@ -365,7 +371,11 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.totalCount = rows.length;
 		const seen = new Set<string>();
 		this.sharedIdentities = new Set();
+		this.ratedComparisons = { strength: false, speed: false, cost: false };
 		for (const row of rows) {
+			for (const key of ["strength", "speed", "cost"] as const) {
+				if (validComparison(row.model.comparison?.[key])) this.ratedComparisons[key] = true;
+			}
 			const identity = `${row.model.provider}\0${row.model.modelId}`;
 			if (seen.has(identity)) this.sharedIdentities.add(identity);
 			seen.add(identity);
@@ -704,6 +714,15 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			: display.providerName;
 	}
 
+	/** Width of one rating column, or zero when no model in the inventory carries that rating. */
+	private comparisonWidth(key: keyof typeof COMPARISON_SYMBOLS, header: string): number {
+		if (!this.ratedComparisons[key]) return 0;
+		return Math.max(
+			terminalTextWidth(COMPARISON_SYMBOLS[key].repeat(4)),
+			terminalTextWidth(catalogText(this.catalog, header)),
+		);
+	}
+
 	private headerText(columns: ModelColumns): string {
 		const cells = [padTerminalText(catalogText(this.catalog, "jouzu.cli.modelPicker.columnName"), columns.name)];
 		if (columns.provider)
@@ -752,7 +771,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		if (columns.provider) {
 			cells.push(
 				this.styles.apply(
-					"palette.detail",
+					"palette.label",
 					padTerminalText(this.providerCell(row), columns.provider, { indicator: "…" }),
 				),
 			);
@@ -760,7 +779,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		if (columns.context) {
 			cells.push(
 				this.styles.apply(
-					"palette.detail",
+					"palette.value",
 					padTerminalText(contextLabel(row.model.contextWindow), columns.context, { alignment: "right" }),
 				),
 			);
@@ -768,7 +787,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		for (const key of ["strength", "speed", "cost"] as const) {
 			if (columns[key]) {
 				const value = comparisonLabel(row.model.comparison?.[key], COMPARISON_SYMBOLS[key]);
-				cells.push(this.styles.apply("palette.detail", padTerminalText(value, columns[key])));
+				cells.push(this.styles.apply("palette.value", padTerminalText(value, columns[key])));
 			}
 		}
 		const text = `${marker} ${status}${favorite}${projectDefault} ${cells.join("  ")}`;
@@ -837,18 +856,9 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			innerWidth,
 			Math.max(CONTEXT_COLUMN, terminalTextWidth(catalogText(this.catalog, "jouzu.cli.modelPicker.columnContext"))),
 			{
-				strength: Math.max(
-					terminalTextWidth(COMPARISON_SYMBOLS.strength.repeat(4)),
-					terminalTextWidth(catalogText(this.catalog, "jouzu.cli.modelPicker.columnStrength")),
-				),
-				speed: Math.max(
-					terminalTextWidth(COMPARISON_SYMBOLS.speed.repeat(4)),
-					terminalTextWidth(catalogText(this.catalog, "jouzu.cli.modelPicker.columnSpeed")),
-				),
-				cost: Math.max(
-					terminalTextWidth(COMPARISON_SYMBOLS.cost.repeat(4)),
-					terminalTextWidth(catalogText(this.catalog, "jouzu.cli.modelPicker.columnCost")),
-				),
+				strength: this.comparisonWidth("strength", "jouzu.cli.modelPicker.columnStrength"),
+				speed: this.comparisonWidth("speed", "jouzu.cli.modelPicker.columnSpeed"),
+				cost: this.comparisonWidth("cost", "jouzu.cli.modelPicker.columnCost"),
 			},
 		);
 		const listHeaderLine =

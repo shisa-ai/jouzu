@@ -1036,27 +1036,40 @@ test("Models view selects and saves for the project, toggles favorites, and canc
 	assert.equal(second.calls.close, 1);
 });
 
-test("Models shows comparison columns as unknown without assessment evidence", () => {
+test("Models hides rating columns that no model in the inventory fills", () => {
 	for (const [locale, headers] of [
-		["en", /Strength\s+Speed\s+Cost/u],
-		["ja", /実力\s+速度\s+コスト/u],
-		["zh-Hans", /Strength\s+Speed\s+Cost/u],
-		["zh-Hant", /Strength\s+Speed\s+Cost/u],
+		["en", /Strength|Speed|Cost/u],
+		["ja", /実力|速度|コスト/u],
 	]) {
 		const { component } = createComponent({ catalog: resolveCatalog(locale).bundle });
 		const wide = stripSgr(component.render(120).join("\n"));
-		assert.match(wide, headers, locale);
-		assert.match(wide, /→.*Tiny.*—\s+—\s+—/u, locale);
+		assert.doesNotMatch(wide, headers, locale);
+		assert.match(wide, /→.*Tiny.*1K\s*│/u, locale);
 		for (const width of [24, 48, 72, 80, 96, 120]) {
 			assert.ok(
 				component.render(width).every((line) => visibleWidth(line) <= width),
 				`${locale}: ${width}`,
 			);
 		}
-		const narrow = stripSgr(component.render(48).join("\n"));
-		assert.doesNotMatch(narrow, headers);
 		component.dispose();
 	}
+});
+
+test("Models keeps rating columns while a search shows only unrated models", () => {
+	const [unrated, other] = rows();
+	const rated = { ...other, model: { ...other.model, comparison: { strength: 2 } } };
+	const { component } = createComponent({
+		getRows: (query) => (query ? [unrated] : [unrated, rated]),
+	});
+	const header = /Strength\s+Speed\s+Cost/u;
+	assert.doesNotMatch(stripSgr(component.render(120).join("\n")), /Strength\s+Speed|Speed\s+Cost/u);
+	assert.match(stripSgr(component.render(120).join("\n")), /Strength/u);
+	for (const character of "tiny") component.handleInput(character);
+	const filtered = stripSgr(component.render(120).join("\n"));
+	assert.match(filtered, /Strength/u, "filtering does not hide a column the inventory fills");
+	assert.doesNotMatch(filtered, header, "columns no model fills stay hidden");
+	assert.doesNotMatch(filtered, /Large Model/u);
+	component.dispose();
 });
 
 test("Models renders catalog ratings with localized headers within terminal widths", () => {
@@ -1115,7 +1128,7 @@ test("Models renders one to four comparison symbols and rejects invalid tiers", 
 	}
 	for (const tier of [0, 5, 1.5]) {
 		const line = lines.find((value) => value.includes(`Tier ${tier} `));
-		assert.match(line, /—\s+—\s+—/u);
+		assert.doesNotMatch(line, /[—★↯$]/u, "invalid tiers leave the cells blank");
 	}
 	for (const width of [24, 48, 72, 80, 96, 120]) {
 		assert.ok(

@@ -36,7 +36,7 @@ Each row shows the model name, its provider, and its context window. `◆` marks
 
 When the selected catalog offering publishes token rates, a separate line shows its known input, output, cached-input, and cache-write prices in USD per million tokens. Unknown rates are omitted; explicit zero rates are shown. Prices wrap on narrow terminals and yield to navigation controls in short terminals. These are published reference rates, not an account-specific billing quote; upstream comparison prices are not shown.
 
-Wide terminals also show catalog-supplied Strength (`★`), Speed (`↯`), and Cost (`$`) ratings, each with one to four text symbols. More stars means stronger, more zigzag arrows means faster, and more dollar signs means more expensive. Missing or invalid ratings show `—`. Ratings belong to the selected catalog offering; Jouzu does not infer them from model names or token prices. Narrow terminals hide the three rating columns together, then Context, then Provider.
+Wide terminals also show catalog-supplied Strength (`★`), Speed (`↯`), and Cost (`$`) ratings, each with one to four text symbols. More stars means stronger, more zigzag arrows means faster, and more dollar signs means more expensive. A missing or invalid rating leaves its cell blank, and a rating column is hidden when no model in the list has that rating. Searching does not hide or show rating columns. Ratings belong to the selected catalog offering; Jouzu does not infer them from model names or token prices. Narrow terminals hide the three rating columns together, then Context, then Provider.
 
 ## Which model a new session uses
 
