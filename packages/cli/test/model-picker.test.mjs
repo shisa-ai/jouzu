@@ -200,6 +200,11 @@ test("selected model prices wrap, follow selection, and disappear without known 
 			const text = stripSgr(lines.join("\n"));
 			for (const rate of ["$0", "$0.000001", "$0.25", "$1.25"]) assert.ok(text.includes(rate), text);
 			assert.match(text, /USD/u);
+			const priceStart = lines.findIndex((line) => line.includes("USD"));
+			const priceEnd = lines.findIndex((line) => line.includes("$1.25"));
+			for (const line of lines.slice(priceStart, priceEnd + 1)) {
+				assert.match(stripSgr(line), /^│ {2}\S/u, "every pricing row shares the detail indent");
+			}
 			if (locale === "en" && width === 160) {
 				assert.match(text, /1K context \/ 100 output/u);
 				assert.match(text, /\$0.25 cached input/u);

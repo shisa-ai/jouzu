@@ -873,8 +873,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const priceLines = rates.length
 			? wrapTextWithAnsi(
 					catalogText(this.catalog, "jouzu.cli.modelPicker.prices", { rates: rates.join(" · ") }),
-					innerWidth,
-				).map((text) => line(this.theme.bg("selectedBg", padTerminalText(text, innerWidth))))
+					Math.max(1, innerWidth - 1),
+				).map((text) => line(this.theme.bg("selectedBg", padTerminalText(` ${text}`, innerWidth))))
 			: [];
 		const headParts: Array<{ key: string; line: string }> = [
 			{ key: "title", line: renderTerminalFrameTitle(title, width, frameOptions) },
