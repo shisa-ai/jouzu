@@ -866,13 +866,13 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			? (Object.keys(rateLabels) as Array<keyof typeof rateLabels>).flatMap((key) => {
 					const value = price[key];
 					return typeof value === "number" && Number.isFinite(value) && value >= 0
-						? [catalogText(this.catalog, rateLabels[key], { rate: String(value) })]
+						? [catalogText(this.catalog, rateLabels[key], { rate: formatRate(value) })]
 						: [];
 				})
 			: [];
 		const priceLines = rates.length
 			? wrapTextWithAnsi(
-					catalogText(this.catalog, "jouzu.cli.modelPicker.prices", { rates: rates.join(" · ") }),
+					`${this.styles.apply("palette.hint", catalogText(this.catalog, "jouzu.cli.modelPicker.prices"))}  ${rates.join(" · ")}`,
 					Math.max(1, innerWidth - 1),
 				).map((text) => line(this.theme.bg("selectedBg", padTerminalText(` ${text}`, innerWidth))))
 			: [];
@@ -1129,6 +1129,11 @@ export function catalogThinkingLevel(
 
 function hasConversationEntries(entries: readonly { type: string }[]): boolean {
 	return entries.some((entry) => ["message", "compaction", "branch_summary", "custom_message"].includes(entry.type));
+}
+
+/** Show a token rate as money: at least two decimals, more only when a sub-cent rate needs them. */
+function formatRate(value: number): string {
+	return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: false });
 }
 
 function catalogPrice(metadata: unknown): PickerModel["price"] {

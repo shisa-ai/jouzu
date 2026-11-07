@@ -199,19 +199,19 @@ test("selected model prices wrap, follow selection, and disappear without known 
 			assert.ok(lines.every((line) => visibleWidth(line) <= width));
 			const text = stripSgr(lines.join("\n"));
 			for (const rate of ["$0", "$0.000001", "$0.25", "$1.25"]) assert.ok(text.includes(rate), text);
-			assert.match(text, /USD/u);
-			const priceStart = lines.findIndex((line) => line.includes("USD"));
+			assert.match(text, /\$\/(?:1M|100万|百万|百萬)/u);
+			const priceStart = lines.findIndex((line) => line.includes("$/"));
 			const priceEnd = lines.findIndex((line) => line.includes("$1.25"));
 			for (const line of lines.slice(priceStart, priceEnd + 1)) {
 				assert.match(stripSgr(line), /^│ {2}\S/u, "every pricing row shares the detail indent");
 			}
 			if (locale === "en" && width === 160) {
 				assert.match(text, /1K context \/ 100 output/u);
-				assert.match(text, /\$0.25 cached input/u);
+				assert.match(text, /\$\/1M tokens {2}\$0\.00 in · \$0\.000001 out · \$0\.25 cached · \$1\.25 cache write/u);
 			}
 		}
 		component.handleInput("down");
-		assert.doesNotMatch(component.render(160).join("\n"), /USD/u);
+		assert.doesNotMatch(component.render(160).join("\n"), /\$\//u);
 		component.handleInput("up");
 		for (const height of [16, 12, 8]) {
 			terminal.rows = height;
