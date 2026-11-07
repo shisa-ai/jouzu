@@ -86,6 +86,15 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 ## Update log
 
+### Pi 1.5.0 — qualified locally
+
+- **Tag and npm `gitHead`:** `v1.5.0` at `f9a26365568127461c47a07a37dcb42c140a3ac5`.
+- **Disposition:** Qualified on 2026-11-07 with ten registered deviations. Node.js remains at least 22.19; Pi Server remains pinned separately at 1.1.0.
+- **Compatibility:** Tool argument validation now uses JSON Schema through pi-schema. TypeBox-only refinements, codecs, BigInt/Undefined schemas, and custom TypeBox formats do not apply to tool arguments. Extensions loaded through Pi retain their TypeBox compatibility imports. Jouzu's branch-summary preparation preserves Pi's context edits while retaining tool evidence; provider receipts retain Gemini signatures across streamed tool-call fragments. Failed session appends roll back their in-memory entries.
+- **Interface review:** Re-inspected Pi's interactive startup, selectors, settings, login, tool and assistant rendering, extension lifecycle, key handling, and width calculation. Pi exposes no interface message catalog or locale setting; Pi-owned and extension update messages remain outside Jouzu's translations. The recorded Pi surface provenance now matches 1.5.0.
+- **Checks:** Online npm integrity/tag verification and the complete local qualification gate pass, including packed installation, synthetic update/rollback, Python artifacts, and API/CLI/RPC contracts. Registry signature verification reports no invalid or missing signatures. All eleven installed Pi packages match registry bytes or documented deviations. Recording-terminal tests are not physical-terminal, native Windows/macOS, or live-provider qualification.
+- **Dependency advisory scope:** The source lock reports one moderate `@hono/node-server` advisory, `GHSA-rmxm-3fg6-px4f`, in WebAIO's unused nested MCP SDK. The prepared release bundle removes that subtree, and the passing package check verifies its absence. This is not a clean source dependency audit.
+
 ### Pi 1.3.0 — qualified locally
 
 - **Tag and npm `gitHead`:** `v1.3.0` at `71023aec1546d6d677a65669c5665c0927ce0dd0`.

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-coding-agent",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"files": {
 		"dist/utils/clipboard.js": {
 			"before": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",

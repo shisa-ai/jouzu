@@ -16,7 +16,17 @@ import {
 const { createJiti } = await import(
 	pathToFileURL(createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")).href
 );
-const jiti = createJiti(import.meta.url, { moduleCache: false });
+const jiti = createJiti(import.meta.url, {
+	moduleCache: false,
+	alias: {
+		"@earendil-works/pi-ai": fileURLToPath(
+			new URL(
+				"../node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/pi-ai-extension-view.js",
+				import.meta.url,
+			),
+		),
+	},
+});
 const { CronScheduler } = await jiti.import(
 	fileURLToPath(new URL("../node_modules/pi-schedule-prompt/src/scheduler.ts", import.meta.url)),
 );

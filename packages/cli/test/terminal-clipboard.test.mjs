@@ -22,6 +22,7 @@ import { additionSource, additions, paths, transform } from "../../../upstream/p
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifestPath = join(repoRoot, "upstream/pi-terminal-clipboard/patch.lock.json");
+const pinnedPiVersion = JSON.parse(await readFile(manifestPath, "utf8")).version;
 const installedUtils = join(repoRoot, "node_modules/@earendil-works/pi-coding-agent/dist/utils");
 const hash = (text) => createHash("sha256").update(text).digest("hex");
 const sessionEnv = {
@@ -71,14 +72,14 @@ async function makePatchedPackage(t) {
 	await mkdir(join(packageRoot, "node_modules/@earendil-works/pi-tui"), { recursive: true });
 	await writeFile(
 		join(packageRoot, "package.json"),
-		JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "1.4.0", type: "module" }),
+		JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: pinnedPiVersion, type: "module" }),
 	);
 	await copyFile(join(installedUtils, "clipboard.js"), join(utils, "clipboard.js"));
 	await copyFile(join(installedUtils, "clipboard-command.js"), join(utils, "clipboard-command.js"));
 	await writeFile(join(utils, "wsl.js"), "export function isWSL() { return false; }\n");
 	await writeFile(
 		join(packageRoot, "node_modules/@earendil-works/pi-tui/package.json"),
-		JSON.stringify({ name: "@earendil-works/pi-tui", version: "1.4.0", type: "module", main: "index.js" }),
+		JSON.stringify({ name: "@earendil-works/pi-tui", version: pinnedPiVersion, type: "module", main: "index.js" }),
 	);
 	await writeFile(
 		join(packageRoot, "node_modules/@earendil-works/pi-tui/index.js"),
@@ -130,7 +131,7 @@ test("manifest locks the transform and the installed tmux module", async () => {
 	const lock = JSON.parse(manifest);
 	assert.equal(lock.schemaVersion, 1);
 	assert.equal(lock.package, "@earendil-works/pi-coding-agent");
-	assert.equal(lock.version, "1.4.0");
+	assert.equal(lock.version, pinnedPiVersion);
 	assert.deepEqual(Object.keys(lock.files).sort(), [...paths].sort());
 	assert.deepEqual(Object.keys(lock.additions).sort(), Object.keys(additions).sort());
 	for (const path of paths) {
@@ -175,7 +176,7 @@ test("apply refuses unrecognized clipboard bytes and conflicting additions", asy
 	await mkdir(utils, { recursive: true });
 	await writeFile(
 		join(packageRoot, "package.json"),
-		JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "1.4.0", type: "module" }),
+		JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: pinnedPiVersion, type: "module" }),
 	);
 	await writeFile(join(utils, "clipboard.js"), "unrecognized");
 	await assert.rejects(applyTerminalClipboard(packageRoot), /hash mismatch/);

@@ -504,13 +504,18 @@ test("required wait fields stay required and unknown fields fail before a wait i
 		{ ...request(), reason: undefined },
 		{ ...request(), deadline: undefined },
 		{ ...request(), on: undefined },
-		{ ...request(), reason: null },
-		{ ...request(), deadline: null },
 		{ ...request(), on: null },
 		{ ...request(), extra: true },
 		{ ...request(), on: [{ ...handle, extra: true }] },
 	]) {
 		assert.throws(() => validateToolArguments(wait, { name: "agent_wait", arguments: args }));
+		await assert.rejects(f.call("agent_wait", args), { code: "schema" });
+	}
+	for (const args of [
+		{ ...request(), reason: null },
+		{ ...request(), deadline: null },
+	]) {
+		// Pi 1.5 coerces null string fields; direct calls still reject the raw nulls.
 		await assert.rejects(f.call("agent_wait", args), { code: "schema" });
 	}
 	assert.deepEqual(await f.attachment.waits.snapshot(), []);

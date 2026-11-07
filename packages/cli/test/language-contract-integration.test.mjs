@@ -47,6 +47,8 @@ import {
 
 const packageRoot = fileURLToPath(new URL("..", import.meta.url));
 const cli = join(packageRoot, "dist", "cli.js");
+const piLock = JSON.parse(readFileSync(join(packageRoot, "dist", "pi.lock.json"), "utf8"));
+const doctorExitStatus = piLock.compatibilityStatus === "qualified" ? 0 : 1;
 
 const UPSTREAM_PROMPT =
 	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.\n\nAvailable tools:\n- read: Read file contents\n\nGuidelines:\n- Be concise in your responses";
@@ -236,7 +238,7 @@ test("the CLI reports the same language contract, profile, and model under both 
 		const reportFor = (locale) => {
 			writeSettings(home, { uiLocale: locale, responseLanguage: "ja", artifactPolicy: { commits: "ja" } });
 			const result = runCli(["--jouzu-home", home, "--jouzu-ui-locale", locale, "doctor", "--json"]);
-			assert.equal(result.status, 0, result.stderr || result.stdout);
+			assert.equal(result.status, doctorExitStatus, result.stderr || result.stdout);
 			assert.equal(result.stderr, "");
 			return JSON.parse(result.stdout);
 		};
@@ -343,7 +345,7 @@ test("the CLI reports an untrusted project policy and leaves the global settings
 		const before = readFileSync(join(home, LOCALIZATION_FILE_NAME), "utf8");
 
 		const result = runCli(["--jouzu-home", home, "doctor", "--json"], { cwd: repo });
-		assert.equal(result.status, 0, result.stderr || result.stdout);
+		assert.equal(result.status, doctorExitStatus, result.stderr || result.stdout);
 		const report = JSON.parse(result.stdout);
 		// No trust signal exists for a repository yet, so the project file is
 		// reported as untrusted and contributes nothing.

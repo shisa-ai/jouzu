@@ -163,6 +163,20 @@ test("summary preparation preserves branch results and fills only the missing ba
 	assert.deepEqual(manager.getEntries(), snapshot, "no synthetic session entries");
 });
 
+test("branch summary preparation honors context edits while retaining tool evidence", async () => {
+	const manager = entries([user("Private original"), user("Hidden original"), user("Keep this")]);
+	const [replace, hide] = manager.getBranch();
+	manager.appendContextEdit(replace.id, { content: [{ type: "text", text: "Replacement context" }] });
+	manager.appendContextEdit(hide.id, null);
+	const snapshot = structuredClone(manager.getEntries());
+	const probe = transport();
+	await branch(manager, probe.streamFn);
+	assert.match(probe.prompts[0], /Replacement context/);
+	assert.match(probe.prompts[0], /Keep this/);
+	assert.doesNotMatch(probe.prompts[0], /Private original|Hidden original/);
+	assert.deepEqual(manager.getEntries(), snapshot);
+});
+
 test("summary preparation labels leading result excerpts without inventing calls", async () => {
 	const messages = [result("outside-excerpt"), user(), call("missing")];
 	const snapshot = structuredClone(messages);

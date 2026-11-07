@@ -151,19 +151,23 @@ test("an append during a verification cannot publish a stale index or receipt", 
 	assert.equal((await verifyPiHistoryEntry(manager, first)).kind, "persisted");
 });
 
-test("a failed partial host write invalidates the prefix and leaves the missing entry buffered", async (t) => {
+test("a failed partial host write invalidates the prefix without publishing the failed entry", async (t) => {
 	const { manager, first, path } = await fixture(t);
 	await verifyPiHistoryEntry(manager, first);
 	const originalSize = (await stat(path)).size;
+	const originalLeaf = manager.getLeafId();
 	t.mock.method(manager, "_persistUnobserved", () => {
 		appendFileSync(path, "{");
 		throw new Error("write failed");
 	});
 	assert.throws(() => manager.appendCustomEntry("not-durable", {}), /write failed/);
-	const last = manager.getLeafId();
-	const proofs = await verifyPiHistoryEntries(manager, [first, last]);
+	const proofs = await verifyPiHistoryEntries(manager, [first]);
 	assert.equal(proofs.get(first).kind, "persisted");
-	assert.equal(proofs.get(last).kind, "buffered");
+	assert.equal(manager.getLeafId(), originalLeaf, "Pi rolls back the failed in-memory append");
+	assert.equal(
+		manager.getEntries().some((entry) => entry.customType === "not-durable"),
+		false,
+	);
 	assert.equal(piHistoryVerificationStats(manager).scannedBytes, originalSize * 2 + 1);
 });
 

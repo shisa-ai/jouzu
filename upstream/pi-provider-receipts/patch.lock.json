@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-ai",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"files": {
 		"dist/api/transform-messages.js": {
 			"before": "5654d81fdacdf3f3e9ca9eb89c4dfa71b742b852163ecd49ba38307f876db63e",
@@ -12,72 +12,72 @@
 			"after": "6f6ef33093f2138f013e3c8a32c4db3b519f51d86211b06d9eb76f18103e6b9a"
 		},
 		"dist/api/openai-completions.js": {
-			"before": "106eb312121137abbe9ad8050e2c9baa1ea27315233c7b8bee8c7820c8b3a6cf",
-			"after": "41397ad02120f534c33aea5a467729ac223474a33bbba89304ad0b168ee336b2"
+			"before": "df81627c173163d0b918692f4a3b87e22cbdb5883b809e4d70d6152d1e68d948",
+			"after": "2975a05d945b0ab4e4c63f7f3918f676dd05c895d120ed02717afcad2e6a49b8"
 		},
 		"dist/api/openai-completions.d.ts": {
 			"before": "552baa4343275a20df53734e5aa12f46cb8648ca28421adf1318b199eae69a05",
 			"after": "b6eccdaa2d0b9796728d4f8c3b922713862dac056d331f3b0b530ea57d9cfd95"
 		},
 		"dist/types.d.ts": {
-			"before": "9348589a0c88c61e78e8575539cec4bf4e4fba8bf9029d3535ddeae07cb1c696",
-			"after": "60fb37887d9901ebb1a65947a05ef7f203414ce69e0176ef6cecf7b062aabc33"
+			"before": "e2944a9e1c37851e6d089556ac955ea4b253eb57a14098b53272e91fe8e84a87",
+			"after": "adf7533a7fd187cca703d8ed85d7f2d78353aba53370627c413ca02284ad7361"
 		},
 		"dist/api/simple-options.js": {
 			"before": "ff234becff46a6c25c1e437c86d72fbe7aeb4e107266d1bf6951622d223b0ae0",
 			"after": "ce381ab6783175012249e775774750bedcdd80cff82cd9423e58830bb0e5111d"
 		},
 		"dist/api/openai-responses.js": {
-			"before": "002f15414b7c7b62a32610a8a915bdf1a01eed930b8b45d7691e8a5c475fa9b5",
-			"after": "47a18e965b9637a74132dd282fc973bf09d73fee6f6d8da85004af88aace2f78"
+			"before": "904b218cb90ab1d2a3ba98ef1f2791660484e8444d358601d33156949b121b2b",
+			"after": "9dac1160749665907a91fafe44522b192db4ff5f9ad1ecab76821cd286eb0f28"
 		},
 		"dist/api/openai-responses-shared.js": {
-			"before": "eed025a4821b1e017dd024b930caf8fa11c7fe053a81efe11bd7d846fdc641d3",
-			"after": "9d43cd9cf0923a7f902d8f7c3cae7088394bdac75d6d8a2c702e077d3f37c041"
+			"before": "00796997da00cd4cb77ae8c1c4bb92a3d4a4a4dd5bea18524de7173e4f877e4c",
+			"after": "bf5ba8aa6aa4c74a760b16bc770499cfe074d7c075d2fecd3c49c48e2a965a5e"
 		},
 		"dist/api/openai-responses-shared.d.ts": {
 			"before": "c6f6ed26e85294d5cf2ba21e24c3bb9e9e5969c22988708faf4a5edfc75a3fce",
 			"after": "6be675fc13e8d8772c09c8eee3cf8ef7827a567ec18a4f2f2793533b1c8f85cb"
 		},
 		"dist/api/anthropic-messages.js": {
-			"before": "360298eff89e8c517c213880088db33c93b56ba737c91e885b22e7e125ca5d55",
-			"after": "e0e305cb78b58b97a0d960aafc639147dcba3bf572ba8d14e2959fb51c9c96a1"
+			"before": "992daf485e2d479ac1df3886019946d0bf512ef6517ec730ce4c7315f9472ecc",
+			"after": "e9de0b931e4f03d0b73d0aa36cd189699df79e94e0f06c006ba22d801d28de19"
 		},
 		"dist/api/google-generative-ai.js": {
-			"before": "959c5013c76c76a306e2621fe88b96bb436f38862bf6c48761f7dc48da6133f6",
-			"after": "56e3a07431fe1c1a35e3b95431fab55c5553b0c5346bc0a645ce630430889e93"
+			"before": "44beb6dfb5a9f8ce35eee4121473af2fc23456b12e5992b94d98c57f68d3a867",
+			"after": "020b19799733a3a0c82962eb2ccdf728ee9a84b82589d44f074bc15f9ac25bcd"
 		},
 		"dist/api/google-shared.js": {
-			"before": "dd6d525cfa495dc1f9b536049d68d265f95cc0988a3026cb418e3407978030ae",
-			"after": "0c7cf0bba43bda017497275048689c20e15fb54958e7cd236a732d4ed4d5024b"
+			"before": "10b7a76cdf73ad10eb09054623d403f85f7c600c46a1654d232f8c68e16ba61c",
+			"after": "b745ec64cb1dbb186d15404a73a62113693168468373dcf1e6e2754375ae578b"
 		},
 		"dist/api/google-shared.d.ts": {
-			"before": "cddabf0d12181149e4c9473eb2c6d2f0ad4e7870c76c2061b85346cb8031b2fc",
-			"after": "a000a950e3079006febd260f7c716441c89e56f4fe8c15db24f58f13a2f33695"
+			"before": "3e1b1cde77d03331e2fd456fe50e91b14c0511fb48c2e06165acaa21dc4d37c0",
+			"after": "57a802733228ba3cb1462b973e0a0a05014ad183ae886da205ecc4e599922e73"
 		},
 		"dist/api/openai-codex-responses.js": {
-			"before": "339c75c5799ec3baca669114e3779988f819a5479e2b2c43dfa0b0f05b921c92",
-			"after": "d63b325d84360e3de6c889b88358fd5fc7afec6d142a21bcac674733182a89d8"
+			"before": "13d02ecedbe4594b7c73bc3b9180e04f2a5e68e42aedfba9a366d5c082be8d57",
+			"after": "9657bd8ee5ab7f00ed26ff08d5511656880da7f5a10041349943019bdc8488b8"
 		},
 		"dist/api/google-vertex.js": {
-			"before": "b2cee57ba4ccc32efc98672c0c9bca7688bb71a497610b56b817ec00f4cf6fbe",
-			"after": "4f13c1fce136d4204f09f796dcb94d20533e5aaabcea122d02d10b22e2784fb7"
+			"before": "90288ba15a1c4a2d9ca1f6956bcbe329de3e70dfdbd7377cca1ba2d578ed8880",
+			"after": "e61549b0de4d06b0a8614491e9f920c96b32b446405adb07bca3101b8f7bb2a6"
 		},
 		"dist/api/azure-openai-responses.js": {
-			"before": "b07688947caf0dea5a6e7907b8aa7a3a35bd34c3c5406cf0c9050788df4e9695",
-			"after": "b6977f84b0cbfd347ddc36084b2dfeec0aea7fa07bc41a2ee31cbad4476ff005"
+			"before": "dd20dfb25c84f53e1d1fd361857b0686a118709eabe93c20a1ba24756f60147a",
+			"after": "c3248055db87ebcee1bc54143e806c3618f605e7698b4b6209f1ced6ed43df9b"
 		},
 		"dist/api/mistral-conversations.js": {
-			"before": "9870c5bd8b92f1dc3a17af42a2e42e737e10d8d1a8c1e8c579db5f2ef1dfb92f",
-			"after": "e0f7e5049ef4a584ef6715106b08f3d7e3fa3fabed605278475de498b73b796d"
+			"before": "27f9cd4a233dfbb2cf8e6a0a4a7342fa486ad9181817ea1416c5b012f3f623c4",
+			"after": "4a37c85327ad29fd123c3bc2f27e30fe389cf7e1635a0a2615610d115e460ba5"
 		},
 		"dist/api/pi-messages.js": {
-			"before": "b4ad43cfb8eab44986c734d7f2f689204349abed6dfb4082971e1916efeb2ee6",
-			"after": "be3f14292cd4dcee719723353e23e578027926e3ff7980cb1ce813189afd9a30"
+			"before": "762c1f0ed385f88fa7005ac7ef80595aa92d6c280158eb80f02199c94f876a38",
+			"after": "9ebe4de78efffbf9add7f64cb6f3258c1377d46c0ca048cf078aae5302d3114d"
 		},
 		"dist/api/bedrock-converse-stream.js": {
-			"before": "2e4a6b46379f7c43ceccb5cef44793bfe6e14f11f4ea42c507b3cc8460d54f0b",
-			"after": "0207190a1bac7186c3adb5e9d59994d3f65748065233683fdfc02507a6e0b988"
+			"before": "3f908ff6e6c67fac3681199140ac0117bbd465f2a8f736acc3a4466d5227a213",
+			"after": "b1956eb6802bf0a2f72c3774071e88987da2e94633349ac982c7e4c089a056e1"
 		},
 		"dist/compat.js": {
 			"before": "df55dca273cb2a7053187b7b29d0fe5b91966a5099ab02d2efe38bb31c3f9738",

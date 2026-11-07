@@ -50,8 +50,8 @@ export function isBuiltinApiProvider(api) {
 		);
 	} else if (path === "dist/api/openai-completions.js") {
 		change(
-			"                            const block = ensureToolCallBlock(toolCall);",
-			`                            const block = ensureToolCallBlock(toolCall);
+			"                            const { block, state } = ensureToolCallBlock(toolCall);",
+			`                            const { block, state } = ensureToolCallBlock(toolCall);
                             // Google OpenAI-compatible routes require this opaque signature on replay.
                             // It can arrive separately from the function arguments, keyed by stream index.
                             const thoughtSignature = toolCall.extra_content?.google?.thought_signature;

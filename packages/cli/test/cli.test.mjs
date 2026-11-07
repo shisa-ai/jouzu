@@ -644,17 +644,17 @@ test("startup reads the UI locale option, environment, and saved setting without
 		assert.match(invalid.stderr, /--jouzu-ui-locale must be one of/);
 
 		const explicit = run(["--jouzu-home", jouzuHome, "--jouzu-ui-locale", "ja", "doctor"]);
-		assert.equal(explicit.status, 0, explicit.stderr);
+		assert.equal(explicit.status, piLock.compatibilityStatus === "qualified" ? 0 : 1, explicit.stderr);
 		assert.equal(existsSync(settingsPath), false, "reading must not create localization.json");
 
 		const fromEnv = run(["--jouzu-home", jouzuHome, "doctor"], { env: { JOUZU_UI_LOCALE: "ja_JP.UTF-8" } });
-		assert.equal(fromEnv.status, 0, fromEnv.stderr);
+		assert.equal(fromEnv.status, piLock.compatibilityStatus === "qualified" ? 0 : 1, fromEnv.stderr);
 		assert.equal(existsSync(settingsPath), false, "reading the environment must not create localization.json");
 
 		const saved = `${JSON.stringify({ schemaVersion: 1, localization: { uiLocale: "zh-Hant" } })}\n`;
 		writeFileSync(settingsPath, saved);
 		const fromSaved = run(["--jouzu-home", jouzuHome, "doctor"]);
-		assert.equal(fromSaved.status, 0, fromSaved.stderr);
+		assert.equal(fromSaved.status, piLock.compatibilityStatus === "qualified" ? 0 : 1, fromSaved.stderr);
 		assert.equal(readFileSync(settingsPath, "utf8"), saved, "reading must not rewrite localization.json");
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
@@ -670,7 +670,7 @@ test("a future-version saved localization warns, falls back, and is left intact"
 		const contents = `${JSON.stringify({ schemaVersion: 99, localization: { uiLocale: "ja" } })}\n`;
 		writeFileSync(settingsPath, contents);
 		const result = run(["--jouzu-home", jouzuHome, "doctor"]);
-		assert.equal(result.status, 0, result.stderr);
+		assert.equal(result.status, piLock.compatibilityStatus === "qualified" ? 0 : 1, result.stderr);
 		assert.match(result.stderr, /schemaVersion 99/);
 		assert.match(result.stderr, /leaving the file unchanged/);
 		assert.equal(readFileSync(settingsPath, "utf8"), contents);
@@ -688,7 +688,7 @@ test("an invalid saved localization warns and is left intact", () => {
 		const contents = `${JSON.stringify({ schemaVersion: 1, localization: { uiLocale: "fr" } })}\n`;
 		writeFileSync(settingsPath, contents);
 		const result = run(["--jouzu-home", jouzuHome, "doctor"]);
-		assert.equal(result.status, 0, result.stderr);
+		assert.equal(result.status, piLock.compatibilityStatus === "qualified" ? 0 : 1, result.stderr);
 		assert.match(result.stderr, /localization settings could not be used/);
 		assert.equal(readFileSync(settingsPath, "utf8"), contents);
 	} finally {

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-agent-core",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"files": {
 		"dist/agent.js": {
 			"before": "f45ae001e2b14fced8ae151f0a00303b5fbdb5fc4b25418d45de6a5546f48a8c",
@@ -16,8 +16,8 @@
 			"after": "6d161b7ab50936abed0fefa4f5cdfbde1d82401acb368a4d46b7844fa92ff97d"
 		},
 		"dist/types.d.ts": {
-			"before": "298f599e6b24c0cfeb5f6e593cbe1a85b373b04ebc221491cb178b941dbef584",
-			"after": "a735ac1095dabf8b6a1ff1b69ca30821c7e0243ebf3352b136cceecfe4830463"
+			"before": "dbdda5a3f7d873b07c9aa0502ab165672d898c9114767a95c28e987daab0075d",
+			"after": "447a212ae28fe9e2691a21acb2fa3ee64c49fc361a81e3c529cfc93ff97502e2"
 		}
 	},
 	"types": "d36f2353a97ebd6fe66e7a479b5ee1da8ae76f2934e5193ce8df06300e80e55c"

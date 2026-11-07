@@ -65,22 +65,22 @@ test("gives every release extension a versioned display entry point without rewr
 	}
 });
 
-test("retains the inspected Pi provenance and flags the current pin for reinspection", () => {
+test("records the inspected Pi provenance and flags version changes for reinspection", () => {
 	assert.deepEqual(RELEASE_SURFACE_PI_PROVENANCE, {
-		version: "1.0.0",
-		tag: "v1.0.0",
-		commit: "a13d35a742c6ef8462812a28fbe1d8c8b7431c32",
+		version: "1.5.0",
+		tag: "v1.5.0",
+		commit: "f9a26365568127461c47a07a37dcb42c140a3ac5",
 	});
 	const pi = RELEASE_SURFACES.filter((candidate) => candidate.owner === "pi");
 	for (const surface of pi) {
 		assert.equal(surface.version, RELEASE_SURFACE_PI_PROVENANCE.version, surface.surfaceId);
 		assert.equal(surface.recheckOn, `pi@${RELEASE_SURFACE_PI_PROVENANCE.version}`, surface.surfaceId);
 	}
-	assert.equal(releaseSurfacesNeedingRecheck({ pi: "1.0.0" }, pi).length, 0);
 	assert.equal(
 		releaseSurfacesNeedingRecheck({ pi: PI_LOCK.packages["@earendil-works/pi-coding-agent"].version }, pi).length,
-		pi.length,
+		0,
 	);
+	assert.equal(releaseSurfacesNeedingRecheck({ pi: "1.0.0" }, pi).length, pi.length);
 	assert.equal(releaseSurfacesNeedingRecheck({}, pi).length, pi.length);
 });
 
@@ -126,7 +126,10 @@ test("decides a re-inspection by comparing each recorded pin with the installed 
 			(row) => row.surfaceId,
 		),
 	);
-	assert.ok(rechecks.some((row) => row.owner === "pi"));
+	assert.equal(
+		rechecks.some((row) => row.owner === "pi"),
+		false,
+	);
 	assert.ok(rechecks.some((row) => row.owner === "@sting8k/pi-vcc"));
 	assert.equal(
 		rechecks.some((row) => row.owner === "service"),

@@ -567,8 +567,8 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		if (path === "dist/core/compaction/branch-summarization.js") {
 			change(
-				"function getMessageFromEntry(entry) {",
-				"function getMessageFromEntry(entry, includeToolResults = false) {",
+				"function getMessageFromEntry(entry, edit) {",
+				"function getMessageFromEntry(entry, edit, includeToolResults = false) {",
 			);
 			change(
 				'            if (entry.message.role === "toolResult")',
@@ -579,8 +579,8 @@ export function sessionEntryToContextMessages(entry) {`,
 				"export function prepareBranchEntries(entries, tokenBudget = 0, includeToolResults = false) {",
 			);
 			change(
-				"        const message = getMessageFromEntry(entry);",
-				"        const message = getMessageFromEntry(entry, includeToolResults);",
+				"        const message = getMessageFromEntry(entry, edits.get(entry.id));",
+				"        const message = getMessageFromEntry(entry, edits.get(entry.id), includeToolResults);",
 			);
 			change(
 				"    const { messages, fileOps } = prepareBranchEntries(entries, tokenBudget);",

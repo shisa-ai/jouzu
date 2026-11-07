@@ -105,7 +105,7 @@ test("doctor shows the support stage and the upstream boundary counts in both lo
 	}
 });
 
-test("doctor marks the Pi 1.0 surface inspection stale for a Pi 1.4 runtime", () => {
+test("doctor marks the Pi 1.5 surface inspection stale for a different runtime", () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-surface-recheck-"));
 	try {
 		const current = context(root);
@@ -113,7 +113,7 @@ test("doctor marks the Pi 1.0 surface inspection stale for a Pi 1.4 runtime", ()
 		current.piRuntimeVersion = "1.4.0";
 		const report = createDoctorReport(current).report;
 		const before = JSON.stringify(report);
-		assert.match(flat(formatDoctorReport(report, RENDER)), /inspected against Pi 1\.0\.0, not the running Pi 1\.4\.0/u);
+		assert.match(flat(formatDoctorReport(report, RENDER)), /inspected against Pi 1\.5\.0, not the running Pi 1\.4\.0/u);
 		assert.match(flat(formatDoctorReport(report, { ...RENDER, catalog: loadCatalog("ja") })), /Pi 1\.4\.0 では未確認/u);
 		assert.equal(JSON.stringify(report), before);
 	} finally {
