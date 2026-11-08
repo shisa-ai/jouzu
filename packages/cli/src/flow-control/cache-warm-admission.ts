@@ -78,7 +78,6 @@ export function cacheWarmAdmission(input: {
 			try {
 				const message = await send({
 					...options,
-					...{ onMessageConverted: undefined },
 					onPayload: async (payload, requestModel) => {
 						check();
 						if (accepting || finished)

@@ -987,7 +987,6 @@ test("required admission does not confuse failed outcome with missing inclusion"
 		native: async (model, context, options) => {
 			const source = context.messages.find((message) => message.role === "user");
 			const output = { role: "user", content: source.content };
-			options.onMessageConverted?.(source, output);
 			await options.onPayload({ messages: [output] }, model);
 			return {
 				async *[Symbol.asyncIterator]() {},

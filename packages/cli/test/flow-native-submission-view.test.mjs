@@ -75,7 +75,6 @@ test("native request failure keeps exact inclusion separate from outcome", async
 		native: async (model, context, options) => {
 			const source = context.messages[0],
 				output = { role: "user", content: source.content };
-			options.onMessageConverted?.(source, output);
 			await options.onPayload({ messages: [output] }, model);
 			return { async *[Symbol.asyncIterator]() {}, result: async () => ({ ...assistant(), stopReason: "error" }) };
 		},

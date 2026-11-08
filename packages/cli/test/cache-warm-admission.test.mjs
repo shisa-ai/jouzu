@@ -37,9 +37,6 @@ function fixture({ cancellationLookup } = {}) {
 		signal: controller.signal,
 		maxTokens: 1,
 		maxRetries: 0,
-		onMessageConverted() {
-			throw Error("conversational conversion observer must not be called");
-		},
 		onPayload() {
 			throw Error("conversational callback must not be called");
 		},
@@ -62,7 +59,6 @@ function fixture({ cancellationLookup } = {}) {
 			sessionId = "new";
 		},
 		send: async (options) => {
-			assert.equal(options.onMessageConverted, undefined);
 			const payload = await options.onPayload({ ...body, max_tokens: 1 }, model);
 			assert.deepEqual(payload, { ...body, max_tokens: 1, admitted: true });
 			return { stopReason: "stop" };

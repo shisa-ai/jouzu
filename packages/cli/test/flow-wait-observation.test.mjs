@@ -562,24 +562,18 @@ for (const api of [
 		});
 }
 
-test("provider maps retained tool results and leaves synthetic orphan results unobserved", () => {
+test("provider inserts a synthetic tool result for an orphaned call without changing history", () => {
 	const call = assistant();
 	call.content = [{ type: "toolCall", id: "orphan", name: "agent_wait", arguments: args }];
 	call.stopReason = "toolUse";
 	const user = { role: "user", content: "continue", timestamp: 2 };
-	const observed = [];
-	const rows = convertMessages(
-		model,
-		{ messages: [call, user] },
-		{},
-		{
-			onMessageConverted: (source, output) => observed.push({ source, output }),
-		},
-	);
-	assert.equal(rows.filter((row) => row.role === "tool").length, 1);
-	assert.equal(observed.length, 1);
-	assert.equal(observed[0].source, user);
-	assert.equal(observed[0].output.role, "user");
+	const messages = [call, user];
+	const original = structuredClone(messages);
+	const rows = convertMessages(model, { messages }, {});
+	const tools = rows.filter((row) => row.role === "tool");
+	assert.equal(tools.length, 1);
+	assert.equal(tools[0].tool_call_id, "orphan");
+	assert.deepEqual(messages, original);
 });
 
 test("Anthropic grouped terminal waits retain distinct block receipts through reopening", async (t) => {

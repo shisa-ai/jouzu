@@ -17,7 +17,7 @@ for (const api of [
 	"bedrock-converse-stream",
 	"mistral-conversations",
 ]) {
-	test(`normalized transcript keeps exact user and tool-result receipt identities: ${api}`, async () => {
+	test(`provider conversion preserves the input transcript: ${api}`, async () => {
 		const { stream } = await import(`@earendil-works/pi-ai/api/${api}`);
 		const model = {
 			id: "fixture",
@@ -54,7 +54,6 @@ for (const api of [
 			...results,
 		];
 		const original = structuredClone(messages);
-		const receipts = [];
 		let payload;
 		const response = await stream(
 			model,
@@ -63,9 +62,6 @@ for (const api of [
 				apiKey: "fixture-key",
 				region: "us-east-1",
 				maxTokens: 32,
-				onMessageConverted(source, output) {
-					receipts.push({ source, output });
-				},
 				onPayload(value) {
 					payload = value;
 					throw new Error("fixture-before-network");
@@ -75,14 +71,6 @@ for (const api of [
 		assert.ok(payload, response.errorMessage);
 		assert.match(response.errorMessage, /fixture-before-network/);
 		assert.deepEqual(messages, original);
-		const contains = (value, target) =>
-			value === target ||
-			(value !== null && typeof value === "object" && Object.values(value).some((child) => contains(child, target)));
-		for (const source of [...users, ...results]) {
-			const matches = receipts.filter((receipt) => receipt.source === source);
-			assert.equal(matches.length, 1, `one receipt for source index ${messages.indexOf(source)}`);
-			assert.ok(contains(payload, matches[0].output), "receipt points into the final payload");
-		}
 	});
 }
 
@@ -113,7 +101,7 @@ test("provider receipt patch preserves unrecognized installed source", async (t)
 				.version,
 		}),
 	);
-	const path = join(pkg, "dist/api/transform-messages.js");
+	const path = join(pkg, "dist/compat.js");
 	await writeFile(path, "unrecognized");
 	await assert.rejects(applyProviderReceipts(root), /hash mismatch/);
 	assert.equal(await readFile(path, "utf8"), "unrecognized");

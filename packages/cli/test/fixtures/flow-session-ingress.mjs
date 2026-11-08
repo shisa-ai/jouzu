@@ -82,10 +82,6 @@ export async function fixture(
 								);
 							},
 						});
-					// The controller no longer maps per-message conversion outputs, so this callback is
-					// optional the way Pi treats it.
-					for (const message of context.messages)
-						if (message.role === "user") options.onMessageConverted?.(message, message);
 					await options.onPayload({ messages: context.messages }, model);
 					sent.push(structuredClone(context.messages));
 					return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
