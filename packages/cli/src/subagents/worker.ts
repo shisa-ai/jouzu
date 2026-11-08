@@ -15,6 +15,7 @@ import { configureChildResources, expandedChildResourceLoader } from "./resource
 import { resolveAgentThinking } from "./roles.js";
 import { observeChildBackgroundExecution, settleChildWork } from "./settle.js";
 import { createChildToolPolicy } from "./tool-policy.js";
+import { projectWorkerUsage } from "./usage.js";
 
 export { expandedChildResourceLoader as childResourceLoader } from "./resources.js";
 
@@ -168,15 +169,7 @@ async function runGuardedWorker(
 				failureController.abort(new Error("Agent limit reached. Work is incomplete."));
 			}
 			if (event.type === "entry_appended" && event.entry.type === "usage") {
-				const usage = event.entry.usage;
-				send({
-					type: "usage",
-					input: usage.input,
-					output: usage.output,
-					cacheRead: usage.cacheRead,
-					cacheWrite: usage.cacheWrite,
-					cost: Number.isFinite(usage.cost?.total) && usage.cost.total > 0 ? usage.cost.total : null,
-				});
+				send(projectWorkerUsage(event.entry.usage));
 			}
 			if (event.type === "tool_execution_start") send({ type: "activity", tool: event.toolName });
 			if (event.type === "message_end") {
@@ -196,15 +189,7 @@ async function runGuardedWorker(
 						text: boundedText(lastText, 32_000),
 						entryId: sessionManager.getLeafId() ?? undefined,
 					});
-					const usage = message.usage;
-					send({
-						type: "usage",
-						input: usage.input,
-						output: usage.output,
-						cacheRead: usage.cacheRead,
-						cacheWrite: usage.cacheWrite,
-						cost: Number.isFinite(usage.cost?.total) && usage.cost.total > 0 ? usage.cost.total : null,
-					});
+					send(projectWorkerUsage(message.usage));
 				}
 				if (message.role === "toolResult") {
 					send({

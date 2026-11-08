@@ -7,6 +7,7 @@ import { fitTerminalText, sanitizeTerminalText } from "../terminal-layout.js";
 import type { AgentRun } from "./manager.js";
 import { agentModelDisplay, agentModelSelectorLabel } from "./model-display.js";
 import { isSameModelSelector } from "./roles.js";
+import { formatUsageCost } from "./usage.js";
 
 export function runPresentation(run: AgentRun) {
 	return {
@@ -131,13 +132,12 @@ export function subagentComponent(
 							number(usage[key]) !== undefined && Number(usage[key]) > 0 ? [`${key}: ${usage[key]}`] : [],
 						);
 						if (tokens.length) detail(label(CatalogMessageId.subagentTokensLabel), tokens.join(" · "));
+						const cost = formatUsageCost(usage, catalog);
 						if (Object.keys(usage).length)
 							add(
 								muted(
-									usage.costComplete === true && number(usage.cost) !== undefined
-										? msg(CatalogMessageId.subagentCost, {
-												amount: `$${Number(usage.cost).toFixed(4)}`,
-											})
+									cost !== null
+										? msg(CatalogMessageId.subagentCost, { amount: cost })
 										: msg(CatalogMessageId.subagentCostUnknown),
 								),
 							);

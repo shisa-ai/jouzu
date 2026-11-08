@@ -47,6 +47,20 @@ test("expanded completion distinguishes unknown cost and candidate stability fro
 	assert.doesNotMatch(output, /turns|approved|Accepted/);
 });
 
+test("expanded costs show billed zero, estimates, partial sums and legacy totals at 48 columns", () => {
+	for (const [usage, pattern] of [
+		[{ cost: 0, costComplete: true, costSource: "provider" }, /\$0\.0000 billed/],
+		[{ cost: 2, costComplete: true, costSource: "estimate" }, /\$2\.0000 estimated/],
+		[{ cost: 5, costComplete: false, costSource: "mixed" }, /≥ \$5\.0000, partly estimated/],
+		[{ cost: 2 }, /Cost: \$2\.0000/],
+		[{ cost: null, costComplete: false }, /Cost: unknown/],
+	]) {
+		const lines = subagentComponent({ ...run, usage }, plain, true).render(48);
+		assert.match(lines.join("\n"), pattern);
+		assert.ok(lines.every((line) => visibleWidth(line) <= 48));
+	}
+});
+
 test("theme assigns distinct semantic status colors while no-color retains text", () => {
 	const seen = [];
 	const theme = {

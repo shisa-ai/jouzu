@@ -161,6 +161,8 @@ for (const mode of [undefined, "off", "streaming", "idle"])
 						? [entry.message.usage]
 						: [],
 			);
+			assert.equal(result.usage.costComplete, true);
+			assert.equal(result.usage.costSource, "estimate");
 			assert.ok(Math.abs(result.usage.cost - usage.reduce((sum, item) => sum + item.cost.total, 0)) < 1e-9);
 		} finally {
 			await manager.dispose();

@@ -40,6 +40,7 @@ import {
 	SAME_MODEL,
 	type WorkspaceWriterPolicy,
 } from "./subagents/roles.js";
+import { formatUsageCost } from "./subagents/usage.js";
 import {
 	fitTerminalText,
 	padTerminalText,
@@ -1216,7 +1217,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 					lines.push(
 						detail(
 							catalogMessage(CatalogMessageId.workflowFieldUsage),
-							`${compactNumber(tokens, this.catalog)} tokens · ${run.usage.cost === null ? this.msg(CatalogMessageId.workflowValueCostUnknown) : `$${run.usage.cost.toFixed(4)}`}`,
+							`${compactNumber(tokens, this.catalog)} tokens · ${formatUsageCost(run.usage, this.catalog) ?? this.msg(CatalogMessageId.workflowValueCostUnknown)}`,
 						),
 					);
 					if (run.result)

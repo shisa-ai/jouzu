@@ -3,6 +3,7 @@ import type { LanguageContract } from "../language-contract.js";
 import type { TextGuardMode } from "../textguard-policy.js";
 import type { ChildContext } from "./context.js";
 import type { AgentModel, AgentRole, AgentThinkingLevel } from "./roles.js";
+import type { WorkerUsage } from "./usage.js";
 
 /** Credentials travel only over the private parent/child pipe, never into run records. */
 export interface WorkerLaunch {
@@ -43,6 +44,6 @@ export type WorkerEvent =
 	| { type: "ready"; sessionFile: string; sessionId: string }
 	| { type: "activity"; tool: string }
 	| { type: "message"; role: string; text: string; entryId?: string }
-	| { type: "usage"; input: number; output: number; cacheRead: number; cacheWrite: number; cost: number | null }
+	| WorkerUsage
 	| { type: "control"; id: string; status: "queued" | "rejected" }
 	| { type: "result"; status: "completed" | "failed" | "cancelled"; text: string };

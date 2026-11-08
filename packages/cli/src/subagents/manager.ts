@@ -36,6 +36,7 @@ import {
 	type WorkspaceWriterPolicy,
 } from "./roles.js";
 import { readSessionTrace, type TracePage, type TraceQuery } from "./trace.js";
+import { addWorkerUsage, type RunUsage } from "./usage.js";
 
 export type RunStatus = "queued" | "starting" | "running" | "completed" | "failed" | "cancelled" | "interrupted";
 export interface AgentRun {
@@ -62,14 +63,7 @@ export interface AgentRun {
 	parentContextFile?: string;
 	currentTool?: string;
 	result?: string;
-	usage: {
-		input: number;
-		output: number;
-		cacheRead: number;
-		cacheWrite: number;
-		cost: number | null;
-		costComplete?: boolean;
-	};
+	usage: RunUsage;
 }
 export interface WorkerHandle {
 	send(command: WorkerCommand): void;
@@ -606,14 +600,7 @@ export class SubagentManager {
 			if (event.type === "schedule_warning") run.scheduleWarning = event.text;
 			if (event.type === "schedules_cancelled") run.cancelledSchedules = event.count;
 			if (event.type === "activity") run.currentTool = event.tool;
-			if (event.type === "usage") {
-				for (const field of ["input", "output", "cacheRead", "cacheWrite"] as const)
-					run.usage[field] += Math.max(0, event[field] || 0);
-				if (event.cost === null) {
-					run.usage.costComplete = false;
-					run.usage.cost = null;
-				} else if (run.usage.costComplete) run.usage.cost = (run.usage.cost ?? 0) + event.cost;
-			}
+			if (event.type === "usage") addWorkerUsage(run.usage, event);
 			if (event.type === "result") this.results.set(id, event);
 			this.event(run, event);
 			this.persist(run);

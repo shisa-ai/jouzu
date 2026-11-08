@@ -51,6 +51,42 @@ function fixture(maxConcurrent = 2) {
 	};
 }
 
+test("usage keeps billed zero and known partial mixed totals across persistence", async () => {
+	const f = fixture();
+	try {
+		const run = f.launch();
+		const emit = (cost) =>
+			f.children[0].emit({ type: "usage", input: 1, output: 1, cacheRead: 0, cacheWrite: 0, cost });
+		emit({ total: 0, source: "provider" });
+		assert.equal(f.manager.get(run.id).usage.cost, 0);
+		emit({ total: 2, source: "provider" });
+		emit(null);
+		emit({ total: 3, source: "estimate" });
+		f.children[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.children[0].exit(true);
+		const usage = f.manager.get(run.id).usage;
+		assert.equal(usage.cost, 5);
+		assert.equal(usage.costComplete, false);
+		assert.equal(usage.costSource, "mixed");
+		const file = join(f.children[0].launch.directory, "run.json");
+		await f.manager.dispose();
+		const restored = new SubagentManager(f.p, "parent", 2);
+		assert.deepEqual(restored.get(run.id).usage, usage);
+		await restored.dispose();
+		for (const legacy of [{ cost: 2, costComplete: true }, { cost: 2 }, { cost: null, costComplete: false }]) {
+			const record = JSON.parse(readFileSync(file, "utf8"));
+			record.usage = { input: 1, output: 1, cacheRead: 0, cacheWrite: 0, ...legacy };
+			writeFileSync(file, JSON.stringify(record));
+			const old = new SubagentManager(f.p, "parent", 2);
+			assert.deepEqual(old.get(run.id).usage, record.usage);
+			await old.dispose();
+		}
+	} finally {
+		await f.manager.dispose();
+		rmSync(f.p.cwd, { recursive: true, force: true });
+	}
+});
+
 test("notification handling notifies idle subscribers without changing completion time", async () => {
 	const f = fixture();
 	try {
