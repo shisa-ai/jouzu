@@ -2,8 +2,6 @@ import { basename } from "node:path";
 import {
 	type BuildSystemPromptOptions,
 	getDocsPath,
-	getExamplesPath,
-	getReadmePath,
 	type InlineExtension,
 	type Theme,
 } from "@earendil-works/pi-coding-agent";
@@ -14,6 +12,7 @@ import { type InteractiveStartupContext, isInteractivePiStartup } from "./intera
 import type { CatalogBundle } from "./locale-catalog.js";
 import type { JouzuMetadata } from "./metadata.js";
 import { buildModelGuidance } from "./model-guidance.js";
+import { type PromptFeatureState, promptCapabilities } from "./prompt-capabilities.js";
 import type { ProfileSelection } from "./runtime.js";
 import { detectTerminalColorMode, fitTerminalText, type TerminalColorMode } from "./terminal-layout.js";
 
@@ -99,6 +98,8 @@ export interface BannerRenderOptions {
 	palette?: BannerPalette;
 	/** The resolved catalog for the banner labels. Defaults to English. */
 	catalog?: CatalogBundle;
+	/** Feature state read for each run; tool visibility still comes from Pi's prompt options. */
+	promptFeatures?: () => PromptFeatureState;
 	/**
 	 * The runtime response-language section for the active contract, or a getter
 	 * that returns `undefined` for `auto`. Read on each turn, so a language change
@@ -158,7 +159,9 @@ export const JOUZU_USER_COMMUNICATION_GUIDANCE =
 export const JOUZU_HARNESS_GUIDANCE =
 	"Make independent tool calls in parallel in one response. Treat a message that arrives while you work as steering the current task unless it cancels or replaces it.";
 export const JOUZU_REPOSITORY_WORK_GUIDANCE =
-	"Work directly by default. Follow repository instructions and preserve user-owned work. Inspect relevant files before editing. Scope file searches to relevant project paths and widen only when needed; do not run filesystem-wide scans such as `find /` unless the user explicitly requests them. Distinguish evidence from assumptions, make the smallest coherent change, and run the narrowest deterministic check. Report untested limitations honestly. Use task tracking only for work with three or more distinct steps. Use background, goal, loop, scheduling, web, or browser tools only when the task requires them; do not combine workflow systems unless each has a separate purpose. Compute reported numbers with executed code, not mental arithmetic. Read an optional skill only when the task needs it, not because a keyword matches; read the exact listed `<location>` once and never search guessed package paths. If a skill file is unavailable, continue without it.";
+	"Work directly by default. Follow repository instructions and preserve user-owned work. Inspect relevant files before editing. Scope file searches to relevant project paths and widen only when needed; do not run filesystem-wide scans such as `find /` unless the user explicitly requests them. Distinguish evidence from assumptions, make the smallest coherent change, and run the narrowest deterministic check. Report untested limitations honestly. Compute reported numbers with executed code, not mental arithmetic.";
+export const JOUZU_SKILL_GUIDANCE =
+	"Load a skill only when the task needs it, not because a keyword matches. Read its exact listed `<location>` once; never search guessed package paths. If a skill file is unavailable, continue without it.";
 /**
  * Asynchronous-work guidance for sessions without flow-control waits. When `agent_wait` is
  * active, its tool guidelines carry the complete wait protocol, so this paragraph is omitted.
@@ -192,12 +195,16 @@ function codeNames(names: string[]): string {
 }
 
 /**
- * Decision-time routing generated from the session's active tools and skills. Without
- * `agent_wait`, the asynchronous-work paragraph precedes the table.
+ * Decision-time routing from declared tools and admitted skills. Async guidance is included
+ * only for asynchronous producers without active flow waits.
  */
-export function buildCapabilityRoutingGuidance(options: BuildSystemPromptOptions): string {
-	const tools = new Set(options.selectedTools ?? []);
-	const skills = new Set((options.skills ?? []).map((skill) => skill.name));
+export function buildCapabilityRoutingGuidance(
+	options: BuildSystemPromptOptions,
+	state: PromptFeatureState = {},
+): string {
+	const capabilities = promptCapabilities(options, state);
+	const tools = capabilities.tools;
+	const skills = new Set(capabilities.skills.map((skill) => skill.name));
 	const routes: CapabilityRoute[] = [];
 	const add = (enabled: boolean, need: string, route: string, boundary: string): void => {
 		if (enabled) routes.push({ need, route, boundary });
@@ -239,26 +246,16 @@ export function buildCapabilityRoutingGuidance(options: BuildSystemPromptOptions
 		tools.has("tff-fetch_url"),
 		"JavaScript rendering, a bot wall, selector, or screenshot",
 		"`tff-fetch_url`",
-		"Use only when `web_fetch` cannot do the job.",
-	);
-	add(
-		skills.has("jouzu-reference"),
-		"Jouzu configuration, language, model catalogs, profiles, session or trace files, controls, or troubleshooting",
-		"read `jouzu-reference` at its listed `<location>`",
-		"Use the actual session tools for live state; slash commands are user actions, and user-only settings and restart requirements stay with the user.",
-	);
-	add(
-		skills.has("jouzu-source-check"),
-		"Fact-checking or source comparison",
-		"read `jouzu-source-check` at its listed `<location>`",
-		"Not needed to summarize a page the user supplied.",
+		tools.has("web_fetch")
+			? "Use only when `web_fetch` cannot do the job."
+			: "Use for pages requiring browser rendering.",
 	);
 	const taskTools = selectedNames(["TaskCreateMany", "TaskCreate", "TaskUpdate", "TaskList"], tools);
 	add(
 		taskTools.length > 0,
 		"Finite work with distinct steps",
 		codeNames(taskTools),
-		"Open tasks may auto-advance; record blockers with task controls.",
+		"Use task tracking only for work with three or more distinct steps or when requested. Open tasks may auto-advance; record blockers with task controls.",
 	);
 	const goalTools = selectedNames(["get_goal", "update_goal"], tools);
 	add(
@@ -286,42 +283,23 @@ export function buildCapabilityRoutingGuidance(options: BuildSystemPromptOptions
 		"`schedule_prompt`",
 		"Use an explicit time requirement; do not add timer-based polling for a job that reports completion.",
 	);
-	add(
-		tools.has("subagent") && skills.has("jouzu-delegation"),
-		"Subagent assignments, steering, or resume handoffs",
-		"read `jouzu-delegation` at its listed `<location>` once; use `subagent`",
-		"Use the user's configured role model.",
-	);
-	add(
-		skills.has("jouzu-clear-writing"),
-		"Documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, or diagnostics",
-		"read `jouzu-clear-writing` at its listed `<location>`",
-		"Ground claims in the implementation.",
-	);
-	add(
-		skills.has("jouzu-anti-slop"),
-		"Existing prose needs a filler-removal pass",
-		"read `jouzu-anti-slop` at its listed `<location>`",
-		skills.has("jouzu-clear-writing")
-			? "For drafting or restructuring, use `jouzu-clear-writing`."
-			: "Keep facts and qualifiers.",
-	);
-	const table = [
-		"Jouzu capability routing for optional skills and workflow tools (generated from this session's active tools and skills):",
-		"| Need | Use | Boundary |",
-		"| --- | --- | --- |",
-		...routes.map((route) => `| ${route.need} | ${route.route} | ${route.boundary} |`),
-	].join("\n");
-	// `agent_wait` registers the full wait protocol as tool guidelines; repeat none of it here.
-	return tools.has("agent_wait") ? table : `${JOUZU_ASYNC_WAIT_GUIDANCE}\n\n${table}`;
+	return [
+		capabilities.asynchronous && !tools.has("agent_wait") ? JOUZU_ASYNC_WAIT_GUIDANCE : undefined,
+		skills.size ? JOUZU_SKILL_GUIDANCE : undefined,
+		routes.length
+			? "Use optional tools only when needed; do not combine workflow systems unless each has a separate purpose."
+			: undefined,
+		...routes.map((route) => `- ${route.need}: ${route.route}. ${route.boundary}`),
+	]
+		.filter(Boolean)
+		.join("\n");
 }
 
 /**
- * Pi's documentation pointer, narrowed to Pi development. Pi's longer section also routes
- * models, keybindings, and environment variables to Pi docs, which `jouzu-reference` covers.
+ * A single discovery pointer for Pi development; detailed topic routing lives in its index.
  */
 export function jouzuDocsSection(): string {
-	return `Pi documentation (read only for Pi extension, SDK, theme, or TUI development): README ${getReadmePath()}; guides ${getDocsPath()}; examples ${getExamplesPath()}. Resolve docs/... and examples/... paths against those directories.`;
+	return `For Pi extension, SDK, or TUI development, start with ${getDocsPath()}/index.md.`;
 }
 
 /** The local calendar date. A new day becomes a section update instead of a rewritten prompt. */
@@ -341,6 +319,7 @@ export function jouzuPreamble(capabilityRouting?: string, responseLanguageSectio
 }
 
 export interface JouzuPromptParts {
+	promptFeatures?: PromptFeatureState;
 	capabilityRouting?: string;
 	responseLanguageSection?: string;
 	now?: Date;
@@ -355,15 +334,20 @@ export interface JouzuPromptParts {
  */
 export function applyJouzuPromptSections(options: BuildSystemPromptOptions, parts: JouzuPromptParts = {}): boolean {
 	if (options.customPrompt || options.forceSystemPrompt !== undefined) return false;
+	const capabilities = promptCapabilities(options, parts.promptFeatures);
+	options.skills = capabilities.skills;
 	options.sections ??= {};
 	const sections = options.sections;
-	sections.preamble = jouzuPreamble(parts.capabilityRouting, parts.responseLanguageSection);
+	sections.preamble = jouzuPreamble(
+		parts.capabilityRouting ?? buildCapabilityRoutingGuidance(options, parts.promptFeatures),
+		parts.responseLanguageSection,
+	);
 	sections.docs = jouzuDocsSection();
 	sections.date = jouzuDateSection(parts.now);
 	options.toolGuidelines ??= {};
 	const guidelines = options.toolGuidelines;
 	for (const [tool, lines] of Object.entries(JOUZU_TOOL_GUIDELINES)) {
-		if (options.selectedTools?.includes(tool)) guidelines[tool] = [...(guidelines[tool] ?? []), ...lines];
+		if (capabilities.tools.has(tool)) guidelines[tool] = [...new Set([...(guidelines[tool] ?? []), ...lines])];
 	}
 	return true;
 }
@@ -508,14 +492,21 @@ export function createJouzuPresentationExtension(
 		factory: (pi) => {
 			const catalog = options.catalog ?? defaultCatalog();
 			pi.on("before_agent_start", (event, ctx) => {
+				const promptFeatures = options.promptFeatures?.();
 				const capabilityRouting = [
-					buildCapabilityRoutingGuidance(event.systemPromptOptions),
-					buildModelGuidance(ctx?.model?.id, event.systemPromptOptions.selectedTools),
+					buildCapabilityRoutingGuidance(event.systemPromptOptions, promptFeatures),
+					buildModelGuidance(
+						ctx?.model?.id,
+						[...promptCapabilities(event.systemPromptOptions, promptFeatures).tools].filter(
+							(name) => name !== "subagent" || promptFeatures?.subagentsEnabled !== false,
+						),
+					),
 				]
 					.filter(Boolean)
 					.join("\n\n");
 				applyJouzuPromptSections(event.systemPromptOptions, {
 					capabilityRouting,
+					promptFeatures,
 					responseLanguageSection: options.responseLanguageSection?.(),
 				});
 			});

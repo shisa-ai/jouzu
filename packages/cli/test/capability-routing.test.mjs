@@ -7,6 +7,7 @@ import {
 	JOUZU_ASYNC_WAIT_GUIDANCE,
 	JOUZU_DEFAULT_GUIDANCE,
 } from "../dist/presentation.js";
+import { promptCapabilities } from "../dist/prompt-capabilities.js";
 
 const root = join(import.meta.dirname, "../../..");
 const corpus = JSON.parse(readFileSync(join(root, "evals/core-capability-routing.json"), "utf8"));
@@ -76,11 +77,6 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 		"make the smallest coherent change",
 		"run the narrowest deterministic check",
 		"Report untested limitations honestly",
-		"Use task tracking only for work with three or more distinct steps",
-		"do not combine workflow systems",
-		"exact listed `<location>` once",
-		"never search guessed package paths",
-		"If a skill file is unavailable, continue without it",
 	]) {
 		assert.match(JOUZU_DEFAULT_GUIDANCE, new RegExp(phrase));
 	}
@@ -119,62 +115,47 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 		"batch_web_fetch",
 		"tff-search_web",
 		"tff-fetch_url",
-		"jouzu-source-check",
 		"TaskCreate",
 		"get_goal",
 		"multiloop",
 		"bg_task",
 		"schedule_prompt",
-		"jouzu-clear-writing",
-		"jouzu-anti-slop",
 	]) {
 		assert.match(routing, new RegExp(phrase));
 	}
-	assert.match(routing, /read `jouzu-source-check` at its listed `<location>`/);
+	assert.doesNotMatch(routing, /jouzu-source-check|jouzu-clear-writing|jouzu-anti-slop/);
 	assert.match(routing, /read `multiloop` at its listed `<location>`/);
 	// The goal and measured-loop routes both come from the multiloop skill now.
 	assert.match(routing, /One user-approved persistent objective/);
 	assert.match(routing, /Repeated measured improvement/);
-	assert.match(routing, /read `jouzu-clear-writing` at its listed `<location>`/);
-	assert.match(routing, /read `jouzu-anti-slop` at its listed `<location>`/);
-	assert.match(routing, /Existing prose needs a filler-removal pass/);
 });
 
-test("Jouzu product questions route to the reference only when the skill is bundled", () => {
-	const skill = { name: "jouzu-reference" };
-	const routing = buildCapabilityRoutingGuidance({ selectedTools: ["read"], skills: [skill] });
-	assert.match(routing, /read `jouzu-reference` at its listed `<location>`/);
-	assert.match(
-		routing,
-		/Jouzu configuration, language, model catalogs, profiles, session or trace files, controls, or troubleshooting/,
-	);
-	assert.match(routing, /Use the actual session tools for live state/);
-	assert.match(routing, /slash commands are user actions/);
-	assert.match(routing, /user-only settings and restart requirements/);
-	// The route is generated routing, not part of the inline default guidance.
-	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /jouzu-reference/);
-	assert.doesNotMatch(buildCapabilityRoutingGuidance({ selectedTools: ["read"], skills: [] }), /jouzu-reference/);
-	assert.doesNotMatch(buildCapabilityRoutingGuidance({ selectedTools: ["read"] }), /jouzu-reference/);
-	assert.doesNotMatch(
-		buildCapabilityRoutingGuidance({ selectedTools: ["read"], skills: [{ name: "jouzu-clear-writing" }] }),
-		/jouzu-reference/,
-	);
+test("skill triggers live in the index rather than repeated routing rows", () => {
+	const skills = ["jouzu-reference", "jouzu-source-check", "jouzu-clear-writing", "jouzu-anti-slop"].map((name) => ({
+		name,
+	}));
+	const options = { selectedTools: ["read"], skills };
+	assert.deepEqual(promptCapabilities(options).skills, skills);
+	const routing = buildCapabilityRoutingGuidance(options);
+	assert.match(routing, /exact listed `<location>` once/);
+	assert.match(routing, /If a skill file is unavailable, continue without it/);
+	for (const skill of skills) assert.ok(!routing.includes(skill.name));
+	assert.equal(buildCapabilityRoutingGuidance({ selectedTools: ["read"], skills: [] }), "");
 });
 
-test("delegation routes to the skill only when both tool and skill are available", () => {
+test("delegation skills require an available and enabled delegation tool", () => {
 	const skill = { name: "jouzu-delegation" };
-	const routing = buildCapabilityRoutingGuidance({ selectedTools: ["subagent"], skills: [skill] });
-	assert.match(routing, /read `jouzu-delegation` at its listed `<location>` once/);
-	assert.match(routing, /Use the user's configured role model/);
-	// The subagent integration states the assignment checklist once for every model.
-	assert.doesNotMatch(routing, /acceptance checks/);
-	assert.doesNotMatch(buildCapabilityRoutingGuidance({ selectedTools: ["subagent"] }), /jouzu-delegation/);
-	assert.doesNotMatch(buildCapabilityRoutingGuidance({ selectedTools: ["read"], skills: [skill] }), /jouzu-delegation/);
+	const options = { selectedTools: ["read", "subagent"], skills: [skill] };
+	assert.deepEqual(promptCapabilities(options).skills, [skill]);
+	assert.deepEqual(promptCapabilities(options, { subagentsEnabled: false }).skills, []);
+	assert.deepEqual(promptCapabilities({ ...options, selectedTools: ["read"] }).skills, []);
+	assert.deepEqual(promptCapabilities({ ...options, hiddenTools: ["subagent"] }).skills, []);
+	assert.equal(promptCapabilities(options, { subagentsEnabled: false }).tools.has("subagent"), true);
 });
 
 test("asynchronous-work guidance appears once, from waits when they are active", () => {
 	const plain = buildCapabilityRoutingGuidance({ selectedTools: ["bg_task", "TaskUpdate"] });
-	assert.ok(plain.startsWith(`${JOUZU_ASYNC_WAIT_GUIDANCE}\n\n`));
+	assert.ok(plain.startsWith(`${JOUZU_ASYNC_WAIT_GUIDANCE}\n`));
 	assert.doesNotMatch(plain, /`agent_wait`/);
 	const waiting = buildCapabilityRoutingGuidance({
 		selectedTools: ["bg_task", "TaskUpdate", "agent_wait", "schedule_prompt"],
@@ -194,14 +175,29 @@ test("the untrusted-content rule is stated once per prompt", () => {
 	assert.equal(buildCapabilityRoutingGuidance({ selectedTools: ["batch_web_fetch"] }).match(/untrusted/g)?.length, 1);
 });
 
-test("writing routes name their triggers and distinguish drafting from a filler pass", () => {
-	const routing = buildCapabilityRoutingGuidance({
-		selectedTools: ["read"],
-		skills: [{ name: "jouzu-clear-writing" }, { name: "jouzu-anti-slop" }],
-	});
-	assert.match(
-		routing,
-		/Documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, or diagnostics/,
+test("minimal and hidden tool selections do not advertise optional workflows", () => {
+	for (const selectedTools of [[], ["read", "bash", "edit", "write"]]) {
+		assert.equal(buildCapabilityRoutingGuidance({ selectedTools }), "");
+	}
+	assert.equal(buildCapabilityRoutingGuidance({ selectedTools: ["bg_task"], hiddenTools: ["bg_task"] }), "");
+	assert.doesNotMatch(buildCapabilityRoutingGuidance({ selectedTools: ["tff-fetch_url"] }), /web_fetch/);
+	assert.doesNotMatch(
+		buildCapabilityRoutingGuidance({ selectedTools: ["subagent"] }, { subagentsEnabled: false }),
+		/completion notifications/,
 	);
-	assert.match(routing, /For drafting or restructuring, use `jouzu-clear-writing`/);
+});
+
+test("skill admission preserves generic and indirect-reader skills without unavailable workflow skills", () => {
+	const skills = ["custom-skill", "jouzu-reference", "multiloop", "jouzu-delegation"].map((name) => ({ name }));
+	const options = { selectedTools: ["read"], hiddenTools: ["read"], skills };
+	assert.deepEqual(
+		promptCapabilities(options).skills.map((skill) => skill.name),
+		["custom-skill", "jouzu-reference"],
+	);
+	assert.deepEqual(promptCapabilities({ ...options, selectedTools: [] }).skills, []);
+	assert.deepEqual(
+		promptCapabilities({ ...options, selectedTools: ["read", "get_goal"] }).skills.map((skill) => skill.name),
+		["custom-skill", "jouzu-reference", "multiloop"],
+	);
+	assert.deepEqual(options.skills, skills);
 });

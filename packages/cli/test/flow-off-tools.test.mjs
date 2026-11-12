@@ -63,5 +63,17 @@ test("the wait guidance is withheld while flow control is off", async () => {
 		registerTool() {},
 		getActiveTools: () => ["agent_wait"],
 	});
-	assert.equal(before({ systemPrompt: "Base prompt" }), undefined);
+	const event = {
+		systemPrompt: "Base prompt",
+		systemPromptOptions: {
+			selectedTools: ["agent_wait"],
+			sections: { flow_control: "stale" },
+			toolGuidelines: { agent_wait: ["stale"] },
+			toolSnippets: { agent_wait: "stale" },
+		},
+	};
+	assert.equal(before(event), undefined);
+	assert.equal(event.systemPromptOptions.sections.flow_control, undefined);
+	assert.deepEqual(event.systemPromptOptions.toolGuidelines.agent_wait, []);
+	assert.equal(event.systemPromptOptions.toolSnippets.agent_wait, "");
 });

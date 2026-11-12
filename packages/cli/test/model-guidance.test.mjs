@@ -22,19 +22,15 @@ function hook() {
 
 function assertRecoveryGuidance(prompt) {
 	for (const clause of [
-		"diagnosis and failure reports are intermediate results, not completion",
-		"Do not weaken checks, bypass failures, or silently reduce the requested scope",
-		"If the user explicitly requests diagnosis only, review only, or otherwise limits changes, respect that boundary",
-		"Keep the original deliverables active while resolving prerequisites",
-		"apply that instruction in the same turn",
-		"Preserve running jobs and pending work across follow-up messages",
-		"compare the requested deliverables with the overall completion checklist, completed work, and verification evidence",
-		"A failed check or unsuccessful first attempt is not by itself a reason to stop",
-		"use the supported wait mechanism and resume on its result",
-		"overall completion checklist",
-		"use them selectively for bounded, coherent work packages",
-		"In cascade mode, an in_progress task is prompted before pending tasks",
-		"A task list is an execution aid, not proof of completion",
+		"When a check fails, distinguish implementation, test, and environment failures",
+		"Do not weaken or bypass checks or reduce scope to get a pass",
+		"Respect diagnosis-only, review-only, pause, and cancellation requests",
+		"Preserve it across turns and compaction",
+		"Apply steering through action in the same turn",
+		"Preserve running jobs and pending work",
+		"compare the requested deliverables against verification evidence",
+		"A failed first attempt or a completed task list is not proof of completion",
+		"completion checklist",
 	]) {
 		assert.ok(prompt.includes(clause), `Missing recovery instruction: ${clause}`);
 	}
@@ -45,33 +41,19 @@ test("Astra guidance follows the selected model on every turn without accumulati
 	const turn = (ctx) => runPromptHook(before, { systemPrompt: base, options: { selectedTools: ["read"] }, ctx });
 	const astra = { model: { id: "gpt-6-astra", provider: "configured-provider" } };
 	const first = turn(astra);
-	assert.match(first.systemPrompt, /carry authorized work through implementation/);
-	assert.match(
-		first.systemPrompt,
-		/Do not stop at acknowledging capability, proposing a plan, or offering to continue/,
-	);
-	assert.match(first.systemPrompt, /continue without ending the turn to clarify/);
-	assert.match(
-		first.systemPrompt,
-		/diagnose and fix the issues you identify within the requested scope, then verify the fixes/,
-	);
-	assert.match(first.systemPrompt, /Do not stop at findings or ask whether to implement an authorized fix/);
-	assert.match(
-		first.systemPrompt,
-		/If the user explicitly requests diagnosis only, review only, or otherwise limits changes, respect that boundary/,
-	);
+	assert.match(first.systemPrompt, /Carry authorized work through implementation/);
+	assert.match(first.systemPrompt, /do not substitute a plan, acknowledgement, or offer to continue/);
+	assert.match(first.systemPrompt, /Ask only when missing information affects correctness or authorization/);
+	assert.match(first.systemPrompt, /Respect diagnosis-only, review-only, pause, and cancellation requests/);
 	assert.match(first.systemPrompt, /Authorization persists across turns/);
 	assertRecoveryGuidance(first.systemPrompt);
-	assert.match(first.systemPrompt, /repeat or broaden testing only/);
-	assert.match(first.systemPrompt, /overall completion checklist/);
-	assert.match(first.systemPrompt, /use them selectively for bounded, coherent work packages/);
-	assert.match(first.systemPrompt, /A task list is an execution aid, not proof of completion/);
-	assert.doesNotMatch(first.systemPrompt, /Use `subagent`/);
+	assert.match(first.systemPrompt, /repeat passing checks only/);
+	assert.doesNotMatch(first.systemPrompt, /Use task tools|agent_wait|Use subagent/);
 	const other = turn({ model: { id: "gpt-5.6-sol" } });
-	assert.doesNotMatch(other.systemPrompt, /carry authorized work through implementation/);
+	assert.doesNotMatch(other.systemPrompt, /Carry authorized work through implementation/);
 	// Each run starts from fresh options, so guidance is set once per turn and never accumulates.
 	assert.deepEqual(turn(astra).sections, first.sections);
-	assert.equal(first.systemPrompt.split("carry authorized work through implementation").length, 2);
+	assert.equal(first.systemPrompt.split("Carry authorized work through implementation").length, 2);
 });
 
 test("delegation guidance describes only the active Jouzu tool", () => {
@@ -82,12 +64,13 @@ test("delegation guidance describes only the active Jouzu tool", () => {
 });
 
 test("Astra guidance keeps one scope boundary and evidence rule after deduplication", () => {
-	const guidance = buildModelGuidance("gpt-6-astra", ["subagent"]);
-	assert.equal(guidance.match(/respect that boundary/g)?.length, 1);
-	assert.equal(guidance.match(/do not mark work complete or report success without the required evidence/g)?.length, 1);
-	assert.match(guidance, /Use task dependencies, user-input holds, pauses, or agent_wait for blocked work/);
-	assert.match(guidance, /verify child evidence and the integrated result before reporting completion/);
-	assert.ok(guidance.length < 5650, "keep this wording-only pass below the prior 5981-character guidance");
+	const guidance = buildModelGuidance("gpt-6-astra", ["subagent", "TaskUpdate", "agent_wait"]);
+	assert.equal(guidance.match(/Respect diagnosis-only/g)?.length, 1);
+	assert.equal(guidance.match(/not proof of completion/g)?.length, 1);
+	assert.match(guidance, /use dependencies, user-input holds, or pauses for blocked work/);
+	assert.match(guidance, /use agent_wait and resume on its result/);
+	assert.match(guidance, /verify child evidence and the integrated result/);
+	assert.ok(guidance.length < 3400);
 });
 
 test("child sessions receive the same model guidance as main sessions", async (t) => {
@@ -104,11 +87,34 @@ test("child sessions receive the same model guidance as main sessions", async (t
 	const astraPrompt = (await childResourceLoader(launch("gpt-6-astra"))).getAppendSystemPrompt();
 	assert.ok(astraPrompt.includes("Review the change."));
 	assert.ok(astraPrompt.includes(buildModelGuidance("gpt-6-astra", ["read"])));
-	assert.match(astraPrompt.join("\n"), /offering to continue/);
+	assert.match(astraPrompt.join("\n"), /offer to continue/);
 	assertRecoveryGuidance(astraPrompt.join("\n"));
 	const other = (await childResourceLoader(launch("gpt-5.6-sol"))).getAppendSystemPrompt();
 	assert.ok(other.includes("Review the change."));
-	assert.doesNotMatch(other.join("\n"), /carry authorized work through implementation/);
+	assert.doesNotMatch(other.join("\n"), /Carry authorized work through implementation/);
+});
+
+test("model workflow advice follows hidden tools and disabled features", () => {
+	const handlers = new Map();
+	createJouzuPresentationExtension(
+		{},
+		{},
+		{ promptFeatures: () => ({ subagentsEnabled: false, flowEnabled: false }) },
+	).factory({
+		on: (name, handler) => handlers.set(name, handler),
+		registerCommand() {},
+		registerTool() {},
+	});
+	const run = runPromptHook(handlers.get("before_agent_start"), {
+		options: {
+			selectedTools: ["read", "subagent", "agent_wait", "TaskUpdate"],
+			hiddenTools: ["TaskUpdate"],
+			skills: [{ name: "jouzu-delegation" }],
+		},
+		ctx: { model: { id: "gpt-6-astra" } },
+	});
+	assert.doesNotMatch(run.systemPrompt, /Use subagent|use agent_wait|Use task tools|jouzu-delegation/);
+	assertRecoveryGuidance(run.systemPrompt);
 });
 
 test("explicit custom system prompts remain user-owned", () => {

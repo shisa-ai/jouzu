@@ -751,14 +751,14 @@
 	{
 		"file": "packages/cli/src/presentation.ts",
 		"kind": "conditional-branch",
-		"text": "For drafting or restructuring, use `jouzu-clear-writing`.",
+		"text": "Use only when `web_fetch` cannot do the job.",
 		"category": "model-facing",
 		"reason": "Part of the brand capability-routing system prompt that presentation.ts hands to the model; it is model-facing text, so it stays English."
 	},
 	{
 		"file": "packages/cli/src/presentation.ts",
 		"kind": "conditional-branch",
-		"text": "Keep facts and qualifiers.",
+		"text": "Use for pages requiring browser rendering.",
 		"category": "model-facing",
 		"reason": "Part of the brand capability-routing system prompt that presentation.ts hands to the model; it is model-facing text, so it stays English."
 	},
@@ -779,9 +779,23 @@
 	{
 		"file": "packages/cli/src/presentation.ts",
 		"kind": "variable-literal",
-		"text": "Work directly by default. Follow repository instructions and preserve user-owned work. Inspect relevant files before editing. Scope file searches to relevant project paths and widen only when needed; do not run filesystem-wide scans such as `find /` unless the user explicitly requests them. Distinguish evidence from assumptions, make the smallest coherent change, and run the narrowest deterministic check. Report untested limitations honestly. Use task tracking only for work with three or more distinct steps. Use background, goal, loop, scheduling, web, or browser tools only when the task requires them; do not combine workflow systems unless each has a separate purpose. Compute reported numbers with executed code, not mental arithmetic. Read an optional skill only when the task needs it, not because a keyword matches; read the exact listed `<location>` once and never search guessed package paths. If a skill file is unavailable, continue without it.",
+		"text": "Work directly by default. Follow repository instructions and preserve user-owned work. Inspect relevant files before editing. Scope file searches to relevant project paths and widen only when needed; do not run filesystem-wide scans such as `find /` unless the user explicitly requests them. Distinguish evidence from assumptions, make the smallest coherent change, and run the narrowest deterministic check. Report untested limitations honestly. Compute reported numbers with executed code, not mental arithmetic.",
 		"category": "model-facing",
 		"reason": "The brand system prompt that presentation.ts hands to the model. It is model-facing text, so it stays English."
+	},
+	{
+		"file": "packages/cli/src/presentation.ts",
+		"kind": "variable-literal",
+		"text": "Load a skill only when the task needs it, not because a keyword matches. Read its exact listed `<location>` once; never search guessed package paths. If a skill file is unavailable, continue without it.",
+		"category": "model-facing",
+		"reason": "Skill loading guidance in the model's system prompt, not a localized user interface message."
+	},
+	{
+		"file": "packages/cli/src/presentation.ts",
+		"kind": "conditional-branch",
+		"text": "Use optional tools only when needed; do not combine workflow systems unless each has a separate purpose.",
+		"category": "model-facing",
+		"reason": "Optional workflow routing in the model's system prompt, not a localized user interface message."
 	},
 	{
 		"file": "packages/cli/src/profile-manager.ts",
@@ -1304,14 +1318,14 @@
 	{
 		"file": "packages/cli/src/subagents/integration.ts",
 		"kind": "conditional-branch",
-		"text": "Subagents are enabled. Roles can change during the session; choose a role from op:roles that allows child placement. Only the user can change role models; do not edit agent configuration to select another model. Write each assignment in complete sentences with normal spacing. Give one objective, verified context and file paths, constraints, acceptance checks, and an explicit stopping point and report. Separate dependent stages. For follow-ups, state what changed and what remains authorized. Diagnose provider, tool, and instruction failures before judging implementation quality; do not substitute another model.",
+		"text": "Use subagent op:roles before delegation; choose a role allowing child placement. Roles can change. Only the user changes role models or enables subagents; do not edit agent configuration to choose a model. Give each child one objective, verified context and paths, constraints, acceptance checks, and an explicit stopping point and report. Use complete sentences. Separate dependent stages; state what changed and remains authorized in follow-ups. Diagnose provider, tool, and instruction failures before judging implementation; do not substitute another model.",
 		"category": "model-facing",
 		"reason": "Part of the subagent section of the system prompt that integration.ts hands to the model. It is model-facing text, so it stays English."
 	},
 	{
 		"file": "packages/cli/src/subagents/integration.ts",
 		"kind": "conditional-branch",
-		"text": "Subagents are disabled by the user for this session. Work directly; do not delegate or re-enable subagents. Existing results may be inspected and acknowledged.",
+		"text": "Subagents are disabled by the user. Work directly; do not delegate or re-enable them. Existing results may be inspected and acknowledged.",
 		"category": "model-facing",
 		"reason": "Part of the subagent section of the system prompt that integration.ts hands to the model. It is model-facing text, so it stays English."
 	}

@@ -789,6 +789,10 @@ export async function runMainCli(args: string[]): Promise<void> {
 				presentation.createJouzuPresentationExtension(metadata, profile, {
 					catalog: preRuntime.catalog.bundle,
 					responseLanguageSection: () => languageContract.currentSection(),
+					promptFeatures: () => ({
+						subagentsEnabled: modelPicker.workflowService.subagentsEnabled(),
+						flowEnabled: flow?.enabled() ?? false,
+					}),
 				}),
 				sessionUi,
 				// Account commands must run before model-availability input checks.

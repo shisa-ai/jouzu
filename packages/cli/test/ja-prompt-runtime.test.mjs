@@ -65,7 +65,7 @@ for (const selection of [
 		const { preamble, docs, addendum } = system[0].sections;
 		assert.ok(preamble.includes(JOUZU_DEFAULT_GUIDANCE), "Japanese selection uses the shared streamlined guidance");
 		assert.equal(preamble.split(JOUZU_DEFAULT_GUIDANCE).length, 2);
-		assert.match(docs, /^<docs>\nPi documentation \(read only for Pi extension, SDK, theme, or TUI development\)/u);
+		assert.match(docs, /^<docs>\nFor Pi extension, SDK, or TUI development, start with .*\/index.md\./u);
 		assert.match(preamble, /comments: Preserve the existing language/u);
 		assert.match(preamble, /documentation: Follow the project's existing language/u);
 		assert.match(preamble, /commits: Follow the project's existing language/u);

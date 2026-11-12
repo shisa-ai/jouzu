@@ -202,7 +202,9 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 		const prompt = JSON.stringify(requests[0].messages);
 		assert.match(prompt, /PROJECT_GUIDANCE_EVIDENCE/);
 		assert.match(prompt, /jouzu-clear-writing/);
-		assert.match(prompt, /Jouzu capability routing/);
+		assert.match(prompt, /Session continuity across compaction/);
+		assert.match(prompt, /Finite work with distinct steps/);
+		assert.doesNotMatch(prompt, /jouzu-delegation/);
 		const saved = readFileSync(run.sessionFile, "utf8").trim().split("\n").map(JSON.parse);
 		const results = saved
 			.filter((item) => item.type === "message" && item.message.role === "toolResult")

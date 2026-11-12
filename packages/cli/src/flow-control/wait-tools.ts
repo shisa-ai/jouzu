@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { InlineExtension, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
+import { FLOW_TOOLS, promptCapabilities } from "../prompt-capabilities.js";
 import { setPromptSections } from "../prompt-sections.js";
 import { retainAutomaticWork } from "./automatic-work.js";
 import { FLOW_OFF_MESSAGE } from "./flow-off-message.js";
@@ -259,10 +260,21 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 		name: "jouzu-flow-waits",
 		factory(pi) {
 			pi.on("before_agent_start", (event) => {
-				// While flow control is off its tools refuse, so guidance that tells the model to use them
-				// would be instructions it cannot follow.
-				if (options.enabled && !options.enabled()) return;
-				const missing = flowWaitGuidance(pi.getActiveTools()).filter((line) => !event.systemPrompt.includes(line));
+				const enabled = options.enabled?.() !== false;
+				const prompt = event.systemPromptOptions;
+				if (!enabled) {
+					// Keep declarations and their refusal contract; suppress instructions to invoke them.
+					for (const name of FLOW_TOOLS) {
+						if (prompt.toolGuidelines) prompt.toolGuidelines[name] = [];
+						if (prompt.toolSnippets) prompt.toolSnippets[name] = "";
+					}
+					return setPromptSections(event, { flow_control: undefined });
+				}
+				const active = promptCapabilities({
+					...prompt,
+					selectedTools: prompt.selectedTools ?? pi.getActiveTools(),
+				}).tools;
+				const missing = flowWaitGuidance([...active]).filter((line) => !event.systemPrompt.includes(line));
 				return setPromptSections(event, { flow_control: missing.join("\n") || undefined });
 			});
 			pi.registerTool({

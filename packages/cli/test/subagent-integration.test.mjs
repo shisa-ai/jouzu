@@ -6,12 +6,14 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { validateToolArguments } from "@earendil-works/pi-ai";
 import { convertResponsesTools } from "@earendil-works/pi-ai/api/openai-responses-shared";
-import { runPromptHook } from "../../../scripts/fixtures/prompt-hook.mjs";
+import { runPromptHook as runBasePromptHook } from "../../../scripts/fixtures/prompt-hook.mjs";
 import { resolveCatalog } from "../dist/locale-catalog.js";
 import { notificationHash } from "../dist/notifications/inbox.js";
 import { pathDigest } from "../dist/path-digest.js";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
+const runPromptHook = (handler, options = {}) =>
+	runBasePromptHook(handler, { ...options, options: { selectedTools: ["read", "subagent"], ...options.options } });
 test("shared dashboard takeover suppresses child widget and routes visibility without launching work", async () => {
 	const visibility = [];
 	const f = fixture(false, { dashboardVisibility: (visible) => visibility.push(visible) });
@@ -637,10 +639,10 @@ test("delegation checklist reaches every parent model without requiring a skill"
 		for (const id of ["gpt-6-astra", "glm-5.3-flash", "other-model"]) {
 			const active = { ...f.ctx, model: { provider: "fixture", id } };
 			const prompt = runPromptHook(f.handlers.get("before_agent_start"), { ctx: active }).systemPrompt;
-			assert.match(prompt, /complete sentences with normal spacing/);
-			assert.match(prompt, /one objective, verified context and file paths, constraints, acceptance checks/);
+			assert.match(prompt, /complete sentences/);
+			assert.match(prompt, /one objective, verified context and paths, constraints, acceptance checks/);
 			assert.match(prompt, /explicit stopping point and report/);
-			assert.match(prompt, /state what changed and what remains authorized/);
+			assert.match(prompt, /state what changed and remains authorized/);
 			assert.match(prompt, /Diagnose provider, tool, and instruction failures/);
 			assert.match(f.tool.parameters.properties.task.description, /stopping point\/report/);
 		}
@@ -650,6 +652,33 @@ test("delegation checklist reaches every parent model without requiring a skill"
 		assert.match(prompt, /Work directly/);
 	} finally {
 		await f.shutdown();
+	}
+});
+
+test("subagent prompt follows visible tools and retains disabled-result guidance", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const hook = f.handlers.get("before_agent_start");
+		for (const options of [
+			{ selectedTools: ["read"] },
+			{ selectedTools: ["read", "subagent"], hiddenTools: ["subagent"] },
+		]) {
+			const run = runPromptHook(hook, {
+				ctx: f.ctx,
+				options: { ...options, sections: { subagents: "stale" }, skills: [{ name: "jouzu-delegation" }] },
+			});
+			assert.equal(run.sections.subagents, undefined);
+			assert.deepEqual(run.event.systemPromptOptions.skills, []);
+		}
+		await f.integration.service.setSubagentsEnabled(false);
+		const disabled = runPromptHook(hook, { ctx: f.ctx, options: { skills: [{ name: "jouzu-delegation" }] } });
+		assert.match(disabled.sections.subagents, /Existing results may be inspected and acknowledged/);
+		assert.deepEqual(disabled.event.systemPromptOptions.skills, []);
+		await f.integration.service.setSubagentsEnabled(true);
+		assert.match(runPromptHook(hook, { ctx: f.ctx }).sections.subagents, /op:roles/);
+	} finally {
+		await f.handlers.get("session_shutdown")({}, f.ctx);
 	}
 });
 
@@ -776,7 +805,7 @@ test("agent calls cannot override configured models, including through stale too
 		assert.equal(run.model.id, "glm-5.3-flash", "launch uses the configured role, not the parent model");
 		assert.equal(authentications, 1);
 		const prompt = runPromptHook(f.handlers.get("before_agent_start"), { ctx: f.ctx }).systemPrompt;
-		assert.match(prompt, /Only the user can change role models/);
+		assert.match(prompt, /Only the user changes role models/);
 	} finally {
 		await f.shutdown();
 	}

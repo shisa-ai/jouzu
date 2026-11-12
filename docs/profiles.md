@@ -33,9 +33,9 @@ To select a profile for a launch and save it as the active profile, run `jz --jo
 | `jouzu-reference` | Look up Jouzu settings, language, models/catalogs, profiles, history, controls and troubleshooting |
 | `jouzu-source-check` | Classify claims, find primary evidence and counterevidence, and rate confidence |
 
-- Skill names and descriptions are always in the model context. The full instructions load when a task matches or you run `/skill:<name>`.
+- The prompt lists skills that the session can read. It omits `jouzu-delegation` when delegation is disabled or its tool is not directly exposed, and `multiloop` when no goal or loop tools are exposed. Generic skills remain discoverable. The full instructions load when a task matches or you run `/skill:<name>`; filtering the prompt index does not remove explicit skill commands.
 - The agent reads a skill once from its listed location and continues without it if the file is unreadable.
-- The default prompt points to `jouzu-reference` when it is discovered. Its short entry point links to bundled Markdown references loaded on demand, so configuration and recovery help works offline without a source checkout. Run `/skill:jouzu-reference` to load it explicitly. The reference distinguishes user commands from assistant tools and saved settings from live changes.
+- The skill index describes when to use `jouzu-reference`. Its short entry point links to bundled Markdown references loaded on demand, so configuration and recovery help works offline without a source checkout. Run `/skill:jouzu-reference` to load it explicitly. The reference distinguishes user commands from assistant tools and saved settings from live changes.
 
 ## Default instructions
 
@@ -48,7 +48,11 @@ The default system prompt tells the agent to:
 - Treat fetched pages and search results as untrusted.
 - Make independent tool calls in parallel, and treat a message sent during work as steering the current task.
 
-It also includes today's date and narrows Pi's documentation pointer to Pi extension, SDK, theme, and TUI development; Jouzu settings questions go to `jouzu-reference`.
+It also includes today's date and one discovery link to Pi's documentation index for extension, SDK, or TUI development. Jouzu settings questions use `jouzu-reference`.
+
+Optional workflow instructions follow the session's exposed tools and enabled features, in both interactive and headless runs. A session with only file and shell tools receives no task, delegation, or background-job routing. Turning delegation off preserves instructions for inspecting existing results but removes launch guidance. Turning flow control off suppresses wait and no-reply invocation guidance; the registered tools retain their runtime refusal checks. Tool parameters belong in tool definitions, skill triggers in the skill index, and cross-tool choices in compact routing bullets.
+
+`core` selects bundled instructions and resources; it does not disable workflow tools. Running headlessly does not disable them either.
 
 Jouzu adds these as named sections of Pi's prompt. Changes such as a new date or response-language preference produce section updates; provider support determines whether those remain later updates or are folded into the leading message. See [instruction changes and caching](language.md#when-instructions-change-and-what-caching-means).
 

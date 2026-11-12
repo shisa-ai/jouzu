@@ -90,14 +90,14 @@ test("applies Jouzu guidance as Pi prompt sections and leaves other prompts alon
 	assert.equal(options.sections.preamble, jouzuPreamble(routing));
 	assert.match(options.sections.preamble, /^You are an expert coding assistant operating inside Jouzu/);
 	assert.ok(options.sections.preamble.indexOf(JOUZU_DEFAULT_GUIDANCE) < options.sections.preamble.indexOf(routing));
-	assert.match(
-		options.sections.docs,
-		/^Pi documentation \(read only for Pi extension, SDK, theme, or TUI development\)/,
-	);
+	assert.match(options.sections.docs, /^For Pi extension, SDK, or TUI development, start with .*\/index.md\.$/);
 	assert.equal(options.sections.date, "Today's date: Saturday, 2026-10-24");
 	assert.deepEqual(options.toolGuidelines.edit, JOUZU_TOOL_GUIDELINES.edit);
 	assert.deepEqual(options.toolGuidelines.bash, JOUZU_TOOL_GUIDELINES.bash);
 	assert.equal(options.toolGuidelines.write, undefined);
+	applyJouzuPromptSections(options, { capabilityRouting: routing, now: new Date(2026, 9, 24) });
+	assert.deepEqual(options.toolGuidelines.edit, JOUZU_TOOL_GUIDELINES.edit);
+	assert.deepEqual(options.toolGuidelines.bash, JOUZU_TOOL_GUIDELINES.bash);
 
 	for (const owned of [{ customPrompt: "user-owned prompt" }, { forceSystemPrompt: "forced by another extension" }]) {
 		const untouched = { cwd: "/workspace", selectedTools: ["edit"], sections: {}, toolGuidelines: {}, ...owned };
@@ -124,12 +124,7 @@ test("default guidance states harness facts once and stays bounded", () => {
 		"make the smallest coherent change",
 		"run the narrowest deterministic check",
 		"Report untested limitations honestly",
-		"Use task tracking only for work with three or more distinct steps",
-		"do not combine workflow systems",
 		"Compute reported numbers with executed code",
-		"not because a keyword matches",
-		"exact listed `<location>` once",
-		"never search guessed package paths",
 	])
 		assert.ok(JOUZU_DEFAULT_GUIDANCE.includes(phrase), phrase);
 	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /be concise|jouzu-core|jouzu-clear-writing|completion notifications/i);
@@ -210,12 +205,12 @@ test("generates stable capability routing from only active tools and skills", ()
 	};
 	const guidance = buildCapabilityRoutingGuidance(options);
 	assert.equal(buildCapabilityRoutingGuidance(options), guidance);
-	assert.match(guidance, /generated from this session's active tools and skills/);
+	assert.doesNotMatch(guidance, /\| Need \|/);
 	assert.doesNotMatch(guidance, /`read`|`grep`/);
 	assert.match(guidance, /`web_fetch`/);
 	assert.match(guidance, /`TaskCreate`/);
 	assert.match(guidance, /`bg_task`/);
-	assert.match(guidance, /read `jouzu-clear-writing` at its listed `<location>`/);
+	assert.match(guidance, /Load a skill only when the task needs it/);
 	assert.doesNotMatch(guidance, /vcc_recall/);
 	assert.doesNotMatch(guidance, /tff-/);
 	assert.doesNotMatch(guidance, /schedule_prompt/);
@@ -230,14 +225,14 @@ test("generates stable capability routing from only active tools and skills", ()
 	assert.notEqual(changed, guidance);
 });
 
-test("the Jouzu reference route appears only for its skill and never reaches a custom prompt", async () => {
+test("skill loading guidance is shared and never replaces a custom prompt", async () => {
 	const upstream = `You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.
 
 Available tools:
 - read: Read file contents`;
 	const options = { customPrompt: undefined, selectedTools: ["read"], skills: [{ name: "jouzu-reference" }] };
 	const routing = buildCapabilityRoutingGuidance(options);
-	assert.match(routing, /read `jouzu-reference` at its listed `<location>`/);
+	assert.match(routing, /Load a skill only when the task needs it/);
 	assert.doesNotMatch(
 		buildCapabilityRoutingGuidance({ ...options, skills: [{ name: "jouzu-clear-writing" }] }),
 		/jouzu-reference/,
@@ -245,7 +240,7 @@ Available tools:
 	const { handlers } = installExtension();
 	const branded = runPromptHook(handlers.get("before_agent_start"), { systemPrompt: upstream, options });
 	assert.equal(branded.sections.preamble, jouzuPreamble(routing));
-	assert.match(branded.systemPrompt, /Jouzu configuration, language, model catalogs/);
+	assert.doesNotMatch(branded.systemPrompt, /Jouzu configuration, language, model catalogs/);
 
 	// A user-owned prompt gets no Jouzu sections, so the route never reaches it.
 	const custom = runPromptHook(handlers.get("before_agent_start"), {

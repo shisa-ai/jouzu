@@ -108,7 +108,7 @@ Profile selection uses `--jouzu-profile`, `JOUZU_PROFILE` or the saved profile c
 
 ## Identity, guidance and custom prompts
 
-The default identity is the same Jouzu coding assistant in either interface language. Shared guidance covers editing, evidence, verification, tools, skills and workflow. Capability routing depends on available tools/skills; model-specific guidance depends on the selected model. Response and artifact instructions are composed separately from those shared rules.
+The default identity is the same Jouzu coding assistant in either interface language. Shared guidance covers editing, evidence, verification, tools, skills and workflow. Capability routing follows selected tools whose declarations are visible and the enabled feature state; skill listings retain readable, applicable skills. Model-specific guidance follows the selected model and gates optional task, wait, and delegation advice on their availability. Response and artifact instructions are composed separately from those shared rules.
 
 Jouzu supplies its default identity, shared guidance, routing and applicable model/language instructions in Pi's `preamble` section. Tool rules, documentation pointers, date, project context, skills and append-system content occupy other sections. Workflow can add role and subagent instructions.
 

@@ -18,6 +18,7 @@ import type { CatalogBundle } from "../locale-catalog.js";
 import { preferCatalogModels } from "../model-catalog-projection.js";
 import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
+import { promptCapabilities } from "../prompt-capabilities.js";
 import { setPromptSections } from "../prompt-sections.js";
 import type { TextGuardMode } from "../textguard-policy.js";
 import {
@@ -534,9 +535,14 @@ export function createWorkflowIntegration(
 			pi.on("before_agent_start", (event, active) => {
 				ctx = active;
 				const role = mainRole ? `Agent role: ${mainRole.id}\n${mainRole.instructions}` : undefined;
-				const subagents = subagentsEnabled
-					? "Subagents are enabled. Roles can change during the session; choose a role from op:roles that allows child placement. Only the user can change role models; do not edit agent configuration to select another model. Write each assignment in complete sentences with normal spacing. Give one objective, verified context and file paths, constraints, acceptance checks, and an explicit stopping point and report. Separate dependent stages. For follow-ups, state what changed and what remains authorized. Diagnose provider, tool, and instruction failures before judging implementation quality; do not substitute another model."
-					: "Subagents are disabled by the user for this session. Work directly; do not delegate or re-enable subagents. Existing results may be inspected and acknowledged.";
+				const available = promptCapabilities(event.systemPromptOptions, { subagentsEnabled });
+				// Filtering the prompt index does not remove explicit skill commands or saved results.
+				event.systemPromptOptions.skills = available.skills;
+				const subagents = !available.tools.has("subagent")
+					? undefined
+					: subagentsEnabled
+						? "Use subagent op:roles before delegation; choose a role allowing child placement. Roles can change. Only the user changes role models or enables subagents; do not edit agent configuration to choose a model. Give each child one objective, verified context and paths, constraints, acceptance checks, and an explicit stopping point and report. Use complete sentences. Separate dependent stages; state what changed and remains authorized in follow-ups. Diagnose provider, tool, and instruction failures before judging implementation; do not substitute another model."
+						: "Subagents are disabled by the user. Work directly; do not delegate or re-enable them. Existing results may be inspected and acknowledged.";
 				return setPromptSections(event, { agent_role: role, subagents });
 			});
 			pi.on("session_shutdown", async () => {
