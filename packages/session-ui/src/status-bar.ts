@@ -191,18 +191,16 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot, text: Se
 			style: usage.cacheComplete ? "status.tokens" : "status.unknown",
 			value: `C${cache}`,
 		});
-		const cost =
-			usage.cost == null
-				? "$?"
-				: `${usage.costEstimated ? "~" : ""}$${usage.cost.toFixed(3)}${usage.costComplete ? "" : " + ?"}`;
-		segments.push({
-			id: "cost",
-			side: "right",
-			order: 40,
-			priority: 400,
-			style: usage.cost == null || !usage.costComplete ? "status.unknown" : "status.tokens",
-			value: cost,
-		});
+		if (usage.cost != null) {
+			segments.push({
+				id: "cost",
+				side: "right",
+				order: 40,
+				priority: 400,
+				style: usage.costComplete ? "status.tokens" : "status.unknown",
+				value: `${usage.costEstimated ? "~" : ""}$${usage.cost.toFixed(3)}${usage.costComplete ? "" : " + ?"}`,
+			});
+		}
 	}
 	return segments;
 }

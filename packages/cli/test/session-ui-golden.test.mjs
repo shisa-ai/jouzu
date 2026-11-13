@@ -93,14 +93,14 @@ const SESSION_LINE_GOLDEN = {
 };
 
 const STATUS_BAR_GOLDEN = {
-	"en-48": "日本語 project · [!?↑]     19% | ↑124k | C? | $?",
-	"en-80": "日本語 project · feat/v0.1.2 [!?↑] · node         19%/200k | ↑124k ↓9k | C? | $?",
+	"en-48": "日本語 project · [!?↑] · node   19% | ↑124k | C?",
+	"en-80": "日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0     19%/200k | ↑124k ↓9k | C?",
 	"en-120":
-		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                        19%/200k | ↑124k ↓9k | C? | $?",
-	"ja-48": "日本語 project · [!?↑]     19% | ↑124k | C? | $?",
-	"ja-80": "日本語 project · feat/v0.1.2 [!?↑] · node         19%/200k | ↑124k ↓9k | C? | $?",
+		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                             19%/200k | ↑124k ↓9k | C?",
+	"ja-48": "日本語 project · [!?↑] · node   19% | ↑124k | C?",
+	"ja-80": "日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0     19%/200k | ↑124k ↓9k | C?",
 	"ja-120":
-		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                        19%/200k | ↑124k ↓9k | C? | $?",
+		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                             19%/200k | ↑124k ↓9k | C?",
 };
 
 test("the Session UI line and status bar are fixed at 48, 80, and 120 columns in en and ja", () => {

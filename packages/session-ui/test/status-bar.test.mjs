@@ -56,7 +56,7 @@ function snapshot(overrides = {}) {
 	};
 }
 
-test("renders usage, cache share, and unknown cost without quota claims", () => {
+test("renders usage and cache share without unavailable cost or quota claims", () => {
 	const rendered = renderStatusBar(snapshot(), 120, styles, text);
 	assert.equal(terminalTextWidth(rendered), 120);
 	assert.match(rendered, /日本語 project/);
@@ -64,8 +64,8 @@ test("renders usage, cache share, and unknown cost without quota claims", () => 
 	assert.match(rendered, /node v24\.16\.0/);
 	assert.match(rendered, /19%\/200k/);
 	assert.match(rendered, /↑124k ↓9k/);
-	assert.match(rendered, /C\? \| \$\?/);
-	assert.doesNotMatch(rendered, /5h:|7d:/);
+	assert.match(rendered, /C\?$/);
+	assert.doesNotMatch(rendered, /\$|5h:|7d:/);
 });
 
 test("renders the agreed format and preserves cost qualifiers at every width", () => {
@@ -89,14 +89,15 @@ test("renders the agreed format and preserves cost qualifiers at every width", (
 	for (const [changes, cache, cost] of [
 		[{ costEstimated: false }, "C95%", "$24.532"],
 		[{ costComplete: false }, "C95%", "~$24.532 + ?"],
-		[{ cost: null, cacheComplete: false }, "C?", "$?"],
+		[{ cost: null, cacheComplete: false }, "C?", undefined],
+		[{ cost: undefined }, "C95%", undefined],
 		[{ inputTokens: 0, cacheReadPercent: undefined }, "C—", "~$24.532"],
 		[{ cacheReadPercent: 0, cost: 0, costEstimated: false }, "C0%", "$0.000"],
 	]) {
 		const state = make(changes);
 		const segments = buildStatusBarSegments(state, text);
 		assert.equal(segments.find(({ id }) => id === "cache").value, cache);
-		assert.equal(segments.find(({ id }) => id === "cost").value, cost);
+		assert.equal(segments.find(({ id }) => id === "cost")?.value, cost);
 		for (let width = 1; width <= 160; width++) {
 			const rendered = renderStatusBar(state, width, styles, text);
 			assert.equal(terminalTextWidth(rendered), width);
@@ -199,7 +200,7 @@ test("exposes reusable status segments with deterministic compaction", () => {
 	const segments = buildStatusBarSegments(snapshot(), text);
 	assert.deepEqual(
 		segments.map(({ id }) => id),
-		["workspace", "git", "runtime", "context", "tokens", "cache", "cost"],
+		["workspace", "git", "runtime", "context", "tokens", "cache"],
 	);
 	assert.equal(segments.find(({ id }) => id === "workspace").style, "status.workspace");
 	assert.deepEqual(

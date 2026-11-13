@@ -62,10 +62,10 @@ test("keeps wide and compact Session UI lines stable", () => {
 		renderSessionLine(snapshot, hints, 48, plainStyles, text),
 		"/model choose          Codex gpt-5.6-sol (xhigh)",
 	);
-	assert.equal(renderStatusBar(snapshot, 48, plainStyles, text), "日本語 project · [!?↑]     19% | ↑124k | C? | $?");
+	assert.equal(renderStatusBar(snapshot, 48, plainStyles, text), "日本語 project · [!?↑] · node   19% | ↑124k | C?");
 	assert.equal(
 		renderStatusBar(snapshot, 80, plainStyles, text),
-		"日本語 project · feat/v0.1.2 [!?↑] · node         19%/200k | ↑124k ↓9k | C? | $?",
+		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0     19%/200k | ↑124k ↓9k | C?",
 	);
 });
 

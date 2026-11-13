@@ -64,8 +64,8 @@ counts to zero, so a recorded zero does not prove caching was unavailable.
 
 Cost is the sum of recorded per-request amounts in USD. `~$24.532` includes
 estimated amounts; `$24.532` contains only provider-reported amounts. Neither is
-an account invoice or a measure of subscription quota. `$?` means no usable cost
-is available; ` + ?` after an amount means additional usage has unknown cost.
+an account invoice or a measure of subscription quota. Cost is omitted when no
+usable amount is available; ` + ?` after an amount means additional usage has unknown cost.
 A provider-reported zero displays as `$0.000`; a placeholder zero does not imply
 free usage. Narrow terminals shorten or omit lower-priority segments while
 preserving context and any visible cost qualifiers.
