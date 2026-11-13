@@ -178,6 +178,31 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot, text: Se
 				...(unknown ? [{ value: unknown, style: "status.unknown" } as const] : []),
 			],
 		});
+		const cache = !usage.cacheComplete
+			? "?"
+			: usage.cacheReadPercent === undefined
+				? "—"
+				: `${Math.round(usage.cacheReadPercent)}%`;
+		segments.push({
+			id: "cache",
+			side: "right",
+			order: 30,
+			priority: 450,
+			style: usage.cacheComplete ? "status.tokens" : "status.unknown",
+			value: `C${cache}`,
+		});
+		const cost =
+			usage.cost == null
+				? "$?"
+				: `${usage.costEstimated ? "~" : ""}$${usage.cost.toFixed(3)}${usage.costComplete ? "" : " + ?"}`;
+		segments.push({
+			id: "cost",
+			side: "right",
+			order: 40,
+			priority: 400,
+			style: usage.cost == null || !usage.costComplete ? "status.unknown" : "status.tokens",
+			value: cost,
+		});
 	}
 	return segments;
 }

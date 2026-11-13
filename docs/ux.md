@@ -34,6 +34,36 @@ Jouzu adds surfaces to Pi rather than replacing Pi's input model. Read this tabl
 
 Two consequences follow. A new Jouzu action gets a semantic ID and a default binding, not a raw key check in a component. A key that Pi already defines keeps Pi's meaning unless a recorded decision overrides it.
 
+## Session status bar
+
+The right side shows context, cumulative tokens, cache share, and cost:
+
+```text
+19%/272k | ↑397k ↓5k | C95% | ~$24.532
+```
+
+This is a layout example, not a pricing example. The context percentage describes
+current occupancy; `272k` is the context-window capacity. A leading `~` on the
+context percentage marks an estimate after compaction.
+
+Token and cost totals cover recorded usage on the active branch, including
+compaction, branch summaries, and tool usage where recorded. They do not combine
+separate subagent sessions. `↑` includes uncached input, cache reads, and cache
+writes; `↓` counts output. A trailing `?` marks incomplete token accounting.
+
+`C95%` means cache reads account for 95% of cumulative input. `C0%` means the
+recorded counts show no cache reads; `C—` means there is no input yet. `C?` means
+required counts are missing or invalid. Providers can normalize unreported cache
+counts to zero, so a recorded zero does not prove caching was unavailable.
+
+Cost is the sum of recorded per-request amounts in USD. `~$24.532` includes
+estimated amounts; `$24.532` contains only provider-reported amounts. Neither is
+an account invoice or a measure of subscription quota. `$?` means no usable cost
+is available; ` + ?` after an amount means additional usage has unknown cost.
+A provider-reported zero displays as `$0.000`; a placeholder zero does not imply
+free usage. Narrow terminals shorten or omit lower-priority segments while
+preserving context and any visible cost qualifiers.
+
 ## Key assignment rules
 
 1. **Every action must be reachable without a modified key.** Modified keys are accelerators. `Ctrl`, `Alt`, `Shift`, and `Super` combinations that a legacy terminal cannot encode are unavailable to some users on every platform; see [Encoding and line discipline](key-collisions.md#encoding-and-line-discipline). A recorded decision may accept an accelerator-only action; the current exception is Models favorite (`jouzu.model.toggleFavorite`), recorded in [Palette primary and secondary actions](palette-ux.md#primary-and-secondary-actions).

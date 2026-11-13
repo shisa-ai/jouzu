@@ -18,6 +18,11 @@ export interface SessionUsageSnapshot {
 	inputTokens: number;
 	outputTokens: number;
 	unknownMessageCount: number;
+	cacheReadPercent?: number;
+	cacheComplete: boolean;
+	cost: number | null;
+	costEstimated: boolean;
+	costComplete: boolean;
 }
 
 export interface SessionStatusSnapshot {
@@ -56,30 +61,76 @@ export type SessionSnapshotContext = Pick<
 type SessionUsageLike = {
 	input?: number;
 	output?: number;
+	cacheRead?: number;
+	cacheWrite?: number;
+	cost?: { total?: number; totalFromProvider?: boolean };
 };
+
+function validCount(value: unknown): value is number {
+	return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
 
 function usageFromBranch(ctx: SessionSnapshotContext, observedAt: number): SessionUiFact<SessionUsageSnapshot> {
 	let inputTokens = 0;
 	let outputTokens = 0;
 	let unknownMessageCount = 0;
+	let cacheReadTokens = 0;
+	let cacheComplete = true;
+	let cost: number | null = null;
+	let costEstimated = false;
+	let costComplete = true;
 	for (const entry of ctx.sessionManager.getBranch()) {
 		const usage =
 			entry.type === "message"
 				? (entry.message as { usage?: SessionUsageLike }).usage
-				: entry.type === "compaction" || entry.type === "branch_summary"
+				: entry.type === "compaction" || entry.type === "branch_summary" || entry.type === "usage"
 					? entry.usage
 					: undefined;
 		if (!usage) {
-			if (entry.type === "message" && entry.message.role === "assistant") unknownMessageCount += 1;
+			if (
+				(entry.type === "message" && entry.message.role === "assistant") ||
+				entry.type === "compaction" ||
+				entry.type === "branch_summary" ||
+				entry.type === "usage"
+			) {
+				unknownMessageCount += 1;
+				cacheComplete = false;
+				costComplete = false;
+			}
 			continue;
 		}
-		inputTokens += Number.isFinite(usage.input) ? (usage.input ?? 0) : 0;
-		outputTokens += Number.isFinite(usage.output) ? (usage.output ?? 0) : 0;
+		const counts = [usage.input, usage.output, usage.cacheRead, usage.cacheWrite];
+		if (!counts.every(validCount)) unknownMessageCount += 1;
+		if (![usage.input, usage.cacheRead, usage.cacheWrite].every(validCount)) cacheComplete = false;
+		inputTokens += [usage.input, usage.cacheRead, usage.cacheWrite].reduce<number>(
+			(total, value) => total + (validCount(value) ? value : 0),
+			0,
+		);
+		outputTokens += validCount(usage.output) ? usage.output : 0;
+		cacheReadTokens += validCount(usage.cacheRead) ? usage.cacheRead : 0;
+		const amount = usage.cost?.total;
+		// A provider-reported zero is authoritative; a catalog placeholder zero is not.
+		if (validCount(amount) && (amount > 0 || usage.cost?.totalFromProvider === true)) {
+			cost = (cost ?? 0) + amount;
+			costEstimated ||= usage.cost?.totalFromProvider !== true;
+		} else {
+			costComplete = false;
+		}
 	}
 	return {
 		status: unknownMessageCount > 0 ? "partial" : "known",
 		observedAt,
-		value: { scope: "active_branch", inputTokens, outputTokens, unknownMessageCount },
+		value: {
+			scope: "active_branch",
+			inputTokens,
+			outputTokens,
+			unknownMessageCount,
+			...(cacheComplete && inputTokens > 0 ? { cacheReadPercent: (cacheReadTokens / inputTokens) * 100 } : {}),
+			cacheComplete,
+			cost,
+			costEstimated,
+			costComplete,
+		},
 	};
 }
 

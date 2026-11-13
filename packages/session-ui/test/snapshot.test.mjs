@@ -29,7 +29,7 @@ function context(overrides = {}) {
 	};
 }
 
-test("captures provider-neutral session facts without paths or cost claims", () => {
+test("captures provider-neutral session facts without full paths", () => {
 	const snapshot = createSessionStatusSnapshot(context(), {
 		clock: { now: () => 1234 },
 		idleSince: 1000,
@@ -53,9 +53,67 @@ test("captures provider-neutral session facts without paths or cost claims", () 
 		scope: "active_branch",
 		inputTokens: 155,
 		outputTokens: 28,
-		unknownMessageCount: 0,
+		unknownMessageCount: 4,
+		cacheComplete: false,
+		cost: 99,
+		costEstimated: true,
+		costComplete: false,
 	});
-	assert.doesNotMatch(JSON.stringify(snapshot), /\/work\/|cost/i);
+	assert.doesNotMatch(JSON.stringify(snapshot), /\/work\//);
+});
+
+test("adds cache reads and writes to input and sums recorded costs on the active branch", () => {
+	const usage = (input, cacheRead, cacheWrite, output, total, totalFromProvider = true) => ({
+		input,
+		cacheRead,
+		cacheWrite,
+		output,
+		cost: { total, totalFromProvider },
+	});
+	const entries = [
+		{ type: "message", message: { role: "assistant", usage: usage(20000, 160000, 20000, 10000, 0.333) } },
+		{ type: "compaction", usage: usage(0, 200000, 0, 100, 0.06, false) },
+		{ type: "branch_summary", usage: usage(0, 0, 0, 10, 0) },
+		{ type: "usage", usage: usage(0, 0, 0, 0, 0) },
+	];
+	const result = createSessionStatusSnapshot(context({ sessionManager: { getBranch: () => entries } })).usage.value;
+	assert.equal(result.inputTokens, 400000);
+	assert.equal(result.outputTokens, 10110);
+	assert.equal(result.cacheReadPercent, 90);
+	assert.equal(result.cacheComplete, true);
+	assert.equal(result.cost, 0.393);
+	assert.equal(result.costEstimated, true);
+	assert.equal(result.costComplete, true);
+	assert.equal(result.unknownMessageCount, 0);
+});
+
+test("distinguishes empty, zero-cache, missing, and invalid accounting", () => {
+	const capture = (entries) =>
+		createSessionStatusSnapshot(
+			context({
+				sessionManager: { getBranch: () => entries },
+			}),
+		).usage.value;
+	const empty = capture([]);
+	assert.equal(empty.cacheComplete, true);
+	assert.equal(empty.cacheReadPercent, undefined);
+	assert.equal(empty.cost, null);
+	const entry = (usage) => ({ type: "message", message: { role: "assistant", usage } });
+	const zero = capture([
+		entry({ input: 100, output: 1, cacheRead: 0, cacheWrite: 0, cost: { total: 0, totalFromProvider: true } }),
+	]);
+	assert.equal(zero.cacheReadPercent, 0);
+	assert.equal(zero.cost, 0);
+	assert.equal(zero.costEstimated, false);
+	const invalid = capture([entry({ input: -1, output: Infinity, cacheRead: NaN, cacheWrite: 0, cost: { total: -1 } })]);
+	assert.equal(invalid.inputTokens, 0);
+	assert.equal(invalid.outputTokens, 0);
+	assert.equal(invalid.cacheComplete, false);
+	assert.equal(invalid.cost, null);
+	assert.equal(invalid.costComplete, false);
+	const placeholder = capture([entry({ input: 100, output: 1, cacheRead: 0, cacheWrite: 0, cost: { total: 0 } })]);
+	assert.equal(placeholder.cost, null);
+	assert.equal(placeholder.costComplete, false);
 });
 
 test("estimates the compacted projection until fresh usage is available", () => {

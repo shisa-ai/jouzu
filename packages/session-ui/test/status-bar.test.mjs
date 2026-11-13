@@ -56,7 +56,7 @@ function snapshot(overrides = {}) {
 	};
 }
 
-test("renders the useful provider-neutral status facts without cost or quota", () => {
+test("renders usage, cache share, and unknown cost without quota claims", () => {
 	const rendered = renderStatusBar(snapshot(), 120, styles, text);
 	assert.equal(terminalTextWidth(rendered), 120);
 	assert.match(rendered, /日本語 project/);
@@ -64,7 +64,45 @@ test("renders the useful provider-neutral status facts without cost or quota", (
 	assert.match(rendered, /node v24\.16\.0/);
 	assert.match(rendered, /19%\/200k/);
 	assert.match(rendered, /↑124k ↓9k/);
-	assert.doesNotMatch(rendered, /\$|5h:|7d:/);
+	assert.match(rendered, /C\? \| \$\?/);
+	assert.doesNotMatch(rendered, /5h:|7d:/);
+});
+
+test("renders the agreed format and preserves cost qualifiers at every width", () => {
+	const value = {
+		scope: "active_branch",
+		inputTokens: 397000,
+		outputTokens: 5000,
+		unknownMessageCount: 0,
+		cacheReadPercent: 95,
+		cacheComplete: true,
+		cost: 24.532,
+		costEstimated: true,
+		costComplete: true,
+	};
+	const make = (changes = {}) =>
+		snapshot({
+			context: { status: "known", observedAt: 1, value: { window: 272000, percent: 19 } },
+			usage: { status: "known", observedAt: 1, value: { ...value, ...changes } },
+		});
+	assert.match(renderStatusBar(make(), 140, styles, text), /19%\/272k \| ↑397k ↓5k \| C95% \| ~\$24\.532$/);
+	for (const [changes, cache, cost] of [
+		[{ costEstimated: false }, "C95%", "$24.532"],
+		[{ costComplete: false }, "C95%", "~$24.532 + ?"],
+		[{ cost: null, cacheComplete: false }, "C?", "$?"],
+		[{ inputTokens: 0, cacheReadPercent: undefined }, "C—", "~$24.532"],
+		[{ cacheReadPercent: 0, cost: 0, costEstimated: false }, "C0%", "$0.000"],
+	]) {
+		const state = make(changes);
+		const segments = buildStatusBarSegments(state, text);
+		assert.equal(segments.find(({ id }) => id === "cache").value, cache);
+		assert.equal(segments.find(({ id }) => id === "cost").value, cost);
+		for (let width = 1; width <= 160; width++) {
+			const rendered = renderStatusBar(state, width, styles, text);
+			assert.equal(terminalTextWidth(rendered), width);
+			if (rendered.includes("$")) assert.ok(rendered.endsWith(cost));
+		}
+	}
 });
 
 test("marks approximate context in full and narrow displays", () => {
@@ -161,7 +199,7 @@ test("exposes reusable status segments with deterministic compaction", () => {
 	const segments = buildStatusBarSegments(snapshot(), text);
 	assert.deepEqual(
 		segments.map(({ id }) => id),
-		["workspace", "git", "runtime", "context", "tokens"],
+		["workspace", "git", "runtime", "context", "tokens", "cache", "cost"],
 	);
 	assert.equal(segments.find(({ id }) => id === "workspace").style, "status.workspace");
 	assert.deepEqual(
