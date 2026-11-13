@@ -1,5 +1,5 @@
 import { basename } from "node:path";
-import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { type ExtensionContext, estimateTokens } from "@earendil-works/pi-coding-agent";
 import type { SessionUiClock } from "./contracts.js";
 import { SYSTEM_SESSION_UI_CLOCK } from "./contracts.js";
 import type { GitStatusSnapshot } from "./sources/git.js";
@@ -41,6 +41,7 @@ export interface SessionStatusSnapshot {
 		tokens?: number;
 		window: number;
 		percent?: number;
+		approximate?: boolean;
 	}>;
 	usage: SessionUiFact<SessionUsageSnapshot>;
 	git: SessionUiFact<GitStatusSnapshot>;
@@ -88,7 +89,18 @@ function contextFrom(ctx: SessionSnapshotContext, observedAt: number): SessionSt
 	if (!usage || !window || window <= 0) return { status: "unknown", observedAt };
 	const percent = usage.percent;
 	const tokens = usage.tokens;
-	const value: { tokens?: number; window: number; percent?: number } = { window };
+	const value: NonNullable<SessionStatusSnapshot["context"]["value"]> = { window };
+	if (tokens === null && ctx.sessionManager.getBranch().some((entry) => entry.type === "compaction")) {
+		// Retained assistant usage still describes the pre-compaction request.
+		// Estimate the projected content, including the saved system/tool context, instead.
+		const messages = ctx.sessionManager.buildSessionProjection().messages;
+		const estimatedTokens = messages.reduce((total, message) => total + estimateTokens(message), 0);
+		return {
+			status: "partial",
+			observedAt,
+			value: { window, tokens: estimatedTokens, percent: (estimatedTokens / window) * 100, approximate: true },
+		};
+	}
 	if (tokens !== null) value.tokens = tokens;
 	if (percent !== null) value.percent = percent;
 	return {

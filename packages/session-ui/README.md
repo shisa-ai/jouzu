@@ -6,7 +6,7 @@ This private workspace owns the persistent interactive surfaces around a Jouzu s
 
 - **Prompt Frame:** wraps Pi's `CustomEditor` with Jouzu borders and a single `❯` leader on the first prompt row while preserving Pi input behavior. Later rows keep the indent alone, so a terminal selection picks up at most one marker character instead of one per wrapped row.
 - **Session Line:** places one priority hint on the left and protects provider/model/thinking identity on the right, with a `fast` label when Fast processing is selected.
-- **Status Bar:** renders provider-neutral workspace, Git, project-runtime, context, token, and health facts with deterministic narrowing.
+- **Status Bar:** renders provider-neutral workspace, Git, project-runtime, context, token, and health facts with deterministic narrowing. After compaction, a `~` prefix marks estimated context usage until a subsequent model response supplies usage. The estimate counts the rebuilt conversation, including its summary and saved system/tool context; provider tokenization and request-time changes can differ.
 
 ## Boundaries
 

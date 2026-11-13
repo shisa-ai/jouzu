@@ -140,6 +140,7 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot, text: Se
 	}
 	const context = snapshot.context.value;
 	const percent = context?.percent;
+	const contextPercent = percent === undefined ? "?" : `${context?.approximate ? "~" : ""}${Math.round(percent)}`;
 	segments.push({
 		id: "context",
 		side: "right",
@@ -151,10 +152,8 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot, text: Se
 				: percent !== undefined && percent >= 70
 					? "status.context.warning"
 					: "status.context.normal",
-		value: context
-			? `${percent === undefined ? "?" : Math.round(percent)}%/${compactCount(context.window)}`
-			: text.statusContextUnknown,
-		compactValue: context ? `${percent === undefined ? "?" : Math.round(percent)}%` : "?",
+		value: context ? `${contextPercent}%/${compactCount(context.window)}` : text.statusContextUnknown,
+		compactValue: context ? `${contextPercent}%` : "?",
 		required: true,
 	});
 	if (snapshot.usage.value) {

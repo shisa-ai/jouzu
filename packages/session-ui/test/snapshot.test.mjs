@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { estimateTokens, SessionManager } from "@earendil-works/pi-coding-agent";
 
 import { createSessionStatusSnapshot } from "../dist/index.js";
 
@@ -55,6 +56,48 @@ test("captures provider-neutral session facts without paths or cost claims", () 
 		unknownMessageCount: 0,
 	});
 	assert.doesNotMatch(JSON.stringify(snapshot), /\/work\/|cost/i);
+});
+
+test("estimates the compacted projection until fresh usage is available", () => {
+	const manager = SessionManager.inMemory();
+	manager.appendMessage({
+		role: "system",
+		content: "System instructions",
+		toolsAdded: [{ name: "read", description: "Read a file", parameters: { type: "object" } }],
+		timestamp: 1,
+	});
+	manager.appendMessage({ role: "user", content: "discarded".repeat(1000), timestamp: 2 });
+	const kept = manager.appendMessage({ role: "user", content: "retained tail", timestamp: 3 });
+	manager.appendCompaction("Compaction summary", kept, 376745);
+	manager.appendMessage({ role: "user", content: "after compaction", timestamp: 4 });
+	manager.appendContextEdit(kept, { content: "edited tail" });
+	let usage = { tokens: null, contextWindow: 1_000_000, percent: null };
+	const ctx = context({ sessionManager: manager, getContextUsage: () => usage });
+	const messages = manager.buildSessionProjection().messages;
+	assert.ok(messages.some((message) => message.role === "system" && message.toolsAdded?.length));
+	assert.ok(messages.some((message) => message.role === "compactionSummary"));
+	assert.doesNotMatch(JSON.stringify(messages), /discarded|retained tail/);
+	const expected = messages.reduce((total, message) => total + estimateTokens(message), 0);
+	const estimated = createSessionStatusSnapshot(ctx).context;
+	assert.equal(estimated.status, "partial");
+	assert.deepEqual(estimated.value, {
+		tokens: expected,
+		window: 1_000_000,
+		percent: (expected / 1_000_000) * 100,
+		approximate: true,
+	});
+	usage = { tokens: 1234, contextWindow: 1_000_000, percent: 0.1234 };
+	const measured = createSessionStatusSnapshot(ctx).context;
+	assert.equal(measured.status, "known");
+	assert.deepEqual(measured.value, { tokens: 1234, window: 1_000_000, percent: 0.1234 });
+});
+
+test("keeps missing context unknown without a compaction", () => {
+	const ctx = context({
+		sessionManager: SessionManager.inMemory(),
+		getContextUsage: () => ({ tokens: null, contextWindow: 1000, percent: null }),
+	});
+	assert.deepEqual(createSessionStatusSnapshot(ctx).context.value, { window: 1000 });
 });
 
 test("labels incomplete context and usage honestly", () => {

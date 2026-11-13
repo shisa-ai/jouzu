@@ -67,6 +67,24 @@ test("renders the useful provider-neutral status facts without cost or quota", (
 	assert.doesNotMatch(rendered, /\$|5h:|7d:/);
 });
 
+test("marks approximate context in full and narrow displays", () => {
+	const estimated = snapshot({
+		context: {
+			status: "partial",
+			observedAt: 1,
+			value: { tokens: 38000, window: 1000000, percent: 3.8, approximate: true },
+		},
+	});
+	const segment = buildStatusBarSegments(estimated, text).find(({ id }) => id === "context");
+	assert.equal(segment.value, "~4%/1m");
+	assert.equal(segment.compactValue, "~4%");
+	assert.equal(renderStatusBar(estimated, 5, styles, text).trim(), "~4%");
+	assert.match(renderStatusBar(estimated, 48, styles, text), /~4%/);
+	for (let width = 1; width <= 120; width += 1) {
+		assert.equal(terminalTextWidth(renderStatusBar(estimated, width, styles, text)), width);
+	}
+});
+
 test("maps context pressure and unknown usage to distinct semantic styles", () => {
 	for (const [percent, style] of [
 		[69, "status.context.normal"],
