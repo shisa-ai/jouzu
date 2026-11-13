@@ -34,6 +34,12 @@ Jouzu adds surfaces to Pi rather than replacing Pi's input model. Read this tabl
 
 Two consequences follow. A new Jouzu action gets a semantic ID and a default binding, not a raw key check in a component. A key that Pi already defines keeps Pi's meaning unless a recorded decision overrides it.
 
+## Help
+
+Run `/help` or press `Ctrl+/` to open Jouzu Help. Both routes open the same
+localized overlay with the effective model-picker, model-cycle, and close keys.
+Use the displayed close key or press `Ctrl+/` again to dismiss it.
+
 ## Session status bar
 
 The right side shows context, cumulative tokens, cache share, and cost:

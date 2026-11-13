@@ -85,6 +85,11 @@ export function createJouzuHelpExtension(catalog: CatalogBundle = defaultCatalog
 				);
 			};
 
+			pi.registerCommand("help", {
+				description: catalogText(catalog, CatalogMessageId.helpOverlayShortcutDescription),
+				handler: async (_args, ctx) => showHelp(ctx),
+			});
+
 			for (const shortcut of HELP_SHORTCUTS) {
 				pi.registerShortcut(shortcut, {
 					description: catalogText(catalog, CatalogMessageId.helpOverlayShortcutDescription),

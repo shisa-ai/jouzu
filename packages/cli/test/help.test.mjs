@@ -9,14 +9,20 @@ const identityTheme = {
 	bold: (value) => value,
 };
 
-test("registers help shortcuts and renders effective semantic bindings", async () => {
+test("registers /help and shortcuts with the same overlay and effective bindings", async () => {
 	const shortcuts = new Map();
+	const commands = new Map();
 	createJouzuHelpExtension().factory({
+		registerCommand(name, options) {
+			commands.set(name, options);
+		},
 		registerShortcut(shortcut, options) {
 			shortcuts.set(shortcut, options);
 		},
 	});
 	assert.deepEqual([...shortcuts.keys()], ["ctrl+/", "ctrl+?"]);
+	assert.deepEqual([...commands.keys()], ["help"]);
+	assert.equal(commands.get("help").description, shortcuts.get("ctrl+/").description);
 
 	let customOptions;
 	let rendered = "";
@@ -58,11 +64,24 @@ test("registers help shortcuts and renders effective semantic bindings", async (
 	assert.doesNotMatch(rendered, /Ctrl\+L|Ctrl\+P|Esc close/);
 	assert.match(rendered, /\/hotkeys/);
 	assert.match(rendered, /\/scrollback.*Export transcript/);
+	const shortcutRendered = rendered;
+	rendered = "";
+	await commands.get("help").handler("", ctx);
+	assert.equal(rendered, shortcutRendered);
+	assert.equal(customOptions.overlay, true);
+	await commands.get("help").handler("", {
+		mode: "rpc",
+		ui: { custom: () => assert.fail("non-TUI help must not open an overlay") },
+	});
 });
 
 test("renders the overlay labels from the Japanese catalog with resolved keys", async () => {
 	const shortcuts = new Map();
+	const commands = new Map();
 	createJouzuHelpExtension(resolveCatalog("ja").bundle).factory({
+		registerCommand(name, options) {
+			commands.set(name, options);
+		},
 		registerShortcut(shortcut, options) {
 			shortcuts.set(shortcut, options);
 		},
@@ -101,4 +120,9 @@ test("renders the overlay labels from the Japanese catalog with resolved keys", 
 	assert.doesNotMatch(rendered, /Models|All shortcuts/);
 	// The shortcut description Pi shows in its hotkeys table is catalog text too.
 	assert.equal(shortcuts.get("ctrl+/").description, "Jouzu ヘルプを開く");
+	assert.equal(commands.get("help").description, "Jouzu ヘルプを開く");
+	const shortcutRendered = rendered;
+	rendered = "";
+	await commands.get("help").handler("", ctx);
+	assert.equal(rendered, shortcutRendered);
 });

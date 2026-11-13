@@ -255,6 +255,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "help",
+      "registered_extension": true,
+      "english": "Open Jouzu help",
+      "japanese": "Jouzu ヘルプを開く",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.help.overlay.shortcutDescription"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "hotkeys",
       "registered_extension": false,
       "english": "Show all keyboard shortcuts",
