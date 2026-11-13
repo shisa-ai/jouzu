@@ -93,14 +93,14 @@ const SESSION_LINE_GOLDEN = {
 };
 
 const STATUS_BAR_GOLDEN = {
-	"en-48": "日本語 project · [!?↑] · node   19%/200k | ↑124k",
-	"en-80": "日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0          19%/200k | ↑124k ↓9k",
+	"en-48": "日本語 project · [!?↑]     19% | ↑124k | C? | $?",
+	"en-80": "日本語 project · feat/v0.1.2 [!?↑] · node         19%/200k | ↑124k ↓9k | C? | $?",
 	"en-120":
-		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                                  19%/200k | ↑124k ↓9k",
-	"ja-48": "日本語 project · [!?↑] · node   19%/200k | ↑124k",
-	"ja-80": "日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0          19%/200k | ↑124k ↓9k",
+		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                        19%/200k | ↑124k ↓9k | C? | $?",
+	"ja-48": "日本語 project · [!?↑]     19% | ↑124k | C? | $?",
+	"ja-80": "日本語 project · feat/v0.1.2 [!?↑] · node         19%/200k | ↑124k ↓9k | C? | $?",
 	"ja-120":
-		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                                  19%/200k | ↑124k ↓9k",
+		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0                                        19%/200k | ↑124k ↓9k | C? | $?",
 };
 
 test("the Session UI line and status bar are fixed at 48, 80, and 120 columns in en and ja", () => {
@@ -120,7 +120,7 @@ test("the Session UI line and status bar are fixed at 48, 80, and 120 columns in
 test("the required status-bar segments survive at 48 columns in both locales", () => {
 	for (const locale of ["en", "ja"]) {
 		const bar = renderStatusBar(snapshot, 48, plainStyles, text[locale]);
-		assert.ok(bar.includes("19%/200k"), `${locale}: the required context segment was dropped`);
+		assert.ok(bar.includes("19%"), `${locale}: the required context segment was dropped`);
 		assert.ok(bar.includes("日本語 project"), `${locale}: the workspace label was dropped`);
 	}
 });
