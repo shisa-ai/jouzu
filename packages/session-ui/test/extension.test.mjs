@@ -116,11 +116,13 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 				return (
 					(data === "model-key" && action === "app.model.select") ||
 					(data === "cycle-key" && action === "app.model.cycleForward") ||
-					(data === "enter" && action === "tui.input.submit")
+					(data === "\r" && action === "tui.input.submit")
 				);
 			},
 		};
 		const editor = calls.editors[0](tui, theme, keybindings);
+		// Pi installs its command dispatcher after constructing the custom editor.
+		editor.onSubmit = () => assert.fail("Jouzu model commands must not reach Pi's dispatcher");
 		let builtInModelPickerCalls = 0;
 		editor.onAction("app.model.select", () => {
 			builtInModelPickerCalls += 1;
@@ -128,9 +130,9 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		editor.handleInput("model-key");
 		editor.handleInput("cycle-key");
 		editor.setText("/model codex/gpt-test");
-		editor.handleInput("enter");
+		editor.handleInput("\r");
 		editor.setText("/scoped-models");
-		editor.handleInput("enter");
+		editor.handleInput("\r");
 		await new Promise((resolve) => setImmediate(resolve));
 		assert.deepEqual(modelQueries, [undefined, "codex/gpt-test"]);
 		assert.deepEqual(modelCycles, ["forward"]);

@@ -277,16 +277,26 @@ export class SessionPromptEditor extends CustomEditor {
 	) {
 		super(tui, theme, keybindingsManager, { paddingX: 0 });
 		this.borderColor = (value: string) => styles.apply("prompt.border", value);
-		// Pi assigns onSubmit after constructing a custom editor. Replace the base data
-		// property with an accessor so every assignment, including Pi's, crosses the exact
-		// /exit alias before the interactive handler sees the submitted text.
+		// Pi assigns onSubmit after constructing a custom editor. Route the resolved
+		// submission so slash autocomplete and typed commands use the same picker.
 		let submitHandler: ((text: string) => void) | undefined;
 		Object.defineProperty(this, "onSubmit", {
 			configurable: true,
 			enumerable: true,
 			get: () => submitHandler,
 			set: (handler: ((text: string) => void) | undefined) => {
-				submitHandler = handler ? (text) => handler(this.mapExitAlias(text)) : undefined;
+				submitHandler = handler
+					? (text) => {
+							const match = /^\/model(?:\s+(.*))?$/u.exec(text.trim().replace(/^\uFF0F/u, "/"));
+							if (match && this.options.onModelPicker) {
+								void this.openModelPicker(match[1]?.trim() || undefined).then((opened) => {
+									if (!opened) handler(this.mapExitAlias(text));
+								});
+							} else {
+								handler(this.mapExitAlias(text));
+							}
+						}
+					: undefined;
 			},
 		});
 	}
@@ -431,19 +441,6 @@ export class SessionPromptEditor extends CustomEditor {
 						super.handleInput(data);
 					});
 				return;
-			}
-			if (this.options.onModelPicker) {
-				const match = /^\/model(?:\s+(.*))?$/.exec(editorText.trim());
-				if (match) {
-					if (this.onExtensionShortcut?.(data)) return;
-					this.setText("");
-					void this.openModelPicker(match[1]?.trim() || undefined).then((opened) => {
-						if (opened) return;
-						this.setText(editorText);
-						super.handleInput(data);
-					});
-					return;
-				}
 			}
 		}
 		super.handleInput(data);

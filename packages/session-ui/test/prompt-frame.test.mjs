@@ -275,6 +275,61 @@ test("exact /model submission opens the Jouzu picker while slash autocomplete is
 	assert.equal(editor.getText(), "");
 });
 
+test("completed /model commands use Jouzu after autocomplete and preserve fallback", async () => {
+	for (const outcome of [true, false, "throw"]) {
+		const queries = [];
+		const submitted = [];
+		const keys = new KeybindingsManager({
+			"tui.input.submit": { defaultKeys: "enter", description: "Submit" },
+			"tui.select.confirm": { defaultKeys: "enter", description: "Confirm" },
+			"tui.input.tab": { defaultKeys: "tab", description: "Complete" },
+		});
+		const editor = new SessionPromptEditor(tui, editorTheme, keys, plainStyles, {
+			onModelPicker: async (query) => {
+				queries.push(query);
+				if (outcome === "throw") throw new Error("picker unavailable");
+				return outcome;
+			},
+		});
+		editor.onSubmit = (value) => submitted.push(value);
+		editor.setAutocompleteProvider({
+			async getSuggestions() {
+				return { prefix: "/mo", items: [{ value: "model", label: "model" }] };
+			},
+			applyCompletion() {
+				return { lines: ["/model"], cursorLine: 0, cursorCol: 6 };
+			},
+		});
+		editor.setText("/mo");
+		editor.handleInput("\t");
+		await new Promise((resolve) => setImmediate(resolve));
+		assert.equal(editor.isShowingAutocomplete(), true);
+		editor.handleInput("\r");
+		await new Promise((resolve) => setImmediate(resolve));
+		assert.deepEqual(queries, [undefined]);
+		assert.deepEqual(submitted, outcome === true ? [] : ["/model"]);
+		assert.equal(editor.getText(), "");
+	}
+});
+
+test("resolved submission routes model queries and leaves other commands alone", async () => {
+	const queries = [];
+	const submitted = [];
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		onModelPicker: async (query) => {
+			queries.push(query);
+			return true;
+		},
+	});
+	editor.onSubmit = (text) => submitted.push(text);
+	for (const text of ["/model gpt", "／model claude", "/models", "/help", "ordinary input"]) {
+		editor.onSubmit(text);
+		await new Promise((resolve) => setImmediate(resolve));
+	}
+	assert.deepEqual(queries, ["gpt", "claude"]);
+	assert.deepEqual(submitted, ["/models", "/help", "ordinary input"]);
+});
+
 test("removes /scoped-models from autocomplete and intercepts exact manual submission", async () => {
 	let commandCalls = 0;
 	let submitted;
