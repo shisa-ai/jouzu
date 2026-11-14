@@ -1635,6 +1635,12 @@ jouzu-cli-flow-status-blockedRecoveryDecision = 已阻止：已保存的工作�
 jouzu-cli-flow-status-turnInProgress = 模型轮次正在进行中。
 jouzu-cli-flow-status-furtherAutomationPaused = 进一步的自动化已暂停：{ $reason }
 jouzu-cli-flow-status-pausedLine = 已暂停：{ $reason }
+jouzu-cli-flow-pause-interrupted = 回合已中断
+jouzu-cli-flow-pause-reopened = 会话已重新打开
+jouzu-cli-flow-pause-command = 已通过 { $command } 保留
+jouzu-cli-flow-pause-admission = 流控制受理失败（{ $code }）
+jouzu-cli-flow-pause-provider = 提供方请求失败
+jouzu-cli-flow-pause-providerDetail = 提供方请求失败（{ $detail }）
 jouzu-cli-flow-status-resumeAutomation = 使用 /flow resume 恢复自动化，或发送新消息。
 jouzu-cli-flow-status-otherRecoveryBlockersHeading = 其他恢复阻止项
 jouzu-cli-flow-status-statusIncompleteHeading = 状态不完整
@@ -1846,19 +1852,19 @@ jouzu-cli-presentation-status-jobsRunning = { $count ->
    *[other] { $count } 个后台作业运行中
 }
 jouzu-cli-presentation-status-tasksOpen = { $total } 个任务中 { $open } 个未完成
-jouzu-cli-presentation-status-campaigns = { $count ->
-    [one] { $count } 个活动中的批次任务
-   *[other] { $count } 个活动中的批次任务
+jouzu-cli-presentation-status-automatedWork = { $count ->
+    [one] { $count } 项自动化工作进行中
+   *[other] { $count } 项自动化工作进行中
 }
+jouzu-cli-presentation-status-sessionName = “{ $name }”
 jouzu-cli-presentation-status-waits = { $count ->
     [one] { $count } 个等待
    *[other] { $count } 个等待
 }
-jouzu-cli-presentation-status-suspended = { $count } 个已暂停
+jouzu-cli-presentation-status-suspended = { $count } 项已暂停或停止
 jouzu-cli-presentation-status-workIdle = 没有正在运行或排队的工作
 jouzu-cli-presentation-status-flowOn = 开启
 jouzu-cli-presentation-status-flowOff = 关闭
-jouzu-cli-presentation-status-flowPaused = 已暂停：{ $reason }
 jouzu-cli-presentation-status-attentionHeld = { $count ->
     [one] { $count } 条保留的消息
    *[other] { $count } 条保留的消息

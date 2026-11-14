@@ -1471,6 +1471,12 @@ jouzu-cli-flow-status-blockedRecoveryDecision = 已封鎖: 已儲存的工作需
 jouzu-cli-flow-status-turnInProgress = 模型回合正在進行中。
 jouzu-cli-flow-status-furtherAutomationPaused = 進一步的自動化已暫停: { $reason }
 jouzu-cli-flow-status-pausedLine = 已暫停: { $reason }
+jouzu-cli-flow-pause-interrupted = 回合已中斷
+jouzu-cli-flow-pause-reopened = 工作階段已重新開啟
+jouzu-cli-flow-pause-command = 已透過 { $command } 保留
+jouzu-cli-flow-pause-admission = 流程控制受理失敗（{ $code }）
+jouzu-cli-flow-pause-provider = 供應商要求失敗
+jouzu-cli-flow-pause-providerDetail = 供應商要求失敗（{ $detail }）
 jouzu-cli-flow-status-resumeAutomation = 使用 /flow resume 繼續自動化，或傳送新訊息。
 jouzu-cli-flow-status-otherRecoveryBlockersHeading = 其他復原封鎖項
 jouzu-cli-flow-status-statusIncompleteHeading = 狀態不完整
@@ -1619,7 +1625,7 @@ jouzu-cli-presentation-status-label-work = 工作
 jouzu-cli-presentation-status-label-flow = 流程控制
 jouzu-cli-presentation-status-label-textguard = TextGuard
 jouzu-cli-presentation-status-label-attention = 需要處理
-jouzu-cli-presentation-status-label-provider = 提供者
+jouzu-cli-presentation-status-label-provider = 供應商
 jouzu-cli-presentation-status-label-scopedModels = 限定模型
 jouzu-cli-presentation-status-label-runtime = 執行環境
 jouzu-cli-presentation-status-started = 開始於 { $time }（{ $age }前）
@@ -1668,19 +1674,19 @@ jouzu-cli-presentation-status-jobsRunning = { $count ->
    *[other] { $count } 個背景工作執行中
 }
 jouzu-cli-presentation-status-tasksOpen = { $total } 個任務中 { $open } 個未完成
-jouzu-cli-presentation-status-campaigns = { $count ->
-    [one] { $count } 個進行中的批次任務
-   *[other] { $count } 個進行中的批次任務
+jouzu-cli-presentation-status-automatedWork = { $count ->
+    [one] { $count } 項自動化工作進行中
+   *[other] { $count } 項自動化工作進行中
 }
+jouzu-cli-presentation-status-sessionName = 「{ $name }」
 jouzu-cli-presentation-status-waits = { $count ->
     [one] { $count } 個等待
    *[other] { $count } 個等待
 }
-jouzu-cli-presentation-status-suspended = { $count } 個已暫停
+jouzu-cli-presentation-status-suspended = { $count } 項已暫停或停止
 jouzu-cli-presentation-status-workIdle = 沒有正在執行或排隊的工作
 jouzu-cli-presentation-status-flowOn = 開啟
 jouzu-cli-presentation-status-flowOff = 關閉
-jouzu-cli-presentation-status-flowPaused = 已暫停：{ $reason }
 jouzu-cli-presentation-status-attentionHeld = { $count ->
     [one] { $count } 則保留的訊息
    *[other] { $count } 則保留的訊息

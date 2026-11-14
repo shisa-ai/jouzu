@@ -1,6 +1,6 @@
 import { catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
-import { isAdmissionPause } from "./flow-pause.js";
+import { flowPauseText, isAdmissionPause } from "./flow-pause.js";
 import { type FlowStatusContext, FlowStatusMessageId as Id } from "./flow-status-context.js";
 import { formatFlowReport } from "./flow-status-report.js";
 import type { FlowScope } from "./receipt-ledger.js";
@@ -205,7 +205,7 @@ export function formatFlowStatus(
 	if (status.context) return formatFlowReport(status, now, options, catalog);
 	const lines: string[] = [];
 	if (status.paused) {
-		lines.push(`Paused: ${status.paused}`);
+		lines.push(catalogText(catalog, Id.pausedLine, { reason: flowPauseText(status.paused, catalog) }));
 		lines.push(catalogText(catalog, isAdmissionPause(status.paused) ? Id.repairCauseClear : Id.resumeNow));
 		lines.push("");
 	}

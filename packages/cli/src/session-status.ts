@@ -2,6 +2,7 @@ import { basename } from "node:path";
 import type { ExtensionCommandContext, Theme, ThemeColor } from "@earendil-works/pi-coding-agent";
 import { catalogText } from "./cli-messages.js";
 import type { BackgroundJobSnapshot } from "./flow-control/background-adapter.js";
+import { flowPauseText } from "./flow-control/flow-pause.js";
 import type { FlowStatus } from "./flow-control/flow-status.js";
 import type { FlowTask } from "./flow-control/task-producer.js";
 import type { CatalogBundle } from "./locale-catalog.js";
@@ -77,7 +78,8 @@ export interface SessionWorkSummary {
 	flow?: {
 		enabled: boolean;
 		paused?: string;
-		campaigns: number;
+		/** Registered automated work that can still take turns, such as loops and goals. */
+		automated: number;
 		waits: number;
 		suspended: number;
 	};
@@ -179,8 +181,8 @@ export async function collectSessionWork(
 		const status = enabled ? await flow.status().catch(() => undefined) : undefined;
 		summary.flow = {
 			enabled,
-			...(status?.paused ? { paused: sanitizeTerminalText(status.paused) } : {}),
-			campaigns: status?.active.length ?? 0,
+			...(status?.paused ? { paused: flowPauseText(status.paused, catalog, 200) } : {}),
+			automated: status?.active.length ?? 0,
 			waits: status?.waiting.length ?? 0,
 			suspended: status?.suspended.length ?? 0,
 		};
@@ -310,7 +312,7 @@ export function buildSessionStatusSections(input: SessionStatusInput): { heading
 	const name = sessionManager.getSessionName?.();
 	const started = activity.startedAt;
 	const details: Span[][] = [];
-	if (name) details.push(value(`“${sanitizeTerminalText(name)}”`));
+	if (name) details.push(value(text("sessionName", { name: sanitizeTerminalText(name) })));
 	if (started !== undefined)
 		details.push(value(text("started", { time: formatClock(started), age: formatAge(catalog, now - started) })));
 	if (details.length) sessionLines.push(joinSpans(details));
@@ -390,7 +392,7 @@ export function buildSessionStatusSections(input: SessionStatusInput): { heading
 		});
 
 	const sections: Section[] = [identity, usageSection];
-	if (input.work?.known) sections.push(...workSections(input.work, text, label));
+	if (input.work?.known) sections.push(...workSections(input.work, text, label, catalog));
 
 	sections.push([
 		{
@@ -468,13 +470,18 @@ function usageSpans(usage: SessionUsageSnapshot, text: Text): Span[] {
 	return spans;
 }
 
-function workSections(work: SessionWorkSummary, text: Text, label: (key: string) => string): Section[] {
+function workSections(
+	work: SessionWorkSummary,
+	text: Text,
+	label: (key: string) => string,
+	catalog: CatalogBundle,
+): Section[] {
 	const section: Section = [];
 	const items: Span[][] = [];
 	if (work.agentsActive) items.push(value(text("agentsActive", { count: work.agentsActive })));
 	if (work.jobsRunning) items.push(value(text("jobsRunning", { count: work.jobsRunning })));
 	if (work.tasksOpen) items.push(value(text("tasksOpen", { open: work.tasksOpen, total: work.tasksTotal })));
-	if (work.flow?.campaigns) items.push(value(text("campaigns", { count: work.flow.campaigns })));
+	if (work.flow?.automated) items.push(value(text("automatedWork", { count: work.flow.automated })));
 	if (work.flow?.waits) items.push(value(text("waits", { count: work.flow.waits })));
 	if (work.flow?.suspended) items.push(value(text("suspended", { count: work.flow.suspended })));
 	section.push({
@@ -483,7 +490,12 @@ function workSections(work: SessionWorkSummary, text: Text, label: (key: string)
 	});
 	if (work.flow) {
 		const state: Span[] = work.flow.paused
-			? [{ text: text("flowPaused", { reason: work.flow.paused }), role: "warning" }]
+			? [
+					{
+						text: catalogText(catalog, "jouzu.cli.flow.status.pausedLine", { reason: work.flow.paused }),
+						role: "warning",
+					},
+				]
 			: work.flow.enabled
 				? value(text("flowOn"))
 				: [{ text: text("flowOff"), role: "secondary" }];

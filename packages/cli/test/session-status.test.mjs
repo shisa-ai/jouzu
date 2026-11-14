@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { resolveCatalog } from "../dist/locale-catalog.js";
+import { loadCatalog, resolveCatalog } from "../dist/locale-catalog.js";
 import {
 	buildSessionStatusSections,
 	collectSessionWork,
@@ -211,7 +211,7 @@ test("work collection counts producers and lists items that need attention with 
 	assert.equal(work.agentsActive, 1);
 	assert.equal(work.jobsRunning, 1);
 	assert.deepEqual([work.tasksOpen, work.tasksTotal], [1, 2]);
-	assert.deepEqual(work.flow, { enabled: true, campaigns: 1, waits: 2, suspended: 0 });
+	assert.deepEqual(work.flow, { enabled: true, automated: 1, waits: 2, suspended: 0 });
 	assert.deepEqual(
 		work.attention.map((item) => [item.action, item.text, item.route]),
 		[
@@ -225,7 +225,7 @@ test("work collection counts producers and lists items that need attention with 
 	const text = renderSessionStatus(buildSessionStatusSections({ ctx: sessionContext([]), catalog: en, runtime, work }));
 	assert.match(
 		text,
-		/\nWork +1 subagent active · 1 background job running · 1 of 2 tasks open · 1 campaign active · 2 waits\n/,
+		/\nWork +1 subagent active · 1 background job running · 1 of 2 tasks open · 1 automated work item active · 2 waits\n/,
 	);
 	assert.match(text, /\nFlow control +on\n/);
 	assert.match(text, /\nTextGuard +guarded\n/);
@@ -249,10 +249,10 @@ test("idle and paused work states are stated rather than left blank", async () =
 	text = renderSessionStatus(
 		buildSessionStatusSections({ ctx: sessionContext([]), catalog: en, runtime, work: paused }),
 	);
-	assert.match(text, /\nFlow control +paused: provider error\n/);
+	assert.match(text, /\nFlow control +Paused: provider error\n/);
 
 	const off = await collectSessionWork(scope, { flow: flowSource(undefined, { enabled: () => false }) }, en);
-	assert.deepEqual(off.flow, { enabled: false, campaigns: 0, waits: 0, suspended: 0 });
+	assert.deepEqual(off.flow, { enabled: false, automated: 0, waits: 0, suspended: 0 });
 	text = renderSessionStatus(buildSessionStatusSections({ ctx: sessionContext([]), catalog: en, runtime, work: off }));
 	assert.match(text, /\nFlow control +off\n/);
 });
@@ -263,7 +263,7 @@ test("a flow status read failure leaves counts at zero instead of failing the co
 		{ flow: flowSource(undefined, { status: async () => Promise.reject(new Error("ledger unreadable")) }) },
 		en,
 	);
-	assert.deepEqual(work.flow, { enabled: true, campaigns: 0, waits: 0, suspended: 0 });
+	assert.deepEqual(work.flow, { enabled: true, automated: 0, waits: 0, suspended: 0 });
 	assert.deepEqual(work.attention, []);
 });
 
@@ -291,5 +291,91 @@ test("the ja report uses catalog labels and composition", async () => {
 	const text = renderSessionStatus(buildSessionStatusSections({ ctx: sessionContext(branch), catalog: ja, runtime }));
 	assert.match(text, /\n使用量 +入力 1k（キャッシュ 90%） · 出力 10 · ~\$0\.010\n/);
 	assert.match(text, /\nプロファイル +core（適用済み）\n/);
-	assert.doesNotMatch(text, /Session|Usage|Profile|replies|prompts/);
+	assert.match(text, /\n +「fix status layout」 · 開始 /);
 });
+
+// Every catalog, including the zh drafts that are not offered yet, renders the whole report without
+// English fallbacks. Only protected values stay as-is: IDs, versions, commands, modes, and names.
+for (const locale of ["ja", "zh-Hans", "zh-Hant"])
+	test(`the ${locale} catalog localizes every row of a full report`, async () => {
+		const catalog = loadCatalog(locale);
+		const branch = [
+			message("user", 0),
+			message("assistant", 1, {
+				provider: PROVIDER,
+				model: "office-pool/gpt-6-astra",
+				content: [{ type: "toolCall" }],
+				usage: usage(100, 10, 900, 0.01),
+			}),
+			{ type: "compaction", timestamp: at(2), usage: usage(1, 0, 0, 0) },
+			message("assistant", 3, {
+				provider: PROVIDER,
+				model: "office-pool/gpt-6-astra-mini",
+				content: [],
+				usage: usage(5, 1, 0, 0.001),
+			}),
+			message("assistant", 4, { provider: PROVIDER, model: "office-pool/gpt-6-astra", content: [] }),
+		];
+		const work = await collectSessionWork(
+			scope,
+			{
+				agentRuns: () => ({
+					sessionId: SESSION,
+					runs: [run(), run({ id: "done", status: "completed", completion: { revision: "r", handled: false } })],
+				}),
+				flow: flowSource(
+					{
+						...emptyFlowStatus,
+						paused: "held from /flow",
+						held: [{}],
+						retryable: [{}],
+						uncertain: [{}],
+						unaccountable: [{}],
+						waiting: [{}],
+						active: [{}],
+						suspended: [{}],
+					},
+					{
+						jobs: () => [
+							{ id: "j1", sessionId: SESSION, status: "running" },
+							{ id: "j2", sessionId: SESSION, status: "completed", updatedAt: T0 },
+						],
+						tasks: () => [{ taskId: "1", subject: "a", status: "pending", state: "active" }],
+					},
+				),
+				textguard: () => ({ mode: "guarded", pending: 1 }),
+			},
+			catalog,
+		);
+		const named = { ...sessionContext(branch).sessionManager, getSessionName: () => "名前" };
+		const report = (bundle, ctx = sessionContext(branch, { sessionManager: named })) =>
+			renderSessionStatus(
+				buildSessionStatusSections({
+					ctx,
+					catalog: bundle,
+					runtime,
+					snapshot: { git: { status: "known", observedAt: 0, value: { dirty: true, ahead: 0, behind: 1 } } },
+					work,
+					agentRuns: [run()],
+					now: T0 + 3 * 60 * 60_000,
+				}),
+			);
+		const text = report(catalog);
+		const english = report(en);
+		const englishLabels = english
+			.split("\n")
+			.map((line) => line.match(/^(\S.*?)\s{2,}/u)?.[1])
+			.filter((label) => label && label !== "TextGuard");
+		assert.equal(englishLabels.length, 14, "every label row except TextGuard");
+		for (const label of englishLabels)
+			assert.equal(text.includes(label), false, `English label in ${locale}: ${label}`);
+		assert.doesNotMatch(
+			text,
+			/\b(?:session|status|started|ago|clean|uncommitted|detached|thinking|applied|prompts?|repl(?:y|ies)|tool calls?|compactions?|tokens|in|out|cached|records?|subagents?|runs?|jobs?|tasks?|open|automated|work|items?|waits?|paused|stopped|held|messages?|withheld|requests?|turns?|outcome|authority|pending|reviews?|results?|delivered|available|unknown|on|off)\b/i,
+		);
+		// A model was not selected: the warning is localized too.
+		assert.doesNotMatch(
+			report(catalog, sessionContext(branch, { model: undefined, sessionManager: named })),
+			/not selected/,
+		);
+	});

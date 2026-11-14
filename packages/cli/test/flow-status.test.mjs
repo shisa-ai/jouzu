@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import {
+	admissionPause,
+	COMMAND_PAUSE,
+	flowPauseText,
+	INTERRUPTED_PAUSE,
+	providerPause,
+	REOPENED_PAUSE,
+} from "../dist/flow-control/flow-pause.js";
 import { formatFlowStatus, projectFlowStatus } from "../dist/flow-control/flow-status.js";
+import { resolveCatalog } from "../dist/locale-catalog.js";
 
 const scope = { sessionId: "session", branchId: "branch" };
 const wait = (overrides = {}) => ({
@@ -251,6 +260,30 @@ test("inputs sharing one cause are listed under it once", () => {
 	// The cause is stated once and the identities stay whole beneath it, so a reader sees two problems
 	// rather than three lines of the same sentence.
 	assert.match(text, /Held input\n- Waiting for user work\.\n {2}2 inputs: s1, s2\n- s3: Queue is revised\./);
+});
+
+test("pause reasons render in the reader's language and keep codes and provider detail", () => {
+	const ja = resolveCatalog("ja").bundle;
+	const cases = [
+		[INTERRUPTED_PAUSE, "a turn was interrupted", "ターンが中断されました"],
+		[REOPENED_PAUSE, "the session was reopened", "セッションを開き直しました"],
+		[COMMAND_PAUSE, "held from /flow", "/flow で保留中"],
+		[admissionPause("schema"), "flow admission failed (schema)", "フロー制御の受け付けに失敗しました（schema）"],
+		[providerPause(""), "a provider request failed", "プロバイダーへのリクエストが失敗しました"],
+		[
+			providerPause("429 rate limited"),
+			"a provider request failed (429 rate limited)",
+			"プロバイダーへのリクエストが失敗しました（429 rate limited）",
+		],
+		["an unrecognized reason", "an unrecognized reason", "an unrecognized reason"],
+	];
+	for (const [reason, english, japanese] of cases) {
+		// The English catalog reproduces the stored reason, so English output does not change.
+		assert.equal(flowPauseText(reason), english);
+		assert.equal(flowPauseText(reason, ja), japanese);
+	}
+	const text = formatFlowStatus(projectFlowStatus(scope, [], [], [], [], [], INTERRUPTED_PAUSE), 0, {}, ja);
+	assert.match(text, /^一時停止中: ターンが中断されました\n/);
 });
 
 test("a session pause leads the status and names how to release it", () => {

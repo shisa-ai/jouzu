@@ -1602,6 +1602,12 @@ jouzu-cli-flow-status-blockedRecoveryDecision = ブロック中: 保存された
 jouzu-cli-flow-status-turnInProgress = モデルのターンが実行中です。
 jouzu-cli-flow-status-furtherAutomationPaused = 以降の自動実行は一時停止しています: { $reason }
 jouzu-cli-flow-status-pausedLine = 一時停止中: { $reason }
+jouzu-cli-flow-pause-interrupted = ターンが中断されました
+jouzu-cli-flow-pause-reopened = セッションを開き直しました
+jouzu-cli-flow-pause-command = { $command } で保留中
+jouzu-cli-flow-pause-admission = フロー制御の受け付けに失敗しました（{ $code }）
+jouzu-cli-flow-pause-provider = プロバイダーへのリクエストが失敗しました
+jouzu-cli-flow-pause-providerDetail = プロバイダーへのリクエストが失敗しました（{ $detail }）
 jouzu-cli-flow-status-resumeAutomation = `/flow resume` で自動実行を再開するか、新しいメッセージを送信してください。
 jouzu-cli-flow-status-otherRecoveryBlockersHeading = その他の復旧ブロッカー
 jouzu-cli-flow-status-statusIncompleteHeading = 状態が不完全
@@ -1830,19 +1836,19 @@ jouzu-cli-presentation-status-jobsRunning = { $count ->
    *[other] 実行中のバックグラウンドジョブ { $count } 件
 }
 jouzu-cli-presentation-status-tasksOpen = 未完了のタスク { $open }/{ $total } 件
-jouzu-cli-presentation-status-campaigns = { $count ->
-    [one] 有効なキャンペーン { $count } 件
-   *[other] 有効なキャンペーン { $count } 件
+jouzu-cli-presentation-status-automatedWork = { $count ->
+    [one] 自動実行中の作業 { $count } 件
+   *[other] 自動実行中の作業 { $count } 件
 }
+jouzu-cli-presentation-status-sessionName = 「{ $name }」
 jouzu-cli-presentation-status-waits = { $count ->
     [one] 待機 { $count } 件
    *[other] 待機 { $count } 件
 }
-jouzu-cli-presentation-status-suspended = 一時停止中 { $count } 件
+jouzu-cli-presentation-status-suspended = 一時停止または停止中 { $count } 件
 jouzu-cli-presentation-status-workIdle = 実行中または待機中の作業はありません
 jouzu-cli-presentation-status-flowOn = オン
 jouzu-cli-presentation-status-flowOff = オフ
-jouzu-cli-presentation-status-flowPaused = 一時停止中: { $reason }
 jouzu-cli-presentation-status-attentionHeld = { $count ->
     [one] 保留中のメッセージ { $count } 件
    *[other] 保留中のメッセージ { $count } 件

@@ -1625,6 +1625,12 @@ jouzu-cli-flow-status-blockedRecoveryDecision = Blocked: saved work needs a reco
 jouzu-cli-flow-status-turnInProgress = A model turn is in progress.
 jouzu-cli-flow-status-furtherAutomationPaused = Further automation is paused: { $reason }
 jouzu-cli-flow-status-pausedLine = Paused: { $reason }
+jouzu-cli-flow-pause-interrupted = a turn was interrupted
+jouzu-cli-flow-pause-reopened = the session was reopened
+jouzu-cli-flow-pause-command = held from { $command }
+jouzu-cli-flow-pause-admission = flow admission failed ({ $code })
+jouzu-cli-flow-pause-provider = a provider request failed
+jouzu-cli-flow-pause-providerDetail = a provider request failed ({ $detail })
 jouzu-cli-flow-status-resumeAutomation = Resume automation with /flow resume, or send a new message.
 jouzu-cli-flow-status-otherRecoveryBlockersHeading = Other recovery blockers
 jouzu-cli-flow-status-statusIncompleteHeading = Status incomplete
@@ -1836,19 +1842,19 @@ jouzu-cli-presentation-status-jobsRunning = { $count ->
    *[other] { $count } background jobs running
 }
 jouzu-cli-presentation-status-tasksOpen = { $open } of { $total } tasks open
-jouzu-cli-presentation-status-campaigns = { $count ->
-    [one] { $count } campaign active
-   *[other] { $count } campaigns active
+jouzu-cli-presentation-status-automatedWork = { $count ->
+    [one] { $count } automated work item active
+   *[other] { $count } automated work items active
 }
+jouzu-cli-presentation-status-sessionName = “{ $name }”
 jouzu-cli-presentation-status-waits = { $count ->
     [one] { $count } wait
    *[other] { $count } waits
 }
-jouzu-cli-presentation-status-suspended = { $count } suspended
+jouzu-cli-presentation-status-suspended = { $count } paused or stopped
 jouzu-cli-presentation-status-workIdle = Nothing running or queued
 jouzu-cli-presentation-status-flowOn = on
 jouzu-cli-presentation-status-flowOff = off
-jouzu-cli-presentation-status-flowPaused = paused: { $reason }
 jouzu-cli-presentation-status-attentionHeld = { $count ->
     [one] { $count } held message
    *[other] { $count } held messages

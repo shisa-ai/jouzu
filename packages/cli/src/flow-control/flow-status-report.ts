@@ -1,6 +1,7 @@
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import { wrapTerminalWords } from "../command-report.js";
 import type { CatalogBundle } from "../locale-catalog.js";
+import { flowPauseText } from "./flow-pause.js";
 import type { FlowActiveWork, FlowStatus, FlowSuspendedWork } from "./flow-status.js";
 import { flowDisplayText, FlowStatusMessageId as Id } from "./flow-status-context.js";
 
@@ -64,7 +65,7 @@ export function formatFlowReport(
 		lines.push(catalogText(catalog, count === 1 ? Id.blockedOneRequest : Id.blockedManyRequests, { count }));
 		lines.push(catalogText(catalog, Id.correctCauseThenClear));
 		if (status.paused)
-			lines.push(catalogText(catalog, Id.automationAlsoPaused, { reason: flowDisplayText(status.paused) }));
+			lines.push(catalogText(catalog, Id.automationAlsoPaused, { reason: flowPauseText(status.paused, catalog) }));
 		heading(catalogText(catalog, Id.requestsNotSentHeading));
 		for (const request of visible(status.retryable)) {
 			const source = context.requests[request.requestId];
@@ -115,9 +116,9 @@ export function formatFlowReport(
 	} else if (context.turnActive) {
 		lines.push(catalogText(catalog, Id.turnInProgress));
 		if (status.paused)
-			lines.push(catalogText(catalog, Id.furtherAutomationPaused, { reason: flowDisplayText(status.paused) }));
+			lines.push(catalogText(catalog, Id.furtherAutomationPaused, { reason: flowPauseText(status.paused, catalog) }));
 	} else if (status.paused) {
-		lines.push(catalogText(catalog, Id.pausedLine, { reason: flowDisplayText(status.paused) }));
+		lines.push(catalogText(catalog, Id.pausedLine, { reason: flowPauseText(status.paused, catalog) }));
 		lines.push(catalogText(catalog, Id.resumeAutomation));
 	}
 	if (context.recovery?.length) {

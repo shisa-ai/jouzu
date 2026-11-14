@@ -79,7 +79,7 @@ context. Rows appear in this order:
 | --- | --- |
 | Identity | Session ID, then session name and start time; workspace folder name with git branch and change state; model display name and ID, provider name, thinking level; profile |
 | Usage | Prompts, replies, tool calls, and compactions; context occupancy; tokens, cache share, and cost; per-model rows when more than one model or any subagent ran |
-| Work | Active subagents, running background jobs, open tasks, flow-control campaigns and waits; flow-control state; TextGuard mode |
+| Work | Active subagents, running background jobs, open tasks, automated work such as loops and goals, waits, and paused or stopped work; flow-control state; TextGuard mode |
 | Needs attention | One line per pending item, with the command that handles it |
 | Technical | Provider runtime key, scoped-model count, Jouzu and Pi versions |
 

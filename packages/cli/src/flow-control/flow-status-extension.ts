@@ -2,7 +2,7 @@ import type { InlineExtension } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
 import { renderFlowMessage } from "./flow-message-renderer.js";
-import { COMMAND_PAUSE, INTERRUPTED_PAUSE, isProviderPause, REOPENED_PAUSE } from "./flow-pause.js";
+import { COMMAND_PAUSE, flowPauseText, INTERRUPTED_PAUSE, isProviderPause, REOPENED_PAUSE } from "./flow-pause.js";
 import { type FlowUnaccountableWork, formatFlowStatus, projectFlowStatus } from "./flow-status.js";
 import { captureFlowStatusContext, flowDisplayText, FlowStatusMessageId as Id } from "./flow-status-context.js";
 import { nativeHoldHash, nativeHoldPending } from "./native-request-store.js";
@@ -413,7 +413,9 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								notify(
 									ingress.pauseAutomated(COMMAND_PAUSE)
 										? catalogText(catalog, Id.pausedEveryTurn)
-										: catalogText(catalog, Id.alreadyPaused, { reason: ingress.automatedPause() ?? "" }),
+										: catalogText(catalog, Id.alreadyPaused, {
+												reason: flowPauseText(ingress.automatedPause() ?? "", catalog),
+											}),
 								);
 								return;
 							}
