@@ -40,6 +40,14 @@ Run `/help` or press `Ctrl+/` to open Jouzu Help. Both routes open the same
 localized overlay with the effective model-picker, model-cycle, and close keys.
 Use the displayed close key or press `Ctrl+/` again to dismiss it.
 
+## Plugins and customization
+
+Run `/plugins` for package installation commands, the visible package-gallery URL,
+and guidance on modifying extensions or the client itself. The guide appears in
+the transcript without starting a model turn or adding model context. Opening it
+does not browse the web, install packages, or change configuration. It also appears
+in `/help` and slash-command completion.
+
 ## Session status bar
 
 The right side shows context, cumulative tokens, cache share, and cost:

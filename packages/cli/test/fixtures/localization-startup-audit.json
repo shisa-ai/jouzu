@@ -435,6 +435,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "plugins",
+      "registered_extension": true,
+      "english": "Discover plugins and customize Jouzu",
+      "japanese": "プラグインを探してJouzuをカスタマイズ",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.plugins.description"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "quit",
       "registered_extension": false,
       "english": "Quit Jouzu",

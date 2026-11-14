@@ -62,6 +62,7 @@ test("registers /help and shortcuts with the same overlay and effective bindings
 	assert.match(rendered, /Ctrl\+X close/);
 	assert.match(rendered, /Ctrl\+\/ or Ctrl\+\?.*Help/);
 	assert.doesNotMatch(rendered, /Ctrl\+L|Ctrl\+P|Esc close/);
+	assert.match(rendered, /\/plugins.*Plugins and customization/);
 	assert.match(rendered, /\/hotkeys/);
 	assert.match(rendered, /\/scrollback.*Export transcript/);
 	const shortcutRendered = rendered;

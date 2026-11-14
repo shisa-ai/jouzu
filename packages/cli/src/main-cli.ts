@@ -526,12 +526,14 @@ export async function runMainCli(args: string[]): Promise<void> {
 		presentation,
 		{ createJouzuModelPicker },
 		{ createJouzuHelpExtension },
+		{ createPluginsExtension },
 		{ createScrollbackExtension },
 		{ createSessionUiExtension, SESSION_UI_MESSAGE_IDS, WorkDashboardController, selectWork },
 	] = await Promise.all([
 		import("./presentation.js"),
 		import("./model-picker.js"),
 		import("./help.js"),
+		import("./plugins.js"),
 		import("./scrollback.js"),
 		import("./session-ui/index.js"),
 	]);
@@ -830,6 +832,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				modelPicker.workflowExtension,
 				createAstraCompatibilityExtension(),
 				createFastModeExtension(preRuntime.catalog.bundle),
+				createPluginsExtension(preRuntime.catalog.bundle),
 				createResponsesToolSchemaExtension(),
 				voice,
 				help,

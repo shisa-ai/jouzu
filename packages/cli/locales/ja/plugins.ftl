@@ -1,0 +1,10 @@
+jouzu-cli-plugins-title = プラグインとカスタマイズ
+jouzu-cli-plugins-description = プラグインを探してJouzuをカスタマイズ
+jouzu-cli-helpOverlay-plugins = { $command }{"  "}プラグインとカスタマイズ
+jouzu-cli-plugins-introduction = JouzuはPiのカスタマイズ性を受け継いでいます。拡張機能をインストールしたり、スキル、プロンプト、テーマを追加したり、エージェントのクライアント自体を変更して自分に合ったものにできます。Piパッケージを探す: { $url }
+jouzu-cli-plugins-install = ターミナルからパッケージをインストール:
+jouzu-cli-plugins-manage = 設定済みパッケージは{ $list }で確認し、{ $remove }で削除できます。Jouzuで{ $reload }を実行すると、拡張機能やその他のリソースを再読み込みします。
+jouzu-cli-plugins-warning = サードパーティのパッケージは、あなたのユーザー権限で動作します。インストール前に内容を確認してください。互換性はパッケージ、Piのバージョン、OSによって異なります。
+jouzu-cli-plugins-customizeTitle = プラグイン以外もカスタマイズできます。
+jouzu-cli-plugins-customize = Jouzuには、拡張機能の作成、インターフェースや動作の変更、独自クライアントの構築に関するドキュメントが含まれています。そのドキュメントを使って、Jouzuをあなたの作業に合わせるお手伝いができます。拡張機能の変更は{ $reload }で読み込めます。クライアント自体の変更には、再ビルドと再起動が必要な場合があります。
+jouzu-cli-plugins-question = 何を追加・変更したいですか？

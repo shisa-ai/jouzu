@@ -1,0 +1,10 @@
+jouzu-cli-plugins-title = 外掛與自訂
+jouzu-cli-plugins-description = 尋找外掛並自訂Jouzu
+jouzu-cli-helpOverlay-plugins = { $command }{"  "}外掛與自訂
+jouzu-cli-plugins-introduction = Jouzu繼承了Pi的可自訂性：你可以安裝擴充功能，新增技能、提示範本和主題，也可以修改代理程式用戶端本身，讓它符合自己的需求。瀏覽Pi套件：{ $url }
+jouzu-cli-plugins-install = 從終端機安裝套件：
+jouzu-cli-plugins-manage = 使用{ $list }查看已設定的套件，使用{ $remove }移除套件。在Jouzu中執行{ $reload }可重新載入擴充功能和其他資源。
+jouzu-cli-plugins-warning = 第三方套件以你的使用者權限執行。安裝前請檢查其內容；相容性取決於套件、Pi版本和作業系統。
+jouzu-cli-plugins-customizeTitle = 自訂不止於外掛。
+jouzu-cli-plugins-customize = Jouzu附帶編寫擴充功能、修改介面和行為以及建立自己的用戶端的文件。我可以使用這些文件，協助你依照工作方式調整Jouzu。擴充功能的修改可透過{ $reload }載入；用戶端本身的修改可能需要重新建置和啟動。
+jouzu-cli-plugins-question = 你想新增或修改什麼？

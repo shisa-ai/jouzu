@@ -1,0 +1,10 @@
+jouzu-cli-plugins-title = Plugins and customization
+jouzu-cli-plugins-description = Discover plugins and customize Jouzu
+jouzu-cli-helpOverlay-plugins = { $command }{"  "}Plugins and customization
+jouzu-cli-plugins-introduction = Jouzu inherits Pi’s customizability: you can install extensions, add skills, prompts, and themes, or change the agent client itself to make it your own. Browse Pi packages: { $url }
+jouzu-cli-plugins-install = Install a package from your terminal:
+jouzu-cli-plugins-manage = Use { $list } to see configured packages and { $remove } to remove one. Run { $reload } in Jouzu to reload extensions and other resources.
+jouzu-cli-plugins-warning = Third-party packages run with your user permissions. Review them before installing; compatibility depends on the package, Pi version, and operating system.
+jouzu-cli-plugins-customizeTitle = Customization can go beyond plugins.
+jouzu-cli-plugins-customize = Jouzu includes documentation for writing extensions, changing its interface and behavior, and building your own client. I can use that documentation to help adapt Jouzu to your workflow. Extension changes can be loaded with { $reload }; changes to the client itself may require a rebuild and restart.
+jouzu-cli-plugins-question = What would you like to add or change?

@@ -48,6 +48,7 @@ The first launch asks for interface and response languages separately and offers
 | `Ctrl+P` | Cycle favorite models |
 | `/language` | Preview and save interface, response and artifact languages |
 | `/fast on`, `/fast off` | Request priority or standard processing on supported models |
+| `/plugins` | Learn how to install Pi packages and customize Jouzu |
 | `/workflow` | Configure agents and inspect child runs |
 | `/goal`, `/multiloop` | Manage goals and loops |
 | `/bg` | Manage background jobs |
