@@ -14,6 +14,7 @@ import type { JouzuMetadata } from "./metadata.js";
 import { buildModelGuidance } from "./model-guidance.js";
 import { type PromptFeatureState, promptCapabilities } from "./prompt-capabilities.js";
 import type { ProfileSelection } from "./runtime.js";
+import type { SessionStatusSources } from "./session-status.js";
 import { detectTerminalColorMode, fitTerminalText, type TerminalColorMode } from "./terminal-layout.js";
 
 export { isInteractivePiStartup } from "./interactive-startup.js";
@@ -32,24 +33,6 @@ const PRESENTATION_IDS = {
 	windowTitleSession: "jouzu.cli.presentation.windowTitle.session",
 	bannerVersionJouzu: "jouzu.cli.presentation.bannerVersion.jouzu",
 	bannerVersionPi: "jouzu.cli.presentation.bannerVersion.pi",
-	statusModelNotSelected: "jouzu.cli.presentation.status.modelNotSelected",
-	statusProfileNotApplied: "jouzu.cli.presentation.status.profileNotApplied",
-	statusScopedModelsAll: "jouzu.cli.presentation.status.scopedModelsAll",
-	statusContextUsage: "jouzu.cli.presentation.status.contextUsage",
-	// The `/status` block's heading and field labels. The session, workspace,
-	// model, thinking level, context usage, scoped-model count, profile id, and
-	// version values are protected values passed as arguments; only the label and
-	// the `applied` state word move here.
-	statusHeading: "jouzu.cli.presentation.status.heading",
-	statusSession: "jouzu.cli.presentation.status.session",
-	statusWorkspace: "jouzu.cli.presentation.status.workspace",
-	statusModel: "jouzu.cli.presentation.status.model",
-	statusThinking: "jouzu.cli.presentation.status.thinking",
-	statusContext: "jouzu.cli.presentation.status.context",
-	statusScopedModels: "jouzu.cli.presentation.status.scopedModels",
-	statusProfile: "jouzu.cli.presentation.status.profile",
-	statusRuntime: "jouzu.cli.presentation.status.runtime",
-	statusProfileApplied: "jouzu.cli.presentation.status.profileApplied",
 	commandStatusDescription: "jouzu.cli.presentation.command.statusDescription",
 } as const;
 
@@ -108,6 +91,8 @@ export interface BannerRenderOptions {
 	 * existing guidance is unchanged.
 	 */
 	responseLanguageSection?: () => string | undefined;
+	/** Live producers `/status` reports on: cached git state, subagents, flow control, and TextGuard. */
+	status?: SessionStatusSources;
 }
 
 function envFlagIsTrue(value: string | undefined): boolean {
@@ -542,43 +527,29 @@ export function createJouzuPresentationExtension(
 			pi.registerCommand("status", {
 				description: catalogText(catalog, PRESENTATION_IDS.commandStatusDescription),
 				handler: async (_args, ctx) => {
-					const model = ctx.model
-						? `${ctx.model.provider}/${ctx.model.id}`
-						: catalogText(catalog, PRESENTATION_IDS.statusModelNotSelected);
-					const usage = ctx.getContextUsage();
-					const context = usage
-						? catalogText(catalog, PRESENTATION_IDS.statusContextUsage, {
-								tokens: String(usage.tokens ?? "unknown"),
-								window: String(usage.contextWindow),
-								percent: String(usage.percent ?? "unknown"),
-							})
-						: "unknown";
-					const scopedModels =
-						ctx.scopedModels.length === 0
-							? catalogText(catalog, PRESENTATION_IDS.statusScopedModelsAll)
-							: String(ctx.scopedModels.length);
-					const applied = profile.appliedManifestSha256
-						? catalogText(catalog, PRESENTATION_IDS.statusProfileApplied)
-						: catalogText(catalog, PRESENTATION_IDS.statusProfileNotApplied);
-					ctx.ui.notify(
-						[
-							catalogText(catalog, PRESENTATION_IDS.statusHeading),
-							catalogText(catalog, PRESENTATION_IDS.statusSession, {
-								id: ctx.sessionManager.getSessionId(),
-							}),
-							catalogText(catalog, PRESENTATION_IDS.statusWorkspace, { name: basename(ctx.cwd) || "workspace" }),
-							catalogText(catalog, PRESENTATION_IDS.statusModel, { model }),
-							catalogText(catalog, PRESENTATION_IDS.statusThinking, { level: ctx.thinkingLevel ?? "off" }),
-							catalogText(catalog, PRESENTATION_IDS.statusContext, { context }),
-							catalogText(catalog, PRESENTATION_IDS.statusScopedModels, { models: scopedModels }),
-							catalogText(catalog, PRESENTATION_IDS.statusProfile, { id: profile.id, state: applied }),
-							catalogText(catalog, PRESENTATION_IDS.statusRuntime, {
-								jouzu: metadata.displayVersion,
-								pi: metadata.piVersion,
-							}),
-						].join("\n"),
-						"info",
+					const { buildSessionStatusSections, collectSessionWork, renderSessionStatus } = await import(
+						"./session-status.js"
 					);
+					const sources = options.status ?? {};
+					const sessionId = ctx.sessionManager.getSessionId();
+					const scope = { sessionId, branchId: ctx.sessionManager.getLeafId() ?? "root" };
+					const work = await collectSessionWork(scope, sources, catalog);
+					const agents = sources.agentRuns?.();
+					const snapshot = sources.snapshot?.();
+					const report = buildSessionStatusSections({
+						ctx,
+						catalog,
+						runtime: {
+							jouzuVersion: metadata.displayVersion,
+							piVersion: metadata.piVersion,
+							profileId: profile.id,
+							profileApplied: Boolean(profile.appliedManifestSha256),
+						},
+						...(snapshot ? { snapshot } : {}),
+						work,
+						...(agents?.sessionId === sessionId ? { agentRuns: agents.runs } : {}),
+					});
+					ctx.ui.notify(renderSessionStatus(report, ctx.mode === "tui" ? ctx.ui.theme : undefined), "info");
 				},
 			});
 		},

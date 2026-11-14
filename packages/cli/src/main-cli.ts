@@ -793,6 +793,27 @@ export async function runMainCli(args: string[]): Promise<void> {
 						subagentsEnabled: modelPicker.workflowService.subagentsEnabled(),
 						flowEnabled: flow?.enabled() ?? false,
 					}),
+					status: {
+						snapshot: () => sessionUi.statusSnapshot(),
+						agentRuns: () => ({
+							sessionId: modelPicker.workflowService.sessionId(),
+							runs: modelPicker.workflowService.runs(),
+						}),
+						...(flow
+							? {
+									flow: {
+										enabled: () => flow.enabled(),
+										status: () => flow.dashboardStatus(),
+										jobs: () => flow.dashboardWork.jobs(),
+										tasks: () => flow.dashboardWork.tasks(),
+									},
+								}
+							: {}),
+						textguard: (sessionId) => ({
+							mode: nativeTextguard.currentMode(),
+							pending: nativeTextguard.forSession(sessionId)?.reviews().length ?? 0,
+						}),
+					},
 				}),
 				sessionUi,
 				// Account commands must run before model-availability input checks.

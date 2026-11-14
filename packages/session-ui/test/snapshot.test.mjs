@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { estimateTokens, SessionManager } from "@earendil-works/pi-coding-agent";
 
-import { createSessionStatusSnapshot } from "../dist/index.js";
+import { createSessionStatusSnapshot, summarizeSessionActivity } from "../dist/index.js";
 
 function context(overrides = {}) {
 	return {
@@ -181,4 +181,69 @@ test("labels incomplete context and usage honestly", () => {
 	});
 	assert.equal(snapshot.usage.status, "partial");
 	assert.equal(snapshot.usage.value.unknownMessageCount, 1);
+});
+
+test("summarizes branch activity and splits reply usage by model in first-use order", () => {
+	const reply = (minute, provider, model, content, usage) => ({
+		type: "message",
+		timestamp: new Date(Date.UTC(2026, 10, 14, 5, minute)).toISOString(),
+		message: { role: "assistant", provider, model, content, ...(usage ? { usage } : {}) },
+	});
+	const entries = [
+		{ type: "message", timestamp: "2026-11-14T05:00:00.000Z", message: { role: "user", content: "hi" } },
+		reply(1, "p", "big", [{ type: "toolCall" }, { type: "text" }, { type: "toolCall" }], {
+			input: 10,
+			output: 4,
+			cacheRead: 30,
+			cacheWrite: 0,
+			cost: { total: 0.5, totalFromProvider: true },
+		}),
+		{ type: "message", timestamp: "2026-11-14T05:02:00.000Z", message: { role: "toolResult", content: [] } },
+		{
+			type: "compaction",
+			timestamp: "2026-11-14T05:03:00.000Z",
+			usage: { input: 1, output: 1, cacheRead: 0, cacheWrite: 0 },
+		},
+		{ type: "message", timestamp: "2026-11-14T05:04:00.000Z", message: { role: "user", content: "more" } },
+		reply(5, "p", "small", [], { input: 6, output: 2, cacheRead: 0, cacheWrite: 0, cost: { total: 0 } }),
+		reply(6, "p", "big", [{ type: "toolCall" }]),
+	];
+	const summary = summarizeSessionActivity({
+		getBranch: () => entries,
+		getHeader: () => ({ type: "session", timestamp: "2026-11-14T04:59:00.000Z" }),
+	});
+	assert.deepEqual(
+		{ ...summary, models: undefined },
+		{
+			prompts: 2,
+			responses: 3,
+			toolCalls: 3,
+			compactions: 1,
+			startedAt: Date.UTC(2026, 10, 14, 4, 59),
+			lastActivityAt: Date.UTC(2026, 10, 14, 5, 6),
+			models: undefined,
+		},
+	);
+	assert.deepEqual(
+		summary.models.map((model) => [model.modelId, model.responses]),
+		[
+			["big", 2],
+			["small", 1],
+		],
+	);
+	const [big, small] = summary.models;
+	// The reply without saved usage keeps the known sum but marks it incomplete.
+	assert.equal(big.usage.inputTokens, 40);
+	assert.equal(big.usage.cost, 0.5);
+	assert.equal(big.usage.costEstimated, false);
+	assert.equal(big.usage.costComplete, false);
+	assert.equal(big.usage.unknownMessageCount, 1);
+	// A placeholder zero is not a cost.
+	assert.equal(small.usage.cost, null);
+	assert.equal(small.usage.costComplete, false);
+});
+
+test("an empty session has no start time or models", () => {
+	const summary = summarizeSessionActivity({ getBranch: () => [], getHeader: () => null });
+	assert.deepEqual(summary, { prompts: 0, responses: 0, toolCalls: 0, compactions: 0, models: [] });
 });

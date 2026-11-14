@@ -70,6 +70,41 @@ A provider-reported zero displays as `$0.000`; a placeholder zero does not imply
 free usage. Narrow terminals shorten or omit lower-priority segments while
 preserving context and any visible cost qualifiers.
 
+## Session status command
+
+`/status` prints a report in the transcript. It adds nothing to the model's
+context. Rows appear in this order:
+
+| Group | Rows |
+| --- | --- |
+| Identity | Session ID, then session name and start time; workspace folder name with git branch and change state; model display name and ID, provider name, thinking level; profile |
+| Usage | Prompts, replies, tool calls, and compactions; context occupancy; tokens, cache share, and cost; per-model rows when more than one model or any subagent ran |
+| Work | Active subagents, running background jobs, open tasks, flow-control campaigns and waits; flow-control state; TextGuard mode |
+| Needs attention | One line per pending item, with the command that handles it |
+| Technical | Provider runtime key, scoped-model count, Jouzu and Pi versions |
+
+The session ID comes first because support requests start from it. The
+workspace row shows the folder name, not the path, so the report can be shared.
+
+Usage counts the active branch and uses the status bar's notation: `~` marks an
+estimated cost and `+ ?` marks usage with unknown cost. Subagents run in
+separate sessions, so each subagent model gets its own row marked
+`subagent run`, and the Usage total excludes them. Git state is the status
+bar's last reading.
+
+Work rows read the same producers as the work dashboard. A producer that has
+not attached is left out rather than reported as idle. When every attached
+producer is idle, Work reads `Nothing running or queued`.
+
+In Needs attention, `!` marks an item that holds automated work until you act:
+a held message, a withheld request, a turn with an unknown outcome, work the
+session has no authority for, or a pending TextGuard review. `·` marks a
+finished subagent or job result that has not reached the model yet.
+
+In the TUI, labels use the theme's muted color and values its text color;
+warnings use the warning color. The `!` and `·` markers carry their meaning
+without color. RPC and print modes produce the same text without styling.
+
 ## Key assignment rules
 
 1. **Every action must be reachable without a modified key.** Modified keys are accelerators. `Ctrl`, `Alt`, `Shift`, and `Super` combinations that a legacy terminal cannot encode are unavailable to some users on every platform; see [Encoding and line discipline](key-collisions.md#encoding-and-line-discipline). A recorded decision may accept an accelerator-only action; the current exception is Models favorite (`jouzu.model.toggleFavorite`), recorded in [Palette primary and secondary actions](palette-ux.md#primary-and-secondary-actions).

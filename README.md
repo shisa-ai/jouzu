@@ -54,7 +54,7 @@ The first launch asks for interface and response languages separately and offers
 | `/flow` | Show why automatic work stopped and how to resume it |
 | `/voice` or `Ctrl+\` | Start or stop dictation |
 | `/textguard` | Review flagged content |
-| `/status` | Show session, model, and context usage |
+| `/status` | Show session details, model, usage and cost, running work, and items that need attention |
 | `/bug` | Draft a bug report |
 | `/scrollback` | Export the conversation to terminal scrollback for search and selection |
 | `Ctrl+/` or `/hotkeys` | Help and shortcuts |

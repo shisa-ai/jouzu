@@ -1606,16 +1606,111 @@ jouzu-cli-presentation-status-profileNotApplied = 未套用
 jouzu-cli-presentation-status-scopedModelsAll = 全部可用
 jouzu-cli-presentation-status-contextUsage = { $tokens }/{ $window } 個權杖（{ $percent }%）
 jouzu-cli-presentation-status-heading = Jouzu 工作階段狀態
-jouzu-cli-presentation-status-session = session: { $id }
-jouzu-cli-presentation-status-workspace = workspace: { $name }
-jouzu-cli-presentation-status-model = model: { $model }
-jouzu-cli-presentation-status-thinking = thinking: { $level }
-jouzu-cli-presentation-status-context = context: { $context }
-jouzu-cli-presentation-status-scopedModels = scoped models: { $models }
-jouzu-cli-presentation-status-profile = profile: { $id } ({ $state })
-jouzu-cli-presentation-status-runtime = runtime: Jouzu { $jouzu } · Pi { $pi }
 jouzu-cli-presentation-status-profileApplied = 已套用
-jouzu-cli-presentation-command-statusDescription = 顯示目前的 Jouzu 工作階段、模型、內容與設定檔狀態
+jouzu-cli-presentation-status-label-session = 工作階段
+jouzu-cli-presentation-status-label-workspace = 工作區
+jouzu-cli-presentation-status-label-model = 模型
+jouzu-cli-presentation-status-label-profile = 設定檔
+jouzu-cli-presentation-status-label-activity = 活動
+jouzu-cli-presentation-status-label-context = 上下文
+jouzu-cli-presentation-status-label-usage = 用量
+jouzu-cli-presentation-status-label-models = 依模型
+jouzu-cli-presentation-status-label-work = 工作
+jouzu-cli-presentation-status-label-flow = 流程控制
+jouzu-cli-presentation-status-label-textguard = TextGuard
+jouzu-cli-presentation-status-label-attention = 需要處理
+jouzu-cli-presentation-status-label-provider = 提供者
+jouzu-cli-presentation-status-label-scopedModels = 限定模型
+jouzu-cli-presentation-status-label-runtime = 執行環境
+jouzu-cli-presentation-status-started = 開始於 { $time }（{ $age }前）
+jouzu-cli-presentation-status-ageUnderMinute = 不到 1 分鐘
+jouzu-cli-presentation-status-ageMinutes = { $minutes } 分鐘
+jouzu-cli-presentation-status-ageHours = { $hours } 小時 { $minutes } 分鐘
+jouzu-cli-presentation-status-ageDays = { $days } 天 { $hours } 小時
+jouzu-cli-presentation-status-gitClean = 無變更
+jouzu-cli-presentation-status-gitChanged = 有未提交的變更
+jouzu-cli-presentation-status-thinking = 思考 { $level }
+jouzu-cli-presentation-status-unknown = 未知
+jouzu-cli-presentation-status-prompts = { $count ->
+    [one] { $count } 則提示
+   *[other] { $count } 則提示
+}
+jouzu-cli-presentation-status-responses = { $count ->
+    [one] { $count } 則回覆
+   *[other] { $count } 則回覆
+}
+jouzu-cli-presentation-status-toolCalls = { $count ->
+    [one] { $count } 次工具呼叫
+   *[other] { $count } 次工具呼叫
+}
+jouzu-cli-presentation-status-compactions = { $count ->
+    [one] { $count } 次壓縮
+   *[other] { $count } 次壓縮
+}
+jouzu-cli-presentation-status-subagentRuns = { $count ->
+    [one] { $count } 次子代理執行
+   *[other] { $count } 次子代理執行
+}
+jouzu-cli-presentation-status-tokensIn = 輸入 { $tokens }
+jouzu-cli-presentation-status-tokensOut = 輸出 { $tokens }
+jouzu-cli-presentation-status-tokensInCached = 輸入 { $tokens }（快取 { $percent }%）
+jouzu-cli-presentation-status-profileValue = { $id }（{ $state }）
+jouzu-cli-presentation-status-usageIncomplete = { $count ->
+    [one] （{ $count } 筆紀錄缺少用量）
+   *[other] （{ $count } 筆紀錄缺少用量）
+}
+jouzu-cli-presentation-status-agentsActive = { $count ->
+    [one] { $count } 個子代理執行中
+   *[other] { $count } 個子代理執行中
+}
+jouzu-cli-presentation-status-jobsRunning = { $count ->
+    [one] { $count } 個背景工作執行中
+   *[other] { $count } 個背景工作執行中
+}
+jouzu-cli-presentation-status-tasksOpen = { $total } 個任務中 { $open } 個未完成
+jouzu-cli-presentation-status-campaigns = { $count ->
+    [one] { $count } 個進行中的批次任務
+   *[other] { $count } 個進行中的批次任務
+}
+jouzu-cli-presentation-status-waits = { $count ->
+    [one] { $count } 個等待
+   *[other] { $count } 個等待
+}
+jouzu-cli-presentation-status-suspended = { $count } 個已暫停
+jouzu-cli-presentation-status-workIdle = 沒有正在執行或排隊的工作
+jouzu-cli-presentation-status-flowOn = 開啟
+jouzu-cli-presentation-status-flowOff = 關閉
+jouzu-cli-presentation-status-flowPaused = 已暫停：{ $reason }
+jouzu-cli-presentation-status-attentionHeld = { $count ->
+    [one] { $count } 則保留的訊息
+   *[other] { $count } 則保留的訊息
+}
+jouzu-cli-presentation-status-attentionRetryable = { $count ->
+    [one] { $count } 個已保留的要求
+   *[other] { $count } 個已保留的要求
+}
+jouzu-cli-presentation-status-attentionUncertain = { $count ->
+    [one] { $count } 個結果不明的回合
+   *[other] { $count } 個結果不明的回合
+}
+jouzu-cli-presentation-status-attentionUnaccountable = { $count ->
+    [one] { $count } 項此工作階段無權處理的工作
+   *[other] { $count } 項此工作階段無權處理的工作
+}
+jouzu-cli-presentation-status-attentionTextguard = { $count ->
+    [one] { $count } 項 TextGuard 審查待處理
+   *[other] { $count } 項 TextGuard 審查待處理
+}
+jouzu-cli-presentation-status-attentionAgentResults = { $count ->
+    [one] { $count } 個子代理結果尚未送達
+   *[other] { $count } 個子代理結果尚未送達
+}
+jouzu-cli-presentation-status-attentionJobResults = { $count ->
+    [one] { $count } 個工作結果尚未送達
+   *[other] { $count } 個工作結果尚未送達
+}
+jouzu-cli-presentation-status-runtimeValue = Jouzu { $jouzu } · Pi { $pi }
+jouzu-cli-presentation-command-statusDescription = 顯示工作階段詳情、用量和正在執行的工作
 jouzu-cli-classicHost-mcpUnavailable = 此工作階段未啟用內建的 Model Context Protocol (MCP) 連線。請改用 Jouzu 的檔案與網頁工具。
 jouzu-cli-keybindings-action-conflictDetail = ；與 { $action } 衝突
 jouzu-cli-keybindings-action-currentDetail = ；目前為 { $binding }

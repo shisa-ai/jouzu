@@ -50,7 +50,15 @@ function interactiveContext() {
 		model: { provider: "anthropic", id: "claude-test" },
 		thinkingLevel: "high",
 		scopedModels: [{}, {}],
-		sessionManager: { getSessionId: () => "session-test-123" },
+		isIdle: () => true,
+		sessionManager: {
+			getSessionId: () => "session-test-123",
+			getLeafId: () => "leaf",
+			getBranch: () => [],
+			getHeader: () => null,
+			getSessionName: () => undefined,
+			buildSessionProjection: () => ({ messages: [] }),
+		},
 		getContextUsage: () => ({ tokens: 12_345, contextWindow: 200_000, percent: 6.2 }),
 		ui: {
 			theme: identityTheme,
@@ -465,16 +473,19 @@ test("registers a provider-neutral session status command without exposing paths
 	assert.equal(commands.has("jouzu"), false);
 	await commands.get("status").handler("", ctx);
 	assert.equal(calls.notifications.length, 1);
-	const message = calls.notifications[0][0];
-	assert.match(message, /session: session-test-123/);
-	assert.match(message, /workspace: 日本語 project/);
-	assert.match(message, /model: anthropic\/claude-test/);
-	assert.match(message, /thinking: high/);
-	assert.match(message, /context: 12345\/200000 tokens \(6\.2%\)/);
-	assert.match(message, /scoped models: 2/);
-	assert.match(message, /profile: core \(not applied\)/);
-	assert.match(message, /runtime: Jouzu 0\.1\.0 · Pi 0\.84\.2/);
+	const [message, level] = calls.notifications[0];
+	assert.equal(level, "info");
+	assert.match(message, /^Jouzu session status\n/);
+	assert.match(message, /\nSession +session-test-123\n/);
+	assert.match(message, /\nWorkspace +日本語 project\n/);
+	assert.match(message, /\nModel +claude-test\n +anthropic · thinking high\n/);
+	assert.match(message, /\nProfile +core \(not applied\)\n/);
+	assert.match(message, /\nContext +12k\/200k tokens \(6%\)\n/);
+	assert.match(message, /\nScoped models +2\n/);
+	assert.match(message, /\nRuntime +Jouzu 0\.1\.0 · Pi 0\.84\.2$/);
 	assert.doesNotMatch(message, /\/work\//);
+	// With no work producers wired, the report leaves the work rows out rather than claiming idle.
+	assert.doesNotMatch(message, /\nWork |Nothing running/);
 });
 
 test("session status labels unavailable model and context facts honestly", async () => {
@@ -486,10 +497,23 @@ test("session status labels unavailable model and context facts honestly", async
 	ctx.getContextUsage = () => ({ tokens: null, contextWindow: 128_000, percent: null });
 	await commands.get("status").handler("", ctx);
 	const message = calls.notifications[0][0];
-	assert.match(message, /model: not selected/);
-	assert.match(message, /thinking: off/);
-	assert.match(message, /context: unknown\/128000 tokens \(unknown%\)/);
-	assert.match(message, /scoped models: all available/);
+	assert.match(message, /\nModel +not selected\n/);
+	assert.match(message, /\nContext +unknown\/128k tokens \(\?%\)\n/);
+	assert.match(message, /\nScoped models +all available\n/);
+	assert.match(message, /\nProvider +—\n/);
+});
+
+test("session status styles labels and values through the theme in the TUI only", async () => {
+	const { commands } = installExtension();
+	const { calls, ctx } = interactiveContext();
+	ctx.ui.theme = { bold: (text) => text, fg: (color, text) => `<${color}>${text}</${color}>` };
+	await commands.get("status").handler("", ctx);
+	const styled = calls.notifications[0][0];
+	assert.match(styled, /^<accent>Jouzu session status<\/accent>\n/);
+	assert.match(styled, /<muted>Session +<\/muted><text>session-test-123<\/text>/);
+	ctx.mode = "rpc";
+	await commands.get("status").handler("", ctx);
+	assert.doesNotMatch(calls.notifications[1][0], /<muted>/);
 });
 
 test("the session status block and its command description render from the ja catalog", async () => {
@@ -499,39 +523,16 @@ test("the session status block and its command description render from the ja ca
 	await commands.get("status").handler("", ctx);
 	const message = calls.notifications[0][0];
 	const status = (key, args) => ja.format(`jouzu.cli.presentation.status.${key}`, args);
-	assert.equal(
-		message,
-		[
-			status("heading"),
-			status("session", { id: "session-test-123" }),
-			status("workspace", { name: "日本語 project" }),
-			status("model", { model: "anthropic/claude-test" }),
-			status("thinking", { level: "high" }),
-			status("context", { context: status("contextUsage", { tokens: "12345", window: "200000", percent: "6.2" }) }),
-			status("scopedModels", { models: "2" }),
-			status("profile", { id: "core", state: status("profileNotApplied") }),
-			status("runtime", { jouzu: "0.1.0", pi: "0.84.2" }),
-		].join("\n"),
-	);
-	for (const label of [
-		"Jouzu session status",
-		"session:",
-		"workspace:",
-		"model:",
-		"thinking:",
-		"context:",
-		"scoped models:",
-		"profile:",
-		"runtime:",
-	])
+	assert.ok(message.startsWith(`${status("heading")}\n`));
+	for (const key of ["session", "workspace", "model", "profile", "activity", "context", "runtime"])
+		assert.match(message, new RegExp(`\n${status(`label.${key}`)} `), `missing ja label: ${key}`);
+	assert.ok(message.includes(status("profileValue", { id: "core", state: status("profileNotApplied") })));
+	for (const label of ["Jouzu session status", "Session ", "Workspace ", "Model ", "Context ", "Profile ", "Runtime "])
 		assert.equal(message.includes(label), false, `English label survives: ${label}`);
 	assert.equal(commands.get("status").description, ja.format("jouzu.cli.presentation.command.statusDescription"));
 });
 
 test("the status command description keeps its English default", () => {
 	const { commands } = installExtension();
-	assert.equal(
-		commands.get("status").description,
-		"Show the current Jouzu session, model, context, and profile status",
-	);
+	assert.equal(commands.get("status").description, "Show session details, usage, and running work");
 });

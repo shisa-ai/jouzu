@@ -45,15 +45,21 @@ export interface SessionUiExtensionOptions {
 	env?: NodeJS.ProcessEnv;
 }
 
-export function createSessionUiExtension(options: SessionUiExtensionOptions): InlineExtension {
+export type SessionUiExtension = InlineExtension & {
+	/** The snapshot the status bar last rendered; undefined outside the TUI or before the session starts. */
+	statusSnapshot(): SessionStatusSnapshot | undefined;
+};
+
+export function createSessionUiExtension(options: SessionUiExtensionOptions): SessionUiExtension {
 	// One text view over the mutable catalog. Its getters resolve the active locale
 	// on each read, so a language change reaches the next frame or completion
 	// without recreating the editor or losing its content.
 	const text = sessionUiText(options.catalog);
+	let controller: SessionStatusController | undefined;
 	return {
 		name: SESSION_UI_RUNTIME_IDS.extension,
+		statusSnapshot: () => controller?.getSnapshot(),
 		factory: (pi) => {
-			let controller: SessionStatusController | undefined;
 			let editorInstalled = false;
 			const slashCommandOwnership = createSlashCommandOwnershipState();
 			let localizeSlashCommand = createSlashCommandLocalizer(options.catalog, [], slashCommandOwnership);

@@ -1768,16 +1768,111 @@ jouzu-cli-presentation-status-profileNotApplied = 未適用
 jouzu-cli-presentation-status-scopedModelsAll = すべて利用可能
 jouzu-cli-presentation-status-contextUsage = { $tokens }/{ $window } トークン（{ $percent }%）
 jouzu-cli-presentation-status-heading = Jouzu セッションの状態
-jouzu-cli-presentation-status-session = セッション: { $id }
-jouzu-cli-presentation-status-workspace = ワークスペース: { $name }
-jouzu-cli-presentation-status-model = モデル: { $model }
-jouzu-cli-presentation-status-thinking = 思考: { $level }
-jouzu-cli-presentation-status-context = コンテキスト: { $context }
-jouzu-cli-presentation-status-scopedModels = 対象モデル: { $models }
-jouzu-cli-presentation-status-profile = プロファイル: { $id }（{ $state }）
-jouzu-cli-presentation-status-runtime = 実行環境: Jouzu { $jouzu } · Pi { $pi }
 jouzu-cli-presentation-status-profileApplied = 適用済み
-jouzu-cli-presentation-command-statusDescription = 現在の Jouzu セッション、モデル、コンテキスト、プロファイルの状態を表示します
+jouzu-cli-presentation-status-label-session = セッション
+jouzu-cli-presentation-status-label-workspace = ワークスペース
+jouzu-cli-presentation-status-label-model = モデル
+jouzu-cli-presentation-status-label-profile = プロファイル
+jouzu-cli-presentation-status-label-activity = アクティビティ
+jouzu-cli-presentation-status-label-context = コンテキスト
+jouzu-cli-presentation-status-label-usage = 使用量
+jouzu-cli-presentation-status-label-models = モデル別
+jouzu-cli-presentation-status-label-work = 作業
+jouzu-cli-presentation-status-label-flow = フロー制御
+jouzu-cli-presentation-status-label-textguard = TextGuard
+jouzu-cli-presentation-status-label-attention = 要対応
+jouzu-cli-presentation-status-label-provider = プロバイダー
+jouzu-cli-presentation-status-label-scopedModels = 対象モデル
+jouzu-cli-presentation-status-label-runtime = 実行環境
+jouzu-cli-presentation-status-started = 開始 { $time }（{ $age }前）
+jouzu-cli-presentation-status-ageUnderMinute = 1分未満
+jouzu-cli-presentation-status-ageMinutes = { $minutes }分
+jouzu-cli-presentation-status-ageHours = { $hours }時間{ $minutes }分
+jouzu-cli-presentation-status-ageDays = { $days }日{ $hours }時間
+jouzu-cli-presentation-status-gitClean = 変更なし
+jouzu-cli-presentation-status-gitChanged = 未コミットの変更あり
+jouzu-cli-presentation-status-thinking = 思考 { $level }
+jouzu-cli-presentation-status-unknown = 不明
+jouzu-cli-presentation-status-prompts = { $count ->
+    [one] プロンプト { $count } 件
+   *[other] プロンプト { $count } 件
+}
+jouzu-cli-presentation-status-responses = { $count ->
+    [one] 応答 { $count } 件
+   *[other] 応答 { $count } 件
+}
+jouzu-cli-presentation-status-toolCalls = { $count ->
+    [one] ツール呼び出し { $count } 件
+   *[other] ツール呼び出し { $count } 件
+}
+jouzu-cli-presentation-status-compactions = { $count ->
+    [one] 圧縮 { $count } 回
+   *[other] 圧縮 { $count } 回
+}
+jouzu-cli-presentation-status-subagentRuns = { $count ->
+    [one] サブエージェントの実行 { $count } 件
+   *[other] サブエージェントの実行 { $count } 件
+}
+jouzu-cli-presentation-status-tokensIn = 入力 { $tokens }
+jouzu-cli-presentation-status-tokensOut = 出力 { $tokens }
+jouzu-cli-presentation-status-tokensInCached = 入力 { $tokens }（キャッシュ { $percent }%）
+jouzu-cli-presentation-status-profileValue = { $id }（{ $state }）
+jouzu-cli-presentation-status-usageIncomplete = { $count ->
+    [one] （使用量のない記録 { $count } 件）
+   *[other] （使用量のない記録 { $count } 件）
+}
+jouzu-cli-presentation-status-agentsActive = { $count ->
+    [one] 実行中のサブエージェント { $count } 件
+   *[other] 実行中のサブエージェント { $count } 件
+}
+jouzu-cli-presentation-status-jobsRunning = { $count ->
+    [one] 実行中のバックグラウンドジョブ { $count } 件
+   *[other] 実行中のバックグラウンドジョブ { $count } 件
+}
+jouzu-cli-presentation-status-tasksOpen = 未完了のタスク { $open }/{ $total } 件
+jouzu-cli-presentation-status-campaigns = { $count ->
+    [one] 有効なキャンペーン { $count } 件
+   *[other] 有効なキャンペーン { $count } 件
+}
+jouzu-cli-presentation-status-waits = { $count ->
+    [one] 待機 { $count } 件
+   *[other] 待機 { $count } 件
+}
+jouzu-cli-presentation-status-suspended = 一時停止中 { $count } 件
+jouzu-cli-presentation-status-workIdle = 実行中または待機中の作業はありません
+jouzu-cli-presentation-status-flowOn = オン
+jouzu-cli-presentation-status-flowOff = オフ
+jouzu-cli-presentation-status-flowPaused = 一時停止中: { $reason }
+jouzu-cli-presentation-status-attentionHeld = { $count ->
+    [one] 保留中のメッセージ { $count } 件
+   *[other] 保留中のメッセージ { $count } 件
+}
+jouzu-cli-presentation-status-attentionRetryable = { $count ->
+    [one] 差し止められたリクエスト { $count } 件
+   *[other] 差し止められたリクエスト { $count } 件
+}
+jouzu-cli-presentation-status-attentionUncertain = { $count ->
+    [one] 結果不明のターン { $count } 件
+   *[other] 結果不明のターン { $count } 件
+}
+jouzu-cli-presentation-status-attentionUnaccountable = { $count ->
+    [one] このセッションに権限のない作業 { $count } 件
+   *[other] このセッションに権限のない作業 { $count } 件
+}
+jouzu-cli-presentation-status-attentionTextguard = { $count ->
+    [one] TextGuard の確認待ち { $count } 件
+   *[other] TextGuard の確認待ち { $count } 件
+}
+jouzu-cli-presentation-status-attentionAgentResults = { $count ->
+    [one] 未配信のサブエージェント結果 { $count } 件
+   *[other] 未配信のサブエージェント結果 { $count } 件
+}
+jouzu-cli-presentation-status-attentionJobResults = { $count ->
+    [one] 未配信のジョブ結果 { $count } 件
+   *[other] 未配信のジョブ結果 { $count } 件
+}
+jouzu-cli-presentation-status-runtimeValue = Jouzu { $jouzu } · Pi { $pi }
+jouzu-cli-presentation-command-statusDescription = セッションの詳細、使用量、実行中の作業を表示します
 jouzu-cli-classicHost-mcpUnavailable = 組み込みの Model Context Protocol（MCP）接続はこのセッションでは有効になっていません。代わりに Jouzu のファイルツールとウェブツールを使用してください。
 jouzu-cli-keybindings-action-conflictDetail = 、{ $action } と競合
 jouzu-cli-keybindings-action-currentDetail = 、設定値 { $binding }

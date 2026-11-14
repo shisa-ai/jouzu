@@ -1774,16 +1774,111 @@ jouzu-cli-presentation-status-profileNotApplied = not applied
 jouzu-cli-presentation-status-scopedModelsAll = all available
 jouzu-cli-presentation-status-contextUsage = { $tokens }/{ $window } tokens ({ $percent }%)
 jouzu-cli-presentation-status-heading = Jouzu session status
-jouzu-cli-presentation-status-session = session: { $id }
-jouzu-cli-presentation-status-workspace = workspace: { $name }
-jouzu-cli-presentation-status-model = model: { $model }
-jouzu-cli-presentation-status-thinking = thinking: { $level }
-jouzu-cli-presentation-status-context = context: { $context }
-jouzu-cli-presentation-status-scopedModels = scoped models: { $models }
-jouzu-cli-presentation-status-profile = profile: { $id } ({ $state })
-jouzu-cli-presentation-status-runtime = runtime: Jouzu { $jouzu } · Pi { $pi }
 jouzu-cli-presentation-status-profileApplied = applied
-jouzu-cli-presentation-command-statusDescription = Show the current Jouzu session, model, context, and profile status
+jouzu-cli-presentation-status-label-session = Session
+jouzu-cli-presentation-status-label-workspace = Workspace
+jouzu-cli-presentation-status-label-model = Model
+jouzu-cli-presentation-status-label-profile = Profile
+jouzu-cli-presentation-status-label-activity = Activity
+jouzu-cli-presentation-status-label-context = Context
+jouzu-cli-presentation-status-label-usage = Usage
+jouzu-cli-presentation-status-label-models = By model
+jouzu-cli-presentation-status-label-work = Work
+jouzu-cli-presentation-status-label-flow = Flow control
+jouzu-cli-presentation-status-label-textguard = TextGuard
+jouzu-cli-presentation-status-label-attention = Needs attention
+jouzu-cli-presentation-status-label-provider = Provider
+jouzu-cli-presentation-status-label-scopedModels = Scoped models
+jouzu-cli-presentation-status-label-runtime = Runtime
+jouzu-cli-presentation-status-started = started { $time } ({ $age } ago)
+jouzu-cli-presentation-status-ageUnderMinute = under a minute
+jouzu-cli-presentation-status-ageMinutes = { $minutes } min
+jouzu-cli-presentation-status-ageHours = { $hours } h { $minutes } min
+jouzu-cli-presentation-status-ageDays = { $days } d { $hours } h
+jouzu-cli-presentation-status-gitClean = clean
+jouzu-cli-presentation-status-gitChanged = uncommitted changes
+jouzu-cli-presentation-status-thinking = thinking { $level }
+jouzu-cli-presentation-status-unknown = unknown
+jouzu-cli-presentation-status-prompts = { $count ->
+    [one] { $count } prompt
+   *[other] { $count } prompts
+}
+jouzu-cli-presentation-status-responses = { $count ->
+    [one] { $count } reply
+   *[other] { $count } replies
+}
+jouzu-cli-presentation-status-toolCalls = { $count ->
+    [one] { $count } tool call
+   *[other] { $count } tool calls
+}
+jouzu-cli-presentation-status-compactions = { $count ->
+    [one] { $count } compaction
+   *[other] { $count } compactions
+}
+jouzu-cli-presentation-status-subagentRuns = { $count ->
+    [one] { $count } subagent run
+   *[other] { $count } subagent runs
+}
+jouzu-cli-presentation-status-tokensIn = { $tokens } in
+jouzu-cli-presentation-status-tokensOut = { $tokens } out
+jouzu-cli-presentation-status-tokensInCached = { $tokens } in ({ $percent }% cached)
+jouzu-cli-presentation-status-profileValue = { $id } ({ $state })
+jouzu-cli-presentation-status-usageIncomplete = { $count ->
+    [one] ({ $count } record without usage)
+   *[other] ({ $count } records without usage)
+}
+jouzu-cli-presentation-status-agentsActive = { $count ->
+    [one] { $count } subagent active
+   *[other] { $count } subagents active
+}
+jouzu-cli-presentation-status-jobsRunning = { $count ->
+    [one] { $count } background job running
+   *[other] { $count } background jobs running
+}
+jouzu-cli-presentation-status-tasksOpen = { $open } of { $total } tasks open
+jouzu-cli-presentation-status-campaigns = { $count ->
+    [one] { $count } campaign active
+   *[other] { $count } campaigns active
+}
+jouzu-cli-presentation-status-waits = { $count ->
+    [one] { $count } wait
+   *[other] { $count } waits
+}
+jouzu-cli-presentation-status-suspended = { $count } suspended
+jouzu-cli-presentation-status-workIdle = Nothing running or queued
+jouzu-cli-presentation-status-flowOn = on
+jouzu-cli-presentation-status-flowOff = off
+jouzu-cli-presentation-status-flowPaused = paused: { $reason }
+jouzu-cli-presentation-status-attentionHeld = { $count ->
+    [one] { $count } held message
+   *[other] { $count } held messages
+}
+jouzu-cli-presentation-status-attentionRetryable = { $count ->
+    [one] { $count } withheld request
+   *[other] { $count } withheld requests
+}
+jouzu-cli-presentation-status-attentionUncertain = { $count ->
+    [one] { $count } turn with unknown outcome
+   *[other] { $count } turns with unknown outcome
+}
+jouzu-cli-presentation-status-attentionUnaccountable = { $count ->
+    [one] { $count } work item this session has no authority for
+   *[other] { $count } work items this session has no authority for
+}
+jouzu-cli-presentation-status-attentionTextguard = { $count ->
+    [one] { $count } TextGuard review pending
+   *[other] { $count } TextGuard reviews pending
+}
+jouzu-cli-presentation-status-attentionAgentResults = { $count ->
+    [one] { $count } subagent result not yet delivered
+   *[other] { $count } subagent results not yet delivered
+}
+jouzu-cli-presentation-status-attentionJobResults = { $count ->
+    [one] { $count } job result not yet delivered
+   *[other] { $count } job results not yet delivered
+}
+jouzu-cli-presentation-status-runtimeValue = Jouzu { $jouzu } · Pi { $pi }
+jouzu-cli-presentation-command-statusDescription = Show session details, usage, and running work
 jouzu-cli-classicHost-mcpUnavailable = Built-in Model Context Protocol (MCP) connections are not enabled in this session. Use Jouzu's file and web tools instead.
 jouzu-cli-keybindings-action-conflictDetail = ; conflicts with { $action }
 jouzu-cli-keybindings-action-currentDetail = ; current { $binding }

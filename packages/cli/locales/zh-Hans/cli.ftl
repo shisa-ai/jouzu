@@ -1784,16 +1784,111 @@ jouzu-cli-presentation-status-profileNotApplied = 未应用
 jouzu-cli-presentation-status-scopedModelsAll = 全部可用
 jouzu-cli-presentation-status-contextUsage = { $tokens }/{ $window } 令牌（{ $percent }%）
 jouzu-cli-presentation-status-heading = Jouzu 会话状态
-jouzu-cli-presentation-status-session = 会话：{ $id }
-jouzu-cli-presentation-status-workspace = 工作区：{ $name }
-jouzu-cli-presentation-status-model = 模型：{ $model }
-jouzu-cli-presentation-status-thinking = 思考：{ $level }
-jouzu-cli-presentation-status-context = 上下文：{ $context }
-jouzu-cli-presentation-status-scopedModels = 范围模型：{ $models }
-jouzu-cli-presentation-status-profile = 配置档案：{ $id }（{ $state }）
-jouzu-cli-presentation-status-runtime = 运行时：Jouzu { $jouzu } · Pi { $pi }
 jouzu-cli-presentation-status-profileApplied = 已应用
-jouzu-cli-presentation-command-statusDescription = 显示当前 Jouzu 会话、模型、上下文和配置档案状态
+jouzu-cli-presentation-status-label-session = 会话
+jouzu-cli-presentation-status-label-workspace = 工作区
+jouzu-cli-presentation-status-label-model = 模型
+jouzu-cli-presentation-status-label-profile = 配置文件
+jouzu-cli-presentation-status-label-activity = 活动
+jouzu-cli-presentation-status-label-context = 上下文
+jouzu-cli-presentation-status-label-usage = 用量
+jouzu-cli-presentation-status-label-models = 按模型
+jouzu-cli-presentation-status-label-work = 工作
+jouzu-cli-presentation-status-label-flow = 流控制
+jouzu-cli-presentation-status-label-textguard = TextGuard
+jouzu-cli-presentation-status-label-attention = 需要处理
+jouzu-cli-presentation-status-label-provider = 提供方
+jouzu-cli-presentation-status-label-scopedModels = 限定模型
+jouzu-cli-presentation-status-label-runtime = 运行时
+jouzu-cli-presentation-status-started = 开始于 { $time }（{ $age }前）
+jouzu-cli-presentation-status-ageUnderMinute = 不到 1 分钟
+jouzu-cli-presentation-status-ageMinutes = { $minutes } 分钟
+jouzu-cli-presentation-status-ageHours = { $hours } 小时 { $minutes } 分钟
+jouzu-cli-presentation-status-ageDays = { $days } 天 { $hours } 小时
+jouzu-cli-presentation-status-gitClean = 无改动
+jouzu-cli-presentation-status-gitChanged = 有未提交的改动
+jouzu-cli-presentation-status-thinking = 思考 { $level }
+jouzu-cli-presentation-status-unknown = 未知
+jouzu-cli-presentation-status-prompts = { $count ->
+    [one] { $count } 条提示
+   *[other] { $count } 条提示
+}
+jouzu-cli-presentation-status-responses = { $count ->
+    [one] { $count } 条回复
+   *[other] { $count } 条回复
+}
+jouzu-cli-presentation-status-toolCalls = { $count ->
+    [one] { $count } 次工具调用
+   *[other] { $count } 次工具调用
+}
+jouzu-cli-presentation-status-compactions = { $count ->
+    [one] { $count } 次压缩
+   *[other] { $count } 次压缩
+}
+jouzu-cli-presentation-status-subagentRuns = { $count ->
+    [one] { $count } 次子代理运行
+   *[other] { $count } 次子代理运行
+}
+jouzu-cli-presentation-status-tokensIn = 输入 { $tokens }
+jouzu-cli-presentation-status-tokensOut = 输出 { $tokens }
+jouzu-cli-presentation-status-tokensInCached = 输入 { $tokens }（缓存 { $percent }%）
+jouzu-cli-presentation-status-profileValue = { $id }（{ $state }）
+jouzu-cli-presentation-status-usageIncomplete = { $count ->
+    [one] （{ $count } 条记录缺少用量）
+   *[other] （{ $count } 条记录缺少用量）
+}
+jouzu-cli-presentation-status-agentsActive = { $count ->
+    [one] { $count } 个子代理运行中
+   *[other] { $count } 个子代理运行中
+}
+jouzu-cli-presentation-status-jobsRunning = { $count ->
+    [one] { $count } 个后台作业运行中
+   *[other] { $count } 个后台作业运行中
+}
+jouzu-cli-presentation-status-tasksOpen = { $total } 个任务中 { $open } 个未完成
+jouzu-cli-presentation-status-campaigns = { $count ->
+    [one] { $count } 个活动中的批次任务
+   *[other] { $count } 个活动中的批次任务
+}
+jouzu-cli-presentation-status-waits = { $count ->
+    [one] { $count } 个等待
+   *[other] { $count } 个等待
+}
+jouzu-cli-presentation-status-suspended = { $count } 个已暂停
+jouzu-cli-presentation-status-workIdle = 没有正在运行或排队的工作
+jouzu-cli-presentation-status-flowOn = 开启
+jouzu-cli-presentation-status-flowOff = 关闭
+jouzu-cli-presentation-status-flowPaused = 已暂停：{ $reason }
+jouzu-cli-presentation-status-attentionHeld = { $count ->
+    [one] { $count } 条保留的消息
+   *[other] { $count } 条保留的消息
+}
+jouzu-cli-presentation-status-attentionRetryable = { $count ->
+    [one] { $count } 个已保留的请求
+   *[other] { $count } 个已保留的请求
+}
+jouzu-cli-presentation-status-attentionUncertain = { $count ->
+    [one] { $count } 个结果未知的回合
+   *[other] { $count } 个结果未知的回合
+}
+jouzu-cli-presentation-status-attentionUnaccountable = { $count ->
+    [one] { $count } 项此会话无权处理的工作
+   *[other] { $count } 项此会话无权处理的工作
+}
+jouzu-cli-presentation-status-attentionTextguard = { $count ->
+    [one] { $count } 项 TextGuard 审查待处理
+   *[other] { $count } 项 TextGuard 审查待处理
+}
+jouzu-cli-presentation-status-attentionAgentResults = { $count ->
+    [one] { $count } 个子代理结果尚未送达
+   *[other] { $count } 个子代理结果尚未送达
+}
+jouzu-cli-presentation-status-attentionJobResults = { $count ->
+    [one] { $count } 个作业结果尚未送达
+   *[other] { $count } 个作业结果尚未送达
+}
+jouzu-cli-presentation-status-runtimeValue = Jouzu { $jouzu } · Pi { $pi }
+jouzu-cli-presentation-command-statusDescription = 显示会话详情、用量和正在运行的工作
 jouzu-cli-classicHost-mcpUnavailable = 此会话未启用内置的 Model Context Protocol (MCP) 连接。请改用 Jouzu 的文件和网络工具。
 jouzu-cli-keybindings-action-conflictDetail = ；与 { $action } 冲突
 jouzu-cli-keybindings-action-currentDetail = ；当前 { $binding }

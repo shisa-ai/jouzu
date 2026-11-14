@@ -28,7 +28,7 @@ It exits `1` when it reports a problem.
 
 | Command | Shows |
 | --- | --- |
-| `/status` | Session, workspace, model, thinking level, context, profile, runtime |
+| `/status` | Session ID and start time, workspace and git state, model, profile, context, usage and cost by model, running work, items that need attention, runtime versions |
 | `/about` | Running and installed Jouzu builds, Pi version, startup time. If the running and installed builds differ, restart Jouzu. |
 | `/flow runtime` | Startup package paths and hashes |
 | `/bug` | Draft a bug report. See [Report a Jouzu bug](bug-reporting.md). |

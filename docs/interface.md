@@ -67,7 +67,7 @@ All surfaces measure terminal display columns, not string length. Tests cover Ch
 
 | Command | Shows |
 | --- | --- |
-| `/status` | Session, workspace, model, thinking level, context usage, profile, runtime |
+| `/status` | Session, workspace, model, context, usage and cost, running work, and items that need attention; see [the status command](ux.md#session-status-command) |
 | `/about` | Running and installed Jouzu builds, Pi version, startup time |
 | `/session` | Session details, ending with a runtime line |
 | `/labels` | Automatic session naming. See [Session labels](session-labels.md). |
