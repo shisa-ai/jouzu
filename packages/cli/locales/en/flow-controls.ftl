@@ -1,0 +1,72 @@
+jouzu-cli-flow-control-usage1 = /flow shows what session flow control is holding.
+jouzu-cli-flow-control-usage2 = /flow details [page] includes full identifiers and per-item controls.
+jouzu-cli-flow-control-usage3 = /flow runtime shows running and installed builds and startup package paths and hashes.
+jouzu-cli-flow-control-usage4 = /flow off turns flow control off: retained sends run natively and nothing is queued or scheduled.
+jouzu-cli-flow-control-usage5 = /flow on turns flow control back on for this session.
+jouzu-cli-flow-control-usage6 = /flow retry <request> authorizes one withheld request.
+jouzu-cli-flow-control-usage7 = /flow cancel <token> removes a wait's dependency gate without stopping its job.
+jouzu-cli-flow-control-usage8 = /flow pause holds every automated turn in this session; /flow resume releases it.
+jouzu-cli-flow-control-usage9 = /flow pause <work> holds one work item's automated turns; /flow resume <work> releases it.
+jouzu-cli-flow-control-usage10 = /flow stop <work> retires a work item and ends its waits. None of these stop a running job.
+jouzu-cli-flow-control-usage11 = /flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.
+jouzu-cli-flow-control-usage12 = /flow reset explains the destructive idle reset; /flow reset confirm discards all queued messages, flow receipts, and waits. Use it only if /flow clear does not fix the problem.
+jouzu-cli-flow-control-usage13 = /flow clear releases a stuck reservation while preserving receipts, waits, and running jobs.
+jouzu-cli-flow-control-offNotice1 = Flow control is off for this session: nothing is intercepted, queued, or scheduled.
+jouzu-cli-flow-control-offNotice2 = Jobs and tasks run and report through their own delivery paths.
+jouzu-cli-flow-control-offNotice3 = Run /flow on to turn flow control back on; /flow runtime still reports builds.
+jouzu-cli-flow-control-providerPause = Flow control paused after { $reason }. Automated work resumes on your next message. Run /flow for details.
+jouzu-cli-flow-control-heldInput = Flow control is holding your message: { $reason }. Run /flow for the control that releases it.
+jouzu-cli-flow-control-recoveryHold = Flow control is holding automated work: { $reason }. Run /flow for the control that releases it.
+jouzu-cli-flow-control-cannotSwitch = This session cannot switch flow control.
+jouzu-cli-flow-control-alreadyOff = Flow control is already off for this session. Turn it back on with /flow on.
+jouzu-cli-flow-control-alreadyOn = Flow control is already on for this session.
+jouzu-cli-flow-control-flushed = { $count ->
+    [one] { $count } retained send ran natively
+   *[other] { $count } retained sends ran natively
+}
+jouzu-cli-flow-control-waitsEnded = { $count ->
+    [one] { $count } wait ended
+   *[other] { $count } waits ended
+}
+jouzu-cli-flow-control-noInterrupted = No interrupted turn { $target } is waiting for a decision. Run /flow to list them.
+jouzu-cli-flow-control-clearBusy = Flow clear needs an idle session. Interrupt the running turn, then run /flow clear again.
+jouzu-cli-flow-control-clearRecovery = Flow clear preserved pending evidence that still needs reconciliation. Run /flow for the remaining hold.
+jouzu-cli-flow-control-clearInactive = Flow clear completed. No active reservation was found; continue with a new message.
+jouzu-cli-flow-control-clearReservation = Cleared flow reservation { $attempt }. Jobs and waits were left unchanged; receipt evidence was preserved.
+jouzu-cli-flow-control-noRetry = No withheld request { $target } is waiting for a retry. Run /flow to list them.
+jouzu-cli-flow-control-retryAuthorized = Authorized a retry of { $target }. Its input is admitted again before it is sent.
+jouzu-cli-flow-control-waitCancelled = Cancelled wait { $target }. Its job keeps running and its work stays open.
+jouzu-cli-flow-control-notPaused = Automated turns are not paused for this session.
+jouzu-cli-flow-control-resumed = Resumed automated turns. They run from the next idle boundary.
+jouzu-cli-flow-control-noWork = No registered work { $target }. Run /flow to list active work.
+jouzu-cli-flow-control-operationFailed1 = Flow control: { $detail }
+jouzu-cli-flow-control-operationFailed2 = The operation did not complete. Run /flow runtime for build details.
+jouzu-cli-flow-control-inputUnavailable = Input status unavailable
+jouzu-cli-flow-control-waitsUnavailable = Job waits unavailable
+jouzu-cli-flow-control-workUnavailable = Work status unavailable
+jouzu-cli-flow-control-descriptionsUnavailable = Input descriptions unavailable
+jouzu-cli-flow-control-requestsUnavailable = Request records unavailable
+jouzu-cli-flow-control-savedUnresolved = { $count } saved deliveries have unresolved history.
+jouzu-cli-flow-control-inputsUnmatched = { $count } submitted inputs could not be matched to session history.
+jouzu-cli-flow-control-sourcesUnavailable = Waiting on unavailable job sources: { $sources }
+jouzu-cli-flow-control-requestUnknown = A provider request has no recorded outcome. Inspect /flow details before resetting; do not assume it was never sent.
+jouzu-cli-flow-control-tasksUnavailable = Task details unavailable: { $detail }
+jouzu-cli-flow-control-detachedUnavailable = Detached work unavailable: { $detail }
+jouzu-cli-flow-control-stale = Flow status changed while it was being read; run /flow again.
+jouzu-cli-flow-control-hostRecovery = host recovery is still in progress
+jouzu-cli-flow-control-requestDecision = a withheld request needs a decision
+jouzu-cli-flow-control-interruptedOutcome = an interrupted turn has an unknown outcome
+jouzu-cli-flow-control-waitReconciliation = wait sources are still being reconciled
+jouzu-cli-flow-control-savedDecision = saved work needs a recovery decision
+jouzu-cli-flow-control-inputMissing = Input is missing or cancelled.
+jouzu-cli-flow-control-inputRecovery = Input is waiting for recovery reconciliation.
+jouzu-cli-flow-control-hostRetry = Input is waiting for host retry or compaction.
+jouzu-cli-flow-control-queueRevision = Input has no exact native queue revision.
+jouzu-cli-flow-control-inputPaused = Automated input is paused until the next user turn is under way.
+jouzu-cli-flow-control-inputInterrupted = Automated input is waiting for an interrupted turn to be resolved.
+jouzu-cli-flow-control-contextReceipt = Deferred context requires a persistence receipt before release.
+jouzu-cli-flow-control-contextIdle = Non-waking context is waiting for an idle append boundary.
+jouzu-cli-flow-control-inputIndependence = Unclassified input cannot establish independence from a live wait.
+jouzu-cli-flow-control-queuedWork = Input is waiting for queued user work.
+jouzu-cli-flow-control-hostIdle = Automated input is waiting for an idle host boundary.
+jouzu-cli-flow-control-earlierInput = Input is waiting for an earlier retained instruction in its lane.

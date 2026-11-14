@@ -30,34 +30,6 @@ function flowOn(options: FlowStatusOptions): boolean {
 	return options.enabled?.() !== false;
 }
 
-const FLOW_OFF_NOTICE = [
-	"Flow control is off for this session: nothing is intercepted, queued, or scheduled.",
-	"Jobs, tasks, and lanes run and report through their own delivery paths.",
-	"Run /flow on to turn flow control back on; /flow runtime still reports builds.",
-].join("\n");
-
-/** One notice for a held input, in the words the status view uses for the same state. */
-const heldInputNotice = (reason: string) =>
-	`Flow control is holding your message: ${reason}. Run /flow for the control that releases it.`;
-const recoveryHoldNotice = (reason: string) =>
-	`Flow control is holding automated work: ${reason}. Run /flow for the control that releases it.`;
-
-const USAGE = [
-	"/flow shows what session flow control is holding.",
-	"/flow details [page] includes full identifiers and per-item controls.",
-	"/flow runtime shows running and installed builds and startup package paths and hashes.",
-	"/flow off turns flow control off: retained sends run natively and nothing is queued or scheduled.",
-	"/flow on turns flow control back on for this session.",
-	"/flow retry <request> authorizes one withheld request.",
-	"/flow cancel <token> removes a wait's dependency gate without stopping its job.",
-	"/flow pause holds every automated turn in this session; /flow resume releases it.",
-	"/flow pause <work> holds one campaign's automated turns; /flow resume <work> releases it.",
-	"/flow stop <work> retires a campaign and ends its waits. None of these stop a running job.",
-	"/flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.",
-	"/flow reset explains the destructive idle reset; /flow reset confirm discards all queued messages, flow receipts, and waits. Use it only if /flow clear does not fix the problem.",
-	"/flow clear releases a stuck reservation while preserving receipts, waits, and running jobs.",
-].join("\n");
-
 /**
  * The user's view of and controls over held work. Every reply goes to the terminal through
  * `ctx.ui.notify`, so reading status or repairing a hold adds nothing to the model's context.
@@ -68,6 +40,29 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 } {
 	const now = () => options.now?.() ?? Date.now();
 	const catalog = options.catalog ?? defaultCatalog();
+	const text = (key: string, args: Record<string, string | number> = {}) =>
+		catalogText(catalog, `jouzu.cli.flow.control.${key}`, args);
+	const recoveryReasons: Record<string, string> = {
+		"host recovery is still in progress": "hostRecovery",
+		"a withheld request needs a decision": "requestDecision",
+		"an interrupted turn has an unknown outcome": "interruptedOutcome",
+		"wait sources are still being reconciled": "waitReconciliation",
+		"saved work needs a recovery decision": "savedDecision",
+		"Input is missing or cancelled.": "inputMissing",
+		"Input is waiting for recovery reconciliation.": "inputRecovery",
+		"Input is waiting for host retry or compaction.": "hostRetry",
+		"Input has no exact native queue revision.": "queueRevision",
+		"Automated input is paused until the next user turn is under way.": "inputPaused",
+		"Automated input is waiting for an interrupted turn to be resolved.": "inputInterrupted",
+		"Deferred context requires a persistence receipt before release.": "contextReceipt",
+		"Non-waking context is waiting for an idle append boundary.": "contextIdle",
+		"Unclassified input cannot establish independence from a live wait.": "inputIndependence",
+		"Input is waiting for queued user work.": "queuedWork",
+		"Automated input is waiting for an idle host boundary.": "hostIdle",
+		"Input is waiting for an earlier retained instruction in its lane.": "earlierInput",
+	};
+	const holdReason = (reason: string) =>
+		Object.hasOwn(recoveryReasons, reason) ? text(recoveryReasons[reason]) : flowPauseText(reason, catalog);
 	let announce: ((text: string) => void) | undefined;
 	// A hold is reported once per reason. Re-admission runs on every release pass, so without this a
 	// single blocked message would notify for as long as it stays blocked. The set is bounded because
@@ -86,7 +81,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		const inspected = await ingress.inspect();
 		if (!inspected.submissions.some((submission) => submission.admission === "held") && !inspected.uncertain.length)
 			return;
-		announce(recoveryHoldNotice(reason));
+		announce(text("recoveryHold", { reason: holdReason(reason) }));
 	};
 	return {
 		name: "jouzu-flow-status",
@@ -98,9 +93,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			const reason = options.ingress().automatedPause();
 			if (!reason || !announce || !flowOn(options)) return;
 			if (isProviderPause(reason)) {
-				announce(
-					`Flow control paused after ${flowDisplayText(reason, 200)}. Automated work resumes on your next message. Run /flow for details.`,
-				);
+				announce(text("providerPause", { reason: flowPauseText(reason, catalog, 200) }));
 				return;
 			}
 			const inspected = await options.ingress().inspect();
@@ -119,7 +112,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			const key = `${input.id}:${input.reason}`;
 			if (reportedHolds.has(key)) return;
 			rememberHold(key);
-			announce(heldInputNotice(input.reason));
+			announce(text("heldInput", { reason: holdReason(input.reason) }));
 		},
 		factory(pi) {
 			// The renderer takes the resolved catalog as a trailing argument, so the registered
@@ -144,6 +137,8 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			pi.registerCommand("flow", {
 				description: catalogText(catalog, "jouzu.cli.session.slash.flow"),
 				handler: async (args, ctx) => {
+					const USAGE = Array.from({ length: 13 }, (_, index) => text(`usage${index + 1}`)).join("\n");
+					const FLOW_OFF_NOTICE = Array.from({ length: 3 }, (_, index) => text(`offNotice${index + 1}`)).join("\n");
 					const [verb, target, choice, ...rest] = args.trim().split(/\s+/).filter(Boolean);
 					const notify = (text: string, level: "info" | "error" = "info") => ctx.ui.notify(text, level);
 					try {
@@ -183,16 +178,16 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								return;
 							}
 							if (!options.setEnabled) {
-								notify("This session cannot switch flow control.", "error");
+								notify(text("cannotSwitch"), "error");
 								return;
 							}
 							const live = flowOn(options);
 							if (verb === "off" && !live) {
-								notify("Flow control is already off for this session. Turn it back on with /flow on.");
+								notify(text("alreadyOff"));
 								return;
 							}
 							if (verb === "on" && live) {
-								notify("Flow control is already on for this session.");
+								notify(text("alreadyOn"));
 								return;
 							}
 							// Off and on take effect at once and tear nothing down, so a running turn is no obstacle:
@@ -200,8 +195,8 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							const off = verb === "on" ? { flushed: 0, waits: 0 } : await options.setEnabled(false);
 							if (verb !== "off") await options.setEnabled(true);
 							const did = [
-								...(off.flushed ? [`${off.flushed} retained send${off.flushed === 1 ? "" : "s"} ran natively`] : []),
-								...(off.waits ? [`${off.waits} wait${off.waits === 1 ? "" : "s"} ended`] : []),
+								...(off.flushed ? [text("flushed", { count: off.flushed })] : []),
+								...(off.waits ? [text("waitsEnded", { count: off.waits })] : []),
 							];
 							const headline = catalogText(catalog, verb === "off" ? Id.flowOffHeadline : Id.flowOnHeadline);
 							const tail = catalogText(catalog, verb === "off" ? Id.flowOffTail : Id.flowOnTail);
@@ -238,46 +233,44 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 									return fallback;
 								}
 							};
-							const inspected = await read("Input status unavailable", () => ingress.inspect(), {
+							const inspected = await read(text("inputUnavailable"), () => ingress.inspect(), {
 								version: 1 as const,
 								scope: branch.scope,
 								submissions: [],
 								uncertain: [],
 							});
 							const [waits, authority, submissions, requests] = await Promise.all([
-								read("Job waits unavailable", () => branch.attachment.waits.snapshot(), []),
-								read("Work status unavailable", () => branch.attachment.waits.authoritySnapshot(), {
+								read(text("waitsUnavailable"), () => branch.attachment.waits.snapshot(), []),
+								read(text("workUnavailable"), () => branch.attachment.waits.authoritySnapshot(), {
 									version: 1 as const,
 									work: [],
 									executions: [],
 									waitTokens: [],
 								}),
-								read("Input descriptions unavailable", () => branch.attachment.submissions.snapshot(), []),
-								read("Request records unavailable", () => branch.attachment.nativeRequests.snapshot(), []),
+								read(text("descriptionsUnavailable"), () => branch.attachment.submissions.snapshot(), []),
+								read(text("requestsUnavailable"), () => branch.attachment.nativeRequests.snapshot(), []),
 							]);
 							const recovery: string[] = [];
 							if (branch.recovery.unresolved)
-								recovery.push(`${branch.recovery.unresolved} saved deliveries have unresolved history.`);
+								recovery.push(text("savedUnresolved", { count: branch.recovery.unresolved }));
 							if (branch.sourceRecovery.unresolved)
-								recovery.push(
-									`${branch.sourceRecovery.unresolved} submitted inputs could not be matched to session history.`,
-								);
+								recovery.push(text("inputsUnmatched", { count: branch.sourceRecovery.unresolved }));
 							if (branch.waitSourceRecovery.missing.length)
-								recovery.push(`Waiting on unavailable job sources: ${branch.waitSourceRecovery.missing.join(", ")}`);
+								recovery.push(text("sourcesUnavailable", { sources: branch.waitSourceRecovery.missing.join(", ") }));
 							if (
 								!turnActive &&
 								requests.some((request) => request.outcome === undefined && !request.reset) &&
 								!inspected.uncertain.length
 							)
-								recovery.push(
-									"A provider request has no recorded outcome. Inspect /flow details before resetting; do not assume it was never sent.",
-								);
+								recovery.push(text("requestUnknown"));
 							let tasks: FlowTask[] = [];
 							try {
 								tasks = options.tasks?.() ?? [];
 							} catch (error) {
 								warnings.push(
-									`Task details unavailable: ${flowDisplayText(error instanceof Error ? error.message : String(error))}`,
+									text("tasksUnavailable", {
+										detail: flowDisplayText(error instanceof Error ? error.message : String(error)),
+									}),
 								);
 							}
 							let unaccountable: FlowUnaccountableWork[] = [];
@@ -285,11 +278,12 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								unaccountable = options.unaccountable?.() ?? [];
 							} catch (error) {
 								warnings.push(
-									`Detached work unavailable: ${flowDisplayText(error instanceof Error ? error.message : String(error))}`,
+									text("detachedUnavailable", {
+										detail: flowDisplayText(error instanceof Error ? error.message : String(error)),
+									}),
 								);
 							}
-							if (ingress.branch() !== branch)
-								throw new FlowLedgerError("stale", "Flow status changed while it was being read; run /flow again.");
+							if (ingress.branch() !== branch) throw new FlowLedgerError("stale", text("stale"));
 							notify(
 								formatFlowStatus(
 									projectFlowStatus(
@@ -326,7 +320,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								await ingress.resolveUncertainAttempt(target, choice);
 							} catch (error) {
 								if (!(error instanceof FlowLedgerError) || error.code !== "identity") throw error;
-								notify(`No interrupted turn ${target} is waiting for a decision. Run /flow to list them.`, "error");
+								notify(text("noInterrupted", { target }), "error");
 								return;
 							}
 							notify(
@@ -346,19 +340,13 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								result = await ingress.clearFlow();
 							} catch (error) {
 								if (error instanceof FlowLedgerError && error.code === "busy") {
-									notify(
-										"Flow clear needs an idle session. Interrupt the running turn, then run /flow clear again.",
-										"error",
-									);
+									notify(text("clearBusy"), "error");
 									return;
 								}
 								throw error;
 							}
 							if (result.recoveryHeld) {
-								notify(
-									"Flow clear preserved pending evidence that still needs reconciliation. Run /flow for the remaining hold.",
-									"error",
-								);
+								notify(text("clearRecovery"), "error");
 							} else if (result.releasedRequests) {
 								const releasedId =
 									result.releasedRequests === 1
@@ -375,11 +363,9 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 									}),
 								);
 							} else if (result.kind === "inactive") {
-								notify("Flow clear completed. No active reservation was found; continue with a new message.");
+								notify(text("clearInactive"));
 							} else {
-								notify(
-									`Cleared flow reservation ${result.attemptId}. Jobs and waits were left unchanged; receipt evidence was preserved.`,
-								);
+								notify(text("clearReservation", { attempt: result.attemptId ?? "" }));
 							}
 							return;
 						}
@@ -393,17 +379,17 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								(item) => item.id === target && nativeHoldPending(item) && !item.retryAuthorization?.requestId,
 							);
 							if (!request) {
-								notify(`No withheld request ${target} is waiting for a retry. Run /flow to list them.`, "error");
+								notify(text("noRetry", { target }), "error");
 								return;
 							}
 							// The hash is the evidence the store requires, so a retry cannot land on changed input.
 							await ingress.retryNativeRequest(request.id, nativeHoldHash(request));
-							notify(`Authorized a retry of ${request.id}. Its input is admitted again before it is sent.`);
+							notify(text("retryAuthorized", { target: request.id }));
 							return;
 						}
 						if (verb === "cancel") {
 							await ingress.cancelWait(target, "Cancelled from /flow.");
-							notify(`Cancelled wait ${target}. Its job keeps running and its work stays open.`);
+							notify(text("waitCancelled", { target }));
 							return;
 						}
 						// Lifecycle controls name the work, not its owner: the producer that owns a campaign
@@ -420,12 +406,12 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								return;
 							}
 							if (!ingress.resumeAutomated()) {
-								notify("Automated turns are not paused for this session.");
+								notify(text("notPaused"));
 								return;
 							}
 							// Releasing only lifts the gate; the ordinary boundary decides when work runs.
 							ingress.requestRelease();
-							notify("Resumed automated turns. They run from the next idle boundary.");
+							notify(text("resumed"));
 							return;
 						}
 						const lifecycle = { pause: "paused", resume: "active", stop: "stopped" } as const;
@@ -436,7 +422,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							} catch (error) {
 								// An unknown identity is a discovery problem, so answer it with where the ids are.
 								if (!(error instanceof FlowLedgerError) || error.code !== "identity") throw error;
-								notify(`No registered work ${target}. Run /flow to list active work.`, "error");
+								notify(text("noWork", { target }), "error");
 								return;
 							}
 							notify(
@@ -451,7 +437,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 						notify(USAGE, "error");
 					} catch (error) {
 						notify(
-							`Flow control: ${flowDisplayText(error instanceof Error ? error.message : String(error), 500)}\nThe operation did not complete. Run /flow runtime for build details.`,
+							`${text("operationFailed1", { detail: flowDisplayText(error instanceof Error ? error.message : String(error), 500) })}\n${text("operationFailed2")}`,
 							"error",
 						);
 					}
