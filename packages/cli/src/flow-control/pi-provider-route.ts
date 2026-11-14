@@ -1,5 +1,6 @@
 import type { Api, Model } from "@earendil-works/pi-ai";
 import { ModelRuntime } from "@earendil-works/pi-coding-agent";
+import { isQualifiedLlamaProvider } from "../llama.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 type Provider = NonNullable<ReturnType<ModelRuntime["getProvider"]>>;
@@ -23,12 +24,12 @@ export function preparePiProviderRoute(runtime: ModelRuntime, model: RouteModel,
 			"getRegisteredNativeProvider",
 		] as const)
 			if (runtime[key] !== ModelRuntime.prototype[key]) reject();
-		// API family is not a qualification criterion: the controller does not decode provider bodies.
-		// What must hold is that this transport is the one it wrapped, so its bound, cancellation and
-		// payload hook are known to run.
+		// The controller does not decode provider bodies. Qualify the converter and any native
+		// chat adapter so payload admission and cancellation cannot be bypassed.
+		const native = runtime.getRegisteredNativeProvider(selected.provider);
 		if (
 			!runtime.isBuiltinApiProvider(selected.api) ||
-			runtime.getRegisteredNativeProvider(selected.provider) ||
+			(native && !isQualifiedLlamaProvider(native, selected.api)) ||
 			runtime.getRegisteredProviderConfig(selected.provider)?.streamSimple
 		)
 			reject();

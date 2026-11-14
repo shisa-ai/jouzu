@@ -1,4 +1,5 @@
 import type { InlineExtension } from "@earendil-works/pi-coding-agent";
+import { createLlamaExtension } from "./llama.js";
 import { createDeferredMcpExtension } from "./mcp.js";
 
 /** These tools require their own transcript result to establish ownership or acknowledge delivery. */
@@ -38,9 +39,10 @@ export function createDirectToolPolicyExtension(): InlineExtension {
 	};
 }
 
-/** Keep codemode disabled and load MCP with deferred discovery. */
+/** Qualify llama.cpp chat transport, keep codemode disabled and load MCP with deferred discovery. */
 export function classicHostBuiltinOverrides(): InlineExtension[] {
 	return [
+		createLlamaExtension(),
 		{
 			name: "codemode",
 			builtin: true,
