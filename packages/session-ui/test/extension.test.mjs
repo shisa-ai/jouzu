@@ -14,6 +14,7 @@ const theme = {
 const catalog = {
 	format: (id) =>
 		({
+			"jouzu.cli.piUi.thinking.placeholder": "思考中…",
 			"jouzu.cli.session.line.fast": "fast",
 			"jouzu.cli.session.line.noModel": "no model",
 			"jouzu.cli.session.line.attention": "attention",
@@ -96,7 +97,10 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		});
 		const calls = { widgets: [], footers: [], editors: [] };
 		const ctx = context(root, calls);
+		const thinkingLabels = [];
+		ctx.ui.setHiddenThinkingLabel = (label) => thinkingLabels.push(label);
 		await handlers.get("session_start")({}, ctx);
+		assert.deepEqual(thinkingLabels, ["思考中…"]);
 		const runtimeDeadline = Date.now() + 2000;
 		while (!execCalls.some(({ command }) => command === "node") && Date.now() < runtimeDeadline) {
 			await new Promise((resolve) => setTimeout(resolve, 10));
@@ -139,6 +143,14 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		assert.equal(scopedCommandCalls, 1);
 		assert.equal(builtInModelPickerCalls, 0);
 
+		// A small dynamic catalog exercises a confirmed language change on the existing editor.
+		const originalPlaceholder = catalog.format;
+		catalog.format = (id) => (id === "jouzu.cli.piUi.thinking.placeholder" ? "Thinking..." : originalPlaceholder(id));
+		editor.render(80);
+		assert.equal(thinkingLabels.at(-1), "Thinking...");
+		catalog.format = originalPlaceholder;
+		editor.render(80);
+		assert.equal(thinkingLabels.at(-1), "思考中…");
 		const lineComponent = { render: (width) => [editor.render(width)[0]] };
 		const line = lineComponent.render(60)[0];
 		assert.equal(terminalTextWidth(line), 60);

@@ -45,6 +45,12 @@ writing them. Confirmation saves the choice and refreshes supported screens.
 | Commands, tool names, model IDs, paths, URLs, and diagnostic identifiers | Stay unchanged; see the [catalog glossary](localization-glossary.md). |
 | Model responses, tool output, and source errors | Are not UI translations. The response-language setting guides model explanations; quoted source text remains intact. |
 
+Fixed effort levels and the collapsed-thinking placeholder follow the interface
+language. Settings translate fixed display choices such as on/off, disabled,
+and configure without changing saved values. Provider-defined effort values,
+model names, theme names, transport identifiers, generated reasoning, and source
+errors retain their original text.
+
 Billing is handled by the Shisa service. Jouzu links to the account dashboard
 and sign-in page; it has no CLI billing screen. See [Shisa AI account](shisa.md).
 

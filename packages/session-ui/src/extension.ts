@@ -89,6 +89,14 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions): Se
 
 			pi.on("session_start", (_event, ctx) => {
 				if (ctx.mode !== "tui") return;
+				let thinkingPlaceholder: string | undefined;
+				const syncThinkingPlaceholder = () => {
+					const label = text.thinkingPlaceholder;
+					if (label === thinkingPlaceholder) return;
+					ctx.ui.setHiddenThinkingLabel?.(label);
+					thinkingPlaceholder = label;
+				};
+				syncThinkingPlaceholder();
 				try {
 					localizeSlashCommand = createSlashCommandLocalizer(options.catalog, pi.getCommands(), slashCommandOwnership);
 				} catch {
@@ -162,7 +170,10 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions): Se
 					ctx.ui.setEditorComponent(
 						(tui, theme, keybindings) =>
 							new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme), {
-								topLine: (width) => sessionLine?.render(width)[0],
+								topLine: (width) => {
+									syncThinkingPlaceholder();
+									return sessionLine?.render(width)[0];
+								},
 								slashCommandLocalizer: (command, description) => localizeSlashCommand(command, description),
 								...(options.onModelPicker ? { onModelPicker: options.onModelPicker } : {}),
 								...(options.onModelCycle ? { onModelCycle: options.onModelCycle } : {}),

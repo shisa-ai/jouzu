@@ -247,6 +247,8 @@ interface SettingsItemShape {
 	id: string;
 	label: string;
 	description?: string;
+	currentValue: string;
+	values?: string[];
 }
 
 interface SelectItemShape {
@@ -364,6 +366,19 @@ function buildTextTranslator(catalog: CatalogBundle): (raw: string) => string {
 	return (raw: string): string => {
 		const stripped = stripTerminalSequences(raw);
 		const trimmed = stripped.trim();
+		const step = /^Step ([12])\/2 · (.+)$/u.exec(trimmed);
+		if (step) {
+			const id = step[1] === "1" ? "perModelSelectModel" : "perModelSelectLevel";
+			if (step[2] === catalogText(en, `jouzu.cli.piUi.thinking.${id}`)) {
+				return raw.replace(
+					trimmed,
+					catalogText(catalog, "jouzu.cli.piUi.thinking.step", {
+						step: step[1],
+						description: catalogText(catalog, `jouzu.cli.piUi.thinking.${id}`),
+					}),
+				);
+			}
+		}
 		const exact = exactMap.get(trimmed);
 		if (exact) return raw.replace(trimmed, exact);
 
@@ -554,6 +569,59 @@ function localizeSettingsItems(list: SettingsList, catalog: CatalogBundle): Arra
 	return applyItemChanges(changes);
 }
 
+function localizeSettingsValues(list: SettingsList, catalog: CatalogBundle): Array<() => void> {
+	const items = (list as unknown as SettingsListInternals).items;
+	const restores: Array<() => void> = [];
+	try {
+		for (const item of items) {
+			if (!PI_SETTINGS_ITEM_IDS[item.id]) continue;
+			const original = item.currentValue;
+			const configured = item.id === "model-thinking" ? /^(\d+) configured$/u.exec(original) : null;
+			if (configured) {
+				item.currentValue = catalogText(catalog, "jouzu.cli.piUi.value.configured", { count: configured[1] });
+				restores.push(() => {
+					item.currentValue = original;
+				});
+				continue;
+			}
+			let key: string | undefined;
+			if (
+				item.values?.includes("true") &&
+				item.values.includes("false") &&
+				(original === "true" || original === "false")
+			)
+				key = original;
+			const fixed: Record<string, Record<string, string>> = {
+				warnings: { configure: "configure" },
+				"model-thinking": { none: "none" },
+				"http-idle-timeout": { disabled: "disabled" },
+				"default-project-trust": { Ask: "ask", "Always trust": "alwaysTrust", "Never trust": "neverTrust" },
+				"steering-mode": { "one-at-a-time": "oneAtATime", all: "all" },
+				"follow-up-mode": { "one-at-a-time": "oneAtATime", all: "all" },
+				"cache-warming-mode": { off: "off", streaming: "streaming", idle: "idle" },
+				"mermaid-rendering": { off: "off", streaming: "streaming", final: "final" },
+				"fullscreen-scrollbar": { auto: "auto", always: "always", hidden: "hidden" },
+				"fullscreen-wheel-scroll-lines": { auto: "auto" },
+				"tui-mode": { regular: "regular", fullscreen: "fullscreen" },
+				"fullscreen-exit-output": { transcript: "transcript", "resume-hint": "resumeHint" },
+				apply: { "save and go back": "saveBack" },
+				"single-mode": { "switch to single theme": "singleTheme" },
+			};
+			key ??= fixed[item.id]?.[original];
+			if (!key) continue;
+			const localized = catalogText(catalog, `jouzu.cli.piUi.value.${key}`);
+			item.currentValue = localized;
+			restores.push(() => {
+				item.currentValue = original;
+			});
+		}
+	} catch (error) {
+		for (const restore of restores.reverse()) restore();
+		throw error;
+	}
+	return restores;
+}
+
 function localizeSelectItems(list: SelectList, catalog: CatalogBundle): Array<() => void> {
 	const items = (list as unknown as { items?: SelectItemShape[] }).items ?? [];
 	const en = defaultCatalog();
@@ -579,6 +647,10 @@ function localizeSelectItems(list: SelectList, catalog: CatalogBundle): Array<()
 
 		const thinkingId = THINKING_LEVEL_IDS[item.value];
 		if (thinkingId && description) {
+			label = label.replace(
+				new RegExp(`${item.value}$`, "u"),
+				catalogText(catalog, `jouzu.cli.piUi.effort.${item.value}`),
+			);
 			const enDesc = catalogText(en, thinkingId);
 			if (description === enDesc) {
 				description = catalogText(catalog, thinkingId);
@@ -588,11 +660,15 @@ function localizeSelectItems(list: SelectList, catalog: CatalogBundle): Array<()
 				matched = true;
 			}
 		}
+		if (item.value.includes("/") && description && Object.hasOwn(THINKING_LEVEL_IDS, description)) {
+			description = catalogText(catalog, `jouzu.cli.piUi.effort.${description}`);
+		}
 		if (!matched && item.value === "__clear__" && label === enClearLabel) {
 			label = `  ${catalogText(catalog, "jouzu.cli.piUi.thinking.clearOverride")}`;
 			if (description?.startsWith(enRevertPrefix) && description.endsWith(enRevertSuffix)) {
 				const level = description.slice(enRevertPrefix.length, description.length - enRevertSuffix.length);
-				description = catalogText(catalog, "jouzu.cli.piUi.thinking.revertDefault", { level });
+				const effort = catalogText(catalog, `jouzu.cli.piUi.effort.${level}`);
+				description = catalogText(catalog, "jouzu.cli.piUi.thinking.revertDefault", { level: effort });
 			}
 			matched = true;
 		}
@@ -982,6 +1058,12 @@ function installPrototypePatches(
 					hint: (text: string) => theme.hint(translators.settingsHint(text)),
 				};
 				const itemRestores = localizeSettingsItems(this, catalog);
+				try {
+					itemRestores.push(...localizeSettingsValues(this, catalog));
+				} catch (error) {
+					for (const restore of itemRestores.reverse()) restore();
+					throw error;
+				}
 				list.theme = wrappedTheme;
 				try {
 					return originalRenderMainList.call(this, width);

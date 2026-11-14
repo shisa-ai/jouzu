@@ -85,7 +85,7 @@ export function renderSessionLine(
 	const model = formatModelId(snapshot.model.modelId, text);
 	const thinking = snapshot.model.thinkingLevel;
 	const qualifiers = [
-		thinking && thinking !== "off" ? sanitizeTerminalText(thinking) : "",
+		thinking && thinking !== "off" ? sanitizeTerminalText(text.thinkingLevels?.[thinking] ?? thinking) : "",
 		fastMode ? text.fast : "",
 	].filter(Boolean);
 	const modelIdentity = `${model}${qualifiers.length ? ` (${qualifiers.join(" · ")})` : ""}`;

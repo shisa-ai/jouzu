@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { createSessionUiStyles, renderSessionLine, renderStatusBar, terminalTextWidth } from "../dist/index.js";
+import {
+	createSessionUiStyles,
+	renderSessionLine,
+	renderStatusBar,
+	sessionUiText,
+	terminalTextWidth,
+} from "../dist/index.js";
 
 const plainStyles = createSessionUiStyles({ fg: (_role, value) => value }, { colorEnabled: false });
 const ansiStyles = createSessionUiStyles(
@@ -67,6 +73,21 @@ test("keeps wide and compact Session UI lines stable", () => {
 		renderStatusBar(snapshot, 80, plainStyles, text),
 		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0     19%/200k | ↑124k ↓9k | C?",
 	);
+});
+
+test("fixed effort labels follow the active catalog without changing model names", () => {
+	let locale = "en";
+	const labels = { en: "high", ja: "高" };
+	const dynamic = sessionUiText({ format: (id) => (id === "jouzu.cli.piUi.effort.high" ? labels[locale] : id) });
+	const state = { ...snapshot, model: { ...snapshot.model, thinkingLevel: "high" } };
+	assert.match(renderSessionLine(state, [], 80, plainStyles, dynamic), /gpt-5\.6-sol \(high\)/);
+	locale = "ja";
+	assert.match(renderSessionLine(state, [], 80, plainStyles, dynamic), /gpt-5\.6-sol \(高\)/);
+	for (let width = 1; width <= 120; width++) {
+		assert.equal(terminalTextWidth(renderSessionLine(state, [], width, plainStyles, dynamic)), width);
+	}
+	state.model.thinkingLevel = "provider-custom";
+	assert.match(renderSessionLine(state, [], 80, plainStyles, dynamic), /provider-custom/);
 });
 
 test("reports autonomous work on the Session Line", () => {

@@ -163,7 +163,7 @@ test("withPiUiLocalization localizes Pi /settings, submenus, and selector compon
 		treeFilterMode: "default",
 		warnings: {},
 		modelThinkingLevels: {},
-		availableDefaultModels: [],
+		availableDefaultModels: [{ provider: "example", id: "model-high", name: "Model high", reasoning: true }],
 		showHardwareCursor: true,
 		editorPaddingX: 0,
 		outputPad: 1,
@@ -194,9 +194,53 @@ test("withPiUiLocalization localizes Pi /settings, submenus, and selector compon
 			}
 			const renderedSettings = tui.stripTerminalSequences(selector.render(100).join("\n"));
 			assert.match(renderedSettings, /自動圧縮/u);
+			assert.match(renderedSettings, /オン/u);
+			assert.doesNotMatch(renderedSettings, /\btrue\b|\bfalse\b/u);
+			assert.equal(list.items.find((item) => item.id === "autocompact").currentValue, "true");
+			list.selectItem("warnings");
+			list.handleInput("\r");
+			assert.match(tui.stripTerminalSequences(list.render(100).join("\n")), /オン/u);
+			list.handleInput("\x1b");
+			list.selectItem("model-thinking");
+			list.handleInput("\r");
+			const modelStep = tui.stripTerminalSequences(list.render(100).join("\n"));
+			assert.match(modelStep, /手順 1\/2 · 設定するモデルを選択/u);
+			assert.doesNotMatch(modelStep, /Step|Select a model/u);
+			assert.match(modelStep, /model-high/u);
+			list.handleInput("\r");
+			const levelStep = tui.stripTerminalSequences(list.render(100).join("\n"));
+			assert.match(levelStep, /手順 2\/2/u);
+			assert.doesNotMatch(levelStep, /Step|\bhigh\b.*推論/u);
+			list.handleInput("\x1b");
+			list.handleInput("\x1b");
+			list.selectItem("autocompact");
 			assert.match(renderedSettings, /コンテキストが大きくなったときに自動で圧縮します/u);
 			assert.match(renderedSettings, /入力して検索 · Enter\/Space で変更 · Esc でキャンセル/u);
 
+			const settingCases = [
+				["warnings", "configure", "設定"],
+				["model-thinking", "none", "なし"],
+				["model-thinking", "2 configured", "2 件設定済み"],
+				["http-idle-timeout", "disabled", "無効"],
+				["steering-mode", "one-at-a-time", "1 件ずつ"],
+				["default-project-trust", "Ask", "確認する"],
+				["tui-mode", "fullscreen", "全画面"],
+				["theme", "high", "high"],
+				["transport", "websocket", "websocket"],
+			];
+			for (const [id, original, localized] of settingCases) {
+				const item = list.items.find((row) => row.id === id);
+				const saved = item.currentValue;
+				item.currentValue = original;
+				list.applyFilter("");
+				list.selectItem(id);
+				const rendered = tui.stripTerminalSequences(selector.render(100).join("\n"));
+				assert.ok(rendered.includes(localized), `${id}: ${rendered}`);
+				assert.equal(item.currentValue, original);
+				item.currentValue = saved;
+			}
+			list.applyFilter("");
+			list.selectItem("autocompact");
 			// Search in /settings matches both Japanese and original English labels.
 			list.applyFilter("テーマ");
 			assert.equal(
@@ -240,6 +284,8 @@ test("withPiUiLocalization localizes Pi /settings, submenus, and selector compon
 			);
 			const renderedThinking = tui.stripTerminalSequences(thinking.render(100).join("\n"));
 			assert.match(renderedThinking, /思考レベル/u);
+			assert.match(renderedThinking, /✓ 中/u);
+			assert.doesNotMatch(renderedThinking, /\bmedium\b|\bhigh\b/u);
 			assert.match(renderedThinking, /標準の推論（約 8k トークン） · 既定/u);
 
 			// TrustSelectorComponent (/trust)

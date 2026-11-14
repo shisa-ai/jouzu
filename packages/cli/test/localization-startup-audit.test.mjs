@@ -54,9 +54,17 @@ test("real Japanese startup localizes shared extension commands and matches revi
 	);
 	assert.match(
 		modelThinking.japanese,
-		/Step 1\/2 · Select a model to configure/u,
-		"keep the partial English leak visible",
+		/手順 1\/2 · 設定するモデルを選択/u,
+		"the step instruction is localized before rendering",
 	);
+	assert.doesNotMatch(modelThinking.japanese, /Step|Select a model/u);
+	assert.doesNotMatch(
+		actual.surfaces.find((row) => row.surface === "settings.root" && row.width === 100).japanese,
+		/\btrue\b|\bfalse\b/u,
+	);
+	const collapsed = actual.surfaces.find((row) => row.surface === "thinking.collapsed" && row.width === 100);
+	assert.match(collapsed.japanese, /思考中…/u);
+	assert.doesNotMatch(collapsed.japanese, /Thinking|original reasoning/u);
 	assert.ok(actual.surfaces.length, "the audit must drive help and error paths, not just slash descriptions");
 });
 

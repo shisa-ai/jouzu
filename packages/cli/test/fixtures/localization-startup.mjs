@@ -23,8 +23,10 @@ InteractiveMode.prototype.run = async function () {
 	this.showExtensionError = (...args) => observations.errors.push(args.map(String));
 	const createUI = this.createExtensionUIContext.bind(this);
 	let activeSurface = "startup";
+	const thinkingLabels = [];
 	this.createExtensionUIContext = () => ({
 		...createUI(),
+		setHiddenThinkingLabel: (label) => thinkingLabels.push(label),
 		notify: (text, type) => observations.surfaces.push({ surface: activeSurface, kind: "notification", type, text }),
 		custom: async (factory) => {
 			const component = await factory(this.ui, this.theme, new KeybindingsManager(TUI_KEYBINDINGS), () => {});
@@ -45,6 +47,21 @@ InteractiveMode.prototype.run = async function () {
 	try {
 		await this.bindCurrentSessionExtensions();
 		observations.runtimeSummary = this.options.sessionInfoFooter();
+		const { AssistantMessageComponent, initTheme } = await import("@earendil-works/pi-coding-agent");
+		initTheme("dark");
+		const thinking = new AssistantMessageComponent(
+			{ role: "assistant", content: [{ type: "thinking", thinking: "original reasoning text" }] },
+			true,
+			undefined,
+			thinkingLabels.at(-1),
+		);
+		for (const width of [48, 100])
+			observations.surfaces.push({
+				surface: "thinking.collapsed",
+				kind: "view",
+				width,
+				text: stripTerminalSequences(thinking.render(width).join("\n")),
+			});
 		// Open the real /settings selector and discover its rows and submenus.
 		// No value is accepted, and every submenu is cancelled after inspection.
 		this.showSelector = (create) => {

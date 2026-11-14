@@ -262,6 +262,9 @@ export interface SessionUiWorkDashboardText {
 export interface SessionUiText {
 	/** Paid priority processing is active for this session's model. */
 	readonly fast: string;
+	/** Fixed effort labels; unknown provider-defined values remain unchanged. */
+	readonly thinkingLevels?: Readonly<Record<string, string>>;
+	readonly thinkingPlaceholder?: string;
 	/** Shown in place of a model identity the session has not reported. */
 	readonly noModel: string;
 	/** The Session Line's label for unresolved work when no activity detail fits. */
@@ -332,6 +335,17 @@ export function sessionUiText(catalog: SessionUiCatalog): SessionUiText {
 		},
 	};
 	return {
+		get thinkingLevels() {
+			return Object.fromEntries(
+				["off", "minimal", "low", "medium", "high", "xhigh", "max"].map((level) => [
+					level,
+					catalog.format(`jouzu.cli.piUi.effort.${level}`),
+				]),
+			);
+		},
+		get thinkingPlaceholder() {
+			return catalog.format("jouzu.cli.piUi.thinking.placeholder");
+		},
 		get fast() {
 			return catalog.format(ids.lineFast);
 		},

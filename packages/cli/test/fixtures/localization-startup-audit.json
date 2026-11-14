@@ -605,8 +605,8 @@
     {
       "command": "status",
       "registered_extension": true,
-      "english": "Show the current Jouzu session, model, context, and profile status",
-      "japanese": "現在の Jouzu セッション、モデル、コンテキスト、プロファイルの状態を表示します",
+      "english": "Show session details, usage, and running work",
+      "japanese": "セッションの詳細、使用量、実行中の作業を表示します",
       "catalog": "translation-exists",
       "message_ids": [
         "jouzu.cli.presentation.command.statusDescription"
@@ -660,7 +660,7 @@
         "jouzu.cli.session.slash.thinking"
       ],
       "startup_description": "catalog-japanese-observed",
-      "detail_surfaces": "not-exercised"
+      "detail_surfaces": "selected-paths-exercised"
     },
     {
       "command": "tree",
@@ -713,11 +713,27 @@
   ],
   "surfaces": [
     {
+      "surface": "thinking.collapsed",
+      "kind": "view",
+      "width": 48,
+      "english": "\n Thinking...                                    ",
+      "japanese": "\n 思考中…                                        ",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "thinking.collapsed",
+      "kind": "view",
+      "width": 100,
+      "english": "\n Thinking...                                                                                        ",
+      "japanese": "\n 思考中…                                                                                            ",
+      "startup_output": "changed-needs-review"
+    },
+    {
       "surface": "settings.root",
       "kind": "view",
       "width": 48,
       "english": "────────────────────────────────────────────────\n>                                               \n\n→ Auto-compact                      true\n  Auto-resize images                true\n  Block images                      false\n  Skill commands                    true\n  Show hardware cursor              false\n  Editor padding                    0\n  Output padding                    1\n  Autocomplete max items            5\n  Clear on shrink                   false\n  Terminal progress                 false\n  (1/33)\n\n  Automatically compact context when it gets\n  too large\n\n  Type to search · Enter/Space to change · Es...\n────────────────────────────────────────────────",
-      "japanese": "────────────────────────────────────────────────\n>                                               \n\n→ 自動圧縮                              true\n  画像の自動リサイズ                    true\n  画像の送信をブロック                  false\n  スキルコマンド                        true\n  ハードウェアカーソルを表示            false\n  エディターの余白                      0\n  出力の余白                            1\n  自動補完の最大表示件数                5\n  縮小時に空行を消去                    false\n  端末の進行状況表示                    false\n  (1/33)\n\n  コンテキストが大きくなったときに自動で圧縮し\n  ます\n\n  入力して検索 · Enter/Space で変更 · Esc で...\n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\n>                                               \n\n→ 自動圧縮                              オン\n  画像の自動リサイズ                    オン\n  画像の送信をブロック                  オフ\n  スキルコマンド                        オン\n  ハードウェアカーソルを表示            オフ\n  エディターの余白                      0\n  出力の余白                            1\n  自動補完の最大表示件数                5\n  縮小時に空行を消去                    オフ\n  端末の進行状況表示                    オフ\n  (1/33)\n\n  コンテキストが大きくなったときに自動で圧縮し\n  ます\n\n  入力して検索 · Enter/Space で変更 · Esc で...\n────────────────────────────────────────────────",
       "startup_output": "changed-needs-review"
     },
     {
@@ -725,7 +741,7 @@
       "kind": "view",
       "width": 100,
       "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\n>                                                                                                   \n\n→ Auto-compact                      true\n  Auto-resize images                true\n  Block images                      false\n  Skill commands                    true\n  Show hardware cursor              false\n  Editor padding                    0\n  Output padding                    1\n  Autocomplete max items            5\n  Clear on shrink                   false\n  Terminal progress                 false\n  (1/33)\n\n  Automatically compact context when it gets too large\n\n  Type to search · Enter/Space to change · Esc to cancel\n────────────────────────────────────────────────────────────────────────────────────────────────────",
-      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\n>                                                                                                   \n\n→ 自動圧縮                              true\n  画像の自動リサイズ                    true\n  画像の送信をブロック                  false\n  スキルコマンド                        true\n  ハードウェアカーソルを表示            false\n  エディターの余白                      0\n  出力の余白                            1\n  自動補完の最大表示件数                5\n  縮小時に空行を消去                    false\n  端末の進行状況表示                    false\n  (1/33)\n\n  コンテキストが大きくなったときに自動で圧縮します\n\n  入力して検索 · Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\n>                                                                                                   \n\n→ 自動圧縮                              オン\n  画像の自動リサイズ                    オン\n  画像の送信をブロック                  オフ\n  スキルコマンド                        オン\n  ハードウェアカーソルを表示            オフ\n  エディターの余白                      0\n  出力の余白                            1\n  自動補完の最大表示件数                5\n  縮小時に空行を消去                    オフ\n  端末の進行状況表示                    オフ\n  (1/33)\n\n  コンテキストが大きくなったときに自動で圧縮します\n\n  入力して検索 · Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────────────────────────────────────────────────────────",
       "startup_output": "changed-needs-review"
     },
     {
@@ -915,7 +931,7 @@
       "kind": "view",
       "width": 48,
       "english": "────────────────────────────────────────────────\n→ Anthropic extra usage  true\n\n  Warn when Anthropic subscription auth may\n  use paid extra usage\n\n  Enter/Space to change · Esc to cancel\n────────────────────────────────────────────────",
-      "japanese": "────────────────────────────────────────────────\n→ Anthropic 追加利用の警告  true\n\n  Anthropic サブスクリプション認証で従量課金の\n  追加利用が発生する可能性があるときに警告しま\n  す\n\n  Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\n→ Anthropic 追加利用の警告  オン\n\n  Anthropic サブスクリプション認証で従量課金の\n  追加利用が発生する可能性があるときに警告しま\n  す\n\n  Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────",
       "startup_output": "changed-needs-review"
     },
     {
@@ -923,7 +939,7 @@
       "kind": "view",
       "width": 100,
       "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\n→ Anthropic extra usage  true\n\n  Warn when Anthropic subscription auth may use paid extra usage\n\n  Enter/Space to change · Esc to cancel\n────────────────────────────────────────────────────────────────────────────────────────────────────",
-      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\n→ Anthropic 追加利用の警告  true\n\n  Anthropic サブスクリプション認証で従量課金の追加利用が発生する可能性があるときに警告します\n\n  Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\n→ Anthropic 追加利用の警告  オン\n\n  Anthropic サブスクリプション認証で従量課金の追加利用が発生する可能性があるときに警告します\n\n  Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────────────────────────────────────────────────────────",
       "startup_output": "changed-needs-review"
     },
     {
@@ -938,7 +954,7 @@
       "kind": "view",
       "width": 48,
       "english": "────────────────────────────────────────────────\nPer-Model Thinking Level                        \n\nStep 1/2 · Select a model to configure          \n\n>                                               \n\n→ No models available  Log in to a provider or\n\n  Type to filter · Enter to select · Esc to go  \nback                                            \n────────────────────────────────────────────────",
-      "japanese": "────────────────────────────────────────────────\nモデル別の思考レベル                            \n\nStep 1/2 · Select a model to configure          \n\n>                                               \n\n→ 利用できるモデルがありません  先にプロバイダ\n\n  入力して絞り込み · Enter で選択 · Esc で戻る  \n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\nモデル別の思考レベル                            \n\n手順 1/2 · 設定するモデルを選択                 \n\n>                                               \n\n→ 利用できるモデルがありません  先にプロバイダ\n\n  入力して絞り込み · Enter で選択 · Esc で戻る  \n────────────────────────────────────────────────",
       "startup_output": "changed-needs-review"
     },
     {
@@ -946,7 +962,7 @@
       "kind": "view",
       "width": 100,
       "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\nPer-Model Thinking Level                                                                            \n\nStep 1/2 · Select a model to configure                                                              \n\n>                                                                                                   \n\n→ No models available  Log in to a provider or configure an API key first\n\n  Type to filter · Enter to select · Esc to go back                                                 \n────────────────────────────────────────────────────────────────────────────────────────────────────",
-      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\nモデル別の思考レベル                                                                                \n\nStep 1/2 · Select a model to configure                                                              \n\n>                                                                                                   \n\n→ 利用できるモデルがありません  先にプロバイダーにログインするか API キーを設定してください\n\n  入力して絞り込み · Enter で選択 · Esc で戻る                                                      \n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\nモデル別の思考レベル                                                                                \n\n手順 1/2 · 設定するモデルを選択                                                                     \n\n>                                                                                                   \n\n→ 利用できるモデルがありません  先にプロバイダーにログインするか API キーを設定してください\n\n  入力して絞り込み · Enter で選択 · Esc で戻る                                                      \n────────────────────────────────────────────────────────────────────────────────────────────────────",
       "startup_output": "changed-needs-review"
     },
     {

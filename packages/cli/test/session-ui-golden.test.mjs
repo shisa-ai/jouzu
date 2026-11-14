@@ -86,10 +86,10 @@ const SESSION_LINE_GOLDEN = {
 	"en-80": "/model choose                                          Codex gpt-5.6-sol (xhigh)",
 	"en-120":
 		"/model choose                                                                                  Codex gpt-5.6-sol (xhigh)",
-	"ja-48": "モデル選択 · ヘルプ    Codex gpt-5.6-sol (xhigh)",
-	"ja-80": "モデル選択 · ヘルプ                                    Codex gpt-5.6-sol (xhigh)",
+	"ja-48": "                  Codex gpt-5.6-sol (非常に高い)",
+	"ja-80": "モデル選択 · ヘルプ                               Codex gpt-5.6-sol (非常に高い)",
 	"ja-120":
-		"モデル選択 · ヘルプ                                                                            Codex gpt-5.6-sol (xhigh)",
+		"モデル選択 · ヘルプ                                                                       Codex gpt-5.6-sol (非常に高い)",
 };
 
 const STATUS_BAR_GOLDEN = {
