@@ -15,6 +15,7 @@ import {
 import type { JouzuPaths } from "./paths.js";
 import { validatePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 import { isShisaSignedOut, readShisaLoginToken } from "./shisa-link/credentials.js";
+import { readShisaLinkState, shisaLinkStatePath } from "./shisa-link/state.js";
 
 const REGISTRY_MAX_BYTES = 256 * 1024;
 const OVERRIDES_MAX_BYTES = 64 * 1024;
@@ -462,22 +463,61 @@ function sameAuth(left: CatalogSourceAuth, right: CatalogSourceAuth): boolean {
 	);
 }
 
-/** True when a source targets the built-in Shisa API endpoint and credential reference. */
-export function isShisaApiCatalogEndpoint(source: CatalogSource): boolean {
-	return source.url === SHISA_API_CATALOG_SOURCE.url && sameAuth(source.auth, SHISA_API_CATALOG_SOURCE.auth);
+/**
+ * Catalog URL returned by the platform at Shisa sign-in, so a session signed in to
+ * another Shisa environment reads that environment's catalog. Only HTTPS, or HTTP to
+ * this machine, without embedded credentials, query, or fragment, is accepted.
+ */
+export function linkedShisaCatalogUrl(paths: JouzuPaths): string | undefined {
+	const raw = readShisaLinkState(shisaLinkStatePath(paths))?.endpoints.model_catalog_url;
+	if (!raw) return undefined;
+	try {
+		const parsed = new URL(raw);
+		if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && isLocalhost(parsed))) return undefined;
+		if (parsed.username || parsed.password || parsed.search || parsed.hash) return undefined;
+		return parsed.href;
+	} catch {
+		return undefined;
+	}
+}
+
+/**
+ * True when a source targets the built-in Shisa API endpoint and credential reference.
+ * With `paths`, the catalog URL from the saved Shisa sign-in also counts.
+ */
+export function isShisaApiCatalogEndpoint(source: CatalogSource, paths?: JouzuPaths): boolean {
+	if (!sameAuth(source.auth, SHISA_API_CATALOG_SOURCE.auth)) return false;
+	return (
+		source.url === SHISA_API_CATALOG_SOURCE.url || (paths !== undefined && source.url === linkedShisaCatalogUrl(paths))
+	);
 }
 
 /** True when a source is the built-in descriptor itself (reserved id plus exact endpoint and credential). */
-export function isBuiltinCatalogSource(source: CatalogSource): boolean {
-	return source.id === SHISA_API_CATALOG_SOURCE_ID && isShisaApiCatalogEndpoint(source);
+export function isBuiltinCatalogSource(source: CatalogSource, paths?: JouzuPaths): boolean {
+	return source.id === SHISA_API_CATALOG_SOURCE_ID && isShisaApiCatalogEndpoint(source, paths);
+}
+
+/**
+ * Built-in Shisa catalog URL. The saved sign-in's catalog URL applies when that sign-in
+ * is the catalog credential; `SHISA_API_KEY` or a saved catalog token keeps the default.
+ */
+function builtinShisaCatalogUrl(paths: JouzuPaths, env: NodeJS.ProcessEnv): string {
+	if (envCredentialValue(SHISA_API_CATALOG_SOURCE, env)) return SHISA_API_CATALOG_SOURCE.url;
+	try {
+		if (getCatalogSourceToken(paths, SHISA_API_CATALOG_SOURCE_ID) !== undefined) return SHISA_API_CATALOG_SOURCE.url;
+	} catch {
+		return SHISA_API_CATALOG_SOURCE.url;
+	}
+	return linkedShisaCatalogUrl(paths) ?? SHISA_API_CATALOG_SOURCE.url;
 }
 
 /** Explains why a user-registered source claiming the reserved id blocks the built-in source. */
 export function catalogSourceConflict(
 	source: CatalogSource,
 	catalog: CatalogBundle = defaultCatalog(),
+	paths?: JouzuPaths,
 ): string | undefined {
-	if (source.id !== SHISA_API_CATALOG_SOURCE_ID || isBuiltinCatalogSource(source)) return undefined;
+	if (source.id !== SHISA_API_CATALOG_SOURCE_ID || isBuiltinCatalogSource(source, paths)) return undefined;
 	return catalogText(catalog, SOURCE_MESSAGE_ID.reservedId, {
 		id: SHISA_API_CATALOG_SOURCE_ID,
 		url: SHISA_API_CATALOG_SOURCE.url,
@@ -498,7 +538,7 @@ function envCredentialValue(source: CatalogSource, env: NodeJS.ProcessEnv): stri
 
 /** Read the login credential only for the exact Shisa endpoint and auth reference. */
 function shisaLoginToken(source: CatalogSource, paths: JouzuPaths): string | undefined {
-	return isShisaApiCatalogEndpoint(source) ? readShisaLoginToken(paths) : undefined;
+	return isShisaApiCatalogEndpoint(source, paths) ? readShisaLoginToken(paths) : undefined;
 }
 
 /**
@@ -534,7 +574,7 @@ export function catalogSourceCredentialAvailable(
 	env: NodeJS.ProcessEnv,
 	paths?: JouzuPaths,
 ): boolean {
-	if (paths && isShisaApiCatalogEndpoint(source) && isShisaSignedOut(paths)) return false;
+	if (paths && isShisaApiCatalogEndpoint(source, paths) && isShisaSignedOut(paths)) return false;
 	const state = catalogSourceCredentialState(source, env, paths);
 	return !state || state.envSet || state.stored || state.login === true;
 }
@@ -651,7 +691,7 @@ export function isCodeOwnedCatalogSource(
 	catalog: CatalogBundle = defaultCatalog(),
 ): boolean {
 	return (
-		isBuiltinCatalogSource(source) &&
+		isBuiltinCatalogSource(source, paths) &&
 		!resolveBaseCatalogSources(paths, env, catalog).some((candidate) => candidate.id === source.id)
 	);
 }
@@ -664,16 +704,20 @@ export function resolveCatalogSources(
 ): CatalogSource[] {
 	const base = resolveBaseCatalogSources(paths, env, catalog);
 	const override = loadCatalogSourceOverrides(paths, catalog)[SHISA_API_CATALOG_SOURCE_ID];
-	const builtin: CatalogSource =
-		override?.enabled === undefined
-			? SHISA_API_CATALOG_SOURCE
-			: { ...SHISA_API_CATALOG_SOURCE, enabled: override.enabled };
+	const url = builtinShisaCatalogUrl(paths, env);
+	const builtin: CatalogSource = {
+		...SHISA_API_CATALOG_SOURCE,
+		url,
+		...(override?.enabled === undefined ? {} : { enabled: override.enabled }),
+	};
 	// A registry entry with the reserved id, or any entry targeting the same endpoint and
 	// credential, is the user's own registration of the built-in source. It keeps its label,
 	// enabled state, and URL-keyed cache, and the code-owned descriptor stays out of the way.
-	const claimed = base.some((source) => source.id === SHISA_API_CATALOG_SOURCE_ID || isShisaApiCatalogEndpoint(source));
+	const claimed = base.some(
+		(source) => source.id === SHISA_API_CATALOG_SOURCE_ID || isShisaApiCatalogEndpoint(source, paths),
+	);
 	const sources = (claimed ? base : [builtin, ...base]).map((source) =>
-		isShisaApiCatalogEndpoint(source) && isShisaSignedOut(paths) ? { ...source, enabled: false } : source,
+		isShisaApiCatalogEndpoint(source, paths) && isShisaSignedOut(paths) ? { ...source, enabled: false } : source,
 	);
 	return options.includeDisabled ? sources : sources.filter((source) => source.enabled);
 }
@@ -833,7 +877,7 @@ export function resolveCatalogBearer(
 	catalog: CatalogBundle = defaultCatalog(),
 ): string | undefined {
 	if (source.auth.type === "none") return undefined;
-	if (paths && isShisaApiCatalogEndpoint(source) && isShisaSignedOut(paths))
+	if (paths && isShisaApiCatalogEndpoint(source, paths) && isShisaSignedOut(paths))
 		throw new CatalogSourceError(catalogText(catalog, SOURCE_MESSAGE_ID.signedOut), "auth_required");
 	const name = source.auth.credentialRef.slice(4);
 	const fromEnv = envCredentialValue(source, env);

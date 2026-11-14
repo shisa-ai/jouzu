@@ -214,12 +214,17 @@ async function harness(t, behavior = {}) {
 	t.after(() => new Promise((resolve) => server.close(resolve)));
 
 	const env = { JOUZU_SHISA_PLATFORM_URL: origin, ...(behavior.env ?? {}) };
-	// The built-in Shisa source keeps its production URL; substitute only the
-	// transport so the test never reaches the real platform.
+	// Before sign-in the built-in Shisa source uses its production URL; substitute
+	// only the transport so the test never reaches the real platform, and record
+	// each substitution so tests can prove a signed-in refresh skipped it.
+	const productionCatalogFetches = [];
 	const catalogFetch = (input, init) => {
 		const raw = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
 		const url = new URL(raw);
-		if (url.origin === "https://api.shisa.ai") return fetch(new URL(`${url.pathname}${url.search}`, origin), init);
+		if (url.origin === "https://api.shisa.ai") {
+			productionCatalogFetches.push(url.pathname);
+			return fetch(new URL(`${url.pathname}${url.search}`, origin), init);
+		}
 		return fetch(input, init);
 	};
 	const fastSleep = async (ms) => {
@@ -305,7 +310,20 @@ async function harness(t, behavior = {}) {
 		onCatalogsChanged: picker.reloadCatalogs,
 		onAccountChanged: (change) => picker.refreshShisaAccount(change),
 	});
-	return { home, paths, env, origin, requests, runtime, picker, session, component, notifications, settingsManager };
+	return {
+		home,
+		paths,
+		env,
+		origin,
+		requests,
+		productionCatalogFetches,
+		runtime,
+		picker,
+		session,
+		component,
+		notifications,
+		settingsManager,
+	};
 }
 
 function focusAccount(component) {
@@ -328,6 +346,7 @@ test("Settings connect saves the credential and makes authenticated catalog mode
 	assert.equal(readShisaLoginToken(h.paths), "shsk:loopback-secret", "the device-flow credential is saved");
 	const catalogRequest = h.requests.find((request) => request.url === "/v1/jouzu/model-catalog");
 	assert.ok(catalogRequest, "the authenticated catalog is fetched after sign-in");
+	assert.deepEqual(h.productionCatalogFetches, [], "the catalog URL returned at sign-in is used");
 	assert.equal(
 		catalogRequest.authorization,
 		"Bearer shsk:loopback-secret",
@@ -424,6 +443,7 @@ test("OAuth login fetches and projects the authenticated catalog without a resta
 	);
 	const catalogRequest = h.requests.find((request) => request.url === "/v1/jouzu/model-catalog");
 	assert.ok(catalogRequest, "the authenticated catalog is fetched during login");
+	assert.deepEqual(h.productionCatalogFetches, [], "the catalog URL returned at sign-in is used");
 	assert.equal(
 		catalogRequest.authorization,
 		"Bearer shsk:loopback-secret",

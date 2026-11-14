@@ -429,7 +429,7 @@ export function getCatalogSourceStatus(
 	const credentialAvailable = credential
 		? credential.envSet || credential.stored || credential.login === true
 		: undefined;
-	const conflict = catalogSourceConflict(source, catalog);
+	const conflict = catalogSourceConflict(source, catalog, paths);
 	try {
 		const origin = readOriginState(paths, source.url);
 		const account = origin?.activeAccountRefHash
@@ -899,7 +899,7 @@ export async function refreshModelCatalog(
  */
 function automaticallySkipped(paths: JouzuPaths, source: CatalogSource, env: NodeJS.ProcessEnv): boolean {
 	return (
-		isBuiltinCatalogSource(source) &&
+		isBuiltinCatalogSource(source, paths) &&
 		isCodeOwnedCatalogSource(paths, source, env) &&
 		!catalogSourceCredentialAvailable(source, env, paths)
 	);

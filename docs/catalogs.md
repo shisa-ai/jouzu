@@ -4,7 +4,7 @@ A model catalog is a list of models that a server publishes for Jouzu. Catalogs 
 
 ## Built-in Shisa catalog
 
-- Source ID `shisa-api`, read from `https://api.shisa.ai/v1/jouzu/model-catalog`.
+- Source ID `shisa-api`, read from `https://api.shisa.ai/v1/jouzu/model-catalog`. When the `/login shisa` credential is used, Jouzu reads the catalog address returned at sign-in instead.
 - Jouzu checks credentials in this order: `SHISA_API_KEY`, a token saved for the catalog, then the `/login shisa` credential. See [Shisa AI account](shisa.md).
 - The login credential stays in `agent/auth.json`. It is not copied into the catalog token store or sent to other catalogs.
 - Disable it with `Space` in Settings / Catalogs; it cannot be edited or removed. The choice is stored in `catalog-overrides.json`; re-enabling restores the defaults.

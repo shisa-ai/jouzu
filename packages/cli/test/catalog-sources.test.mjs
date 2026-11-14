@@ -24,6 +24,7 @@ import {
 } from "../dist/catalog-sources.js";
 import { MODEL_CATALOG_MAX_BYTES } from "../dist/model-catalog.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
+import { newShisaInstallId, shisaLinkStatePath, writeShisaLinkState } from "../dist/shisa-link/state.js";
 
 const fixture = JSON.parse(
 	readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
@@ -562,6 +563,68 @@ test("removing a source or dropping bearer auth removes its saved token", () => 
 		setCatalogSourceToken(paths, source.id, "sk-saved-again");
 		store.remove(source.id);
 		assert.equal(Object.keys(loadCatalogSourceTokens(paths)).length, 0);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Shisa catalog follows the sign-in's catalog URL only when the sign-in is the credential", async () => {
+	const { root, paths } = setup();
+	try {
+		mkdirSync(paths.agentDir, { recursive: true });
+		const login = { type: "oauth", access: "sk-login-fixture", refresh: "", expires: Number.MAX_SAFE_INTEGER };
+		writeFileSync(join(paths.agentDir, "auth.json"), JSON.stringify({ shisa: login }), { mode: 0o600 });
+		const link = async (modelCatalogUrl) =>
+			writeShisaLinkState(
+				shisaLinkStatePath(paths),
+				{
+					install_id: newShisaInstallId(),
+					authorization_id: "authorization",
+					api_key_uuid: "key",
+					org: { id: "org", name: "Example Org", slug: "example" },
+					endpoints: {
+						openai_base_url: "https://staging.example.test/openai/v1",
+						model_catalog_url: modelCatalogUrl,
+						asr_realtime_url: "wss://staging.example.test/ws/asr/realtime",
+					},
+					link_token: "link-secret",
+					acked: true,
+				},
+				paths.stateDir,
+			);
+		const builtin = (env = {}) => resolveCatalogSources(paths, env).find((source) => source.id === "shisa-api");
+
+		assert.equal(builtin().url, SHISA_API_CATALOG_SOURCE.url, "no sign-in keeps the default URL");
+
+		const staging = "https://staging.example.test/v1/jouzu/model-catalog";
+		await link(staging);
+		const source = builtin();
+		assert.equal(source.url, staging);
+		assert.equal(catalogSourceConflict(source, undefined, paths), undefined);
+		assert.equal(resolveCatalogBearer(source, {}, paths), login.access);
+		assert.equal(catalogSourceCredentialState(source, {}, paths).login, true);
+		assert.throws(
+			() => resolveCatalogBearer({ ...source, url: "https://unrelated.example/v1/jouzu/model-catalog" }, {}, paths),
+			/not set/,
+			"the sign-in token is sent only to the signed-in catalog URL",
+		);
+
+		assert.equal(builtin({ SHISA_API_KEY: "sk-env-fixture" }).url, SHISA_API_CATALOG_SOURCE.url);
+		setCatalogSourceToken(paths, "shisa-api", "sk-catalog-fixture");
+		assert.equal(builtin().url, SHISA_API_CATALOG_SOURCE.url, "a saved catalog token keeps the default URL");
+		removeCatalogSourceToken(paths, "shisa-api");
+
+		for (const unsafe of [
+			"http://staging.example.test/v1/jouzu/model-catalog",
+			"https://user:pass@staging.example.test/v1/jouzu/model-catalog",
+			"https://staging.example.test/v1/jouzu/model-catalog?x=1",
+			"ftp://staging.example.test/v1/jouzu/model-catalog",
+		]) {
+			await link(unsafe);
+			assert.equal(builtin().url, SHISA_API_CATALOG_SOURCE.url, unsafe);
+		}
+		await link("http://127.0.0.1:8788/v1/jouzu/model-catalog");
+		assert.equal(builtin().url, "http://127.0.0.1:8788/v1/jouzu/model-catalog", "local development gateway");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
