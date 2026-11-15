@@ -396,6 +396,7 @@ test("reload re-adapts added, removed, and changed models.json entries", async (
 	const { createAstraCompatibilityExtension } = await import("../dist/astra-compatibility.js");
 	const dir = await mkdtemp(join(tmpdir(), "jouzu-astra-reload-"));
 	let session;
+	const refreshes = new Set();
 	try {
 		const modelsPath = join(dir, "models.json");
 		const writeModels = (models) =>
@@ -424,6 +425,17 @@ test("reload re-adapts added, removed, and changed models.json entries", async (
 			allowModelNetwork: false,
 			refreshOnCreate: false,
 		});
+		// Provider registration starts cache refreshes without returning their promises.
+		const refresh = runtime.refresh.bind(runtime);
+		runtime.refresh = (...args) => {
+			const pending = refresh(...args);
+			refreshes.add(pending);
+			pending.then(
+				() => refreshes.delete(pending),
+				() => refreshes.delete(pending),
+			);
+			return pending;
+		};
 		// Plays the model picker's /reload role: the registry is refreshed after
 		// teardown and before Astra re-adapts the resolved list.
 		const refresher = {
@@ -496,6 +508,7 @@ test("reload re-adapts added, removed, and changed models.json entries", async (
 		assert.equal(session.model.thinkingLevelMap?.max, "max");
 	} finally {
 		session?.dispose();
+		while (refreshes.size) await Promise.all([...refreshes]);
 		await rm(dir, { recursive: true, force: true });
 	}
 });
