@@ -400,6 +400,51 @@ test("session service updates native recovery gates and authorizes one reviewed 
 	assert.equal((await branch.attachment.nativeRequests.snapshot())[1].retryOf, held.id);
 });
 
+for (const change of ["branch before clear", "branch during snapshot", "requests"]) {
+	test(`confirmed clear refuses changed ${change} before releasing holds`, async (t) => {
+		const f = await fixture(t, { retainInputs: true, holdInput: () => true });
+		await f.session.prompt("held input");
+		const branch = f.service.branch();
+		const store = branch.attachment.nativeRequests;
+		const expected = { branch, requests: JSON.stringify(await store.snapshot()) };
+		let resets = 0;
+		const reset = store.reset.bind(store);
+		const resetMock = t.mock.method(store, "reset", (...args) => {
+			resets++;
+			return reset(...args);
+		});
+		let branchMock;
+		if (change === "branch before clear") branchMock = t.mock.method(f.service, "branch", () => ({ ...branch }));
+		else if (change === "branch during snapshot") {
+			const snapshot = store.snapshot.bind(store);
+			t.mock.method(store, "snapshot", async () => {
+				const records = await snapshot();
+				branchMock = t.mock.method(f.service, "branch", () => ({ ...branch }));
+				return records;
+			});
+		} else expected.requests = "[]";
+		try {
+			await assert.rejects(f.service.clearFlow(expected), { code: "stale" });
+			assert.equal(resets, 0);
+			assert.equal(store.recoveryBlocked, true);
+		} finally {
+			branchMock?.mock.restore();
+			resetMock.mock.restore();
+		}
+	});
+}
+
+test("confirmed clear releases only the unchanged reviewed branch", async (t) => {
+	const f = await fixture(t, { retainInputs: true, holdInput: () => true });
+	await f.session.prompt("held input");
+	const branch = f.service.branch();
+	const expected = { branch, requests: JSON.stringify(await branch.attachment.nativeRequests.snapshot()) };
+	const result = await f.service.clearFlow(expected);
+	assert.equal(result.releasedRequests, 1);
+	assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
+	assert.equal(f.requests.length, 0);
+});
+
 test("session service reports busy retry without granting permission", async (t) => {
 	const f = await fixture(t, { retainInputs: true, holdInput: () => true });
 	const branch = f.service.branch();

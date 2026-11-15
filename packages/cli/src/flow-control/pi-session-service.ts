@@ -69,6 +69,12 @@ export interface PiFlowBranchResources {
 	waitSourceRecovery: { restored: number; missing: string[] };
 }
 
+/** The branch and request state the user confirmed for a non-destructive release. */
+export interface PiFlowClearExpectation {
+	branch: PiFlowBranchResources;
+	requests: string;
+}
+
 /** Own session storage and each branch controller across awaited Pi lifecycle callbacks. */
 export class PiFlowSessionService {
 	private current?: PiFlowBranchResources;
@@ -537,8 +543,8 @@ export class PiFlowSessionService {
 	}
 
 	/** Release a stuck active reservation without deleting receipts or stopping producer jobs. */
-	clearFlow() {
-		return this.resetFlowImpl(false);
+	clearFlow(expected?: PiFlowClearExpectation) {
+		return this.resetFlowImpl(false, undefined, expected);
 	}
 
 	/** Destructively reset flow delivery after an idle boundary; provider and producer jobs keep running. */
@@ -546,15 +552,22 @@ export class PiFlowSessionService {
 		return this.resetFlowImpl(true, onReset);
 	}
 
-	private resetFlowImpl(destructive: boolean, onReset?: () => void) {
+	private resetFlowImpl(destructive: boolean, onReset?: () => void, expected?: PiFlowClearExpectation) {
 		return this.registry.run(async () => {
 			const branch = this.branch();
+			if (expected && branch !== expected.branch)
+				throw new FlowLedgerError("stale", "Flow release branch changed.");
 			const reserve = destructive
 				? branch.host.atQueueMaintenance.bind(branch.host)
 				: branch.host.atIdle.bind(branch.host);
 			const result = await reserve(async () => {
 				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow reset branch changed.");
 				const state = await branch.attachment.ledger.snapshot();
+				if (expected) {
+					const requests = JSON.stringify(await branch.attachment.nativeRequests.snapshot());
+					if (this.branch() !== expected.branch || requests !== expected.requests)
+						throw new FlowLedgerError("stale", "Flow release confirmation changed.");
+				}
 				const attemptId = state.activeAttemptId;
 				if (attemptId && !destructive)
 					await branch.attachment.ledger.emergencyReset(

@@ -18,7 +18,12 @@ import {
 	undispatchedRecord,
 } from "./native-admission.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
-import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
+import {
+	type PiFlowBranchResources,
+	type PiFlowClearExpectation,
+	type PiFlowSessionOptions,
+	PiFlowSessionService,
+} from "./pi-session-service.js";
 import { settlePrintWork } from "./print-settle.js";
 import { FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
@@ -903,9 +908,9 @@ export class PiSessionFlowIngress implements Ingress {
 	resolveUncertainAttempt(id: string, resolution: "retry" | "discard") {
 		return this.repairNative((service) => service.resolveUncertainAttempt(id, resolution));
 	}
-	clearFlow() {
+	clearFlow(expected?: PiFlowClearExpectation) {
 		return this.manage(async (service) => {
-			const result = await service.clearFlow();
+			const result = await service.clearFlow(expected);
 			this.resumeAutomated();
 			return result;
 		});

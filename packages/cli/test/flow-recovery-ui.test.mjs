@@ -55,7 +55,12 @@ function fixture() {
 		inspect: async () => ({ scope: branch.scope, submissions: [], uncertain: [] }),
 		automatedPause: () => undefined,
 		retryNativeRequest: async (...args) => calls.push(["retry", ...args]),
-		clearFlow: async () => {
+		clearFlow: async (expected) => {
+			if (expected) {
+				const requests = JSON.stringify(await branch.attachment.nativeRequests.snapshot());
+				if (branch !== expected.branch || requests !== expected.requests)
+					throw Error("Flow confirmation changed while waiting");
+			}
 			calls.push(["clear"]);
 			return { kind: "inactive", releasedRequests: 1 };
 		},
@@ -82,6 +87,7 @@ function fixture() {
 		notices,
 		ctx,
 		request,
+		branch: () => branch,
 		changeBranch: () => {
 			branch = { ...branch };
 		},
@@ -129,6 +135,21 @@ test("a changed request during clear confirmation is not released", async () => 
 	await f.run();
 	assert.deepEqual(f.calls, []);
 	assert.match(f.notices.at(-1), /changed while/);
+});
+
+test("branch change during the post-confirmation snapshot refuses clear", async () => {
+	const f = fixture();
+	const store = f.branch().attachment.nativeRequests;
+	let reads = 0;
+	store.snapshot = async () => {
+		if (++reads === 2) f.changeBranch();
+		return [f.request];
+	};
+	f.ctx.ui.select = async (_title, choices) => choices.find((label) => label.startsWith("Release saved"));
+	f.ctx.ui.confirm = async () => true;
+	await f.run();
+	assert.deepEqual(f.calls, []);
+	assert.match(f.notices.at(-1), /changed/);
 });
 
 test("noninteractive flow never opens a selector", async () => {

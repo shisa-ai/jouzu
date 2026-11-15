@@ -8,6 +8,7 @@ import { type FlowUnaccountableWork, formatFlowStatus, projectFlowStatus } from 
 import { captureFlowStatusContext, flowDisplayText, FlowStatusMessageId as Id } from "./flow-status-context.js";
 import { nativeHoldHash, nativeHoldPending } from "./native-request-store.js";
 import type { PiSessionFlowIngress } from "./pi-session-ingress.js";
+import type { PiFlowClearExpectation } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowTask } from "./task-producer.js";
 
@@ -137,7 +138,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			});
 			pi.registerCommand("flow", {
 				description: catalogText(catalog, "jouzu.cli.session.slash.flow"),
-				handler: async function handle(args, ctx) {
+				handler: async function handle(args, ctx, clearExpectation?: PiFlowClearExpectation) {
 					const USAGE = Array.from({ length: 13 }, (_, index) => text(`usage${index + 1}`)).join("\n");
 					const FLOW_OFF_NOTICE = Array.from({ length: 3 }, (_, index) => text(`offNotice${index + 1}`)).join("\n");
 					const [verb, target, choice, ...rest] = args.trim().split(/\s+/).filter(Boolean);
@@ -339,7 +340,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 												if (ingress.branch() !== branch) throw new FlowLedgerError("stale", text("stale"));
 												if (JSON.stringify(await branch.attachment.nativeRequests.snapshot()) !== requestSnapshot)
 													throw new FlowLedgerError("stale", text("stale"));
-												await handle("clear", ctx);
+												await handle("clear", ctx, { branch, requests: requestSnapshot });
 											}
 										},
 									});
@@ -382,7 +383,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							}
 							let result: Awaited<ReturnType<PiSessionFlowIngress["clearFlow"]>>;
 							try {
-								result = await ingress.clearFlow();
+								result = await ingress.clearFlow(clearExpectation);
 							} catch (error) {
 								if (error instanceof FlowLedgerError && error.code === "busy") {
 									notify(text("clearBusy"), "error");
