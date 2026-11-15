@@ -16,9 +16,9 @@
 
 /** The pinned Pi provenance this record was taken from. */
 export const RELEASE_SURFACE_PI_PROVENANCE = {
-	version: "1.5.0",
-	tag: "v1.5.0",
-	commit: "f9a26365568127461c47a07a37dcb42c140a3ac5",
+	version: "1.5.2",
+	tag: "v1.5.2",
+	commit: "b4afdddf44e059c67ccf5097e5317d913521b470",
 } as const;
 
 /** `pi`, `service`, or a bundled release-extension package ID. */

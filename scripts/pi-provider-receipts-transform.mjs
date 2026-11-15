@@ -61,15 +61,6 @@ export function isBuiltinApiProvider(api) {
 			"        reasoning: rawUsage.completion_tokens_details?.reasoning_tokens || 0,",
 			"        reasoning: rawUsage.completion_tokens_details?.reasoning_tokens ?? rawUsage.reasoning_tokens ?? 0,",
 		);
-	} else if (path === "dist/api/simple-options.js") {
-		change(
-			"    const available = model.contextWindow - estimateContextTokens(context).tokens - CONTEXT_SAFETY_TOKENS;",
-			`    const estimatedTokens = estimateContextTokens(context).tokens;
-    // Token estimates can undercount dense tool output. Scale the reserve for long prompts;
-    // this is a heuristic, so provider overflow recovery must remain available.
-    const safetyTokens = Math.max(CONTEXT_SAFETY_TOKENS, Math.ceil(estimatedTokens * 0.05));
-    const available = model.contextWindow - estimatedTokens - safetyTokens;`,
-		);
 	} else if (path === "dist/utils/oauth-page.js") {
 		text = transformOAuthBranding(text);
 	} else throw new Error(`Unknown provider receipt path: ${path}`);
@@ -79,6 +70,5 @@ export const paths = [
 	"dist/compat.js",
 	"dist/compat.d.ts",
 	"dist/api/openai-completions.js",
-	"dist/api/simple-options.js",
 	"dist/utils/oauth-page.js",
 ];

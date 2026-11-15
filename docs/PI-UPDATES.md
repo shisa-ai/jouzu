@@ -86,6 +86,16 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 ## Update log
 
+### Pi 1.5.2 — qualified locally
+
+- **Tag and npm `gitHead`:** `v1.5.2` at `b4afdddf44e059c67ccf5097e5317d913521b470`.
+- **Dependency scope:** Aligned runtime packages use 1.5.2; Pi Server and protocol stay at 1.1.0 and chord at 1.3.0. Node.js remains at least 22.19. Mermaid rendering uses lovely-mermaid 0.3.3 instead of grok-mermaid 0.2.3.
+- **User-visible changes:** Richer Mermaid diagrams; session forks into the current directory when the original directory is gone; streaming large-file reads and bounded grep context; Windows find-pattern and clipboard fixes; pasted-text restoration; MCP token-refresh, connection cleanup, and response-size repairs; and coordinated RPC/print shutdown cleanup. Pi's OpenAI-compatible requests omit an empty `tools` array; older proxies can opt into `compat.requiresToolsWithToolHistory`. Remote grep implementations must override `execute()` rather than relying on the deprecated `GrepOperations.readFile` callback for context lines.
+- **Jouzu integration:** Cache warming stays off by default. Native Anthropic conversation and summary requests disable server-side message-thread deltas so final-request checks cover complete messages. Cache-warming admission uses Pi's shared request-option helper. Branch navigation retains awaited flow attachment before `session_tree`; RPC and print cleanup retain their bounded accepted-work handling. The downstream context-reserve transform is retired because Pi supplies a 15% reserve with bounded output near a full window. Ten deviation manifests remain.
+- **Interface review:** Re-inspected interactive startup, selectors, settings, login, custom editors, overlays, message rendering, key routing, and extension declarations. No general interface catalog or locale hook was found; the recorded Pi surface provenance is 1.5.2. Recording-terminal fixtures do not establish physical-terminal behavior.
+- **Advisory scope:** The source lock reports moderate advisories for `@hono/node-server` and `hono` in WebAIO's unused nested MCP SDK. The release bundler excludes that SDK subtree; packed-file validation must confirm its absence. The optional first-use Camoufox lock retains moderate glob/minimatch advisories outside the bundled package. This is not a clean source dependency audit.
+- **Qualification:** Online npm integrity/tag/latest checks, the complete local release gate, API/CLI/RPC contracts, packed installation, synthetic update/rollback, and Python artifact checks pass. All eleven installed Pi package families match registry bytes or documented deviations. Registry signature verification reports no invalid or missing signatures. These are local Linux results, not native Windows/macOS or live-provider qualification.
+
 ### Pi 1.5.0 — qualified locally
 
 - **Tag and npm `gitHead`:** `v1.5.0` at `f9a26365568127461c47a07a37dcb42c140a3ac5`.

@@ -113,7 +113,7 @@ test("doctor marks the Pi 1.5 surface inspection stale for a different runtime",
 		current.piRuntimeVersion = "1.4.0";
 		const report = createDoctorReport(current).report;
 		const before = JSON.stringify(report);
-		assert.match(flat(formatDoctorReport(report, RENDER)), /inspected against Pi 1\.5\.0, not the running Pi 1\.4\.0/u);
+		assert.match(flat(formatDoctorReport(report, RENDER)), /inspected against Pi 1\.5\.2, not the running Pi 1\.4\.0/u);
 		assert.match(flat(formatDoctorReport(report, { ...RENDER, catalog: loadCatalog("ja") })), /Pi 1\.4\.0 では未確認/u);
 		assert.equal(JSON.stringify(report), before);
 	} finally {

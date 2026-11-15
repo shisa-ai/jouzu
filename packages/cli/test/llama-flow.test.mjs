@@ -70,6 +70,22 @@ async function fixture(t, { overlay = false, raw = false } = {}) {
 		authPath: join(root, "auth.json"),
 		refreshOnCreate: false,
 	});
+	// Provider registration starts a cache refresh without returning its promise.
+	// Join every refresh before deleting files that its credential checks can write.
+	const refreshes = new Set();
+	const refresh = runtime.refresh.bind(runtime);
+	runtime.refresh = (...args) => {
+		const pending = refresh(...args);
+		refreshes.add(pending);
+		pending.then(
+			() => refreshes.delete(pending),
+			() => refreshes.delete(pending),
+		);
+		return pending;
+	};
+	afterCleanup(t, async () => {
+		while (refreshes.size) await Promise.all([...refreshes]);
+	});
 	const extension = classicHostBuiltinOverrides().find((entry) => entry.name === "llama.cpp");
 	if (!raw) assert.ok(extension, "Jouzu must install its bundled llama.cpp adapter");
 	const commands = new Map();

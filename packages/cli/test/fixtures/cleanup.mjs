@@ -12,6 +12,7 @@ export function afterCleanup(t, cleanup) {
 				try {
 					await callback();
 				} catch (error) {
+					t.diagnostic(error?.stack ?? String(error));
 					errors.push(error);
 				}
 			}

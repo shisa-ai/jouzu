@@ -11,10 +11,10 @@ function context(tokens) {
 
 const model = { contextWindow: 262144, maxTokens: 131072 };
 
-test("output budget reserves five percent of the estimated prompt for tokenizer uncertainty", () => {
+test("output budget reserves fifteen percent of the estimated prompt for tokenizer uncertainty", () => {
 	// A 170457-token estimate was 4097 below the server count, exceeding the fixed reserve by one.
 	const output = clampMaxTokensToContext(model, context(170457), model.maxTokens);
-	assert.equal(output, 57595);
+	assert.equal(output, 38114);
 	assert.ok(174554 + output < model.contextWindow);
 	assert.ok(Number.isInteger(output));
 });
@@ -64,7 +64,7 @@ test("OpenAI-compatible payload uses the conservative budget after unmeasured tr
 		},
 	).result();
 	assert.match(result.errorMessage, /fixture-before-network/);
-	assert.equal(payload.max_tokens, 81248);
+	assert.equal(payload.max_tokens, 64020);
 	assert.deepEqual(input, original);
 });
 

@@ -27,6 +27,32 @@ test("native receipts hash the final real-provider payload after transforms", as
 	await assert.rejects(f.store.finish(record.id, "failure"), { code: "transition" });
 });
 
+test("Anthropic native and summary requests disable server-side thread deltas", async (t) => {
+	for (const maintenance of [false, true]) {
+		const seen = [];
+		const f = await nativeRequests(t, {
+			native: async (model, _context, options) => {
+				seen.push({ api: model.api, disabled: options.disableContinuation });
+				await options.onPayload({ messages: [{ role: "user", content: "fixture" }] }, model);
+				return { result: async () => ({ ...assistant(), api: model.api }) };
+			},
+		});
+		f.session.agent.state.model = { ...f.session.agent.state.model, api: "anthropic-messages" };
+		if (maintenance) {
+			Object.defineProperty(f.session, "isCompacting", { configurable: true, get: () => true });
+			const response = await f.session.agent.streamFunction(
+				f.session.model,
+				{ messages: [{ role: "user", content: "Summarize", timestamp: 1 }] },
+				{},
+			);
+			await response.result();
+			delete f.session.isCompacting;
+		} else await f.session.prompt("request");
+		assert.equal(seen.length, 1);
+		assert.deepEqual(seen[0], { api: "anthropic-messages", disabled: true });
+	}
+});
+
 test("native source capture distinguishes duplicate input by operation before context filtering", async (t) => {
 	const f = await nativeRequests(t, {
 		retainInputs: true,

@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import {
-	CacheWarmer,
 	getCacheWarmingDelayMs,
 	getPromptCacheTtlMs,
-	isReplayable,
-} from "../../../node_modules/@earendil-works/pi-coding-agent/dist/core/cache-warmer.js";
+	isCacheWarmingReplayable as isReplayable,
+} from "@earendil-works/pi-ai";
+import { CacheWarmer } from "../../../node_modules/@earendil-works/pi-coding-agent/dist/core/cache-warmer.js";
 import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { assembledSession } from "./fixtures/flow-assembly.mjs";
 

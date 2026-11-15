@@ -67,9 +67,9 @@ test("gives every release extension a versioned display entry point without rewr
 
 test("records the inspected Pi provenance and flags version changes for reinspection", () => {
 	assert.deepEqual(RELEASE_SURFACE_PI_PROVENANCE, {
-		version: "1.5.0",
-		tag: "v1.5.0",
-		commit: "f9a26365568127461c47a07a37dcb42c140a3ac5",
+		version: "1.5.2",
+		tag: "v1.5.2",
+		commit: "b4afdddf44e059c67ccf5097e5317d913521b470",
 	});
 	const pi = RELEASE_SURFACES.filter((candidate) => candidate.owner === "pi");
 	for (const surface of pi) {

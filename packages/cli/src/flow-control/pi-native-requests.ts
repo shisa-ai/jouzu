@@ -511,6 +511,8 @@ export class PiNativeRequests {
 					: undefined;
 				const response = await native(model, context, {
 					...options,
+					// Admission records full Anthropic payloads; do not replace them with server-side thread deltas.
+					...(model.api === "anthropic-messages" ? { disableContinuation: true } : {}),
 					...(flowValidateProvider ? { flowValidateProvider } : {}),
 					onPayload: async (payload, requestModel) => {
 						this.assertActive();
@@ -640,6 +642,8 @@ export class PiNativeRequests {
 					: undefined;
 				const response = await native(model, context, {
 					...options,
+					// Keep final-payload receipts bound to the complete admitted Anthropic request.
+					...(model.api === "anthropic-messages" ? { disableContinuation: true } : {}),
 					...(flowValidateProvider ? { flowValidateProvider } : {}),
 					...{ flowCacheWarm: warming.refresh },
 					onPayload: async (payload, requestModel) => {

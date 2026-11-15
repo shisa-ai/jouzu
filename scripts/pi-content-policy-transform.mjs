@@ -71,15 +71,9 @@ export function transform(path, source) {
 	} else if (path === "dist/core/cache-warmer.js") {
 		change(
 			`            const message = await this.models
-                .streamSimple(run.model, run.context, {`,
-			`            const options = {`,
-		);
-		change(
-			`                signal: run.controller.signal,
-            })
+                .streamSimple(run.model, run.context, getCacheWarmingRequestOptions(run.options, run.controller.signal))
                 .result();`,
-			`                signal: run.controller.signal,
-            };
+			`            const options = getCacheWarmingRequestOptions(run.options, run.controller.signal);
             const send = (admittedOptions) => this.models.streamSimple(run.model, run.context, admittedOptions).result();
             const message = run.options.flowCacheWarm
                 ? await run.options.flowCacheWarm(options, send)
@@ -90,10 +84,10 @@ export function transform(path, source) {
 		// warmer (abort, disposal, mode off) or a switched session writes nothing.
 		change(
 			`        try {
-            const options = {`,
+            const options = getCacheWarmingRequestOptions`,
 			`        const sessionId = this.sessionManager.getSessionId();
         try {
-            const options = {`,
+            const options = getCacheWarmingRequestOptions`,
 		);
 		change(
 			`            if (!this.validateRun(run))
@@ -350,7 +344,7 @@ export function sessionEntryToContextMessages(entry) {`,
 			'this.showStatus("Clipboard copy requested for last agent message");',
 		);
 		change(
-			"        return options.sort((a, b) => a.name.localeCompare(b.name));",
+			"        return options.sort(compareProviders);",
 			'        return options.sort((a, b) => Number(b.id === "shisa") - Number(a.id === "shisa") || a.name.localeCompare(b.name));',
 		);
 		change(
@@ -814,8 +808,8 @@ export function sessionEntryToContextMessages(entry) {`,
 			"            if (this._flowBinding) {\n                this._branchSummaryAbortController = undefined;\n                await this._flowBinding.beforeBranchChange();\n            }\n            // Switch leaf (with or without summary)",
 		);
 		change(
-			"            // Emit session_tree event",
-			"            await this._flowBinding?.branchChanged();\n            // Emit session_tree event",
+			'            await this._extensionRunner.emit({\n                type: "session_tree",',
+			'            await this._flowBinding?.branchChanged();\n            await this._extensionRunner.emit({\n                type: "session_tree",',
 		);
 		change(
 			"    // =========================================================================\n    // Compaction\n    // =========================================================================\n    /** Generate Pi's built-in compaction summary for manual and automatic compaction. */",
@@ -868,8 +862,8 @@ export function sessionEntryToContextMessages(entry) {`,
 			'            abortController = new AbortController();\n            this._autoCompactionAbortController = abortController;\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), abortController.signal, "compaction");\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }',
 		);
 		change(
-			"        // Set up abort controller for summarization\n        this._branchSummaryAbortController = new AbortController();\n        try {",
-			'        // Set up abort controller for summarization\n        this._branchSummaryAbortController = new AbortController();\n        try {\n            if (this.resourceLoader.contentPolicy)\n                entriesToSummarize.splice(0, entriesToSummarize.length, ...(await this._filterSummarizationEntries(entriesToSummarize, this._branchSummaryAbortController.signal, "branch summary")));',
+			"        this._branchSummaryAbortController = abortController;\n        try {",
+			'        this._branchSummaryAbortController = abortController;\n        try {\n            if (this.resourceLoader.contentPolicy)\n                entriesToSummarize.splice(0, entriesToSummarize.length, ...(await this._filterSummarizationEntries(entriesToSummarize, abortController.signal, "branch summary")));',
 		);
 		change(
 			"this._resourceLoader.extendResources(extensionPaths);",
@@ -1026,10 +1020,10 @@ export function sessionEntryToContextMessages(entry) {`,
 	} else if (path === "dist/core/agent-session-runtime.js") {
 		change("        this.session.dispose();", "        await this.session.dispose();", 2);
 	} else if (path === "dist/modes/print-mode.js") {
-		change("    let disposed = false;", "    let disposed = false;\n    const settlement = new AbortController();");
+		change("    let disposing;", "    let disposing;\n    const settlement = new AbortController();");
 		change(
-			"        disposed = true;",
-			'        disposed = true;\n        settlement.abort(new Error("Print runtime is closing."));',
+			"        disposing ??= (async () => {",
+			'        settlement.abort(new Error("Print runtime is closing."));\n        disposing ??= (async () => {',
 		);
 		change(
 			'        if (mode === "text") {',
@@ -1050,8 +1044,8 @@ export function sessionEntryToContextMessages(entry) {`,
 		// The end-of-input handler registers after the JSONL reader, so a final line without a
 		// trailing newline is in the command map before the drain inspects it.
 		change(
-			"    let shuttingDown = false;\n    const signalCleanupHandlers = [];",
-			"    let shuttingDown = false;\n" +
+			"    let shuttingDown = false;\n    let inputReady = false;",
+			"    let shuttingDown = false;\n    let inputReady = false;\n" +
 				"    /** Set once end-of-input arrives; dialogs then resolve their defaults. */\n" +
 				"    let inputClosed = false;\n" +
 				"    /** Exit status requested by any shutdown path; a later failing request only raises it. */\n" +
@@ -1062,8 +1056,7 @@ export function sessionEntryToContextMessages(entry) {`,
 				"    let eofDrain;\n" +
 				"    /** Signal that owns the exit, which keeps upstream's immediate termination. */\n" +
 				"    let shutdownSignal;\n" +
-				"    let shutdownFailurePromise;\n" +
-				"    const signalCleanupHandlers = [];",
+				"    let shutdownFailurePromise;",
 		);
 		change(
 			"    function createDialogPromise(opts, defaultValue, request, parseResponse) {\n        if (opts?.signal?.aborted)\n            return Promise.resolve(defaultValue);",
@@ -1115,42 +1108,28 @@ export function sessionEntryToContextMessages(entry) {`,
 				'                output({ type: "extension_ui_request", id, method: "editor", title, prefill });',
 		);
 		change(
-			'            if (event.type === "agent_settled") {\n                void checkShutdownRequested();\n            }',
+			"                setImmediate(checkShutdownRequested);",
+			"                setImmediate(() => { void checkShutdownRequested().catch(reportShutdownFailure); });",
+		);
+		change(
+			"    checkShutdownRequested();\n    // Keep process alive forever",
+			"    void checkShutdownRequested().catch(reportShutdownFailure);\n    // Keep process alive forever",
+		);
+		change(
+			'            if (event.type === "agent_settled") {\n                checkShutdownRequested();\n            }',
 			'            if (event.type === "agent_settled") {\n' +
 				"                void checkShutdownRequested().catch((shutdownError) => reportShutdownFailure(shutdownError));\n" +
 				"            }",
 		);
 		change(
-			"                killTrackedDetachedChildren();\n" +
-				'                void shutdown(signal === "SIGHUP" ? 129 : 143, signal);',
-			"                killTrackedDetachedChildren();\n" +
-				'                void shutdown(signal === "SIGHUP" ? 129 : 143, signal).catch((shutdownError) => reportShutdownFailure(shutdownError));',
+			"                    void shutdown(exitCode, signal);",
+			"                    void shutdown(exitCode, signal).catch((shutdownError) => reportShutdownFailure(shutdownError));",
 		);
 		change(
-			"    let detachInput = () => { };\n" +
-				"    async function shutdown(exitCode = 0, signal) {\n" +
-				"        if (shuttingDown) {\n" +
-				"            process.exit(exitCode);\n" +
-				"        }\n" +
-				"        shuttingDown = true;\n" +
-				"        for (const cleanup of signalCleanupHandlers) {\n" +
-				"            cleanup();\n" +
-				"        }\n" +
-				"        unsubscribe?.();\n" +
-				"        unsubscribeBackpressure?.();\n" +
-				"        await runtimeHost.dispose();\n" +
-				"        detachInput();\n" +
-				"        process.stdin.pause();\n" +
-				'        if (signal !== "SIGTERM") {\n' +
-				"            await flushRawStdout();\n" +
-				"        }\n" +
-				"        process.exit(exitCode);\n" +
-				"    }\n" +
-				"    async function checkShutdownRequested() {\n" +
-				"        if (!shutdownRequested)\n" +
-				"            return;\n" +
-				"        await shutdown();\n" +
-				"    }",
+			text.slice(
+				text.indexOf("    let detachInput = () => { };"),
+				text.indexOf("    const handleInputLine = async (line) => {"),
+			),
 			`    let detachInput = () => { };
     const raiseExitStatus = (code) => {
         if (code)
@@ -1185,8 +1164,9 @@ export function sessionEntryToContextMessages(entry) {`,
         if (shuttingDown) {
             // A signal keeps upstream's immediate termination. An ordinary request joins the
             // shutdown already in flight, so its output flushes and a failing status survives.
-            if (signal)
+            if (signal && signalCount > 1)
                 process.exit(exitCode);
+            if (signal) shutdownSignal = signal;
             return shutdownPromise;
         }
         shuttingDown = true;
@@ -1194,9 +1174,7 @@ export function sessionEntryToContextMessages(entry) {`,
         // Cleanup and disposal run in one promise, so a synchronous cleanup failure rejects into
         // the single failure path instead of leaving disposalPromise unset.
         disposalPromise = (async () => {
-            for (const cleanup of signalCleanupHandlers) {
-                cleanup();
-            }
+            // Cleanup and disposal run in one promise; signal handlers stay installed until exit.
             unsubscribe?.();
             unsubscribeBackpressure?.();
             await runtimeHost.dispose();
@@ -1207,6 +1185,7 @@ export function sessionEntryToContextMessages(entry) {`,
             // every accepted command to report or time out. A signal keeps its native exit.
             if (!signal && eofDrain)
                 await eofDrain;
+            if (shutdownSignal) exitStatus = shutdownSignal === "SIGHUP" ? 129 : 143;
             detachInput();
             process.stdin.pause();
             if (signal !== "SIGTERM") {
@@ -1217,7 +1196,7 @@ export function sessionEntryToContextMessages(entry) {`,
         return shutdownPromise;
     }
     async function checkShutdownRequested() {
-        if (!shutdownRequested)
+        if (!shutdownRequested || shuttingDown || !inputReady || activeCommands > 0 || !session.isIdle)
             return;
         await shutdown();
     }`,
@@ -1274,7 +1253,7 @@ export function sessionEntryToContextMessages(entry) {`,
     const handleCommand = async (command) => {`,
 		);
 		change(
-			"                let preflightSucceeded = false;\n                void session\n",
+			"                let preflightSucceeded = false;\n                // Extension commands run inside prompt(); defer shutdown requests until it settles.\n                activeCommands++;\n                void session\n",
 			`                let preflightSucceeded = false;
                 let accept = () => { };
                 const acceptance = { id, type: "prompt" };
@@ -1291,6 +1270,7 @@ export function sessionEntryToContextMessages(entry) {`,
                     accept();
                 };
                 // Invoke immediately, but route synchronous host errors through the same acceptance.
+                activeCommands++;
                 void (async () => session
 `,
 		);
@@ -1309,12 +1289,15 @@ export function sessionEntryToContextMessages(entry) {`,
 			"                    if (!preflightSucceeded) {\n" +
 				'                        output(error(id, "prompt", e.message));\n' +
 				"                    }\n" +
-				"                });\n",
+				"                })\n                    .finally(() => {\n                    activeCommands--;\n                    checkShutdownRequested();\n                });\n",
 			`                    if (preflightSucceeded) {
                         accept();
                         return;
                     }
                     finishAcceptance(error(id, "prompt", e instanceof Error ? e.message : String(e)));
+                }).finally(() => {
+                    activeCommands--;
+                    void checkShutdownRequested().catch(reportShutdownFailure);
                 });
 `,
 		);
@@ -1330,13 +1313,20 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		change(
 			`        const command = parsed;
+        activeCommands++;
         try {
-            const response = await handleCommand(command);
+            let response;
+            try {
+                response = await handleCommand(command);
+            }
+            finally {
+                activeCommands--;
+            }
             if (response) {
                 output(response);
                 await waitForRawStdoutBackpressure();
             }
-            await checkShutdownRequested();
+            checkShutdownRequested();
         }
         catch (commandError) {
             output(error(command.id, command.type, commandError instanceof Error ? commandError.message : String(commandError)));
@@ -1353,6 +1343,7 @@ export function sessionEntryToContextMessages(entry) {`,
         const command = parsed;
         record.id = command.id;
         record.type = command.type;
+        activeCommands++;
         try {
             const response = await handleCommand(command);
             // A command that already reported, or that was failed at end-of-input, must not emit a
@@ -1371,6 +1362,9 @@ export function sessionEntryToContextMessages(entry) {`,
                 output(error(command.id, command.type, commandError instanceof Error ? commandError.message : String(commandError)));
                 await waitForRawStdoutBackpressure();
             }
+        }
+        finally {
+            activeCommands--;
         }
         // Shutdown failures have their own diagnostic and exit; they are not command responses.
         await checkShutdownRequested();`,

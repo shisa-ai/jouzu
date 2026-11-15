@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-ai",
-	"version": "1.5.0",
+	"version": "1.5.2",
 	"files": {
 		"dist/compat.js": {
 			"before": "df55dca273cb2a7053187b7b29d0fe5b91966a5099ab02d2efe38bb31c3f9738",
@@ -12,12 +12,8 @@
 			"after": "acd6d371511698cd347531e7050259cf04180433d67bee7ffc98ba6eb54de0c0"
 		},
 		"dist/api/openai-completions.js": {
-			"before": "df81627c173163d0b918692f4a3b87e22cbdb5883b809e4d70d6152d1e68d948",
-			"after": "3357ff7dcd3f3ae70316e233a8e68893d20b49e41fb6959d54b141fc712e92d7"
-		},
-		"dist/api/simple-options.js": {
-			"before": "ff234becff46a6c25c1e437c86d72fbe7aeb4e107266d1bf6951622d223b0ae0",
-			"after": "a98efe80b5c2bcfc206519ef024a176c03a02c8641d6f868fc750226ae4fa9af"
+			"before": "3221deb8b506eab9722d27694fc1bceb752d8786180999add590c2489ac91846",
+			"after": "8ab66972a312307b6ea851940042c36de45c1949d9fb6ebd2422f8c1abf72738"
 		},
 		"dist/utils/oauth-page.js": {
 			"before": "82ff736f89ccd7a5a780e97eba656aa73ee2a435eb231938b340ffd9167086c1",
