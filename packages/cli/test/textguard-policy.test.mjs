@@ -174,6 +174,25 @@ test("expanded user messages return the checked snapshot after concurrent mutati
 	assert.equal(checked[0].content[0].text, '<skill name="fixture">public</skill>');
 });
 
+test("approved skill messages retain identity only after every context scan finishes", async () => {
+	for (const mutate of [false, true]) {
+		const first = { role: "user", content: [{ type: "text", text: '<skill name="first">safe</skill>' }], timestamp: 1 };
+		const second = {
+			role: "user",
+			content: [{ type: "text", text: '<skill name="second">safe</skill>' }],
+			timestamp: 2,
+		};
+		const gate = policy(async (text) => {
+			if (mutate && text.includes("second")) first.content[0].text = "PRIVATE MUTATION";
+			return clear;
+		});
+		const checked = await gate.filterContext([first, second]);
+		assert.equal(checked[0] === first, !mutate);
+		assert.equal(checked[1], second);
+		assert.equal(checked[0].content[0].text, '<skill name="first">safe</skill>');
+	}
+});
+
 test("scanner exceptions withhold content without exposing exception text", async () => {
 	const gate = policy(async () => {
 		throw Error("PRIVATE ERROR");

@@ -20,6 +20,8 @@ export async function nativeRequests(
 		enforceRequiredSources = false,
 		contextTransform,
 		contextHandler,
+		policy,
+		skills,
 		cloneCheckpoint,
 		conversionCheckpoint,
 		modelTransform,
@@ -40,6 +42,7 @@ export async function nativeRequests(
 		model,
 		tools: tools.map((tool) => tool.name),
 		customTools: tools,
+		policy,
 		extensions: [
 			...(transform ? [(pi) => pi.on("before_provider_request", transform)] : []),
 			...(contextHandler ? [(pi) => pi.on("context", contextHandler)] : []),
@@ -58,6 +61,7 @@ export async function nativeRequests(
 				}
 			: undefined,
 	});
+	if (skills) session.resourceLoader.getSkills = () => ({ skills, diagnostics: [] });
 	const scope = { sessionId: session.sessionId, branchId: "main" };
 	attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
 	if (contextTransform) session.agent.transformContext = contextTransform;

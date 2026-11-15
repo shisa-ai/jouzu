@@ -450,6 +450,7 @@ export class NativeContentPolicy implements Policy {
 		const generation = this.generation;
 		const boundedSignal = signal ? AbortSignal.any([signal, AbortSignal.timeout(5000)]) : AbortSignal.timeout(5000);
 		const admitted: Messages = [];
+		const unchangedSkills: { index: number; message: Messages[number]; digest: string }[] = [];
 		for (const message of messages) {
 			// The pass is abandoned below once the budget is gone; stop before every later message
 			// files its own interrupted review.
@@ -495,6 +496,7 @@ export class NativeContentPolicy implements Policy {
 					admitted.push(message);
 					continue;
 				}
+				const messageSnapshot = snapshotPayload(message);
 				const snapshot = snapshotPayload(message.content);
 				if (snapshot.status !== "identified") {
 					admitted.push({ role: "user", content: this.withheld().content, timestamp: message.timestamp });
@@ -519,6 +521,8 @@ export class NativeContentPolicy implements Policy {
 						}
 					}
 				}
+				if (!denied && messageSnapshot.status === "identified")
+					unchangedSkills.push({ index: admitted.length, message, digest: messageSnapshot.digest });
 				admitted.push({
 					role: "user",
 					content: denied ? this.withheld().content : snapshot.value,
@@ -527,6 +531,13 @@ export class NativeContentPolicy implements Policy {
 			} else admitted.push(message);
 		}
 		if (generation !== this.generation || boundedSignal.aborted) throw new Error("TextGuard context check interrupted");
+		// Flow tracks message references. Preserve them only after all asynchronous checks,
+		// so mutation during this or a later message's scan still returns the checked copy.
+		for (const candidate of unchangedSkills) {
+			const current = snapshotPayload(candidate.message);
+			if (current.status === "identified" && current.digest === candidate.digest)
+				admitted[candidate.index] = candidate.message;
+		}
 		return admitted;
 	}
 }
