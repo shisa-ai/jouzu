@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.2.6 - 2026-11-16
+
+### Added
+
+- Expand `/status` with session and workspace identity, Git state, model and thinking level, context, usage and cost, per-model subagent totals, running work, and items needing attention with their commands. See [Session interface](docs/interface.md).
+- Add `/help` for the localized shortcut overlay and `/plugins` for Pi package installation and customization guidance.
+- Show cumulative cache-read share and cost provenance in the status bar. Mark estimated context usage after compaction with `~`.
+
+### Changed
+
+- Tailor system-prompt guidance to the tools and features available in the session.
+- Update the embedded Pi runtime to 1.5.2, including richer Mermaid diagrams, moved-folder session forks, large-file tool fixes, Windows search and paste fixes, and MCP authentication and shutdown repairs. Jouzu keeps prompt-cache warming off by default and uses complete Anthropic messages for flow-controlled requests. See [Pi update review](docs/PI-UPDATES.md).
+- Omit empty OpenAI-compatible `tools` arrays. Older proxies that require the field after tool use can set `compat.requiresToolsWithToolHistory: true` in `models.json`. Remote grep overrides should use `execute()`; `GrepOperations.readFile` no longer supplies context lines.
+
+### Fixed
+
+- Wait for accepted asynchronous work and its continuations before print-mode output and shutdown; stop waiting on cancellation or branch change.
+- Preserve recall references to user requests and corrections across compaction, including image-only requests, without relying on shortened goal summaries.
+- Qualify bundled llama.cpp inference for flow control while retaining discovery, authentication, and request checks.
+- Use the catalog endpoint returned by Shisa sign-in; separately saved catalog tokens and environment API keys keep the standard API endpoint.
+- Open Jouzu's model picker after completed `/model` commands, including full-width slash entry.
+- Translate `/status` rows, flow help and control notices, thinking labels, and fixed Settings values while preserving user text, stored values, and provider errors.
+- Preserve child-agent billed zero and known partial costs, distinguish estimated amounts, and omit unavailable cost segments.
+
+### Development
+
+- Require npm 11.13.0 or newer for source builds and report an unsupported version before installing. This fixes the npm 11.9 `EALLOWGIT` failure without weakening the checkout's Git-dependency policy or changing published CLI requirements. See [Development](docs/development.md).
+
 ## 0.2.5 - 2026-11-08
 
 ### Added

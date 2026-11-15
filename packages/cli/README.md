@@ -122,7 +122,7 @@ node packages/cli/dist/cli.js         # run this checkout
 npm run dev:link                      # optional: point global jz/jouzu at this checkout
 ```
 
-Building also requires Go (for [textguard-go](https://github.com/shisa-ai/textguard-go)).
+Building also requires npm 11.13.0 or newer and Go (for [textguard-go](https://github.com/shisa-ai/textguard-go)). See [Development](https://github.com/shisa-ai/jouzu/blob/main/docs/development.md) for setup and npm troubleshooting.
 
 ## Documentation
 
