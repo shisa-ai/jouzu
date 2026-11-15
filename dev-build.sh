@@ -41,7 +41,7 @@ Usage: ./dev-build.sh [build|link|install-hooks|uninstall-hooks]
   install-hooks    Opt in to rebuild after commit, merge, checkout, and rebase.
   uninstall-hooks  Remove only hooks managed by this script.
 
-Requires Bash, Git, npm, Node.js >=22.19.0, and Go >=1.21. Go is a bootstrap:
+Requires Bash, Git, npm >=11.13.0, Node.js >=22.19.0, and Go >=1.21. Go is a bootstrap:
 the TextGuard artifact build selects its reviewed compiler version automatically. Uses this
 checkout by default; set JOUZU_REPO to select another local checkout. Never clones or publishes.
 Dependency installs disable lifecycle scripts and repeat when manifests, lockfiles, or
@@ -71,7 +71,17 @@ require_commands() {
 }
 
 require_build_commands() {
-	local go_version
+	local go_version npm_version
+	npm_version="$(npm --version 2>/dev/null)" || {
+		echo "dev-build: could not determine the installed npm version" >&2
+		return 1
+	}
+	if [[ ! "$npm_version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]] ||
+		(( BASH_REMATCH[1] < 11 || (BASH_REMATCH[1] == 11 && BASH_REMATCH[2] < 13) )); then
+		echo "dev-build: npm >=11.13.0 is required for workspace Git dependencies; found ${npm_version:-an unknown version}" >&2
+		echo "dev-build: install a supported npm version, for example: npm install -g npm@11.21.1" >&2
+		return 1
+	fi
 	if ! command -v go >/dev/null 2>&1; then
 		echo "dev-build: Go is not available on PATH" >&2
 		echo "dev-build: install Go >=1.21; the TextGuard build selects its reviewed compiler version automatically" >&2

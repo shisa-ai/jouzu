@@ -2,9 +2,27 @@
 
 ## Requirements
 
-- Node.js 22.19 or newer, npm, Git, and Bash on `PATH`
+- Node.js 22.19 or newer, npm 11.13.0 or newer, Git, and Bash on `PATH`
 - Go. The build downloads the exact toolchain pinned in `upstream/textguard/source.lock.json` for [textguard-go](https://github.com/shisa-ai/textguard-go).
 - For the full `npm test` suite: `uv` and Python 3.10 or newer
+
+## npm version
+
+Source builds require npm 11.13.0 or newer. Older npm versions can reject the
+workspace's direct Git dependencies with `EALLOWGIT` under this checkout's
+`allow-git=root` policy. `dev-build.sh` checks the npm version before installing.
+
+Update npm without changing the project's Git-dependency policy:
+
+```bash
+npm install -g npm@11.21.1
+npm --version
+./dev-build.sh link
+```
+
+npm 11 supports Jouzu's Node.js minimum. npm 12 has a newer Node.js requirement;
+check its supported Node.js versions before choosing that major version. The
+source-build requirement does not apply to installing Jouzu's published package.
 
 ## Build and run
 

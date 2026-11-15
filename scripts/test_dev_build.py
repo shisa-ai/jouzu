@@ -167,6 +167,10 @@ class DevBuildTests(unittest.TestCase):
                 """\
                 #!/usr/bin/env bash
                 set -eu
+                if [[ "${1:-}" == --version ]]; then
+                \tprintf '%s\\n' "${DEV_BUILD_TEST_NPM_VERSION:-11.21.1}"
+                \texit 0
+                fi
                 {
                 \tprintf 'npm'
                 \tprintf '\\t%s' "$@"
@@ -359,6 +363,26 @@ class DevBuildTests(unittest.TestCase):
         self.assertIn("missing installed dependency fixture-dependency", second.stderr)
         self.assertTrue(package.is_file())
         self.assertEqual(self.log.read_text().count("\tci\t"), 2)
+
+    def test_old_npm_fails_before_dependency_install(self) -> None:
+        sibling = self.root / "jouzu"
+        self._create_jouzu_repo(sibling)
+        for version in ("10.9.0", "11.9.0", "11.12.1", "invalid"):
+            with self.subTest(version=version):
+                self.log.write_text("", encoding="utf-8")
+                result = self._run(env={**self.env, "DEV_BUILD_TEST_NPM_VERSION": version})
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("npm >=11.13.0 is required for workspace Git dependencies", result.stderr)
+                self.assertIn("npm install -g npm@11.21.1", result.stderr)
+                self.assertNotIn("\tci\t", self.log.read_text())
+
+    def test_fixed_npm_11_and_npm_12_can_build(self) -> None:
+        sibling = self.root / "jouzu"
+        self._create_jouzu_repo(sibling)
+        for version in ("11.13.0", "11.21.1", "12.0.0"):
+            with self.subTest(version=version):
+                result = self._run(env={**self.env, "DEV_BUILD_TEST_NPM_VERSION": version})
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_fresh_sibling_checkout_installs_dependencies_once(self) -> None:
         sibling = self.root / "jouzu"
