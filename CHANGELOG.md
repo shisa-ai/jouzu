@@ -6,6 +6,7 @@
 
 - Expand `/status` with session and workspace identity, Git state, model and thinking level, context, usage and cost, per-model subagent totals, running work, and items needing attention with their commands. See [Session interface](docs/interface.md).
 - Add `/help` for the localized shortcut overlay and `/plugins` for Pi package installation and customization guidance.
+- Offer terminal recovery actions from `/flow`: authorize a retry, release saved holds with confirmation, resume automatic work, or show details. Authorization and release do not resend messages. See [Flow control](docs/flow-control.md).
 - Show cumulative cache-read share and cost provenance in the status bar. Mark estimated context usage after compaction with `~`.
 
 ### Changed
@@ -16,6 +17,8 @@
 
 ### Fixed
 
+- Preserve approved, unchanged skill input through TextGuard and flow admission, including `/skill:` invocations and ordinary messages quoting skill markup. Keep mutation and denial checks in force.
+- Reject a recovery confirmation when its branch or request state changes before release, so a confirmation cannot clear another branch's holds.
 - Wait for accepted asynchronous work and its continuations before print-mode output and shutdown; stop waiting on cancellation or branch change.
 - Preserve recall references to user requests and corrections across compaction, including image-only requests, without relying on shortened goal summaries.
 - Qualify bundled llama.cpp inference for flow control while retaining discovery, authentication, and request checks.

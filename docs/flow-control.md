@@ -14,14 +14,14 @@ turns. A stuck reservation can prevent the next reply from starting.
 
 | Command | Effect |
 | --- | --- |
-| `/flow` | Show why automatic work stopped and how to resume it |
+| `/flow` | Show held inputs and work; offer recovery actions in an interactive terminal |
 | `/flow pause` | Pause automatic replies. Background jobs keep running. |
 | `/flow resume` | Allow automatic replies again |
 | `/flow off` | Turn flow control off for this session. Messages run as ordinary turns; jobs, tasks, and loops send their own notifications. |
 | `/flow on` | Turn flow control back on |
 | `/flow reset` | Explain the destructive reset without changing anything. |
 | `/flow reset confirm` | Destructive reset, available only while idle. Discards all queued messages, receipts, and waits, and releases holds on model requests. Running jobs keep running. Use it only if `/flow clear` does not fix the problem. |
-| `/flow clear` | Release a stuck reservation while preserving receipts, waits, and running jobs. Run while Jouzu is idle. |
+| `/flow clear` | Release saved request holds and a stuck reservation without resending. Preserve receipts, waits, and running jobs. Run while Jouzu is idle. |
 | `/flow retry <request>` | Allow one withheld request to go through the pre-send checks again; use its request ID from `/flow` |
 | `/flow cancel <token>` | Cancel an entire wait, even if it covers multiple dependencies. Underlying jobs keep running and its work stays open. Use the wait token from `/flow`. |
 | `/flow resolve <attempt> retry` or `discard` | Settle a model request with an unknown outcome, using the attempt ID shown by `/flow` |
@@ -34,6 +34,20 @@ turns. A stuck reservation can prevent the next reply from starting.
 - `/flow clear` repairs a reservation without discarding flow evidence. If that does not fix the problem, `/flow reset confirm` is the destructive fallback: it discards all queued messages and flow delivery state, cancels waits, and leaves underlying jobs running.
 - `/flow resolve <attempt> retry` may repeat a request the model already answered. It resolves an unknown attempt outcome; `/flow retry <request>` instead authorizes a withheld request.
 - Set `JOUZU_FLOW_CONTROL=0` before starting Jouzu to disable flow control for that process.
+
+## Recovery actions in the terminal
+
+Run `/flow` to read the report and choose an action with the selection keys shown
+by the dialog. Depending on the session state, it offers retry authorization,
+release of saved holds, resumption of automatic work, and technical details.
+Canceling leaves state unchanged. Non-interactive mode shows only the report.
+
+Authorizing a retry does not send input; send a message to continue, and the
+pre-send checks still apply. Releasing saved holds requires confirmation and
+does not resend input or fix the underlying cause. A branch or request-state
+change before release invalidates that confirmation. History, waits, and running
+jobs are preserved. Requests with an unknown send outcome still need their
+per-attempt decision in `/flow details`.
 
 ## Waiting for jobs
 
