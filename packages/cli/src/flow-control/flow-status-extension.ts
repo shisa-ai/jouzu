@@ -3,6 +3,7 @@ import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.j
 import type { CatalogBundle } from "../locale-catalog.js";
 import { renderFlowMessage } from "./flow-message-renderer.js";
 import { COMMAND_PAUSE, flowPauseText, INTERRUPTED_PAUSE, isProviderPause, REOPENED_PAUSE } from "./flow-pause.js";
+import { styleFlowReport } from "./flow-report-style.js";
 import { type FlowUnaccountableWork, formatFlowStatus, projectFlowStatus } from "./flow-status.js";
 import { captureFlowStatusContext, flowDisplayText, FlowStatusMessageId as Id } from "./flow-status-context.js";
 import { nativeHoldHash, nativeHoldPending } from "./native-request-store.js";
@@ -136,7 +137,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			});
 			pi.registerCommand("flow", {
 				description: catalogText(catalog, "jouzu.cli.session.slash.flow"),
-				handler: async (args, ctx) => {
+				handler: async function handle(args, ctx) {
 					const USAGE = Array.from({ length: 13 }, (_, index) => text(`usage${index + 1}`)).join("\n");
 					const FLOW_OFF_NOTICE = Array.from({ length: 3 }, (_, index) => text(`offNotice${index + 1}`)).join("\n");
 					const [verb, target, choice, ...rest] = args.trim().split(/\s+/).filter(Boolean);
@@ -284,31 +285,75 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 								);
 							}
 							if (ingress.branch() !== branch) throw new FlowLedgerError("stale", text("stale"));
-							notify(
-								formatFlowStatus(
-									projectFlowStatus(
-										inspected.scope,
-										inspected.submissions,
-										waits,
-										authority.work,
-										unaccountable,
-										inspected.uncertain,
-										ingress.automatedPause(),
-										{
-											...captureFlowStatusContext(submissions, requests, tasks, recovery, catalog),
-											warnings,
-											turnActive,
-										},
-									),
-									now(),
+							const report = formatFlowStatus(
+								projectFlowStatus(
+									inspected.scope,
+									inspected.submissions,
+									waits,
+									authority.work,
+									unaccountable,
+									inspected.uncertain,
+									ingress.automatedPause(),
 									{
-										details: verb === "details",
-										page: target ? Number(target) : 1,
-										columns: process.stdout.columns ?? 100,
+										...captureFlowStatusContext(submissions, requests, tasks, recovery, catalog),
+										warnings,
+										turnActive,
 									},
-									catalog,
 								),
+								now(),
+								{
+									details: verb === "details",
+									page: target ? Number(target) : 1,
+									columns: process.stdout.columns ?? 100,
+								},
+								catalog,
 							);
+							notify(ctx.mode === "tui" ? styleFlowReport(report, ctx.ui.theme) : report);
+							if (verb === undefined && ctx.mode === "tui" && process.env.TERM !== "dumb") {
+								const actions: { label: string; run: () => Promise<void> }[] = [];
+								const descriptions = captureFlowStatusContext(submissions, requests, tasks, recovery, catalog);
+								const requestSnapshot = JSON.stringify(requests);
+								for (const request of requests.filter(
+									(item) => nativeHoldPending(item) && !item.retryAuthorization?.requestId,
+								)) {
+									const hash = nativeHoldHash(request);
+									actions.push({
+										label: text("actionRetry", {
+											number: actions.length + 1,
+											summary: flowDisplayText(
+												descriptions.inputs[descriptions.requests[request.id]?.inputIds[0]]?.summary ?? request.id,
+												80,
+											),
+										}),
+										run: async () => {
+											await ingress.retryNativeRequest(request.id, hash);
+											notify(text("retryAuthorized", { target: request.id }));
+										},
+									});
+								}
+								if (requests.some(nativeHoldPending) || recovery.length || inspected.uncertain.length)
+									actions.push({
+										label: text("actionClear"),
+										run: async () => {
+											if (await ctx.ui.confirm(text("actionClear"), text("confirmClear"))) {
+												if (ingress.branch() !== branch) throw new FlowLedgerError("stale", text("stale"));
+												if (JSON.stringify(await branch.attachment.nativeRequests.snapshot()) !== requestSnapshot)
+													throw new FlowLedgerError("stale", text("stale"));
+												await handle("clear", ctx);
+											}
+										},
+									});
+								if (ingress.automatedPause())
+									actions.push({ label: text("actionResume"), run: () => handle("resume", ctx) });
+								actions.push({ label: text("actionDetails"), run: () => handle("details", ctx) });
+								const selected = await ctx.ui.select(
+									text("actionTitle"),
+									actions.map((action) => action.label),
+								);
+								if (selected === undefined) return;
+								if (ingress.branch() !== branch) throw new FlowLedgerError("stale", text("stale"));
+								await actions.find((action) => action.label === selected)?.run();
+							}
 							return;
 						}
 						if (verb === "resolve") {

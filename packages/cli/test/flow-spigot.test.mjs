@@ -252,7 +252,7 @@ test("flow control on restores routing, and reset performs full recovery without
 		"off turns flow control off",
 		"on turns flow control back on",
 		"reset explains the destructive idle reset",
-		"clear releases a stuck reservation",
+		"clear releases saved request holds and stuck reservations without resending",
 	])
 		assert.match(notices.at(-1).text, new RegExp(`/flow ${line}`));
 

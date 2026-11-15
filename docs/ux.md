@@ -113,6 +113,22 @@ In the TUI, labels use the theme's muted color and values its text color;
 warnings use the warning color. The `!` and `·` markers carry their meaning
 without color. RPC and print modes produce the same text without styling.
 
+## Flow recovery
+
+`/flow` shows held inputs and work. In an interactive terminal it also offers
+request retry authorization, release of saved holds, resume, and technical
+details when applicable. Select an action with the configured selection keys;
+canceling leaves state unchanged. Non-interactive output remains a text report.
+
+Retry authorization does not itself resend a message. Send a message to continue;
+input checks still apply. Releasing saved holds requires confirmation and
+preserves history, waits, and running jobs. It does not fix the underlying cause
+or establish the outcome of an interrupted provider request. Use the per-attempt
+controls in `/flow details` for unknown outcomes.
+
+The report uses accent headings, normal input text, and muted supporting details.
+Its labels and indentation carry the same meaning without color.
+
 ## Key assignment rules
 
 1. **Every action must be reachable without a modified key.** Modified keys are accelerators. `Ctrl`, `Alt`, `Shift`, and `Super` combinations that a legacy terminal cannot encode are unavailable to some users on every platform; see [Encoding and line discipline](key-collisions.md#encoding-and-line-discipline). A recorded decision may accept an accelerator-only action; the current exception is Models favorite (`jouzu.model.toggleFavorite`), recorded in [Palette primary and secondary actions](palette-ux.md#primary-and-secondary-actions).
