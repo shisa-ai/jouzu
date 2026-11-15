@@ -3,6 +3,10 @@
 	"package": "@earendil-works/pi-coding-agent",
 	"version": "1.5.0",
 	"files": {
+		"dist/modes/print-mode.js": {
+			"before": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+			"after": "0ee9cb94e7ed1a091af26179e324f960a2bbeec8890b25ea2eb217e860c3f1fd"
+		},
 		"dist/core/settings-manager.js": {
 			"before": "66edb495ff9767e7f2ce0d2f4e2d102532e4b396ad7bc7c3c648c7c12c0fe71d",
 			"after": "df0056b52df36dc3b54f9c49d5fad2c642e11b82231226a177e1f38f2477f504"
@@ -145,6 +149,6 @@
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
-	"flowIngress": "429b7485746f6a266310724b8c73d4604e937956d394fffb09e48202fd045d38",
-	"flowIngressTypes": "d77e21096d185c5568b8bf27b7f72a919117b58291f3e9ad58bbbbb6e9a6fb9f"
+	"flowIngress": "263f28a402c4de6a85adcaa403221639bde9dfb70775dbbd04a0a56e264e3c60",
+	"flowIngressTypes": "a9339519cb51a5a8bf845aa304b3caf0e64902c79426cffc52bd11b90f345843"
 }

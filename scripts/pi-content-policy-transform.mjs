@@ -1025,6 +1025,16 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 	} else if (path === "dist/core/agent-session-runtime.js") {
 		change("        this.session.dispose();", "        await this.session.dispose();", 2);
+	} else if (path === "dist/modes/print-mode.js") {
+		change("    let disposed = false;", "    let disposed = false;\n    const settlement = new AbortController();");
+		change(
+			"        disposed = true;",
+			'        disposed = true;\n        settlement.abort(new Error("Print runtime is closing."));',
+		);
+		change(
+			'        if (mode === "text") {',
+			'        await session._flowBinding?.settlePrint(settlement.signal);\n        if (mode === "text") {',
+		);
 	} else if (path === "dist/modes/rpc/rpc-mode.js") {
 		// End-of-input must not leave the process waiting on input that can no longer arrive.
 		// Dialogs resolve their defaults and later dialogs are not emitted, accepted commands get a
@@ -2022,6 +2032,7 @@ export interface LoadSkillsResult {
 }
 export const paths = [
 	"dist/main.js",
+	"dist/modes/print-mode.js",
 	"dist/main.d.ts",
 	"dist/modes/interactive/interactive-mode.js",
 	"dist/modes/interactive/interactive-mode.d.ts",

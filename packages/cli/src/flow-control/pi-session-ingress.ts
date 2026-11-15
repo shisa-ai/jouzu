@@ -19,6 +19,7 @@ import {
 } from "./native-admission.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
+import { settlePrintWork } from "./print-settle.js";
 import { FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
@@ -495,6 +496,11 @@ export class PiSessionFlowIngress implements Ingress {
 		this.retainedUserInput.clear();
 		return flushed;
 	}
+	/** Called by the single-shot host before output and disposal, never by disposal itself. */
+	async settlePrint(signal: AbortSignal): Promise<void> {
+		if (this.session) await settlePrintWork(this.session, this, signal);
+	}
+
 	/** Join submitted callbacks and their native dispatch before a headless owner closes. */
 	async joinPendingOperations(): Promise<void> {
 		if (this.frames.getStore()?.active)

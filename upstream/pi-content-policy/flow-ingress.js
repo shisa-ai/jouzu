@@ -39,6 +39,7 @@ export class FlowIngressBinding {
 			(handler.runCommand !== undefined && typeof handler.runCommand !== "function") ||
 			(handler.beforeBranchChange !== undefined && typeof handler.beforeBranchChange !== "function") ||
 			(handler.branchChanged !== undefined && typeof handler.branchChanged !== "function") ||
+			(handler.settlePrint !== undefined && typeof handler.settlePrint !== "function") ||
 			(handler.dispose !== undefined && typeof handler.dispose !== "function")
 		)
 			throw new Error("Unsupported flow ingress protocol.");
@@ -86,6 +87,12 @@ export class FlowIngressBinding {
 			};
 		}
 		return binding;
+	}
+
+	async settlePrint(signal) {
+		this.assertActive();
+		await this.#handler.settlePrint?.(signal);
+		this.assertActive();
 	}
 
 	constructor(session, handler) {

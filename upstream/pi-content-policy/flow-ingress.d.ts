@@ -71,6 +71,8 @@ export interface FlowIngress {
 	attach?(session: AgentSession): void | Promise<void>;
 	/** Run a direct host command without native input ownership. May hold automation, but must not join the command during disposal. */
 	runCommand?(submission: FlowSubmission, run: () => Promise<void>): Promise<void>;
+	/** Wait for accepted single-shot continuations before final output; cancellation does not imply success. */
+	settlePrint?(signal: AbortSignal): Promise<void>;
 	/** Release resources after ingress is fenced. Session disposal awaits this callback. */
 	dispose?(): void | Promise<void>;
 	/** Drain old branch resources with ingress fenced, before Pi changes its transcript position. Do not await session disposal here. */

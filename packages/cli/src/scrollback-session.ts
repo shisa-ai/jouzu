@@ -20,6 +20,9 @@ export function createScrollbackSessionObserver() {
 					attached = session;
 					current = session;
 				},
+				async settlePrint(signal) {
+					await delegate?.settlePrint?.(signal);
+				},
 				async dispose() {
 					if (current === attached) current = undefined;
 					attached = undefined;

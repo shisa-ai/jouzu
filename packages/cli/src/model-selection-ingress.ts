@@ -56,6 +56,9 @@ export function wrapModelSelectionIngress(
 				throw error;
 			}
 		},
+		async settlePrint(signal) {
+			await delegate?.settlePrint?.(signal);
+		},
 		async dispose() {
 			try {
 				await selection.beforeSelection();

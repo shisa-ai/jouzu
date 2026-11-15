@@ -53,6 +53,17 @@ If sending an input was interrupted and its outcome is unknown, inspect the
 session and job state before using `/flow clear`. Clearing releases that hold
 without sending the interrupted input again.
 
+## Print and JSON runs
+
+Single-shot runs (`jouzu -p` and `jouzu --mode json`) wait for accepted
+`agent_wait` dependencies and their continuation replies before closing. This
+includes a reply triggered by a wait deadline. An open task or background job
+without an accepted wait does not keep the run open.
+
+If automatic replies are paused, the run reports the pause and exits with a
+failure status instead of reporting completion. Terminating the process cancels
+settlement and closes the runtime.
+
 ## Request history capacity
 
 Request history records delivery and recovery separately from the model's token
