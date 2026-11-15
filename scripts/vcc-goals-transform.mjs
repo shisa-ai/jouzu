@@ -52,9 +52,25 @@ export const transforms = {
 	},
 	"src/core/summarize.ts": (source) => {
 		source = replaceOnce(
-			`import { mergeSessionGoals } from "./jouzu-goals";\n${source}`,
+			`import { mergeSessionGoals, retainRequestRange, stripRequestRange } from "./jouzu-goals";\n${source}`,
 			"  // Outstanding Context is volatile -- always use fresh only",
 			'  if (header === "Session Goal") return mergeSessionGoals(prev, fresh);\n  // Outstanding Context is volatile -- always use fresh only',
+		);
+		source = replaceOnce(
+			source,
+			"  const blocks = filterNoise(normalize(input.messages, input.sourceIndices));",
+			'  const requestRange = retainRequestRange(input.previousSummary ?? "", input.messages, input.sourceIndices);\n  const blocks = filterNoise(normalize(input.messages, input.sourceIndices));',
+		);
+		source = replaceOnce(
+			source,
+			"stripRecallNote(input.previousSummary)",
+			"stripRecallNote(stripRequestRange(input.previousSummary))",
+		);
+		source = replaceOnce(source, '  if (!merged) return "";', "  if (!merged) return requestRange;");
+		source = replaceOnce(
+			source,
+			"return wrapLongLines(merged + SEPARATOR + RECALL_NOTE);",
+			'return (requestRange ? requestRange + SEPARATOR : "") + wrapLongLines(merged + SEPARATOR + RECALL_NOTE);',
 		);
 		return replaceOnce(
 			source,

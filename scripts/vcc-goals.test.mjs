@@ -15,7 +15,7 @@ async function load(t) {
 	const outfile = join(temp, "vcc.mjs");
 	await build({
 		stdin: {
-			contents: `export { compile } from ${JSON.stringify(join(packageRoot, "src/core/summarize.ts"))}; export { normalize } from ${JSON.stringify(join(packageRoot, "src/core/normalize.ts"))}; export { filterNoise } from ${JSON.stringify(join(packageRoot, "src/core/filter-noise.ts"))}; export { extractGoals } from ${JSON.stringify(join(packageRoot, "src/extract/goals.ts"))};`,
+			contents: `export { compile, compileRanked } from ${JSON.stringify(join(packageRoot, "src/core/summarize.ts"))}; export { normalize } from ${JSON.stringify(join(packageRoot, "src/core/normalize.ts"))}; export { filterNoise } from ${JSON.stringify(join(packageRoot, "src/core/filter-noise.ts"))}; export { extractGoals } from ${JSON.stringify(join(packageRoot, "src/extract/goals.ts"))};`,
 			resolveDir: packageRoot,
 		},
 		bundle: true,
@@ -27,6 +27,62 @@ async function load(t) {
 }
 const user = (content, eligible = true) => ({ role: "user", content, jouzuGoalEligible: eligible });
 const goalSection = (summary) => summary.match(/\[Session Goal\]\n([\s\S]*?)(?=\n\[|\n---|$)/)?.[1] ?? "";
+
+test("long request recall boundary survives compiler merges and later scope corrections", async (t) => {
+	const { compile } = await load(t);
+	const request = Array.from({ length: 30 }, (_, i) => `${i}. ${"詳細な要件を保持してください。".repeat(30)}`).join(
+		"\n",
+	);
+	let summary = compile({ messages: [user(request)], sourceIndices: [42] });
+	for (let i = 0; i < 15; i++) {
+		summary = compile({
+			previousSummary: summary,
+			messages: [user("Automated output\n".repeat(180), false)],
+			sourceIndices: [50 + i],
+		});
+		assert.match(summary, /range:\[42,42\]/);
+		assert.equal(summary.split("[User request recall]").length, 2);
+	}
+	summary = compile({
+		previousSummary: summary,
+		messages: [user("変更: 最後の条件だけを取り消し、他の要件は維持してください。")],
+		sourceIndices: [90],
+	});
+	assert.match(summary, /range:\[42,90\]/);
+	assert.match(summary, /Before continuing work/);
+	assert.doesNotMatch(summary, /\[\/User request recall\]\n\n---\n\n---/);
+});
+
+test("ranked compaction retains image-only requests and references before noise filtering", async (t) => {
+	const { compile, compileRanked } = await load(t);
+	for (const compiler of [compile, compileRanked]) {
+		const image = {
+			role: "user",
+			content: [{ type: "image", mimeType: "image/png", data: "fixture" }],
+			jouzuGoalEligible: true,
+		};
+		let summary = compiler({ messages: [image], sourceIndices: [0] });
+		assert.match(summary, /range:\[0,0\]/);
+		summary = compiler({
+			previousSummary: summary,
+			messages: [user("Continue from where you left off. Keep the data."), user("notification", false)],
+			sourceIndices: [42, 99],
+		});
+		assert.match(summary, /range:\[0,42\]/);
+		const withoutIndices = compiler({ previousSummary: summary, messages: [user("No global index")] });
+		assert.match(withoutIndices, /range:\[0,42\]/);
+		assert.equal(withoutIndices.split("[User request recall]").length, 2);
+		assert.doesNotMatch(withoutIndices, /\[\/User request recall\]\n\n---\n\n---/);
+		assert.doesNotMatch(compiler({ messages: [user("No global index")] }), /\[User request recall\]/);
+	}
+});
+
+test("a recall marker survives when noise filtering removes the whole request", async (t) => {
+	const { compileRanked } = await load(t);
+	const summary = compileRanked({ messages: [user("Continue from where you left off.")], sourceIndices: [12] });
+	assert.match(summary, /range:\[12,12\]/);
+	assert.equal(compileRanked({ previousSummary: summary, messages: [] }), summary);
+});
 
 test("VCC goal patch checks both installed trees and is idempotent", async () => {
 	assert.equal(await applyInstalledVccGoals(true), 0);
@@ -192,14 +248,17 @@ test("actual compaction hook separates custom results and mixed flow user frames
 	t.after(() => rm(temp, { recursive: true, force: true }));
 	const outfile = join(temp, "hook.mjs");
 	await build({
-		entryPoints: [join(packageRoot, "src/hooks/before-compact.ts")],
+		stdin: {
+			contents: `export { registerBeforeCompactHook } from ${JSON.stringify(join(packageRoot, "src/hooks/before-compact.ts"))}; export { loadAllMessages } from ${JSON.stringify(join(packageRoot, "src/core/load-messages.ts"))};`,
+			resolveDir: packageRoot,
+		},
 		bundle: true,
 		packages: "external",
 		platform: "node",
 		format: "esm",
 		outfile,
 	});
-	const { registerBeforeCompactHook } = await import(pathToFileURL(outfile).href);
+	const { registerBeforeCompactHook, loadAllMessages } = await import(pathToFileURL(outfile).href);
 	const handlers = new Map();
 	registerBeforeCompactHook({ on: (name, handler) => handlers.set(name, handler) });
 	const frame = (kind, content) => ({
@@ -246,6 +305,44 @@ test("actual compaction hook separates custom results and mixed flow user frames
 	assert.doesNotMatch(goalSection(summary), /unrelated suggestion|delete the project/);
 	assert.match(summary, /unrelated suggestion/);
 	assert.match(summary, /delete the project/);
+	assert.match(summary, /range:\[0,0\]/, "custom entries have no recall index, so none is invented for them");
+
+	const assistant = (id) => ({
+		type: "message",
+		id,
+		message: { role: "assistant", content: [{ type: "text", text: "Done" }] },
+	});
+	const correction = {
+		type: "message",
+		id: "correction",
+		message: { role: "user", content: "Keep all data; change only the timeout." },
+	};
+	const all = [
+		branchEntries[0],
+		assistant("reply"),
+		{ type: "message", id: "off-path", message: { role: "user", content: "An abandoned branch" } },
+		correction,
+		assistant("final"),
+	];
+	const next = handlers.get("session_before_compact")(
+		{
+			customInstructions: "__pi_vcc__ keep:0",
+			branchEntries: [all[0], all[1], correction, all[4]],
+			preparation: {
+				previousSummary: summary,
+				tokensBefore: 1000,
+				fileOps: { read: new Set(), written: new Set(), edited: new Set() },
+			},
+		},
+		{ sessionManager: { getEntries: () => all } },
+	);
+	assert.match(next.compaction.summary, /range:\[0,3\]/, "references use global file order, not branch positions");
+	const history = join(temp, "session.jsonl");
+	await writeFile(history, `${all.map((entry) => JSON.stringify(entry)).join("\n")}\n`);
+	const recalled = loadAllMessages(history, true, new Set(["user-1", "reply", "correction", "final"]));
+	assert.equal(recalled.rendered.find((entry) => entry.index === 0).summary, "Fix the login timeout.");
+	assert.equal(recalled.rendered.find((entry) => entry.index === 3).summary, correction.message.content);
+	assert.ok(!recalled.rendered.some((entry) => entry.index === 2), "recall respects the active lineage");
 });
 
 test("declarative user instructions become scope changes instead of being dropped", async (t) => {

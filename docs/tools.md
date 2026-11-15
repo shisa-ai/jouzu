@@ -72,6 +72,7 @@ Set `exposure` to `direct` to declare a server's tools immediately, or `hidden` 
 [pi-vcc](https://github.com/sting8k/pi-vcc), based on [VCC](https://github.com/lllyasviel/VCC), compacts the conversation without a model call when it nears or exceeds the context window.
 
 - Compaction shortens the active transcript. Running work continues.
+- Summaries retain a recall range for indexed user requests and later corrections. The assistant is instructed to read those requests before continuing, following pagination and expanding truncated entries. This reference survives repeated compaction even when goal bullets or transcript excerpts omit details. Requests without a recall index are not assigned one; a recall reference cannot guarantee that the assistant follows the instruction.
 - `vcc_recall` retrieves details from the current session, including entries removed from the active transcript. It cannot start compaction.
 - `compact_context` lets the assistant request compaction explicitly. Compaction waits until the current run settles and queued messages have been handled. After successful compaction, the agent continues; a failure reports the problem without automatically continuing.
 
