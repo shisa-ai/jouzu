@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Report a provider's rejection of an image in the conversation and add `/images omit` and `/images restore`, so a session whose image a provider refuses can continue. RPC clients receive the state as `jouzu-images` status JSON. See [Models](docs/models.md#images-a-provider-rejects).
+
 ## 0.2.6 - 2026-11-16
 
 ### Added

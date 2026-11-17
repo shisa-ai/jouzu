@@ -938,6 +938,13 @@
 		"reason": "The state-lock describe label for the agents.json lock: an internal identifier-like value stored in the lock record, never rendered as a sentence."
 	},
 	{
+		"file": "packages/cli/src/image-omission.ts",
+		"kind": "variable-literal",
+		"text": "[image omitted]",
+		"category": "model-facing",
+		"reason": "Placeholder sent to the model in place of an image the user chose to omit from later requests; it stays English."
+	},
+	{
 		"file": "packages/cli/src/subagents/tool-policy.ts",
 		"kind": "record-value",
 		"text": "Access denied: tool is not enabled for this child session.",

@@ -279,6 +279,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "images",
+      "registered_extension": true,
+      "english": "Leave images that the provider rejected out of later requests",
+      "japanese": "プロバイダーが拒否した画像を以降のリクエストから除外します",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.images.description"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "import",
       "registered_extension": false,
       "english": "Import and resume a session from a JSONL file",
