@@ -214,6 +214,7 @@ export function createWorkflowIntegration(
 				cwd,
 				userAgentDir: paths.agentDir,
 				runtimeStateDir: paths.stateDir,
+				runtimeCacheDir: paths.cacheDir,
 				profile,
 				// Resolve active caller preferences, not a staged Settings change, on launch and resume.
 				// The manager freezes this launch contract; later parent changes cannot reach it.

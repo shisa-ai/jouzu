@@ -938,6 +938,13 @@
 		"reason": "The state-lock describe label for the agents.json lock: an internal identifier-like value stored in the lock record, never rendered as a sentence."
 	},
 	{
+		"file": "packages/cli/src/protected-state-policy.ts",
+		"kind": "record-value",
+		"text": "Access denied: Jouzu's state and cache folders are read-only for tools.",
+		"category": "model-facing",
+		"reason": "The tool-block reason returned to the model as tool result text when a file tool targets Jouzu's state or cache folder; it stays English."
+	},
+	{
 		"file": "packages/cli/src/subagents/tool-policy.ts",
 		"kind": "record-value",
 		"text": "Access denied: tool is not enabled for this child session.",
