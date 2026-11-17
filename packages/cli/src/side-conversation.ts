@@ -344,7 +344,10 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 			const reference = runs[index].sideReference;
 			const captured = reference ? Date.parse(reference.capturedAt) : Number.NaN;
 			if (!reference || !Number.isFinite(captured)) continue;
-			return this.text(reference.truncated ? "referenceTruncated" : "reference", { time: formatClock(captured) });
+			// Same-day captures show only the time, leaving border room for the key hints.
+			const clock = formatClock(captured);
+			const time = clock.slice(0, 10) === formatClock(Date.now()).slice(0, 10) ? clock.slice(11) : clock;
+			return this.text(reference.truncated ? "referenceTruncated" : "reference", { time });
 		}
 		return "";
 	}
@@ -401,8 +404,11 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 			...(this.error
 				? wrapTextWithAnsi(styles.apply("palette.message.error", sanitizeScrollbackText(this.error)), width)
 				: []),
-			...wrapTextWithAnsi(styles.apply("palette.hint", catalog.format(`jouzu.cli.btw.${hintKey}`, hintArgs)), width),
 		];
+		// Bottom border: context time on the left, key hints on the right. Hints win when both do not fit.
+		const hint = styles.apply("palette.hint", catalog.format(`jouzu.cli.btw.${hintKey}`, hintArgs));
+		const context = styles.apply("palette.hint", this.reference(runs));
+		const bottomLabel = terminalTextWidth(context) + terminalTextWidth(hint) + 9 <= outerWidth ? context : "";
 		const capacity = Math.max(1, height - footer.length - 3);
 		// Keep a scrolled-up view on the same lines while new answer text arrives below.
 		if (this.scroll > 0 && all.length > this.renderedLines) this.scroll += all.length - this.renderedLines;
@@ -422,7 +428,7 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 			...all.slice(Math.max(0, end - capacity), end).map(row),
 			renderPaletteDivider(outerWidth, styles),
 			...footer.map(row),
-			renderFrameEdge(outerWidth, ["╰", "╯"], styles.apply("palette.hint", this.reference(runs)), "", border),
+			renderFrameEdge(outerWidth, ["╰", "╯"], bottomLabel, hint, border),
 		];
 	}
 }

@@ -211,7 +211,8 @@ test("the panel header summarizes the thread and the footer shows the context ti
 	});
 	const lines = f.component.render(120);
 	assert.match(lines[0], /Fixture Model · 1\/20 answered · ↑0 ↓0 · cost unknown/);
-	assert.match(lines.at(-1), /Context from \d{4}-\d{2}-\d{2} \d{2}:\d{2} · truncated/);
+	assert.match(lines.at(-1), /Context from (\d{4}-\d{2}-\d{2} )?\d{2}:\d{2} · truncated ─+ Enter ask · Enter actions/);
+	assert.match(f.component.render(40).at(-1), /^╰─+ Enter ask/, "a narrow border keeps the key hints");
 	assert.ok(lines.some((line) => line.includes("Answering…")));
 	assert.ok(
 		lines.every((line) => !line.includes("entry")),
