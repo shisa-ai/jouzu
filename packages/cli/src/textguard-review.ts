@@ -556,6 +556,36 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 	};
 }
 
+/** Status key under which clients without a terminal receive TextGuard state as JSON. */
+export const TEXTGUARD_STATUS_KEY = "jouzu-textguard";
+
+/** Read-only TextGuard state for clients: the mode and the items waiting for a user decision. */
+export interface TextGuardStatus {
+	version: 1;
+	mode: TextGuardMode;
+	pending: {
+		id: string;
+		source: string;
+		status: ScanEvidence["status"];
+		reason?: string;
+		findings: { kind: string; severity: string }[];
+	}[];
+}
+
+export function textGuardStatus(mode: TextGuardMode, reviews: ContentReview[]): TextGuardStatus {
+	return {
+		version: 1,
+		mode,
+		pending: reviews.map((review) => ({
+			id: review.id,
+			source: review.displaySource,
+			status: review.evidence.status,
+			...(review.evidence.reason ? { reason: review.evidence.reason } : {}),
+			findings: review.evidence.findings.slice(0, 16).map(({ kind, severity }) => ({ kind, severity })),
+		})),
+	};
+}
+
 export function createTextGuardReviewExtension(
 	runtime: TextGuardRuntime,
 	options: {
@@ -584,9 +614,25 @@ export function createTextGuardReviewExtension(
 	return (pi) => {
 		let lastNotice = "";
 		let context: ExtensionContext | undefined;
+		// Every mode with a user interface (terminal, RPC, ACP) shows the message to the user; only a
+		// session without one, such as print mode, falls back to stderr.
 		const notify = (ctx: ExtensionContext, message: string, type: "info" | "warning" | "error" = "warning") => {
-			if (ctx.mode === "tui" && ctx.hasUI) ctx.ui.notify(message, type);
+			if (ctx.hasUI) ctx.ui.notify(message, type);
 			else writeDiagnostic(message);
+		};
+		let lastState = "";
+		/**
+		 * Clients without a terminal (RPC, ACP) get the mode and what is waiting for review as
+		 * structured, read-only status under one key; the terminal has its own review view and
+		 * footer. Items never carry the withheld text, and nothing here can approve content.
+		 */
+		const publishState = (ctx: ExtensionContext) => {
+			if (!ctx.hasUI || ctx.mode === "tui") return;
+			const policy = runtime.forSession(ctx.sessionManager.getSessionId());
+			const state = JSON.stringify(textGuardStatus(runtime.currentMode(), policy?.reviews() ?? []));
+			if (state === lastState) return;
+			lastState = state;
+			ctx.ui.setStatus(TEXTGUARD_STATUS_KEY, state);
 		};
 		const alertText = (alert: TextGuardAlert, interactive: boolean): string => {
 			const source = alert.source.length > 96 ? `${alert.source.slice(0, 96)}…` : alert.source;
@@ -617,15 +663,20 @@ export function createTextGuardReviewExtension(
 			const ctx = context;
 			if (!ctx) return false;
 			notify(ctx, alertText(alert, ctx.mode === "tui" && ctx.hasUI), alert.kind === "withheld" ? "warning" : "info");
+			publishState(ctx);
 			return true;
 		};
 		const report = (_event: unknown, ctx: ExtensionContext) => {
 			context = ctx;
 			runtime.setAlertListener(showAlert);
 			const policy = runtime.forSession(ctx.sessionManager.getSessionId());
-			if (!policy) return;
+			if (!policy) {
+				publishState(ctx);
+				return;
+			}
 			const queued = policy.drainAlerts();
 			for (const alert of queued) showAlert(alert);
+			publishState(ctx);
 			const pending = policy.reviews();
 			const identity = JSON.stringify([ctx.sessionManager.getSessionId(), pending.map((item) => item.id)]);
 			if (identity === lastNotice) return;
@@ -661,6 +712,7 @@ export function createTextGuardReviewExtension(
 						return;
 					}
 					notify(ctx, modeText(requested), "info");
+					publishState(ctx);
 					try {
 						await ctx.reload();
 					} catch {
