@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const reporter = pathToFileURL(fileURLToPath(new URL("./test-timing-reporter.mjs", import.meta.url))).href;
+const failureReporter = pathToFileURL(fileURLToPath(new URL("./test-failure-reporter.mjs", import.meta.url))).href;
 
 function limit(env, name, fallback) {
 	const raw = env[name];
@@ -142,16 +143,18 @@ export async function runTests(invocation) {
 	delete env.NODE_TEST_CONTEXT;
 	delete env.JOUZU_TEST_TIMINGS_DIR;
 	let record, partial;
-	const reporters = ["--test-reporter=tap"];
+	// TAP on stdout, and every failure repeated on stderr at the end, where a truncated CI log keeps it.
+	const reporters = [
+		"--test-reporter=tap",
+		"--test-reporter-destination=stdout",
+		`--test-reporter=${failureReporter}`,
+		"--test-reporter-destination=stderr",
+	];
 	if (timings) {
 		mkdirSync(timings.dir, { recursive: true });
 		record = join(timings.dir, `${timings.label}-${Date.now()}-${process.pid}.jsonl`);
 		partial = `${record}.partial`;
-		reporters.push(
-			"--test-reporter-destination=stdout",
-			`--test-reporter=${reporter}`,
-			`--test-reporter-destination=${partial}`,
-		);
+		reporters.push(`--test-reporter=${reporter}`, `--test-reporter-destination=${partial}`);
 	}
 	const context = timings ? timingContext(invocation) : null;
 	// Keep the checkout prefix out of each argument to stay below Windows' command-line limit.
