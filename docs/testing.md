@@ -58,7 +58,10 @@ Tests whose names end in `@endurance` repeat full runtime operations until they 
 The Node suite commands use `scripts/run-tests.mjs`. It selects TAP output so
 failure details appear alongside failed tests, applies a 120-second default
 test timeout, and supervises each suite with a separate ten-minute deadline.
-It prints elapsed-time notices to stderr every 15 seconds. The separate
+It prints elapsed-time notices to stderr every 15 seconds, and at the end of
+a suite it repeats every failed test on stderr, with its file, line, failure
+type and first error line, so a log cut to its last lines still names each
+failure. The separate
 supervisor can terminate a blocked test event loop or leaked handles that
 prevent the test runner from exiting.
 
