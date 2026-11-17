@@ -14,12 +14,12 @@ main agent. Opening the panel does not hold the main agent's next automatic turn
 
 ## Context and tools
 
-Each question uses a text snapshot from the main agent's latest admitted provider
-request: the request after conversation transforms and content checks. The panel
-shows its capture time and transcript boundary. It excludes the reply being
-generated, images, thinking blocks, tool declarations, and tool-call arguments.
-New replies and tool results become available after the next main request includes
-them. The snapshot is limited to 64,000 characters and 8,000 per message; a `…`
+Each question uses the saved main conversation on the active branch, including
+compaction summaries, after the session's content checks. This works immediately
+in a new or resumed session, without sending a main-agent request first. The panel
+shows the snapshot's capture time and transcript boundary. It excludes unfinished
+replies, images, thinking blocks, tool declarations, and tool-call arguments.
+The snapshot is limited to 64,000 characters and 8,000 per message; a `…`
 marker beside the snapshot boundary means content was truncated.
 
 Side conversations have no callable tools and load no project instructions,
@@ -28,10 +28,10 @@ another file, search, run commands, change code, delegate work, or control tasks
 Historical requests in the snapshot are reference material, not work for the side
 assistant to execute.
 
-Flow control must be on, and the main agent must have sent a request in this
-process. Jouzu refuses side context when it cannot verify a filtered snapshot.
-For example, a provider-payload replacement makes that request unavailable for
-side sharing. Jouzu does not fall back to raw session history.
+Jouzu checks a copy of saved history without starting a main turn or consuming
+queued inputs. If those checks fail, the side request is withheld. Side questions
+do not require Flow to be enabled; steering and follow-up handoffs use Flow's
+human-input delivery path.
 
 The first question inherits the main model, provider destination, thinking setting,
 and response-language preference. A changed model, destination, or parent branch

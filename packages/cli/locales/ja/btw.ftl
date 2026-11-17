@@ -1,6 +1,6 @@
 jouzu-cli-btw-description = メインの作業を中断せずに別の質問をする
 jouzu-cli-btw-title = サイド会話
-jouzu-cli-btw-contextUnavailable = このモデルに送信済みのポリシー適用後のコンテキストがありません。メインエージェントの次のリクエスト後に再試行してください。サイド会話にはフロー制御が必要です。
+jouzu-cli-btw-contextUnavailable = サイド会話のコンテキストを確認できませんでした。セッションを開き直して再試行してください。
 jouzu-cli-btw-diverged = メインの分岐またはモデルの送信先が変わりました。新しいサイド会話を開始してください。
 jouzu-cli-btw-cancelled = サイドリクエストをキャンセルしました。
 jouzu-cli-btw-question = 質問する
@@ -13,7 +13,7 @@ jouzu-cli-btw-close = 閉じる（サイドリクエストは継続）
 jouzu-cli-btw-empty = まだ質問はありません。
 jouzu-cli-btw-busy = 回答中… メインの作業は継続しています。
 jouzu-cli-btw-idle = メインの作業は独立して継続します。サイドの回答は送信されません。
-jouzu-cli-btw-context = 参照元：メインの最新送信済みリクエスト。生成中の回答を除くテキストのみ、最大64,000文字。
+jouzu-cli-btw-context = 参照元：内容チェック後の保存済みメイン会話。テキストのみ、最大64,000文字。
 jouzu-cli-btw-noAnswer = メインに渡せる回答がまだありません。
 jouzu-cli-btw-limit = この会話は20問に達しました。新しいサイド会話を開始してください。
 jouzu-cli-btw-instruction = メインエージェントへの指示を入力してください。最新のやり取りを参考情報として引用します。

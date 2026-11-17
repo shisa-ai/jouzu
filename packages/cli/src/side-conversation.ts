@@ -9,9 +9,18 @@ import {
 	type PaletteComponent,
 	type PaletteComponentContext,
 	paletteHeightBudget,
+	paletteInnerWidth,
+	renderPaletteBand,
+	renderPaletteDivider,
 } from "./palette.js";
 import { sanitizeScrollbackText } from "./scrollback.js";
-import { fitTerminalText } from "./session-ui/index.js";
+import {
+	createSessionUiStyles,
+	fitTerminalText,
+	renderTerminalFrameBorder,
+	renderTerminalFrameRow,
+	renderTerminalFrameTitle,
+} from "./session-ui/index.js";
 import type { WorkflowService } from "./subagents/integration.js";
 import { type AgentRun, isActiveRun } from "./subagents/manager.js";
 import { formatUsageCost } from "./subagents/usage.js";
@@ -156,13 +165,23 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 	}
 	render(width: number): string[] {
 		const { catalog, keybindings, theme } = this.context;
+		const styles = this.context.styles ?? createSessionUiStyles(theme);
+		const outerWidth = width;
+		const frame = { border: (text: string) => styles.apply("palette.border", text) };
+		const height = paletteHeightBudget(this.context.tui.terminal.rows);
+		const title = theme.bold(styles.apply("palette.title", this.text("title")));
+		if (width < 12 || height < 6) return [fitTerminalText(title, Math.max(1, width))];
+		width = paletteInnerWidth(width);
 		const runs = this.actions.runs();
 		const active = runs.some(isActiveRun);
 		const all = runs.flatMap((run) => [
-			...wrapTextWithAnsi(sanitizeScrollbackText(`> ${run.task}`), width),
+			...wrapTextWithAnsi(styles.apply("palette.heading", sanitizeScrollbackText(`> ${run.task}`)), width),
 			...wrapTextWithAnsi(
-				sanitizeScrollbackText(
-					`${run.model.name ?? run.model.id} · ${catalog.format(`jouzu.cli.subagent.status.${run.status}`)} · ↑${run.usage.input + run.usage.cacheRead + run.usage.cacheWrite} ↓${run.usage.output} · ${formatUsageCost(run.usage, catalog) ?? "?"}`,
+				styles.apply(
+					"palette.detail",
+					sanitizeScrollbackText(
+						`${run.model.name ?? run.model.id} · ${catalog.format(`jouzu.cli.subagent.status.${run.status}`)} · ↑${run.usage.input + run.usage.cacheRead + run.usage.cacheWrite} ↓${run.usage.output} · ${formatUsageCost(run.usage, catalog) ?? "?"}`,
+					),
 				),
 				width,
 			),
@@ -173,7 +192,10 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 					)
 				: []),
 			...wrapTextWithAnsi(
-				sanitizeScrollbackText(run.result ?? catalog.format(`jouzu.cli.subagent.status.${run.status}`)),
+				styles.apply(
+					run.status === "failed" ? "palette.message.error" : "palette.value",
+					sanitizeScrollbackText(run.result ?? catalog.format(`jouzu.cli.subagent.status.${run.status}`)),
+				),
 				width,
 			),
 			"",
@@ -184,11 +206,17 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 			this.mode === "browse"
 				? this.choices().flatMap((key, index) =>
 						Math.abs(index - this.selected) <= (short ? 0 : 1)
-							? [`${index === this.selected ? ">" : " "} ${this.text(key)}`]
+							? [
+									index === this.selected
+										? renderPaletteBand(styles.apply("palette.identity.selected", `→ ${this.text(key)}`), width, theme)
+										: styles.apply("palette.label", `  ${this.text(key)}`),
+								]
 							: [],
 					)
 				: [
-						this.text(this.mode === "question" ? "modeQuestion" : "modeInstruction"),
+						theme.bold(
+							styles.apply("palette.heading", this.text(this.mode === "question" ? "modeQuestion" : "modeInstruction")),
+						),
 						...(short ? [] : this.mode === "question" ? [] : wrapTextWithAnsi(this.text("instruction"), width)),
 						...this.input.render(width),
 					];
@@ -206,20 +234,26 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 		);
 		const footer = [
 			...controls.flatMap((line) => (short ? [fitTerminalText(line, width)] : wrapTextWithAnsi(line, width))),
-			...wrapTextWithAnsi(sanitizeScrollbackText(this.error), width),
-			...wrapTextWithAnsi(hints, width),
+			...wrapTextWithAnsi(styles.apply("palette.message.error", sanitizeScrollbackText(this.error)), width),
+			...wrapTextWithAnsi(styles.apply("palette.hint", hints), width),
 		];
 		const header = [
-			theme.bold(this.text("title")),
-			...(short ? [] : wrapTextWithAnsi(this.text(active ? "busy" : "idle"), width)),
-			...(short ? [] : wrapTextWithAnsi(this.text("context"), width)),
+			...(short
+				? []
+				: wrapTextWithAnsi(styles.apply("palette.message.info", this.text(active ? "busy" : "idle")), width)),
 		];
-		const capacity = Math.max(1, paletteHeightBudget(this.context.tui.terminal.rows) - header.length - footer.length);
+		const capacity = Math.max(1, height - header.length - footer.length - 3);
 		this.scroll = Math.min(this.scroll, Math.max(0, all.length - capacity));
 		const end = all.length - this.scroll;
-		return [...header, ...all.slice(Math.max(0, end - capacity), end), ...footer].flatMap((line) =>
-			wrapTextWithAnsi(line, width),
-		);
+		const row = (text: string) => renderTerminalFrameRow(text, outerWidth, frame);
+		return [
+			renderTerminalFrameTitle(title, outerWidth, frame),
+			...header.map(row),
+			...all.slice(Math.max(0, end - capacity), end).map(row),
+			renderPaletteDivider(outerWidth, styles),
+			...footer.map(row),
+			renderTerminalFrameBorder(outerWidth, { ...frame, left: "╰", right: "╯" }),
+		];
 	}
 }
 

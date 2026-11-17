@@ -1,6 +1,6 @@
 jouzu-cli-btw-description = Ask a side question without interrupting main work
 jouzu-cli-btw-title = Side conversation
-jouzu-cli-btw-contextUnavailable = No policy-filtered context is available for this model yet. Let the main agent send a request, then try again. Side questions require flow control.
+jouzu-cli-btw-contextUnavailable = Side context could not be checked. Reopen the session and try again.
 jouzu-cli-btw-diverged = The main branch or model destination changed. Start a new side conversation.
 jouzu-cli-btw-cancelled = Side request cancelled.
 jouzu-cli-btw-question = Ask a question
@@ -13,7 +13,7 @@ jouzu-cli-btw-close = Close (keep side request running)
 jouzu-cli-btw-empty = No side questions yet.
 jouzu-cli-btw-busy = Answering side question… Main work continues.
 jouzu-cli-btw-idle = Main work continues independently. Side answers are not sent to it.
-jouzu-cli-btw-context = Reference: latest admitted main request; current reply is excluded. Text only, at most 64,000 characters.
+jouzu-cli-btw-context = Reference: saved main conversation after content checks. Text only, at most 64,000 characters.
 jouzu-cli-btw-noAnswer = No completed answer to bring to main yet.
 jouzu-cli-btw-limit = This side conversation has 20 questions. Start a new one to continue.
 jouzu-cli-btw-instruction = Enter the instruction for the main agent. The latest side exchange will be quoted as evidence.

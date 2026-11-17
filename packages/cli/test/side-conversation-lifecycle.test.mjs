@@ -26,7 +26,7 @@ function componentFixture(t, overrides = {}) {
 		{
 			catalog: resolveCatalog("en").bundle,
 			tui: { terminal: { rows: 24 }, requestRender() {} },
-			theme: { bold: (text) => text },
+			theme: { bold: (text) => text, fg: (_role, text) => text, bg: (_role, text) => text },
 			keybindings: keys,
 			close() {
 				closed = true;
@@ -317,7 +317,12 @@ test("side handoff remains authenticated after its command returns and rejects a
 	ui.component().handleInput("tui.select.down");
 	ui.component().handleInput("tui.select.down");
 	ui.component().handleInput("tui.select.confirm");
-	await waitForFlow(() => ui.component().render(100).includes("Main instruction"));
+	await waitForFlow(() =>
+		ui
+			.component()
+			.render(100)
+			.some((line) => line.includes("Main instruction")),
+	);
 	ui.component().handleInput("EXPLICIT_MAIN_INSTRUCTION");
 	ui.component().handleInput("tui.input.submit");
 	await waitForFlow(() => f.sent.length > 0);
@@ -325,9 +330,20 @@ test("side handoff remains authenticated after its command returns and rejects a
 	assert.match(JSON.stringify(f.sent[0]), /EXPLICIT_MAIN_INSTRUCTION/);
 	assert.match(JSON.stringify(f.sent[0]), /Side conversation evidence/);
 	await f.session.waitForIdle();
-	await waitForFlow(() => !ui.component().render(100).includes("Main instruction"));
+	await waitForFlow(
+		() =>
+			!ui
+				.component()
+				.render(100)
+				.some((line) => line.includes("Main instruction")),
+	);
 	ui.component().handleInput("tui.select.confirm");
-	await waitForFlow(() => ui.component().render(100).includes("Main instruction"));
+	await waitForFlow(() =>
+		ui
+			.component()
+			.render(100)
+			.some((line) => line.includes("Main instruction")),
+	);
 	assert.equal((await f.session.navigateTree(anchor, { summarize: false })).cancelled, false);
 	ui.component().handleInput("MUST_NOT_RETARGET");
 	ui.component().handleInput("tui.input.submit");

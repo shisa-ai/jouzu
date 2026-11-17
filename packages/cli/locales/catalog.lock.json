@@ -7,7 +7,7 @@
     "zh-Hant": "487064443252cc389b96233896fa5134551d16f0c29e2920b5e77f223a4570e8"
   },
   "extra": {
-    "en/btw.ftl": "cd18922979345d59f2a729ca3636ec66e7194762912cb2587e00c7c06af7a988",
+    "en/btw.ftl": "ed2749f5ed61102b45cb519839842d47d9507f8eb8d0d7c94750fbb3e720067e",
     "en/compaction.ftl": "04cd2f1efd45825c059a598dcab4a805432323d6a2a875e92e3f8e0e2cf9e54d",
     "en/fixed-labels.ftl": "3cf37818cdea8b173fccfbcdc1b4a28f0b21d519760e3377e6bc968461cc2ba7",
     "en/flow-controls.ftl": "f76e10baca6e93edc6f102e429f2b7113957defaf0ec693569f7101f8b64944a",
@@ -20,7 +20,7 @@
     "en/runtime.ftl": "4a583df878d2bc5ba275ce134d79d023c5915cdf21b72fac7d36d42f988c9d1c",
     "en/slash-commands.ftl": "8649c1f0d1ef064b941fa4706fc99f6a1395ffd3034ea44fe2e3d27a7cf20ad4",
     "en/user-input.ftl": "0ba85cac7baace66ce14ef3666f162db7e2457c159db73d01b797f1f6ad20a92",
-    "ja/btw.ftl": "cf6e6e6dc0d358fa1429056c2b8c1e7f0cb3376fdf6d58c801e25519002ade50",
+    "ja/btw.ftl": "2e88e5053c0c272472d113491d90c2d6546db82b6845c8f7d5763a504740ed1c",
     "ja/compaction.ftl": "58432b76d1edc7c7dea1c49d13303c226c42e33fd3b6a2aea03c7fe2373dfb73",
     "ja/fixed-labels.ftl": "d5677012b507c382902186ff002110342d85e701ecec1656e223ec66b5c28181",
     "ja/flow-controls.ftl": "ece337b7230f3e547b6b4e032f09a5284b82560031d41b1449dc688ba7dd7786",

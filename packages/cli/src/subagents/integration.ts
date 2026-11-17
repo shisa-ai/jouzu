@@ -20,7 +20,7 @@ import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
 import { promptCapabilities } from "../prompt-capabilities.js";
 import { setPromptSections } from "../prompt-sections.js";
-import { sideContextFor } from "../side-context.js";
+import { prepareSideContext, type SideContextFilter, sideContextFor } from "../side-context.js";
 import type { TextGuardMode } from "../textguard-policy.js";
 import {
 	observedSubagentResults,
@@ -84,6 +84,7 @@ export function createWorkflowIntegration(
 	options: {
 		textguardFiles?: boolean;
 		textguardMode?: () => TextGuardMode;
+		filterSideContext?: SideContextFilter;
 		profile?: () => "core" | "ja";
 		dashboardVisibility?: (visible: boolean) => void;
 		/** The resolved catalog the subagent result renderer reads its display text from. */
@@ -220,17 +221,26 @@ export function createWorkflowIntegration(
 		)
 			throw new Error(catalog.format("jouzu.cli.btw.diverged"));
 		const sideContext = side
-			? sideContextFor(
-					{ sessionId: active.sessionManager.getSessionId(), sessionManager: active.sessionManager },
-					effectiveModel,
-				)
+			? options.filterSideContext
+				? await prepareSideContext(
+						{ sessionId: active.sessionManager.getSessionId(), sessionManager: active.sessionManager },
+						effectiveModel,
+						options.filterSideContext,
+					)
+				: sideContextFor(
+						{ sessionId: active.sessionManager.getSessionId(), sessionManager: active.sessionManager },
+						effectiveModel,
+					)
 			: undefined;
+		if (sessionGeneration !== generation || manager !== targetManager)
+			throw new Error(catalogText(catalog, CatalogMessageId.subagentSessionChangedBeforeStart));
+		if (side && (active.model?.provider !== model.provider || active.model.id !== model.id))
+			throw new Error(catalog.format("jouzu.cli.btw.diverged"));
 		if (side && !sideContext) throw new Error(catalog.format("jouzu.cli.btw.contextUnavailable"));
 		if (side && previousRunId) {
 			const previous = targetManager.get(previousRunId);
 			if (
 				previous.purpose !== "side-conversation" ||
-				previous.sideBranchId !== sideContext?.branchId ||
 				previous.sideDestination !== sideContext?.destination ||
 				previous.model.provider !== model.provider ||
 				previous.model.id !== model.id ||

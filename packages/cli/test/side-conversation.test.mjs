@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
 import { resolveCatalog } from "../dist/locale-catalog.js";
-import { captureSideContext, sideContextFor } from "../dist/side-context.js";
+import { captureSideContext, prepareSideContext, sideContextFor } from "../dist/side-context.js";
 import { createSideConversationExtension, SideConversationComponent } from "../dist/side-conversation.js";
 import { SubagentManager } from "../dist/subagents/manager.js";
 import { defaultAgentConfig } from "../dist/subagents/roles.js";
@@ -47,6 +47,47 @@ test("side context is admitted-only, text-only, immutable and bound to its branc
 	assert.equal(sideContextFor(session, { ...model, baseUrl: "http://other/v1" }), undefined);
 	branch.splice(0, branch.length, { id: "other" });
 	assert.equal(sideContextFor(session, model), undefined);
+});
+
+test("side context prepares saved history before any main request and fails closed", async () => {
+	let leaf = "saved";
+	const messages = [
+		{ role: "user", content: "SAVED_HISTORY", timestamp: 1 },
+		{ role: "compactionSummary", summary: "SAVED_SUMMARY", tokensBefore: 100, timestamp: 2 },
+	];
+	const session = {
+		sessionId: "resumed-side",
+		sessionManager: {
+			getLeafId: () => leaf,
+			getBranch: () => [{ id: leaf }],
+			buildSessionProjection: () => ({ messages }),
+		},
+	};
+	const model = { provider: "fixture", id: "model", api: "openai-completions", baseUrl: "http://localhost" };
+	assert.equal(sideContextFor(session, model), undefined);
+	const result = await prepareSideContext(session, model, async (id, input) => {
+		assert.equal(id, session.sessionId);
+		assert.equal(input[0].content, "SAVED_HISTORY");
+		input[0].content = "FILTERED_HISTORY";
+		return input;
+	});
+	assert.match(result.text, /FILTERED_HISTORY/);
+	assert.match(result.text, /SAVED_SUMMARY/);
+	assert.doesNotMatch(result.text, /SAVED_HISTORY/);
+	assert.equal(messages[0].content, "SAVED_HISTORY");
+	await assert.rejects(
+		prepareSideContext(session, model, async () => {
+			throw new Error("policy failed");
+		}),
+		/policy failed/,
+	);
+	await assert.rejects(
+		prepareSideContext(session, model, async () => {
+			leaf = "other";
+			return [];
+		}),
+		/branch changed/,
+	);
 });
 
 test("user-only child results never create parent completion records or callbacks", async () => {
@@ -288,7 +329,7 @@ test("side panel keeps text keys in Pi input and actions reachable with rebound 
 			{
 				catalog: resolveCatalog(locale).bundle,
 				tui: { terminal: { rows: 40 }, requestRender() {} },
-				theme: { bold: (text) => text },
+				theme: { bold: (text) => text, fg: (_role, text) => text, bg: (_role, text) => text },
 				keybindings: {
 					matches: (data, action) => keys[action]?.includes(data),
 					getKeys: (action) => keys[action] ?? [],
@@ -414,7 +455,7 @@ test("side controls remain within a short terminal and keep selection visible", 
 			{
 				catalog: resolveCatalog(locale).bundle,
 				tui: { terminal: { rows: 12 }, requestRender() {} },
-				theme: { bold: (text) => text },
+				theme: { bold: (text) => text, fg: (_role, text) => text, bg: (_role, text) => text },
 				keybindings: { matches: (data, action) => data === action, getKeys: () => ["enter"] },
 				close() {},
 			},
@@ -432,7 +473,7 @@ test("side controls remain within a short terminal and keep selection visible", 
 			const lines = component.render(24);
 			assert.ok(lines.length <= 10, `${locale}: ${lines.join("\n")}`);
 			assert.ok(lines.every((line) => visibleWidth(line) <= 24));
-			assert.ok(lines.some((line) => line.startsWith(">")));
+			assert.ok(lines.some((line) => line.includes("→")));
 			component.handleInput("tui.select.down");
 		}
 		component.dispose();

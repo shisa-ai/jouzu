@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import type { AgentMessage } from "@earendil-works/pi-agent-core";
+import { type AgentSession, convertToLlm } from "@earendil-works/pi-coding-agent";
 
 interface SideSource {
 	sessionId: string;
@@ -71,6 +72,31 @@ export function captureSideContext(
 		text: lines.join("\n"),
 		truncated,
 	});
+}
+
+export type SideContextFilter = (sessionId: string, messages: AgentMessage[]) => Promise<AgentMessage[]>;
+
+/** Prepare saved, compaction-aware history without running the main agent's request hooks. */
+export async function prepareSideContext(
+	session: SideSource & {
+		sessionManager: Pick<AgentSession["sessionManager"], "getLeafId" | "getBranch" | "buildSessionProjection">;
+	},
+	model: Destination,
+	filter: SideContextFilter,
+): Promise<SideContext> {
+	const entryId = session.sessionManager.getLeafId();
+	const branchId = sideContextFor(session, model)?.branchId;
+	const messages = convertToLlm(structuredClone(session.sessionManager.buildSessionProjection().messages));
+	const admitted = await filter(session.sessionId, messages);
+	if (!Array.isArray(admitted)) throw new Error("Invalid content-policy result");
+	if (entryId !== null && !session.sessionManager.getBranch().some((entry) => entry.id === entryId))
+		throw new Error("The main branch changed while preparing side context.");
+	// Freeze the captured leaf even if main work appended messages during filtering.
+	const source = { ...session, sessionManager: { ...session.sessionManager, getLeafId: () => entryId } };
+	captureSideContext(source, model, admitted, branchId);
+	const snapshot = sideContextFor(session, model);
+	if (!snapshot) throw new Error("The main branch changed while preparing side context.");
+	return snapshot;
 }
 
 export function clearSideContext(session: { sessionId: string }): void {
