@@ -136,6 +136,16 @@ used another language.
 A recovery hold is announced once per hold, and not at all if it was released
 before the announcement.
 
+## Stopping a turn
+
+Stop (`abort` in RPC, Esc in the terminal) is final. A prompt that has not started
+yet is cancelled, and RPC answers it with the prompt disposition `aborted`; a
+running turn ends with stop reason `aborted`. In RPC an `abort` cancels every
+prompt sent before it, even one still waiting for admission. A stopped request is
+not a failure: it never holds later messages, asks for a recovery decision, or
+makes flow control start work on its own. A message whose turn had started stays
+in the conversation, and a message sent while a Stop is finishing runs after it.
+
 ## Request history capacity
 
 Request history records delivery and recovery separately from the model's token

@@ -1150,8 +1150,12 @@ export class PiSessionFlowIngress implements Ingress {
 		// Only the first refusal is reported: a hold that lasts is reported once, and the status view
 		// keeps showing it for as long as it holds. Reporting a submission the user did not make would
 		// make every automated hold a notification, so user instruction is what qualifies.
-		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission))
-			this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
+		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission)) {
+			// Input sent while the user's own Stop is finishing waits for it, the way a message sent during
+			// a turn waits for the turn: it is released when the Stop has been recorded, not reported held.
+			if (branch.requests.stopping) void branch.requests.stopSettled().then(() => this.requestRelease());
+			else this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
+		}
 		return (
 			saved &&
 			decision.allowed &&

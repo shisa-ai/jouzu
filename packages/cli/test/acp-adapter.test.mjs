@@ -704,6 +704,12 @@ test("ACP drains handled prompt updates before reporting success", async (t) => 
 	await waitFor(() => readLog(h.logPath).some((entry) => entry.type === "exit"), "the stopped handled child");
 });
 
+test("ACP reports a prompt a Stop cancelled before its turn as cancelled", async (t) => {
+	const h = await directSession(t);
+	const result = await h.session.prompt({ prompt: [{ type: "text", text: "aborted-before-start" }] });
+	assert.equal(result.stopReason, "cancelled");
+});
+
 test("ACP refuses a load whose child crashes during replay", async (t) => {
 	const h = await harness(t, { notificationDelayMs: 60 });
 	writeLoadSession(h, "load-crash");

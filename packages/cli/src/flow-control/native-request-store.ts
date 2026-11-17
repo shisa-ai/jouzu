@@ -725,12 +725,14 @@ export class FlowNativeRequestStore {
 	snapshot(): Promise<NativeRequest[]> {
 		return this.transact((records) => structuredClone(records));
 	}
-	/** Preserve receipts while explicitly releasing their unresolved holds. */
-	reset(): Promise<number> {
+	/** Preserve receipts while explicitly releasing their unresolved holds; `ids` limits it to those requests. */
+	reset(ids?: readonly string[]): Promise<number> {
+		const only = ids ? new Set(ids) : undefined;
 		return this.transact((records) => {
 			let released = 0;
 			for (const record of records)
-				if ((!record.reset && record.outcome === undefined) || nativeHoldPending(record)) {
+				if (only && !only.has(record.id)) continue;
+				else if ((!record.reset && record.outcome === undefined) || nativeHoldPending(record)) {
 					record.reset = true;
 					// A used authorization is the retained retry's provenance, not permission to send again.
 					if (!record.retryAuthorization?.requestId) delete record.retryAuthorization;

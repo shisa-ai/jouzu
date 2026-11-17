@@ -82,7 +82,7 @@ function capture() {
 	};
 }
 
-for (const disposition of ["started", "queued", "handled"])
+for (const disposition of ["started", "queued", "handled", "aborted"])
 	test(`a dispatched prompt reports the native ${disposition} disposition exactly once`, async () => {
 		for (const awaitDispatch of [false, true]) {
 			const harness = controlledSession({ disposition });
