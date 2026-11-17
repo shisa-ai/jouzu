@@ -386,6 +386,7 @@ test("/btw registers for user commands only, preserves drafts, and reports nonin
 	};
 	handlers.get("session_start")({}, ctx);
 	await commands.get("btw").handler("Side question", ctx);
+	await new Promise((resolve) => setImmediate(resolve));
 	assert.deepEqual(asks, ["Side question"]);
 	assert.ok(drafts[0], JSON.stringify(notices));
 	assert.match(drafts[0], /Side conversation evidence.*\nQuestion: Side question\nAnswer: Side answer/);

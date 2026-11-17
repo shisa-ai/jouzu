@@ -87,6 +87,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "btw",
+      "registered_extension": true,
+      "english": "Ask a side question without interrupting main work",
+      "japanese": "メインの作業を中断せずに別の質問をする",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.btw.description"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "bug",
       "registered_extension": false,
       "english": "Draft a bug report for Jouzu",

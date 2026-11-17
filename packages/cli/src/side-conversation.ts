@@ -36,6 +36,9 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 	private selected = 0;
 	private scroll = 0;
 	private busy = false;
+	private preparing = false;
+	private revision = 0;
+	private disposed = false;
 	private error = "";
 	private unsubscribe: () => void;
 	private _focused = false;
@@ -57,6 +60,8 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 		this.input.invalidate();
 	}
 	dispose(): void {
+		this.disposed = true;
+		this.revision++;
 		this.unsubscribe();
 	}
 	private text(key: string): string {
@@ -65,23 +70,31 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 	private choices(): string[] {
 		return ["question", "bring", "steer", "followUp", "stop", "new", "close"];
 	}
-	private run(operation: () => Promise<void>): void {
-		if (this.busy) return;
+	private run(operation: (current: () => boolean) => Promise<void>, preparing = false): void {
+		if (this.busy || this.disposed) return;
 		this.busy = true;
+		this.preparing = preparing;
 		this.error = "";
-		void operation()
+		const revision = ++this.revision;
+		const current = () => !this.disposed && revision === this.revision;
+		void operation(current)
 			.catch((error) => {
-				this.error = error instanceof Error ? error.message : String(error);
+				if (current()) this.error = error instanceof Error ? error.message : String(error);
 			})
 			.finally(() => {
 				this.busy = false;
-				this.context.tui.requestRender();
+				this.preparing = false;
+				if (!this.disposed) this.context.tui.requestRender();
 			});
 	}
 	handleInput(data: string): void {
+		if (this.disposed) return;
 		const keys = this.context.keybindings;
 		if (keys.matches(data, "tui.select.cancel")) {
-			if (this.mode !== "browse") {
+			this.revision++;
+			this.input.setValue("");
+			if (this.mode !== "browse" || this.preparing) {
+				this.preparing = false;
 				this.mode = "browse";
 				this.focused = this._focused;
 			} else this.context.close();
@@ -94,9 +107,10 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 				const value = this.input.getValue().trim();
 				if (!value) return;
 				const mode = this.mode;
-				this.run(async () => {
+				this.run(async (current) => {
 					if (mode === "question") await this.actions.ask(value);
 					else await this.actions.send(value, mode);
+					if (!current()) return;
 					this.input.setValue("");
 					this.mode = "browse";
 					this.focused = this._focused;
@@ -113,15 +127,16 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 			const choice = this.choices()[this.selected];
 			if (["question", "steer", "followUp"].includes(choice)) {
 				const enter = () => {
+					this.input.setValue("");
 					this.mode = choice as "question" | "steer" | "followUp";
 					this.focused = this._focused;
 				};
 				if (choice === "question") enter();
 				else
-					this.run(async () => {
+					this.run(async (current) => {
 						await this.actions.beginInstruction?.();
-						enter();
-					});
+						if (current()) enter();
+					}, true);
 			} else if (choice === "bring") {
 				try {
 					this.actions.bring();
@@ -218,10 +233,12 @@ export function createSideConversationExtension(
 	let adapter: Adapter | undefined;
 	let unsubscribeReceipts: (() => void) | undefined;
 	let launching = false;
+	let generation = 0;
 	return {
 		name: "jouzu-side-conversation",
 		factory(pi) {
 			pi.on("session_start", (_event, ctx) => {
+				generation++;
 				currentSession = ctx.sessionManager.getSessionId();
 				latest = service
 					.sideRuns()
@@ -231,6 +248,7 @@ export function createSideConversationExtension(
 				adapter = undefined;
 			});
 			pi.on("session_shutdown", () => {
+				generation++;
 				currentSession = undefined;
 				unsubscribeReceipts?.();
 				unsubscribeReceipts = undefined;
@@ -245,6 +263,7 @@ export function createSideConversationExtension(
 						return;
 					}
 					const session = currentSession;
+					const epoch = generation;
 					const msg = (key: string) => catalog.format(`jouzu.cli.btw.${key}`);
 					const thread = (): AgentRun[] => {
 						const all = service.sideRuns();
@@ -259,7 +278,7 @@ export function createSideConversationExtension(
 						return result;
 					};
 					const assertSession = () => {
-						if (!session || session !== currentSession || service.sessionId() !== session)
+						if (!session || epoch !== generation || session !== currentSession || service.sessionId() !== session)
 							throw new Error(msg("diverged"));
 					};
 					const exchange = () => {
@@ -279,6 +298,7 @@ export function createSideConversationExtension(
 							receipt.state === "rejected" ? "warning" : "info",
 						);
 					};
+					let draftHandoff: string | undefined;
 					const actions: SideActions = {
 						runs: thread,
 						subscribe: service.subscribe,
@@ -296,8 +316,7 @@ export function createSideConversationExtension(
 							}
 						},
 						bring() {
-							const text = exchange();
-							ctx.ui.pasteToEditor(`${ctx.ui.getEditorText() ? "\n\n" : ""}${text}`);
+							draftHandoff = exchange();
 						},
 						async beginInstruction() {
 							instructionEvidence = exchange();
@@ -331,7 +350,22 @@ export function createSideConversationExtension(
 					};
 					try {
 						if (args.trim()) await actions.ask(args.trim());
-						await surface.open(ctx, { view: "side" }, (context) => new SideConversationComponent(context, actions));
+						// Mount the panel, then release the command's host operation. The
+						// surface owns its own lifetime; keeping this command pending would
+						// block main automatic work at the next idle boundary.
+						void surface
+							.open(ctx, { view: "side" }, (context) => new SideConversationComponent(context, actions))
+							.then(() => {
+								if (draftHandoff === undefined) return;
+								assertSession();
+								// Replacement panels restore the editor on close. Paste only after
+								// that restoration, using the exchange captured by the action.
+								ctx.ui.pasteToEditor(`${ctx.ui.getEditorText() ? "\n\n" : ""}${draftHandoff}`);
+							})
+							.catch((error) => {
+								if (epoch === generation)
+									ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
+							});
 					} catch (error) {
 						ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
 					}

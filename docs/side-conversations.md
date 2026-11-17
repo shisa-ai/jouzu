@@ -5,9 +5,12 @@ Bare `/btw` reopens the side conversation. It has its own question field and sav
 history; questions and answers do not enter the main conversation automatically.
 
 Choose **Ask a question**, type your question, and submit it with the displayed key.
-Use the displayed cancel key to return to the action list. Page Up/Page Down scroll
-the side transcript. Closing the panel keeps its request running. **Cancel side
-request** stops only that request; it does not interrupt the main agent.
+Use the displayed cancel key to discard the question or instruction draft and
+return to the action list. Each edit starts empty. Cancelling instruction
+preparation returns to the actions without opening the instruction field later.
+Page Up/Page Down scroll the side transcript. Closing the panel keeps its request
+running. **Cancel side request** stops only that request; it does not interrupt the
+main agent. Opening the panel does not hold the main agent's next automatic turn.
 
 ## Context and tools
 
@@ -39,9 +42,10 @@ errors have at most two retries, within a three-minute execution limit.
 
 ## Bring information back
 
-- **Bring latest exchange to main editor** appends the latest completed question
-  and answer to your existing draft without submitting it. Review or edit it
-  before sending.
+- **Bring latest exchange to main editor** captures the latest completed question
+  and answer, closes the panel, then appends the exchange to your existing draft
+  without submitting it. This also preserves the insertion when a narrow terminal
+  uses the replacement panel. Review or edit it before sending.
 - **Send an instruction with this exchange as steering** opens an instruction
   field. Submit your instruction with the quoted side exchange as evidence.
 - **Send an instruction with this exchange as a follow-up** uses the same field
