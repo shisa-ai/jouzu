@@ -378,6 +378,10 @@ export class FlowIngressBinding {
 				: { kind: api === "prompt" || api === "steer" || api === "followUp" ? "host" : "sdk", id: api };
 		if (source) source.used = true;
 		const command = this.#command.getStore();
+		// A host prompt is cancelled by any abort that follows its submission, even while admission
+		// holds it, so the abort count at submission travels with its dispatch.
+		const abortEpoch =
+			api === "prompt" && origin.kind === "host" ? (args[1]?.abortEpoch ?? this.#session._promptAbortEpoch) : undefined;
 		const preflight = api === "prompt" ? args[1]?.preflightResult : undefined;
 		if (preflight !== undefined && typeof preflight !== "function")
 			throw new TypeError("Flow prompt preflightResult must be a function.");
@@ -462,6 +466,7 @@ export class FlowIngressBinding {
 				captured[1] = { ...captured[1], triggerTurn };
 			}
 			if (preflight) captured[1] = { ...captured[1], preflightResult: notify };
+			if (abortEpoch !== undefined) captured[1] = { ...captured[1], abortEpoch };
 			this.#dispatches++;
 			try {
 				return await this.#dispatch.run(

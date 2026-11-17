@@ -13,6 +13,7 @@ function fixture({ inspectGate } = {}) {
 			if (inspectGate) await inspectGate.promise;
 			return { version: 1, scope: {}, submissions: state.held, uncertain: [] };
 		},
+		branch: () => ({ attachment: { nativeRequests: { snapshot: async () => [] } } }),
 	};
 	const handlers = new Map();
 	const extension = createFlowStatusExtension({ ingress: () => ingress });

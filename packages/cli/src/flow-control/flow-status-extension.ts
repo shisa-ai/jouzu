@@ -56,7 +56,7 @@ export interface FlowClientStatus {
 	held: { id: string; code: string; text: string }[];
 	/** Model requests withheld until the user retries or clears them with `/flow`. */
 	withheld: { id: string; code: string; text: string }[];
-	/** Requests whose outcome is unknown after an interruption; never resent automatically. */
+	/** Attempts and provider requests whose outcome is unknown after an interruption; never resent automatically. */
 	uncertain: string[];
 }
 
@@ -131,6 +131,14 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		const paused = ingress.automatedPause();
 		const recovery = await ingress.recoveryHold();
 		const inspected = await ingress.inspect();
+		// A provider request with no recorded outcome after a restart is as unknown as an interrupted
+		// attempt; /flow reports it the same way, and the next message waits for the user's decision.
+		const turnActive = statusContext?.isIdle?.() === false;
+		const unresolved = turnActive
+			? []
+			: (await ingress.branch().attachment.nativeRequests.snapshot())
+					.filter((request) => request.outcome === undefined && !request.reset)
+					.map((request) => request.id);
 		return {
 			version: 1,
 			enabled,
@@ -159,7 +167,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 					),
 				).values(),
 			],
-			uncertain: inspected.uncertain.map((attempt) => attempt.id),
+			uncertain: [...new Set([...inspected.uncertain.map((attempt) => attempt.id), ...unresolved])],
 		};
 	};
 	/** Publish the current state to a client without a terminal; the terminal reads it with /flow. */

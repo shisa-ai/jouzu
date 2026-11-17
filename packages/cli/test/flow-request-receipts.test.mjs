@@ -225,8 +225,14 @@ for (const afterHandoff of [false, true])
 		const attempt = (await result.ledger.snapshot()).attempts[0];
 		assert.equal(result.sent.length, 0);
 		assert.equal(attempt.requests[0].handedOff, afterHandoff);
-		assert.equal(attempt.phase, afterHandoff ? "running" : "withheld");
+		assert.equal(attempt.phase, afterHandoff ? "running" : "prepared");
 		if (afterHandoff) assert.equal(attempt.requests[0].outcome, "aborted");
+		else {
+			// A user abort before handoff is not a provider failure: the idle host cancels the attempt
+			// instead of withholding a request that would need a recovery decision.
+			assert.equal((await result.boundary.reconcile(result.ledger, "attempt")).value.kind, "cancelled");
+			assert.equal((await result.ledger.snapshot()).attempts[0].phase, "cancelled");
+		}
 	});
 
 for (const viaCommand of [false, true])

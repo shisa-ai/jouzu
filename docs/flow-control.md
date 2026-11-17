@@ -85,13 +85,24 @@ In RPC mode flow control publishes its state as a `setStatus` request with key
 (each a stable `code` and localized `text`, present only while they apply),
 `held` (input held with a reason: submission `id`, `code`, `text`), `withheld`
 (model requests waiting for `/flow retry` or `/flow clear`: request `id`, `code`,
-`text`), and `uncertain` (attempt ids). It is
+`text`), and `uncertain` (ids of attempts and model requests whose outcome is
+unknown after an interruption). It is
 sent at session start, after every `/flow` command, and when a turn ends, only
 when it changed. The latest state replaces earlier ones. It is read-only: holds
 are released only by the `/flow` commands.
 
 A recovery hold is announced once per hold, and not at all if it was released
 before the announcement.
+
+## Stopping a turn
+
+Stop (`abort` in RPC, Esc in the terminal) is final. A prompt that has not started
+yet is cancelled, and RPC answers it with the prompt disposition `aborted`; a
+running turn ends with stop reason `aborted`. In RPC an `abort` cancels every
+prompt sent before it, even one still waiting for admission. A stopped request is
+not a failure: it never holds later messages, asks for a recovery decision, or
+makes flow control start work on its own. A message whose turn had started stays
+in the conversation, and a message sent while a Stop is finishing runs after it.
 
 ## Request history capacity
 
