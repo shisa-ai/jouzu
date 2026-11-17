@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Security
+
+- Refuse `write` and `edit` tool calls that target Jouzu's state or cache folders, in the main session and in child agents, so the agent's file tools cannot add TextGuard approvals or change flow-control state. See [TextGuard](docs/textguard.md#approvals-and-their-scope).
+
 ## 0.2.6 - 2026-11-16
 
 ### Added

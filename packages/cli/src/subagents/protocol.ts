@@ -16,6 +16,8 @@ export interface WorkerLaunch {
 	directory: string;
 	userAgentDir?: string;
 	runtimeStateDir?: string;
+	/** The parent's cache folder, which holds TextGuard approvals; the child's file tools may not write it. */
+	runtimeCacheDir?: string;
 	profile?: "core" | "ja";
 	sessionFile?: string;
 	context?: ChildContext;

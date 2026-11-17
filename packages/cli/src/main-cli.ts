@@ -65,6 +65,7 @@ import {
 } from "./profile-manager.js";
 import { runProfileMigrationCommand } from "./profile-migration-command.js";
 import { loadBundledProfile } from "./profiles.js";
+import { createProtectedStateExtension } from "./protected-state-policy.js";
 import {
 	createReleaseExtensionDiagnostics,
 	ensureReleaseRuntimeCompatibility,
@@ -775,6 +776,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				createDirectToolPolicyExtension(),
 				// First argument handler, so later handlers and the tool see normalized input.
 				createToolArgumentExtension(),
+				createProtectedStateExtension([paths.stateDir, paths.cacheDir]),
 				{
 					name: "jouzu-dashboard-events",
 					factory: (api) => {

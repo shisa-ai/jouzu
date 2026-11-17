@@ -8,6 +8,7 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import { createDirectToolPolicyExtension } from "../classic-host-policy.js";
 import { createFlowControlRuntime, type FlowControlRuntime } from "../flow-control/flow-runtime.js";
+import { createProtectedStateExtension } from "../protected-state-policy.js";
 import { TextGuardRuntime } from "../textguard-runtime.js";
 import { inheritedContextText, parentContextTool } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
@@ -114,6 +115,11 @@ async function runGuardedWorker(
 				},
 			}),
 			createDirectToolPolicyExtension(),
+			createProtectedStateExtension(
+				[launch.directory, launch.runtimeStateDir, launch.runtimeCacheDir].filter(
+					(root): root is string => typeof root === "string",
+				),
+			),
 			...flow.extensions,
 			{
 				name: "jouzu-child-lifecycle",
