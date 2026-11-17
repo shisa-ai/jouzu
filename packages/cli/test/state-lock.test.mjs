@@ -190,3 +190,20 @@ test("inspectStateLock reports free, dead, and owner-unknown states", async () =
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+test("a lock with this process's PID from before it started is left by an earlier process", () => {
+	const { root, stateDir } = makeStateDir();
+	try {
+		const path = join(stateDir, "lock");
+		const before = new Date(Date.now() - process.uptime() * 1000 - 60_000).toISOString();
+		writeFileSync(path, `${JSON.stringify({ pid: process.pid, startedAt: before, token: "earlier" })}\n`);
+		assert.equal(inspectStateLock(path, new Date()).status, "held-dead");
+		// This process's own lock stays live.
+		rmSync(path);
+		const release = acquireStateLock({ path, describe: "test", onBusy: busyError });
+		assert.equal(inspectStateLock(path, new Date()).status, "held-live");
+		release();
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});

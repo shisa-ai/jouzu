@@ -47,6 +47,8 @@
 		"packages/cli/test/cli.test.mjs :: profile plan is non-mutating and profile apply converges": "integration",
 		"packages/cli/test/cli.test.mjs :: self-update avoids loading Pi runtime modules before package replacement": "integration",
 		"packages/cli/test/cli.test.mjs :: shows Jouzu help and leaves Pi help behind the explicit escape": "integration",
+		"packages/cli/test/empty-session-rpc.test.mjs :: a session opened and closed without a message leaves nothing behind": "child-process",
+		"packages/cli/test/empty-session-rpc.test.mjs :: a second process with the same new session id cannot record a second copy of it": "child-process",
 		"packages/cli/test/flow-assembly-holds.test.mjs :: a composed wake is recorded as notification-only": "child-process",
 		"packages/cli/test/print-settle.test.mjs :: print drains an installed background wait through the final model reply": "integration",
 		"packages/cli/test/flow-assembly-pair.test.mjs :: a live wait blocks lane continuations and delivers its decision once": "integration",

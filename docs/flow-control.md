@@ -95,6 +95,8 @@ receipts, waits, and running jobs. Continue with a new message after clearing it
 | Return to where you left a recent branch | Its unfinished work resumes, including tasks waiting for background jobs |
 | Rewind to an earlier point | Starts a new branch; unfinished work does not resume. File changes are not undone. |
 | Reopen a session | Continues from its last saved position, which may differ from the branch you last viewed |
+| Reopen a session after moving the Jouzu home folder | Continues with its flow state; storage is identified by its place inside the home, not by the absolute path |
+| Start a session and quit without sending a message | Nothing is saved. Flow control keeps a new session's state in memory and writes it, with the session file, the first time it records something, such as your first message |
 
 Extension commands can await `ctx.navigateTree()` with flow control on or off. Navigation requires an idle session with no queued input or other active host operations. A busy refusal leaves the current branch usable. Wait for navigation to finish before starting another host operation, including while the old branch attachment closes and the new one opens.
 

@@ -293,6 +293,9 @@ export class SubagentManager {
 		return path;
 	}
 	attach(): void {
+		// A session that never started an agent has nothing to own or recover, and writes nothing until
+		// its first launch, which takes ownership itself.
+		if (!existsSync(this.root)) return;
 		this.acquireOwner();
 	}
 	/**
