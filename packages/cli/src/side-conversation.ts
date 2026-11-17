@@ -227,7 +227,7 @@ export function createSideConversationExtension(
 	service: WorkflowService,
 	catalog: CatalogBundle = defaultCatalog(),
 ): InlineExtension {
-	const surface = new JouzuPaletteSurfaceHost({ catalog });
+	let surface = new JouzuPaletteSurfaceHost({ catalog });
 	let latest: string | undefined;
 	let currentSession: string | undefined;
 	let adapter: Adapter | undefined;
@@ -239,6 +239,9 @@ export function createSideConversationExtension(
 		factory(pi) {
 			pi.on("session_start", (_event, ctx) => {
 				generation++;
+				// Pi disposes panels during runtime replacement without settling their
+				// custom UI promises. Never reuse that runtime's active surface.
+				surface = new JouzuPaletteSurfaceHost({ catalog });
 				currentSession = ctx.sessionManager.getSessionId();
 				latest = service
 					.sideRuns()

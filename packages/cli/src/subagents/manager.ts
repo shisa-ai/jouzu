@@ -556,7 +556,7 @@ export class SubagentManager {
 				const sameWorkspace = [...this.workers.keys()]
 					.map((key) => this.runs.get(key))
 					.filter((other): other is AgentRun => other !== undefined)
-					.filter((other) => other.cwd === run.cwd);
+					.filter((other) => other.cwd === run.cwd && other.purpose !== "side-conversation");
 				// "parallel" is the user's explicit choice to let writers share one
 				// workspace, so the per-workspace guard and the cross-session writer
 				// lock below are both skipped.

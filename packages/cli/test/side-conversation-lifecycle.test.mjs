@@ -147,11 +147,28 @@ function realUi(t, presentation) {
 		},
 		keybindings: keys,
 		extensionOverlays: new Map(),
+		extensionDialogs: [],
+		clearExtensionTerminalInputListeners() {},
+		setExtensionFooter() {},
+		setExtensionHeader() {},
+		clearExtensionWidgets() {},
+		footerDataProvider: { clearExtensionStatuses() {} },
+		footer: { invalidate() {} },
+		setCustomEditorComponent() {},
+		setupAutocompleteProvider() {},
+		defaultEditor: {},
+		updateTerminalTitle() {},
+		setWorkingIndicator() {},
+		setHiddenThinkingLabel() {},
+		showTopExtensionDialog() {},
 		pushExtensionDialog(value) {
+			this.extensionDialogs.push({ component: value });
 			component = value;
 			mounted();
 		},
-		removeExtensionDialog() {},
+		removeExtensionDialog(value) {
+			this.extensionDialogs = this.extensionDialogs.filter((dialog) => dialog.component !== value);
+		},
 	};
 	const ui = {
 		notify: (...args) => notices.push(args),
@@ -166,10 +183,66 @@ function realUi(t, presentation) {
 		component?.handleInput("tui.select.cancel");
 		await tick();
 	});
-	return { ui, ready, notices, component: () => component, text: () => text };
+	return {
+		ui,
+		ready,
+		notices,
+		component: () => component,
+		text: () => text,
+		reset: () => InteractiveMode.prototype.resetExtensionUI.call(owner),
+	};
 }
 
 for (const presentation of ["replace", "floating"]) {
+	for (const transition of ["reload", "replacement"]) {
+		test(`open ${presentation} side panel can reopen after ${transition} teardown`, async (t) => {
+			const ui = realUi(t, presentation);
+			let active;
+			let subscriptions = 0;
+			const extension = createSideConversationExtension({
+				sideRuns: () => [completed],
+				sessionId: () => active.session.sessionId,
+				subscribe: () => {
+					subscriptions++;
+					return () => subscriptions--;
+				},
+			});
+			active = await fixture(t, { extensions: [extension] });
+			await active.session.bindExtensions({ mode: "tui", uiContext: ui.ui });
+			await active.session.prompt("/btw");
+			await ui.ready;
+			const retired = ui.component();
+			retired.handleInput("tui.select.confirm");
+			retired.handleInput("DISCARDED_DRAFT");
+			ui.reset();
+			assert.equal(subscriptions, 0);
+			if (transition === "reload") await active.session.reload();
+			else {
+				await active.session.extensionRunner.emit({ type: "session_shutdown", reason: "switch" });
+				await active.session.dispose();
+				active = await fixture(t, { extensions: [extension] });
+				await active.session.bindExtensions({ mode: "tui", uiContext: ui.ui });
+			}
+			await active.session.prompt("/btw");
+			await tick();
+			assert.notEqual(ui.component(), retired, "teardown must not retain the disposed panel");
+			assert.equal(subscriptions, 1);
+			assert.ok(
+				ui
+					.component()
+					.render(80)
+					.every((line) => !line.includes("DISCARDED_DRAFT")),
+			);
+			retired.handleInput("tui.input.submit");
+			assert.equal(ui.text(), "EXISTING_DRAFT");
+			ui.component().handleInput("tui.select.down");
+			ui.component().handleInput("tui.select.confirm");
+			await tick();
+			assert.match(ui.text(), /EXISTING_DRAFT\n\nSide conversation evidence/);
+			assert.equal(subscriptions, 0);
+			assert.deepEqual(ui.notices, []);
+		});
+	}
 	test(`bring exchange survives actual Pi editor restoration in ${presentation} presentation`, async (t) => {
 		const f = realUi(t, presentation);
 		const commands = new Map(),
