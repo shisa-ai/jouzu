@@ -248,6 +248,9 @@ export function createWorkflowIntegration(
 					!active.sessionManager.getBranch().some((entry) => entry.id === previous.parentEntryId))
 			)
 				throw new Error(catalog.format("jouzu.cli.btw.diverged"));
+			// The persisted child identity survives process-local context capture IDs.
+			// Ancestry and destination were checked above before retaining that identity.
+			if (sideContext) sideContext.branchId = previous.sideBranchId;
 		}
 		return targetManager.launch(
 			{

@@ -52,6 +52,23 @@ function componentFixture(t, overrides = {}) {
 	return { component, sent, closed: () => closed };
 }
 
+test("starting a fresh side conversation opens a focused question field", async (t) => {
+	let fresh = 0;
+	const { component, sent } = componentFixture(t, {
+		fresh() {
+			fresh++;
+		},
+	});
+	component.focused = true;
+	for (let index = 0; index < 5; index++) component.handleInput("tui.select.down");
+	component.handleInput("tui.select.confirm");
+	assert.equal(fresh, 1);
+	component.handleInput("NEW_QUESTION");
+	component.handleInput("tui.input.submit");
+	await tick();
+	assert.deepEqual(sent, [["question", "NEW_QUESTION"]]);
+});
+
 for (const target of ["question", "steer", "followUp"]) {
 	test(`cancelled question text never enters a new ${target} edit`, async (t) => {
 		const { component, sent } = componentFixture(t);

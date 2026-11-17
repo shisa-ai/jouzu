@@ -1416,11 +1416,24 @@ test("side Q&A bypasses delegated-agent enablement and remains inaccessible thro
 		await f.integration.service.setSubagentsEnabled(true);
 		await assert.rejects(f.integration.service.resume(run.id, "Main assignment"), /not found/);
 		assert.throws(() => f.integration.service.steer(run.id, "Main assignment"), /not found/);
+		const childFile = join(f.workers[0].launch.directory, "session.jsonl");
+		writeFileSync(childFile, "{}\n");
+		f.workers[0].emit({ type: "ready", sessionFile: childFile, sessionId: "side-child" });
 		f.workers[0].emit({ type: "result", status: "completed", text: "Private side answer" });
 		f.workers[0].exit(true);
 		assert.equal(f.integration.service.sideRuns()[0].completion, undefined);
 		assert.deepEqual(f.messages, []);
 		assert.equal((await f.invoke({ op: "list" })).runs.length, 0);
+		captureSideContext(
+			{ sessionId: "parent", sessionManager: f.ctx.sessionManager },
+			f.ctx.model,
+			[{ role: "user", content: "RESTORED_HISTORY" }],
+			"new-process-branch",
+		);
+		const resumed = await f.integration.service.askSide("Continue saved side conversation", run.id);
+		assert.equal(resumed.previousRunId, run.id);
+		assert.equal(resumed.sideBranchId, run.sideBranchId);
+		assert.equal(f.workers.length, 2);
 	} finally {
 		await f.shutdown();
 	}

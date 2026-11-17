@@ -157,6 +157,11 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 			else if (choice === "new") {
 				try {
 					this.actions.fresh();
+					this.input.setValue("");
+					this.selected = 0;
+					this.scroll = 0;
+					this.mode = "question";
+					this.focused = this._focused;
 				} catch (error) {
 					this.error = error instanceof Error ? error.message : String(error);
 				}
