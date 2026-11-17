@@ -162,6 +162,8 @@ export class UserInputAdapters {
 	}
 	async authorize(extensionId: string, adapterId: string): Promise<string> {
 		if (this.closed) throw userInputError("stale-target", "External input runtime is closed.");
+		// Exact loader-owned first-party identity; never a caller-provided path or prefix grant.
+		if (extensionId === "<inline:jouzu-side-conversation>" && adapterId === "jouzu-btw") return extensionId;
 		if (!this.owner.agentDir) throw userInputError("unauthorized", "External input grants are not configured.");
 		const decision = await checkUserInputAdapterGrant({
 			agentDir: this.owner.agentDir,

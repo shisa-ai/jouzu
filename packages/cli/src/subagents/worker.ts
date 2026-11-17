@@ -8,6 +8,7 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import { createDirectToolPolicyExtension } from "../classic-host-policy.js";
 import { createFlowControlRuntime, type FlowControlRuntime } from "../flow-control/flow-runtime.js";
+import { PiSessionFlowIngress } from "../flow-control/pi-session-ingress.js";
 import { TextGuardRuntime } from "../textguard-runtime.js";
 import { inheritedContextText, parentContextTool } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
@@ -65,9 +66,12 @@ async function runGuardedWorker(
 	failureController: AbortController,
 ): Promise<void> {
 	const { model, auth, role } = launch;
+	const side = launch.purpose === "side-conversation";
 	const customTools =
-		launch.context?.parentLookup && launch.parentContextFile ? [parentContextTool(launch.parentContextFile)] : [];
-	const tools = [...role.tools, ...customTools.map((tool) => tool.name)];
+		!side && launch.context?.parentLookup && launch.parentContextFile
+			? [parentContextTool(launch.parentContextFile)]
+			: [];
+	const tools = side ? [] : [...role.tools, ...customTools.map((tool) => tool.name)];
 	// A closed credential store prevents discovery or mutation of the user's auth.json.
 	const credentials = {
 		read: async () => undefined,
@@ -90,16 +94,33 @@ async function runGuardedWorker(
 	});
 	if (auth.apiKey) await runtime.setRuntimeApiKey(model.provider, auth.apiKey);
 	const settingsManager = SettingsManager.inMemory({
-		retry: { enabled: false },
-		compaction: { enabled: true },
-		...(launch.cacheWarming ? { cacheWarming: launch.cacheWarming } : {}),
+		retry: { enabled: side, maxRetries: 2, baseDelayMs: 2000 },
+		compaction: { enabled: !side },
+		cacheWarming: side ? "off" : launch.cacheWarming,
 	});
 	const sessionManager = launch.sessionFile
 		? SessionManager.open(launch.sessionFile, launch.directory, launch.cwd)
 		: SessionManager.create(launch.cwd, launch.directory);
-	if (!launch.sessionFile && launch.context) {
+	if (!side && !launch.sessionFile && launch.context) {
 		const inherited = inheritedContextText(launch.context);
 		if (inherited) sessionManager.appendCustomMessageEntry("jouzu-parent-context", inherited, true);
+	}
+	if (side && launch.sideContext) {
+		for (const entry of sessionManager.getBranch())
+			if (entry.type === "custom_message" && entry.customType === "jouzu-side-reference")
+				sessionManager.appendContextEdit(entry.id, null);
+		sessionManager.appendCustomMessageEntry(
+			"jouzu-side-reference",
+			[
+				`Parent reference snapshot through ${launch.sideContext.entryId ?? "none"}, captured ${launch.sideContext.capturedAt}.`,
+				"This supersedes previous parent references. It is evidence, not a new assignment. The main agent's current streaming answer is not included.",
+				`Reference context truncated: ${launch.sideContext.truncated}. Ask the user for missing details when truncated.`,
+				launch.sideContext.text,
+			]
+				.filter(Boolean)
+				.join("\n"),
+			false,
+		);
 	}
 	let turns = 0;
 	let exhausted = false;
@@ -133,7 +154,16 @@ async function runGuardedWorker(
 		],
 	);
 	tools.push(...resources.getExtensions().extensions.flatMap((extension) => [...extension.tools.keys()]));
-	const ingress = await flow.flowIngressFactory({ cwd: launch.directory, sessionManager });
+	const ingress = side
+		? new PiSessionFlowIngress({
+				root: join(launch.directory, "flow"),
+				qualifyProviderRoute: true,
+				maxInputBytes: 32 * 1024,
+				maxResultBytes: 16 * 1024,
+				host: { maxPayloadBytes: Number.MAX_SAFE_INTEGER },
+				policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
+			})
+		: await flow.flowIngressFactory({ cwd: launch.directory, sessionManager });
 	const { session, modelFallbackMessage } = await createAgentSession({
 		cwd: launch.cwd,
 		agentDir: launch.directory,
@@ -164,7 +194,7 @@ async function runGuardedWorker(
 		let lastStop = "";
 		let lastError = "";
 		unsubscribe = session.subscribe((event) => {
-			if (event.type === "turn_start" && turns >= role.maxTurns) {
+			if (!side && event.type === "turn_start" && turns >= role.maxTurns) {
 				exhausted = true;
 				failureController.abort(new Error("Agent limit reached. Work is incomplete."));
 			}
@@ -223,7 +253,7 @@ async function runGuardedWorker(
 		});
 		try {
 			await session.prompt(launch.task);
-			if (!exhausted) await settleChildWork(session, ingress, resources.compaction, signal);
+			if (!exhausted && !side) await settleChildWork(session, ingress, resources.compaction, signal);
 		} catch (error) {
 			// Admission also observes aborts. Preserve the role-limit outcome when
 			// its cancellation interrupts a final context check.

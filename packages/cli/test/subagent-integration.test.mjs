@@ -10,6 +10,7 @@ import { runPromptHook as runBasePromptHook } from "../../../scripts/fixtures/pr
 import { resolveCatalog } from "../dist/locale-catalog.js";
 import { notificationHash } from "../dist/notifications/inbox.js";
 import { pathDigest } from "../dist/path-digest.js";
+import { captureSideContext } from "../dist/side-context.js";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
 const runPromptHook = (handler, options = {}) =>
@@ -1390,6 +1391,36 @@ test("a queued inherited child keeps the model and effort captured at request ti
 		assert.equal(f.workers.length, 2);
 		assert.equal(f.workers[1].launch.model.id, "gpt-6-astra");
 		assert.equal(f.workers[1].launch.thinkingLevel, "high");
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("side Q&A bypasses delegated-agent enablement and remains inaccessible through delegated operations", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		await f.integration.service.setSubagentsEnabled(false);
+		f.branch.push({ id: "entry" });
+		captureSideContext({ sessionId: "parent", sessionManager: f.ctx.sessionManager }, f.ctx.model, [
+			{ role: "user", content: "ADMITTED_PARENT" },
+		]);
+		const run = await f.integration.service.askSide("User's private side question");
+		assert.equal(f.workers.length, 1);
+		assert.equal(f.workers[0].launch.purpose, "side-conversation");
+		assert.deepEqual(f.workers[0].launch.role.tools, []);
+		assert.equal(f.integration.service.runs().length, 0);
+		assert.equal(f.integration.service.sideRuns().length, 1);
+		assert.throws(() => f.integration.service.read(run.id), /not found/);
+		await assert.rejects(f.integration.service.resume(run.id, "Main assignment"));
+		await f.integration.service.setSubagentsEnabled(true);
+		await assert.rejects(f.integration.service.resume(run.id, "Main assignment"), /not found/);
+		assert.throws(() => f.integration.service.steer(run.id, "Main assignment"), /not found/);
+		f.workers[0].emit({ type: "result", status: "completed", text: "Private side answer" });
+		f.workers[0].exit(true);
+		assert.equal(f.integration.service.sideRuns()[0].completion, undefined);
+		assert.deepEqual(f.messages, []);
+		assert.equal((await f.invoke({ op: "list" })).runs.length, 0);
 	} finally {
 		await f.shutdown();
 	}

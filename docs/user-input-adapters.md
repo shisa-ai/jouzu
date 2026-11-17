@@ -30,6 +30,10 @@ Create `user-input-adapters.json` in Jouzu's resolved agent configuration direct
 
 Replace the path with the extension's absolute entry-file path. Grants match its canonical filesystem identity and adapter ID. Relative paths, globs, duplicate grants, and unknown fields are rejected. A missing file denies registration. The file must be a regular file, not a symlink, and at most 64 KiB. The host rereads it for submission, lookup, and retained dispatch. Rechecks must match the canonical extension identity captured at registration; redirecting an entry-file symlink cannot transfer an existing handle or its retained messages to another granted extension.
 
+The built-in `/btw` handoff uses the same receipts through one exact first-party
+loader identity. It does not require a grants-file entry. That exception does not
+authorize other inline extensions or adapter IDs.
+
 ## Register and bind
 
 Register inside `session_start`, after the extension runtime is attached. Check for the method explicitly; an unavailable or denied adapter must not silently fall back to an automated send in Jouzu.
