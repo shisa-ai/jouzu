@@ -353,13 +353,14 @@ test("side panel keeps text keys in Pi input and actions reachable with rebound 
 			},
 		);
 		component.focused = true;
-		component.handleInput("CONFIRM");
 		component.handleInput("s n 日本語");
 		assert.deepEqual(stopped, []);
 		component.handleInput("SUBMIT");
 		await new Promise((resolve) => setImmediate(resolve));
 		assert.deepEqual(sent, ["s n 日本語"]);
 		for (const width of [24, 48, 80]) assert.ok(component.render(width).every((line) => visibleWidth(line) <= width));
+		component.handleInput("CANCEL");
+		assert.deepEqual(stopped, [], "the first cancel leaves the question field for the actions");
 		component.handleInput("CANCEL");
 		assert.deepEqual(stopped, ["closed"]);
 		component.dispose();
@@ -420,6 +421,7 @@ test("/btw registers for user commands only, preserves drafts, and reports nonin
 					{ matches: (data, action) => keys[action]?.includes(data), getKeys: (action) => keys[action] ?? [] },
 					() => {},
 				);
+				component.handleInput("CANCEL");
 				component.handleInput("DOWN");
 				component.handleInput("CONFIRM");
 			},
@@ -469,6 +471,7 @@ test("side controls remain within a short terminal and keep selection visible", 
 				subscribe: () => () => {},
 			},
 		);
+		component.handleInput("tui.select.cancel");
 		for (let index = 0; index < 7; index++) {
 			const lines = component.render(24);
 			assert.ok(lines.length <= 10, `${locale}: ${lines.join("\n")}`);
