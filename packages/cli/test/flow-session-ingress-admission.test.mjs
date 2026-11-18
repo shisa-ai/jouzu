@@ -877,3 +877,64 @@ test("ingress management inspects and cancels an edited native queue without a m
 	await assert.rejects(f.ingress.inspect(), { code: "stale" });
 	assert.throws(() => f.ingress.cancelNativeQueue(item.id, 2), { code: "stale" });
 });
+
+test("a message held while the user's Stop is being recorded is not reported, however long its admission write takes", async (t) => {
+	const reached = deferred();
+	const providerGate = deferred();
+	const held = [];
+	let gated = false;
+	const f = await fixture(t, {
+		provider: true,
+		onRequest: () => {
+			if (!gated) return;
+			gated = false;
+			reached.resolve();
+			return providerGate.promise;
+		},
+		onHeldUserInput: (input) => held.push(input),
+		autoRelease: { onError: (error) => assert.fail(error) },
+	});
+	await f.session.prompt("warm up");
+	gated = true;
+	const branch = f.ingress.branch();
+	const store = branch.attachment.nativeRequests;
+	// Until the Stop is recorded, its request counts as unresolved, so input admitted meanwhile is held.
+	Object.defineProperty(store, "recoveryBlocked", { configurable: true, get: () => branch.requests.userStopPending });
+	store.blocksQueueing = () => branch.requests.userStopPending;
+	// Recording the Stop waits until released, and so does the next message's admission write: storage
+	// is slow, and the Stop finishes recording before the admission is written.
+	const recordGate = deferred();
+	const reset = store.reset.bind(store);
+	store.reset = async (...args) => {
+		await recordGate.promise;
+		return reset(...args);
+	};
+	const writeGate = deferred();
+	const writing = deferred();
+	const write = branch.attachment.submissions.recordAdmission.bind(branch.attachment.submissions);
+	let delayNext = false;
+	branch.attachment.submissions.recordAdmission = async (...args) => {
+		if (delayNext) {
+			delayNext = false;
+			writing.resolve();
+			await writeGate.promise;
+		}
+		return write(...args);
+	};
+	const stopped = f.session.prompt("stop me").catch(() => {});
+	await reached.promise;
+	const stopping = f.session.abort();
+	providerGate.resolve();
+	await Promise.all([stopping, stopped]);
+	assert.equal(branch.requests.userStopPending, true, "the Stop is still being recorded");
+	delayNext = true;
+	const next = f.session.prompt("right after the stop").catch((error) => error);
+	await writing.promise;
+	recordGate.resolve();
+	await branch.requests.userStopSettled();
+	assert.equal(branch.requests.userStopPending, false);
+	writeGate.resolve();
+	assert.equal((await next) instanceof Error, false);
+	await waitForFlow(() => f.sent.some((messages) => JSON.stringify(messages).includes("right after the stop")));
+	assert.deepEqual(held, [], "no message is reported as held");
+});

@@ -1070,6 +1070,9 @@ export class PiSessionFlowIngress implements Ingress {
 			branch.sourceRecovery.unresolved > 0 ||
 			branch.waitSourceRecovery.missing.length > 0;
 		const outcomeUnresolved = state.attempts.some((attempt) => attempt.phase === "uncertain");
+		// Read with the gates above: a hold decided while the user's Stop is still being recorded is the
+		// Stop's, whatever the Stop has finished by the time the admission itself is written.
+		let stopPending = branch.requests.userStopPending;
 		let decision = decideNativeAdmission(
 			submission,
 			records,
@@ -1143,6 +1146,7 @@ export class PiSessionFlowIngress implements Ingress {
 				allowed: false,
 				reason: catalogText(this.catalog, CatalogMessageId.flowIngressRecoveryReconciliation),
 			};
+		stopPending ||= branch.requests.userStopPending;
 		const current = records.find((record) => record.id === submission.id);
 		if (!current) return false;
 		const saved = await branch.attachment.submissions.recordAdmission(
@@ -1159,7 +1163,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission)) {
 			// Input sent while the user's own Stop is finishing waits for it, the way a message sent during
 			// a turn waits for the turn: it is released when the Stop has been recorded, not reported held.
-			if (branch.requests.userStopPending) void branch.requests.userStopSettled().then(() => this.requestRelease());
+			if (stopPending) void branch.requests.userStopSettled().then(() => this.requestRelease());
 			else this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
 		}
 		return (
