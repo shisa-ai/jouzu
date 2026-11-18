@@ -469,16 +469,25 @@ export class SubagentManager {
 			run.parentContextFile = previous.parentContextFile;
 			if (run.parentContextFile && (!existsSync(run.parentContextFile) || !this.containsSession(run.parentContextFile)))
 				throw new Error(this.msg(CatalogMessageId.subagentParentContextUnavailable));
-			if (
-				[...this.runs.values()].some(
-					(other) =>
-						isActiveRun(other) &&
-						(other.sessionFile === sessionFile || this.pending.get(other.id)?.sessionFile === sessionFile),
+			// A side request that stopped before the worker opened a transcript still
+			// belongs to the thread. Its successor can create the first transcript.
+			if (!sessionFile) {
+				if (run.purpose !== "side-conversation" || previous.status === "completed")
+					throw new Error(this.msg(CatalogMessageId.subagentChildSessionMissing));
+				if ([...this.runs.values()].some((other) => other.previousRunId === previousRunId && isActiveRun(other)))
+					throw new Error(this.msg(CatalogMessageId.subagentChildFollowUpActive));
+			} else {
+				if (
+					[...this.runs.values()].some(
+						(other) =>
+							isActiveRun(other) &&
+							(other.sessionFile === sessionFile || this.pending.get(other.id)?.sessionFile === sessionFile),
+					)
 				)
-			)
-				throw new Error(this.msg(CatalogMessageId.subagentChildFollowUpActive));
-			if (!sessionFile || !existsSync(sessionFile) || !this.containsSession(sessionFile))
-				throw new Error(this.msg(CatalogMessageId.subagentChildSessionMissing));
+					throw new Error(this.msg(CatalogMessageId.subagentChildFollowUpActive));
+				if (!existsSync(sessionFile) || !this.containsSession(sessionFile))
+					throw new Error(this.msg(CatalogMessageId.subagentChildSessionMissing));
+			}
 		}
 		run.sessionFile = sessionFile;
 		if (run.role.judging) run.review = { candidate: captureReviewCandidate(run.cwd), status: "pending" };

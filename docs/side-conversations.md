@@ -27,12 +27,13 @@ reason below it.
 Each question uses the saved main conversation on the active branch, including
 compaction summaries, after the session's content checks. This works immediately
 in a new or resumed session, without sending a main-agent request first. The
-snapshot excludes unfinished replies, images, thinking blocks, tool declarations,
-and tool-call arguments. It is limited to 64,000 characters and 8,000 per message.
+snapshot excludes unfinished replies (including saved partial replies), images,
+thinking blocks, tool declarations, and tool-call arguments. It is limited to
+64,000 characters and 8,000 per message.
 The panel's bottom border shows the latest snapshot's capture time (the time alone
 for a capture from today), followed by `truncated` when content was cut to fit
-these limits. Key hints sit at the right of the same border; a narrow terminal
-drops the capture time first.
+these limits. Key hints sit at the right of the same border. When space is tight,
+the capture time disappears first and key hints can move above the border.
 
 Side conversations have no callable tools and load no project instructions,
 skills, or extension code. They can explain supplied evidence but cannot inspect

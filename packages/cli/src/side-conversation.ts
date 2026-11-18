@@ -105,7 +105,7 @@ function renderFrameEdge(
 	if (room < 0) return fitTerminalText(`${start}${end}`, columns);
 	const head = label && room >= 3 ? ` ${fitTerminalText(label, room - 2, "…")} ` : "";
 	const rest = room - terminalTextWidth(head);
-	const tail = aside && rest >= 12 ? ` ${fitTerminalText(aside, rest - 4, "…")} ${border("─")}` : "";
+	const tail = aside && rest >= 5 ? ` ${fitTerminalText(aside, rest - 4, "…")} ${border("─")}` : "";
 	return `${start}${head}${border("─".repeat(Math.max(0, rest - terminalTextWidth(tail))))}${tail}${end}`;
 }
 
@@ -358,7 +358,7 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 		const border = (text: string) => styles.apply("palette.border", text);
 		const height = paletteHeightBudget(this.context.tui.terminal.rows);
 		const title = theme.bold(styles.apply("palette.title", this.text("title")));
-		if (width < 12 || height < 6) return [fitTerminalText(title, Math.max(1, width))];
+		if (width < 12 || height < 3) return [fitTerminalText(title, Math.max(1, width))];
 		width = paletteInnerWidth(width);
 		const runs = this.actions.runs();
 		this.settle(runs);
@@ -366,21 +366,15 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 		const short = this.context.tui.terminal.rows < 16;
 		const label = (key: Choice, index: number) => {
 			if (index === this.selected)
-				return renderPaletteBand(styles.apply("palette.identity.selected", `→ ${this.text(key)}`), width, theme);
-			return styles.apply(choiceEnabled(key, runs) ? "palette.identity" : "palette.status.off", `  ${this.text(key)}`);
+				return wrapTextWithAnsi(styles.apply("palette.identity.selected", `→ ${this.text(key)}`), width).map((line) =>
+					renderPaletteBand(line, width, theme),
+				);
+			return wrapTextWithAnsi(
+				styles.apply(choiceEnabled(key, runs) ? "palette.identity" : "palette.status.off", `  ${this.text(key)}`),
+				width,
+			);
 		};
-		const controls =
-			this.mode === "browse"
-				? CHOICES.flatMap((key, index) => (!short || index === this.selected ? [label(key, index)] : []))
-				: [
-						...(this.mode === "question"
-							? []
-							: [
-									theme.bold(styles.apply("palette.heading", this.text("modeInstruction"))),
-									...(short ? [] : [styles.apply("palette.label", this.text("instruction"))]),
-								]),
-						...this.input.render(width),
-					];
+		const controls = this.mode === "browse" ? CHOICES.map(label) : [];
 		const hintArgs = {
 			submit: formatEffectiveKeybinding(
 				keybindings,
@@ -399,17 +393,47 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 				: this.mode === "question"
 					? "hintQuestion"
 					: "hintEdit";
-		const footer = [
-			...controls.flatMap((line) => (short ? [fitTerminalText(line, width)] : wrapTextWithAnsi(line, width))),
-			...(this.error
-				? wrapTextWithAnsi(styles.apply("palette.message.error", sanitizeScrollbackText(this.error)), width)
-				: []),
-		];
-		// Bottom border: context time on the left, key hints on the right. Hints win when both do not fit.
-		const hint = styles.apply("palette.hint", catalog.format(`jouzu.cli.btw.${hintKey}`, hintArgs));
-		const context = styles.apply("palette.hint", this.reference(runs));
+		const errorLines = this.error ? wrapTextWithAnsi(sanitizeScrollbackText(this.error), width) : [];
+		const hintStyle = (text: string) => styles.apply("palette.hint", text);
+		const fullHint = catalog.format(`jouzu.cli.btw.${hintKey}`, hintArgs);
+		const borderRoom = outerWidth - 7;
+		const maxHintRows = Math.max(0, height - 3 - Number(errorLines.length > 0));
+		let hint = fullHint;
+		let hintRows: string[] = [];
+		if (terminalTextWidth(fullHint) > borderRoom) {
+			const wrapped = wrapTextWithAnsi(fullHint, width);
+			if (wrapped.length <= maxHintRows) {
+				hintRows = wrapped;
+				hint = "";
+			} else {
+				// At the smallest sizes, preserve a usable cancel key before secondary hints.
+				const primary = `${hintArgs.submit} · ${hintArgs.cancel}`;
+				hint = !this.sending && terminalTextWidth(primary) <= borderRoom ? primary : hintArgs.cancel;
+			}
+		}
+		const bodyRoom = height - 2 - hintRows.length;
+		const errors = errorLines.slice(0, Math.min(3, bodyRoom - 1));
+		if (errors.length && errors.length < errorLines.length)
+			errors[errors.length - 1] = `${fitTerminalText(errors.at(-1) ?? "", width - 1)}…`;
+		const controlRoom = bodyRoom - errors.length;
+		const allChoices = controls.flat();
+		const fields =
+			this.mode === "browse"
+				? (!short && allChoices.length + 2 <= controlRoom ? allChoices : controls[this.selected]).slice(0, controlRoom)
+				: [
+						...(this.mode !== "question" && controlRoom > 1
+							? [theme.bold(styles.apply("palette.heading", this.text("modeInstruction")))]
+							: []),
+						...(this.mode !== "question" && !short && controlRoom > 2
+							? [fitTerminalText(styles.apply("palette.label", this.text("instruction")), width, "…")]
+							: []),
+						...this.input.render(width),
+					];
+		const context = hintRows.length ? "" : hintStyle(this.reference(runs));
 		const bottomLabel = terminalTextWidth(context) + terminalTextWidth(hint) + 9 <= outerWidth ? context : "";
-		const capacity = Math.max(1, height - footer.length - 3);
+		const transcriptRoom = controlRoom - fields.length;
+		const divider = transcriptRoom > 1;
+		const capacity = transcriptRoom - Number(divider);
 		// Keep a scrolled-up view on the same lines while new answer text arrives below.
 		if (this.scroll > 0 && all.length > this.renderedLines) this.scroll += all.length - this.renderedLines;
 		this.renderedLines = all.length;
@@ -426,9 +450,11 @@ export class SideConversationComponent implements PaletteComponent, Focusable {
 				border,
 			),
 			...all.slice(Math.max(0, end - capacity), end).map(row),
-			renderPaletteDivider(outerWidth, styles),
-			...footer.map(row),
-			renderFrameEdge(outerWidth, ["╰", "╯"], bottomLabel, hint, border),
+			...(divider ? [renderPaletteDivider(outerWidth, styles)] : []),
+			...fields.map(row),
+			...errors.map((line) => row(styles.apply("palette.message.error", line))),
+			...hintRows.map((line) => row(hintStyle(line))),
+			renderFrameEdge(outerWidth, ["╰", "╯"], bottomLabel, hintStyle(hint), border),
 		];
 	}
 }
@@ -588,9 +614,10 @@ export function createSideConversationExtension(
 							.then(() => {
 								if (draftHandoff === undefined) return;
 								assertSession();
-								// Replacement panels restore the editor on close. Paste only after
-								// that restoration, using the exchange captured by the action.
-								ctx.ui.pasteToEditor(`${ctx.ui.getEditorText() ? "\n\n" : ""}${draftHandoff}`);
+								// Replacement panels restore the editor on close. Read that draft
+								// after restoration and append independently of the cursor position.
+								const draft = ctx.ui.getEditorText();
+								ctx.ui.setEditorText(`${draft ? `${draft}\n\n` : ""}${draftHandoff}`);
 							})
 							.catch((error) => {
 								if (epoch === generation)

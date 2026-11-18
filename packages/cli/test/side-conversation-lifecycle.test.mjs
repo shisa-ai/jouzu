@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { Editor, visibleWidth } from "@earendil-works/pi-tui";
 import { InteractiveMode } from "../../../node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js";
 import { initTheme } from "../../../node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/theme/theme.js";
 import { resolveCatalog } from "../dist/locale-catalog.js";
+import { paletteHeightBudget } from "../dist/palette.js";
 import { createSideConversationExtension, SideConversationComponent } from "../dist/side-conversation.js";
 import { afterCleanup } from "./fixtures/cleanup.mjs";
 import { fixture, waitForFlow } from "./fixtures/flow-session-ingress.mjs";
@@ -19,15 +21,15 @@ const completed = {
 };
 const keys = { matches: (data, action) => data === action, getKeys: () => ["enter"] };
 
-function componentFixture(t, overrides = {}) {
+function componentFixture(t, overrides = {}, { rows = 24, options = {}, keybindings = keys } = {}) {
 	const sent = [];
 	let closed = false;
 	const component = new SideConversationComponent(
 		{
 			catalog: resolveCatalog("en").bundle,
-			tui: { terminal: { rows: 24 }, requestRender() {} },
+			tui: { terminal: { rows }, requestRender() {} },
 			theme: { bold: (text) => text, fg: (_role, text) => text, bg: (_role, text) => text },
-			keybindings: keys,
+			keybindings,
 			close() {
 				closed = true;
 			},
@@ -47,6 +49,7 @@ function componentFixture(t, overrides = {}) {
 			subscribe: () => () => {},
 			...overrides,
 		},
+		options,
 	);
 	t.after(() => component.dispose());
 	return { component, sent, closed: () => closed };
@@ -212,13 +215,44 @@ test("the panel header summarizes the thread and the footer shows the context ti
 	const lines = f.component.render(120);
 	assert.match(lines[0], /Fixture Model · 1\/20 answered · ↑0 ↓0 · cost unknown/);
 	assert.match(lines.at(-1), /Context from (\d{4}-\d{2}-\d{2} )?\d{2}:\d{2} · truncated ─+ Enter ask · Enter actions/);
-	assert.match(f.component.render(40).at(-1), /^╰─+ Enter ask/, "a narrow border keeps the key hints");
+	const narrow = f.component.render(40).join("\n");
+	assert.match(narrow, /Enter ask/);
+	assert.doesNotMatch(narrow, /Context from/);
 	assert.ok(lines.some((line) => line.includes("Answering…")));
 	assert.ok(
 		lines.every((line) => !line.includes("entry")),
 		"internal entry IDs are not shown",
 	);
 	assert.match(f.component.render(48)[0], /1\/20 answered/, "a narrow header keeps the question count");
+});
+
+test("narrow action and error layouts keep selection, draft and rebound cancel visible within budget", (t) => {
+	const keybindings = { ...keys, getKeys: (action) => [action === "tui.select.cancel" ? "f12" : "enter"] };
+	const check = (component, cols, rows) => {
+		const lines = component.render(cols);
+		assert.ok(lines.length <= paletteHeightBudget(rows), `rendered ${lines.length} rows at ${cols}×${rows}`);
+		assert.ok(lines.every((line) => visibleWidth(line) <= cols));
+		assert.match(lines.join("\n"), /F12/);
+		return lines.join("\n");
+	};
+	const browse = componentFixture(t, {}, { rows: 16, keybindings });
+	browse.component.handleInput("tui.select.cancel");
+	browse.component.handleInput("tui.select.down");
+	assert.match(check(browse.component, 24, 16), /→ Bring latest/);
+	browse.component.handleInput("tui.select.down");
+	assert.match(check(browse.component, 48, 16), /Send an instruction with this exchange as\s*[^\p{L}]*steering/u);
+	const edit = componentFixture(
+		t,
+		{},
+		{
+			rows: 10,
+			keybindings,
+			options: { draft: "質問🙂", error: `Provider error: ${"long diagnostic ".repeat(12)}` },
+		},
+	);
+	const rendered = check(edit.component, 24, 10);
+	assert.match(rendered, /質問🙂/);
+	assert.match(rendered, /Provider error/);
 });
 
 test("a scrolled-up transcript stays in place while new lines arrive", (t) => {
@@ -238,7 +272,8 @@ function realUi(t, presentation) {
 		if (saved === undefined) delete process.env.JOUZU_PALETTE_PRESENTATION;
 		else process.env.JOUZU_PALETTE_PRESENTATION = saved;
 	});
-	let text = "EXISTING_DRAFT";
+	const editor = new Editor({ requestRender() {} }, {});
+	editor.setText("EXISTING_DRAFT");
 	let component;
 	let mounted;
 	const ready = new Promise((resolve) => {
@@ -246,12 +281,7 @@ function realUi(t, presentation) {
 	});
 	const notices = [];
 	const owner = {
-		editor: {
-			getText: () => text,
-			setText: (value) => {
-				text = value;
-			},
-		},
+		editor,
 		ui: {
 			terminal: { rows: 40 },
 			requestRender() {},
@@ -288,10 +318,9 @@ function realUi(t, presentation) {
 	};
 	const ui = {
 		notify: (...args) => notices.push(args),
-		getEditorText: () => text,
-		pasteToEditor: (value) => {
-			text += value;
-		},
+		getEditorText: () => editor.getText(),
+		setEditorText: (value) => editor.setText(value),
+		pasteToEditor: (value) => editor.handleInput(`\x1b[200~${value}\x1b[201~`),
 		custom: (factory, options) => InteractiveMode.prototype.showExtensionCustom.call(owner, factory, options),
 	};
 	afterCleanup(t, async () => {
@@ -304,7 +333,8 @@ function realUi(t, presentation) {
 		ready,
 		notices,
 		component: () => component,
-		text: () => text,
+		text: () => editor.getText(),
+		moveDraftCursorLeft: () => editor.handleInput("\x1b[D"),
 		reset: () => InteractiveMode.prototype.resetExtensionUI.call(owner),
 	};
 }
@@ -361,6 +391,7 @@ for (const presentation of ["replace", "floating"]) {
 	}
 	test(`bring exchange survives actual Pi editor restoration in ${presentation} presentation`, async (t) => {
 		const f = realUi(t, presentation);
+		f.moveDraftCursorLeft();
 		const commands = new Map(),
 			handlers = new Map();
 		createSideConversationExtension({

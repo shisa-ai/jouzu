@@ -5,6 +5,7 @@ import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { visibleWidth } from "@earendil-works/pi-tui";
 import { resolveCatalog } from "../dist/locale-catalog.js";
 import { captureSideContext, prepareSideContext, sideContextFor } from "../dist/side-context.js";
@@ -88,6 +89,29 @@ test("side context prepares saved history before any main request and fails clos
 		}),
 		/branch changed/,
 	);
+});
+
+test("saved side context omits partial assistant replies and keeps completed replies", async () => {
+	const sessionManager = SessionManager.inMemory();
+	sessionManager.appendMessage({ role: "user", content: "Saved question", timestamp: 1 });
+	for (const stopReason of ["aborted", "error", "length", "stop", "toolUse"]) {
+		sessionManager.appendMessage({
+			role: "assistant",
+			content: [{ type: "text", text: `Reply (${stopReason})` }],
+			stopReason,
+			timestamp: 2,
+		});
+	}
+	const model = { provider: "fixture", id: "model", api: "openai-completions", baseUrl: "http://localhost" };
+	const snapshot = await prepareSideContext(
+		{ sessionId: sessionManager.getSessionId(), sessionManager },
+		model,
+		async (_id, messages) => messages,
+	);
+	assert.match(snapshot.text, /Saved question/);
+	assert.match(snapshot.text, /Reply \(stop\)/);
+	assert.match(snapshot.text, /Reply \(toolUse\)/);
+	assert.doesNotMatch(snapshot.text, /Reply \((aborted|error|length)\)/);
 });
 
 test("user-only child results never create parent completion records or callbacks", async () => {
@@ -413,7 +437,7 @@ test("/btw registers for user commands only, preserves drafts, and reports nonin
 		ui: {
 			notify: (...args) => notices.push(args),
 			getEditorText: () => "EXISTING_DRAFT",
-			pasteToEditor: (text) => drafts.push(text),
+			setEditorText: (text) => drafts.push(text),
 			async custom(factory) {
 				component = factory(
 					{ terminal: { rows: 40 }, requestRender() {} },
@@ -433,7 +457,7 @@ test("/btw registers for user commands only, preserves drafts, and reports nonin
 	assert.deepEqual(asks, ["Side question"]);
 	assert.ok(drafts[0], JSON.stringify(notices));
 	assert.match(drafts[0], /Side conversation evidence.*\nQuestion: Side question\nAnswer: Side answer/);
-	assert.ok(drafts[0].startsWith("\n\n"));
+	assert.ok(drafts[0].startsWith("EXISTING_DRAFT\n\n"));
 	component.dispose();
 	await commands.get("btw").handler("Do not launch", { ...ctx, mode: "rpc" });
 	assert.equal(asks.length, 1);

@@ -283,6 +283,39 @@ for (const sideFirst of [true, false]) {
 	});
 }
 
+test("a cancelled queued side question keeps its record and can start the thread transcript on retry", async () => {
+	const f = fixture(1);
+	try {
+		const blocker = f.launch();
+		const side = {
+			purpose: "side-conversation",
+			role: { ...defaultAgentConfig().roles[1], tools: [] },
+			model,
+			auth: {},
+			cwd: f.p.cwd,
+			task: "Side question",
+		};
+		const first = f.manager.launch(side);
+		assert.equal(first.status, "queued");
+		await f.manager.stop(first.id, "Cancelled by user");
+		assert.equal(f.manager.get(first.id).status, "cancelled");
+		const retry = f.manager.launch({ ...side, task: "Retry question" }, undefined, first.id);
+		assert.equal(retry.previousRunId, first.id);
+		assert.equal(retry.status, "queued");
+		assert.throws(
+			() => f.manager.launch({ ...side, task: "Duplicate retry" }, undefined, first.id),
+			/already has an active follow-up/,
+		);
+		await f.manager.stop(blocker.id, "Done");
+		assert.equal(f.manager.get(retry.id).status, "starting");
+		assert.equal(f.children[1].launch.sessionFile, undefined);
+		assert.equal(f.manager.get(first.id).status, "cancelled");
+	} finally {
+		await f.manager.dispose();
+		rmSync(f.p.cwd, { recursive: true, force: true });
+	}
+});
+
 test("writer children serialize on request; result is terminal only after process exit; secrets stay out of records", async () => {
 	const f = fixture();
 	f.manager.setWorkspaceWriters("serialize");

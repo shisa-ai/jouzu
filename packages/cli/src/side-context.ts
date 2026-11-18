@@ -38,9 +38,10 @@ export function captureSideContext(
 	let remaining = 64_000;
 	let truncated = false;
 	for (const raw of [...messages].reverse()) {
-		const message = raw as { role?: string; content?: unknown };
+		const message = raw as { role?: string; content?: unknown; stopReason?: string };
 		// Prompt/tool declarations and thinking are not conversation evidence.
 		if (!["user", "assistant", "toolResult"].includes(message.role ?? "")) continue;
+		if (message.role === "assistant" && ["aborted", "error", "length"].includes(message.stopReason ?? "")) continue;
 		const content =
 			typeof message.content === "string"
 				? message.content
