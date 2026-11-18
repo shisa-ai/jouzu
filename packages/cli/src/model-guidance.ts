@@ -1,4 +1,4 @@
-const MODELS_WITH_FOLLOW_THROUGH_GUIDANCE = new Set(["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra"]);
+const MODELS_WITH_FOLLOW_THROUGH_GUIDANCE = new Set(["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6.2-astra"]);
 
 /** Model-specific behavior guidance; protocol compatibility is handled separately. */
 export function buildModelGuidance(modelId: string | undefined, selectedTools: readonly string[] = []): string {

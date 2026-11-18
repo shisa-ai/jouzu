@@ -8,7 +8,7 @@ import { buildModelGuidance } from "../dist/model-guidance.js";
 import { createJouzuPresentationExtension } from "../dist/presentation.js";
 import { childResourceLoader } from "../dist/subagents/worker.js";
 
-const gpt6Models = ["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra"];
+const gpt6Models = ["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6.2-astra"];
 const base =
 	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
 function hook() {
@@ -67,6 +67,7 @@ test("delegation guidance describes only the active Jouzu tool", () => {
 		"gpt-6.1-sol-preview",
 		"office-pool/gpt-6.1-terra",
 		"gpt-6.2",
+		"gpt-6.2-astra-preview",
 		"gpt-5.6-sol",
 	])
 		assert.equal(buildModelGuidance(id, ["subagent"]), "");
