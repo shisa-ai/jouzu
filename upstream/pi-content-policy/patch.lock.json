@@ -73,11 +73,11 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "ee756f6f74afe9f8930ebf216c95334605d913a275a0eec2c9702f101baef3c3",
-			"after": "1e352b0011d44add65601e5c4215629b86a9446f6eada19afc52562999571f76"
+			"after": "229487e71e01ffda80f3f3c80e8ea96cc43c34eaced79dac66aaaefa04056fd3"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "56d24887a400d77a77b428deb1cce25576cac27e18089e722f536d600fa32c3a",
-			"after": "93f4b3b17a73e4f80fc4ba6a5c2d79c931c68b55815a0c36f1f34ddc944c8586"
+			"after": "925699a63bb5b60b83bc35fdfe3463c4c8a148b0aa87d5a926faec42e9b184df"
 		},
 		"dist/core/agent-session-services.js": {
 			"before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",

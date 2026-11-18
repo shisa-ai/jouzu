@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
+import { join } from "node:path";
 import { test } from "node:test";
 import { count, lastStatus, launchRpc, quiet, response, rpcHome } from "./fixtures/rpc-runtime.mjs";
 
@@ -154,6 +156,137 @@ test("a message sent together with a Stop runs after it, without a hold and with
 			`${delay} ms: the stopped message is sent as the transcript holds it`,
 		);
 	}
+	const holds = f.frames.filter(
+		(frame) =>
+			frame.type === "extension_ui_request" && frame.method === "notify" && /holding your message/.test(frame.message),
+	);
+	assert.deepEqual(holds, [], "no message is reported as held");
+	assert.equal((await f.close()).code, 0);
+});
+
+test("a message sent after a stopped run ended but before it settled is not reported held", async (t) => {
+	const provider = await slowProvider(t);
+	const home = await rpcHome(t, provider.port);
+	// Pi clears the run's abort signal when the run ends and emits agent_settled only after every
+	// extension's handler for it. Holding the handler open keeps the run in that interval, so a
+	// message sent then is admitted while the stopped run's outcome is not yet recorded.
+	const extension = join(home.workspace, "delayed-settle.mjs");
+	await writeFile(
+		extension,
+		[
+			"export default function (pi) {",
+			'\tpi.on("before_provider_request", (event, ctx) => {',
+			'\t\tctx.ui.notify("fixture: preparing", "info");',
+			"\t\treturn new Promise((resolve) => setTimeout(() => resolve(event.payload), 1000));",
+			"\t});",
+			'\tpi.on("agent_settled", (_event, ctx) => {',
+			'\t\tctx.ui.notify("fixture: settling", "info");',
+			"\t\treturn new Promise((resolve) => setTimeout(resolve, 1500));",
+			"\t});",
+			"}",
+			"",
+		].join("\n"),
+	);
+	const f = launchRpc(t, home, ["--extension", extension]);
+	f.send({ id: "ready", type: "get_state" });
+	await f.waitFor(() => response(f.frames, "ready"), "rpc ready");
+	f.send({ id: "warm", type: "prompt", message: "warm up" });
+	await f.waitFor(() => count(f.frames, "agent_settled") > 0, "warm-up answered", 20_000);
+
+	const ends = count(f.frames, "agent_end");
+	const settled = count(f.frames, "agent_settled");
+	const requests = provider.requests.length;
+	const notices = (message) =>
+		f.frames.filter((frame) => frame.method === "notify" && frame.message === message).length;
+	const settling = () => notices("fixture: settling");
+	const preparing = notices("fixture: preparing");
+	const before = settling();
+	f.send({ id: "p", type: "prompt", message: "stop me" });
+	// Stop while the request is still being prepared, so it is never handed to the provider.
+	await f.waitFor(() => notices("fixture: preparing") > preparing, "stopped request in preparation");
+	f.send({ id: "a", type: "abort" });
+	await f.waitFor(() => count(f.frames, "agent_end") > ends && settling() > before, "stopped run settling");
+	assert.equal(count(f.frames, "agent_settled"), settled, "the stopped run has not settled yet");
+	f.send({ id: "n", type: "prompt", message: "sent before the stop settled" });
+	const reply = await f.waitFor(() => response(f.frames, "n"), "next response", 20_000);
+	assert.equal(reply.success, true, JSON.stringify(reply));
+	await f.waitFor(
+		() =>
+			f.frames
+				.filter((frame) => frame.type === "agent_end")
+				.at(-1)
+				?.messages.at(-1)?.stopReason === "stop",
+		"next message answered",
+		20_000,
+	);
+	assert.ok(JSON.stringify(provider.bodies.at(-1)).includes("sent before the stop settled"));
+	assert.equal(provider.requests.length, requests + 1, "the stopped request is never sent");
+	const holds = f.frames.filter(
+		(frame) =>
+			frame.type === "extension_ui_request" && frame.method === "notify" && /holding your message/.test(frame.message),
+	);
+	assert.deepEqual(holds, [], "no message is reported as held");
+	assert.equal((await f.close()).code, 0);
+});
+
+test("a Stop stays the user's when compaction aborts the run again before it settles", async (t) => {
+	const provider = await slowProvider(t);
+	const home = await rpcHome(t, provider.port);
+	// As above: the request is stopped while it is still being prepared, and the run is held in its
+	// settle handler. Compaction aborts the run again in that interval, keeping prompts.
+	const extension = join(home.workspace, "delayed-settle.mjs");
+	await writeFile(
+		extension,
+		[
+			"export default function (pi) {",
+			'\tpi.on("before_provider_request", (event, ctx) => {',
+			'\t\tctx.ui.notify("fixture: preparing", "info");',
+			"\t\treturn new Promise((resolve) => setTimeout(() => resolve(event.payload), 1000));",
+			"\t});",
+			'\tpi.on("agent_settled", (_event, ctx) => {',
+			'\t\tctx.ui.notify("fixture: settling", "info");',
+			"\t\treturn new Promise((resolve) => setTimeout(resolve, 1500));",
+			"\t});",
+			"}",
+			"",
+		].join("\n"),
+	);
+	const f = launchRpc(t, home, ["--extension", extension]);
+	f.send({ id: "ready", type: "get_state" });
+	await f.waitFor(() => response(f.frames, "ready"), "rpc ready");
+	f.send({ id: "warm", type: "prompt", message: "warm up" });
+	await f.waitFor(() => count(f.frames, "agent_settled") > 0, "warm-up answered", 20_000);
+
+	const notices = (message) =>
+		f.frames.filter((frame) => frame.method === "notify" && frame.message === message).length;
+	const preparing = notices("fixture: preparing");
+	const settling = notices("fixture: settling");
+	const settled = count(f.frames, "agent_settled");
+	f.send({ id: "p", type: "prompt", message: "stop me" });
+	await f.waitFor(() => notices("fixture: preparing") > preparing, "stopped request in preparation");
+	f.send({ id: "a", type: "abort" });
+	await f.waitFor(() => notices("fixture: settling") > settling, "stopped run settling");
+	f.send({ id: "c", type: "compact" });
+	await f.waitFor(() => count(f.frames, "agent_settled") > settled && response(f.frames, "c"), "stop settled");
+	await quiet(500);
+	const status = lastStatus(f.frames, "jouzu-flow");
+	assert.ok(status, "flow status published");
+	assert.deepEqual(status.withheld, [], JSON.stringify(status));
+	assert.deepEqual(status.held, [], JSON.stringify(status));
+	assert.equal(status.recovery, undefined, JSON.stringify(status));
+
+	const ends = count(f.frames, "agent_end");
+	f.send({ id: "n", type: "prompt", message: "after the stop" });
+	await f.waitFor(
+		() =>
+			count(f.frames, "agent_end") > ends &&
+			f.frames
+				.filter((frame) => frame.type === "agent_end")
+				.at(-1)
+				?.messages.at(-1)?.stopReason === "stop",
+		"next message answered",
+		20_000,
+	);
 	const holds = f.frames.filter(
 		(frame) =>
 			frame.type === "extension_ui_request" && frame.method === "notify" && /holding your message/.test(frame.message),

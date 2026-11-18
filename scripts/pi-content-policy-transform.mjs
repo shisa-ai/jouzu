@@ -1081,22 +1081,17 @@ export function sessionEntryToContextMessages(entry) {`,
 		// but a prompt that an abort overtook never starts. Prompts from automated work are unaffected.
 		change(
 			"\n    _agentRunAbortRequested = false;\n",
-			"\n    _agentRunAbortRequested = false;\n    _promptAbortEpoch = 0;\n    _abortByUser = false;\n",
+			"\n    _agentRunAbortRequested = false;\n    _promptAbortEpoch = 0;\n",
 		);
 		change(
 			`    async abort() {
         if (this._isAgentRunActive) {
             this._agentRunAbortRequested = true;
         }`,
-			`    /** Whether the latest abort was the user's Stop, not one that keeps prompts, such as compaction's. */
-    get abortByUser() {
-        return this._abortByUser;
-    }
-    async abort(options) {
+			`    async abort(options) {
         if (this._isAgentRunActive) {
             this._agentRunAbortRequested = true;
         }
-        this._abortByUser = !options?.keepPrompts;
         if (!options?.keepPrompts)
             this._promptAbortEpoch++;`,
 		);
@@ -1126,7 +1121,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		change("    dispose(): void;", "    dispose(): Promise<void>;");
 		change(
 			"    abort(): Promise<void>;",
-			"    /** Whether the latest abort was the user's Stop, not one that keeps prompts, such as compaction's. */\n    get abortByUser(): boolean;\n    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
+			"    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
 		);
 		change(
 			"export declare class AgentSession {",

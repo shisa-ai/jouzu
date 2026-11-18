@@ -78,6 +78,7 @@ export function flowPauseCode(reason: string): string {
 export function createFlowStatusExtension(options: FlowStatusOptions): InlineExtension & {
 	announcePause(): Promise<void>;
 	announceHeldInput(input: { id: string; reason: string }): void;
+	refresh(): void;
 } {
 	const now = () => options.now?.() ?? Date.now();
 	const catalog = options.catalog ?? defaultCatalog();
@@ -214,6 +215,10 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		 * Report a submission the user asked for that admission refused. The send produced no turn and no
 		 * reply, so without this the only sign is a notice from whatever command issued it.
 		 */
+		/** Publish the current state to clients without a terminal; nothing is announced. */
+		refresh() {
+			void publishStatus();
+		},
 		announceHeldInput(input) {
 			void publishStatus();
 			if (!announce || !flowOn(options)) return;
