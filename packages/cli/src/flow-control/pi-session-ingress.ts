@@ -59,6 +59,11 @@ export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitN
 	 * a stall: the message produced no turn, and nothing in the session says why.
 	 */
 	onHeldUserInput?(input: { id: string; reason: string }): void;
+	/**
+	 * Called when a stopped run's requests have been recorded. That happens after the run settles, so
+	 * a view of what Flow holds must be refreshed then rather than at the end of the turn.
+	 */
+	onStopRecorded?(): void;
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -255,6 +260,7 @@ export class PiSessionFlowIngress implements Ingress {
 					providerFailed: (detail) => {
 						if (this.pauseAutomated(providerPause(detail))) this.options.onAutomatedPause?.();
 					},
+					stopRecorded: () => this.options.onStopRecorded?.(),
 				},
 				decorateNativeContext: async (messages, sources, signal) => {
 					const branch = this.branch();
@@ -1150,7 +1156,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission)) {
 			// Input sent while the user's own Stop is finishing waits for it, the way a message sent during
 			// a turn waits for the turn: it is released when the Stop has been recorded, not reported held.
-			if (branch.requests.stopping) void branch.requests.stopSettled().then(() => this.requestRelease());
+			if (branch.requests.userStopPending) void branch.requests.userStopSettled().then(() => this.requestRelease());
 			else this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
 		}
 		return (

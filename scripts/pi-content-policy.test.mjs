@@ -685,14 +685,12 @@ test("only a user abort cancels prompts submitted before it, and the session say
 	const submitted = session._promptAbortEpoch;
 	// An abort that keeps prompts, as compaction's does, cancels nothing the user already sent.
 	await session.abort({ keepPrompts: true });
-	assert.equal(session.abortByUser, false);
 	const kept = [];
 	await session.prompt("kept", { abortEpoch: submitted, preflightResult: (value) => kept.push(value) });
 	assert.deepEqual(kept, ["started"]);
 	assert.equal(calls, 1);
 	// The user's abort cancels a prompt submitted before it, before any run starts.
 	await session.abort();
-	assert.equal(session.abortByUser, true);
 	const cancelled = [];
 	await session.prompt("cancelled", { abortEpoch: submitted, preflightResult: (value) => cancelled.push(value) });
 	assert.deepEqual(cancelled, ["aborted"]);

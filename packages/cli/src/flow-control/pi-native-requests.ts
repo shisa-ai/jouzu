@@ -67,14 +67,18 @@ export class PiNativeRequests {
 		this.assertActive();
 		return this.store.blocksQueueing(this.executing ?? this.pending);
 	}
-	/** The user's Stop is finishing: its run is ending, or its requests are still being recorded. */
-	get stopping(): boolean {
-		if ((this.session as { abortByUser?: boolean }).abortByUser === false) return false;
-		return (!!this.runEnd && this.session.agent.signal?.aborted === true) || this.recordingStop > 0;
+	/**
+	 * The user stopped the current run and its outcome is not recorded yet. Both facts are recorded
+	 * when they happen: the Stop when the session is aborted, the recording when it completes. Pi's
+	 * own run state cannot stand in for them, because Pi ends the run, and clears its abort signal,
+	 * before it reports the run settled.
+	 */
+	get userStopPending(): boolean {
+		return !!this.runEnd?.stoppedByUser || this.recordingUserStop > 0;
 	}
-	/** Resolves once a finishing Stop has ended its run and recorded its requests. */
-	async stopSettled(): Promise<void> {
-		if (this.runEnd && this.session.agent.signal?.aborted) await this.runEnd.promise;
+	/** Resolves once a pending user Stop has ended its run and recorded its requests. */
+	async userStopSettled(): Promise<void> {
+		if (this.runEnd?.stoppedByUser) await this.runEnd.promise;
 		await this.abortedRun;
 	}
 	private prepared?: { modelHash: string; capture?: NativeSourceCapture; projections?: NativeProjectionCapture };
@@ -86,9 +90,12 @@ export class PiNativeRequests {
 	private runRequests = new Set<string>();
 	/** Recording the outcome of a run the user aborted; the next request waits for it. */
 	private abortedRun: Promise<void> = Promise.resolve();
-	/** Resolves when the current run has settled and recorded its outcome. */
-	private runEnd?: { promise: Promise<void>; resolve: () => void };
-	private recordingStop = 0;
+	/**
+	 * Resolves when the current run has settled and recorded its outcome. `stoppedByUser` is set when
+	 * the user aborts the session during the run, whatever aborts the run after that.
+	 */
+	private runEnd?: { promise: Promise<void>; resolve: () => void; stoppedByUser: boolean };
+	private recordingUserStop = 0;
 	private readonly unsubscribeTurn: () => void;
 	private guardedStream?: AgentSession["agent"]["streamFunction"];
 	private guardTransport = false;
@@ -127,6 +134,8 @@ export class PiNativeRequests {
 			aborted(): void;
 			failed?(error: unknown): void;
 			providerFailed?(detail: string): void;
+			/** A stopped run's requests are recorded; this follows the run's settlement. */
+			stopRecorded?(): void;
 		},
 		reconcileSources?: () => Promise<unknown>,
 		/**
@@ -148,6 +157,13 @@ export class PiNativeRequests {
 		attached.add(session);
 		this.enabled = flowEnabled ?? (() => true);
 		this.unsubscribeTurn = session.subscribe((event) => this.observeTurn(event));
+		// The user's Stop is recorded against the run it stops at the moment it is made. An abort that
+		// keeps prompts, such as compaction's, is not the user's and does not change that record.
+		const abort = session.abort;
+		this.hooks.set(session, "abort", (options?: { keepPrompts?: boolean }) => {
+			if (!options?.keepPrompts && this.runEnd) this.runEnd.stoppedByUser = true;
+			return abort.call(session, options);
+		});
 		if (identifySources) {
 			const transform = session.agent.transformContext;
 			this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
@@ -890,7 +906,7 @@ export class PiNativeRequests {
 			const promise = new Promise<void>((done) => {
 				resolve = done;
 			});
-			this.runEnd = { promise, resolve };
+			this.runEnd = { promise, resolve, stoppedByUser: false };
 		}
 		if (event.type === "message_end" && event.message.role === "assistant") this.lastAssistant = event.message;
 		if (event.type !== "agent_settled") return;
@@ -904,14 +920,14 @@ export class PiNativeRequests {
 			// recorded state.
 			const ids = [...this.runRequests];
 			this.runRequests = new Set();
-			// Pi without the accessor has no other abort than the user's.
-			const byUser = (this.session as { abortByUser?: boolean }).abortByUser !== false;
-			this.recordingStop++;
+			const byUser = ended?.stoppedByUser === true;
+			if (byUser) this.recordingUserStop++;
 			this.abortedRun = this.abortedRun
 				.then(() => this.finishAborted(ids, byUser))
 				.catch(() => {})
 				.finally(() => {
-					this.recordingStop--;
+					if (byUser) this.recordingUserStop--;
+					if (!this.closed) this.turn?.stopRecorded?.();
 				});
 			void this.abortedRun.then(ended?.resolve);
 			return;
