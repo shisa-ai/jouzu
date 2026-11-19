@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { CombinedAutocompleteProvider, Editor } from "@earendil-works/pi-tui";
 import { createFastModeExtension, FAST_MODE_STATUS } from "../dist/fast-mode.js";
 import { codexMessage, codexTransport } from "./fixtures/codex-transport.mjs";
 import { assembledSession } from "./fixtures/flow-assembly.mjs";
@@ -77,6 +78,46 @@ test("on/off is explicit, idempotent, persisted in the session, and independent 
 			.map((entry) => entry.value),
 		["on", "off"],
 	);
+});
+
+test("the editor submits complete Fast mode commands on the first Enter", async () => {
+	const h = harness();
+	const identity = (value) => value;
+	const editor = new Editor(
+		{ requestRender() {} },
+		{
+			borderColor: identity,
+			selectList: {
+				selectedPrefix: identity,
+				selectedText: identity,
+				description: identity,
+				scrollInfo: identity,
+				noMatch: identity,
+			},
+		},
+	);
+	editor.setAutocompleteProvider(new CombinedAutocompleteProvider([{ name: "fast", ...h.commands.get("fast") }]));
+	const submitted = [];
+	editor.onSubmit = (value) => {
+		submitted.push(value);
+		void h.command(value.slice("/fast".length));
+	};
+	const settle = () => new Promise((resolve) => setImmediate(resolve));
+	for (const action of ["on", "off"]) {
+		for (const char of "/fast o") editor.handleInput(char);
+		await settle();
+		assert.equal(editor.isShowingAutocomplete(), true, "partial arguments still offer completions");
+		for (const char of action.slice(1)) editor.handleInput(char);
+		await settle();
+		editor.handleInput("\r");
+		assert.equal(submitted.at(-1), `/fast ${action}`);
+		assert.equal(h.entries.at(-1).data.enabled, action === "on");
+	}
+	for (const char of "/fast") editor.handleInput(char);
+	await settle();
+	editor.handleInput("\r");
+	assert.deepEqual(submitted, ["/fast on", "/fast off", "/fast"]);
+	assert.equal(h.entries.length, 2, "the bare command only reports status");
 });
 
 test("invalid arguments do not change the choice", async () => {

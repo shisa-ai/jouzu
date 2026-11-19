@@ -83,8 +83,11 @@ export function createFastModeExtension(catalog: CatalogBundle = defaultCatalog(
 			};
 			pi.registerCommand("fast", {
 				description: catalogText(catalog, "jouzu.cli.session.slash.fast"),
+				// An exact match would make Enter accept a redundant completion rather than submit.
 				getArgumentCompletions: (prefix) =>
-					["on", "off"].filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
+					["on", "off"]
+						.filter((value) => value !== prefix && value.startsWith(prefix))
+						.map((value) => ({ value, label: value })),
 				handler: async (args, ctx) => {
 					const action = args.trim();
 					if (action && action !== "on" && action !== "off") {
