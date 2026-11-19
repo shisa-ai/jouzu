@@ -46,6 +46,14 @@ Run `/logout shisa`, select Shisa in `/logout`, or press `D` on the Settings row
 - Other providers keep their credentials.
 - For the rest of the process, Shisa login, catalog, and voice ignore `SHISA_API_KEY`, even if it remains set. Unset it before restarting to stay signed out, or run `/login shisa` to reconnect.
 
+## Inference errors
+
+For recognized Shisa HTTP errors on the catalog's OpenAI-compatible inference route, Jouzu shows the server's message followed by its code, such as `(free_allowance_exhausted)`. Authentication, balance, plan-access and free-allowance failures stop agent-level retries. Follow the message's account action or wait for allowance replenishment as appropriate.
+
+Rate, ingress, capacity and temporary authentication-verification failures remain eligible for the configured agent retry budget. Existing billing and quota exclusions still take precedence. Separately configured transport retries are unchanged: a funding HTTP 429 can still be retried inside a request. The conditional `/bug` hint may appear for account errors; it is not a diagnosis that Jouzu caused the failure.
+
+Recognized messages have control characters removed, whitespace collapsed and one code suffix. The complete formatted error is limited to 1,800 UTF-16 code units; unusually long text or URLs can be truncated. Other payload shapes and adapters that use separate error formatting retain their existing behavior.
+
 ## Troubleshooting
 
 | Message or symptom | Action |

@@ -378,6 +378,36 @@ test("ACP reports a model error and remains usable", async (t) => {
 	assert.equal(result.stopReason, "end_turn");
 });
 
+test("ACP preserves the formatted structured error from its RPC child", async (t) => {
+	const { normalizeProviderError, formatProviderError } = await import(
+		"../../../node_modules/@earendil-works/pi-ai/dist/utils/error-body.js"
+	);
+	const errorMessage = formatProviderError(
+		normalizeProviderError(
+			Object.assign(new Error("SDK error"), {
+				status: 429,
+				error: {
+					code: "free_allowance_exhausted",
+					type: "free_allowance_exhausted",
+					message: "Add credits.\u001b\u202e\r\n日本語",
+				},
+			}),
+		),
+	);
+	const h = await harness(t, { env: { ACP_FAKE_PROVIDER_ERROR: errorMessage } });
+	const session = await h.request("session/new", { cwd: h.cwd, mcpServers: [] });
+	await assert.rejects(
+		h.request("session/prompt", { sessionId: session.sessionId, prompt: [{ type: "text", text: "error" }] }),
+		(error) => {
+			assert.ok(error.message.includes("429: Add credits. 日本語 (free_allowance_exhausted)"));
+			assert.equal(error.message.includes("\u001b"), false);
+			assert.equal(error.message.includes("\u202e"), false);
+			assert.doesNotMatch(error.message, /"type":/);
+			return true;
+		},
+	);
+});
+
 test("ACP resolves a successful retry and rejects a failed retry", async (t) => {
 	const h = await harness(t);
 	const session = await h.request("session/new", { cwd: h.cwd, mcpServers: [] });
