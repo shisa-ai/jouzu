@@ -48,11 +48,13 @@ Run `/logout shisa`, select Shisa in `/logout`, or press `D` on the Settings row
 
 ## Inference errors
 
-For recognized Shisa HTTP errors on the catalog's OpenAI-compatible inference route, Jouzu shows the server's message followed by its code, such as `(free_allowance_exhausted)`. Authentication, balance, plan-access and free-allowance failures stop agent-level retries. Follow the message's account action or wait for allowance replenishment as appropriate.
+For recognized HTTP errors on the Shisa catalog's OpenAI-compatible inference route, Jouzu shows the server's message followed by its code, such as `(free_allowance_exhausted)`. Matching uses the response's code, type and HTTP status, not the provider name; another provider returning the same structure receives the same treatment.
 
-Rate, ingress, capacity and temporary authentication-verification failures remain eligible for the configured agent retry budget. Existing billing and quota exclusions still take precedence. Separately configured transport retries are unchanged: a funding HTTP 429 can still be retried inside a request. The conditional `/bug` hint may appear for account errors; it is not a diagnosis that Jouzu caused the failure.
+Authentication, balance, plan-access and free-allowance failures stop the agent from starting another attempt after a failed response. Follow the message's account action or wait for allowance replenishment as appropriate. Rate, incoming-request traffic, capacity and temporary authentication-verification failures remain eligible for the configured retry budget, unless the message matches an existing billing or quota restriction.
 
-Recognized messages have control characters removed, whitespace collapsed and one code suffix. The complete formatted error is limited to 1,800 UTF-16 code units; unusually long text or URLs can be truncated. Other payload shapes and adapters that use separate error formatting retain their existing behavior.
+Retries inside the network request are controlled separately and remain unchanged: a funding HTTP 429 can still be retried there before the agent receives the failure. The conditional `/bug` hint may appear for account errors; it is not a diagnosis that Jouzu caused the failure.
+
+Recognized messages have terminal control and specified invisible characters removed, whitespace collapsed and one code suffix. The complete formatted error is limited to 1,800 UTF-16 code units (most common characters count as one; many emoji count as two). Unusually long text or URLs can be truncated. Other payload shapes and adapters that use separate error formatting retain their existing behavior.
 
 ## Troubleshooting
 

@@ -70,6 +70,20 @@ export function isBuiltinApiProvider(api) {
 			"        reasoning: rawUsage.completion_tokens_details?.reasoning_tokens || 0,",
 			"        reasoning: rawUsage.completion_tokens_details?.reasoning_tokens ?? rawUsage.reasoning_tokens ?? 0,",
 		);
+	} else if (path === "dist/api/openai-responses.js") {
+		change(
+			"            const errorMessage = formatProviderError(normalizeProviderError(error),",
+			"            const normalizedError = normalizeProviderError(error);\n            const errorMessage = formatProviderError(normalizedError,",
+		);
+		for (const code of [
+			"subscription_sharing_usage_limit_exceeded",
+			"subscription_sharing_workplace_individual_usage_limit_exceeded",
+		]) {
+			change(
+				`if (errorMessage.includes("${code}"))`,
+				`if (!normalizedError.structuredError && errorMessage.includes("${code}"))`,
+			);
+		}
 	} else if (path === "dist/utils/error-body.js") {
 		change(
 			"    const body = extractBody(sdkError);",
@@ -87,11 +101,12 @@ export function isBuiltinApiProvider(api) {
         const { code, message } = norm.structuredError;
         const suffix = \` (\${code})\`;
         let clean = sanitizeStructuredMessage(message);
-        while (clean.endsWith(suffix)) clean = clean.slice(0, -suffix.length).trimEnd();
-        const heading = prefix === undefined ? \`\${norm.status}: \` : \`\${sanitizeStructuredMessage(prefix)} (\${norm.status}): \`;
-        // A custom provider label can itself exceed the display budget.
-        const boundedHeading = clipStructuredText(heading, 1800 - suffix.length - 32);
-        return boundedHeading + clipStructuredText(clean, 1800 - boundedHeading.length - suffix.length) + suffix;
+        while (clean.endsWith(suffix) || clean === suffix.trimStart()) clean = clean.slice(0, Math.max(0, clean.length - suffix.length)).trimEnd();
+        const statusHeading = prefix === undefined ? \`\${norm.status}: \` : \` (\${norm.status}): \`;
+        // Bound only the custom provider label, preserving the HTTP status.
+        const label = prefix === undefined ? "" : clipStructuredText(sanitizeStructuredMessage(prefix), 1800 - statusHeading.length - suffix.length - 32);
+        const heading = label + statusHeading;
+        return (clean ? heading + clipStructuredText(clean, 1800 - heading.length - suffix.length) : heading.trimEnd()) + suffix;
     }`,
 		);
 		text += String.raw`
@@ -128,11 +143,12 @@ function extractStructuredError(error, status) {
 }
 function sanitizeStructuredMessage(message) {
     return message.toWellFormed().replace(/\s+/g, " ")
-        .replace(/[\x00-\x1f\x7f-\x9f\u061c\u200b\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, "").trim();
+        .replace(/[\x00-\x1f\x7f-\x9f\u061c\u200b\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, "").replace(/ {2,}/g, " ").trim();
 }
 function clipStructuredText(text, budget) {
     if (text.length <= budget) return text;
     const marker = "... [truncated]";
+    if (budget <= marker.length) return marker.slice(0, Math.max(0, budget));
     let end = budget - marker.length;
     if (end > 0 && /[\uD800-\uDBFF]/.test(text[end - 1])) end--;
     return ownedSlice(text, 0, end) + marker;
@@ -167,6 +183,7 @@ export const paths = [
 	"dist/compat.js",
 	"dist/compat.d.ts",
 	"dist/api/openai-completions.js",
+	"dist/api/openai-responses.js",
 	"dist/utils/oauth-page.js",
 	"dist/utils/error-body.js",
 	"dist/utils/error-body.d.ts",

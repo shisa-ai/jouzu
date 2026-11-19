@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { test } from "node:test";
+import { runInNewContext } from "node:vm";
 
 const cases = [
 	[401, "invalid_api_key", false],
@@ -93,7 +94,8 @@ for (const tree of ["../node_modules/", "../packages/cli/node_modules/"]) {
 			const norm = normalizeProviderError(sdk(429, rejected));
 			const fallback = norm.messageCarriesBody ? norm.message : `429: ${norm.body}`;
 			assert.equal(formatProviderError(norm), fallback);
-			assert.equal(retry(formatProviderError(norm)), retry(fallback));
+			assert.equal(norm.structuredError, undefined);
+			assert.equal(retry(formatProviderError(norm)), true);
 		}
 		for (const status of [undefined, 400, 503]) {
 			const norm = normalizeProviderError(new APIError(status, value, undefined, new Headers()));
@@ -101,6 +103,8 @@ for (const tree of ["../node_modules/", "../packages/cli/node_modules/"]) {
 				formatProviderError(norm),
 				norm.messageCarriesBody || status === undefined ? norm.message : `${status}: ${norm.body}`,
 			);
+			assert.equal(norm.structuredError, undefined);
+			assert.equal(retry(formatProviderError(norm)), status === 503);
 		}
 		for (const body of [
 			JSON.stringify(value),
@@ -118,6 +122,8 @@ for (const tree of ["../node_modules/", "../packages/cli/node_modules/"]) {
 		assert.equal(display(sdk(429, inner(code, text))), `429: � [31msafe 👩‍💻 a‌b (${code})`);
 		assert.equal(display(sdk(429, inner(code, `hello (${code}) (${code})`))), `429: hello (${code})`);
 		assert.equal(display(sdk(429, inner(code, `hello (${code}) again`))), `429: hello (${code}) again (${code})`);
+		assert.equal(display(sdk(429, inner(code, ` (${code}) (${code})`))), `429: (${code})`);
+		assert.equal(display(sdk(429, inner(code, "a \u200b b \x1b c"))), `429: a b c (${code})`);
 		for (const length of [1700, 1750, 1799, 1800, 1801, 4000, 20000]) {
 			const result = display(sdk(429, inner(code, "😀".repeat(length))), "Gateway API error");
 			assert.ok(result.length <= 1800, result.length);
@@ -278,8 +284,10 @@ for (const tree of ["../node_modules/", "../packages/cli/node_modules/"]) {
 			const wrapper = JSON.stringify({ error: value, pad: "" });
 			const body = JSON.stringify({ error: value, pad: "x".repeat(size - Buffer.byteLength(wrapper)) });
 			assert.equal(Buffer.byteLength(body), size);
-			const norm = normalizeProviderError(Object.assign(new Error("SDK error"), { status: 429, body }));
-			assert.equal(!!norm.structuredError, size <= 16384);
+			for (const fields of [{ status: 429, body }, { $response: { statusCode: 429, body } }]) {
+				const norm = normalizeProviderError(Object.assign(new Error("SDK error"), fields));
+				assert.equal(!!norm.structuredError, size <= 16384);
+			}
 		}
 		const body = JSON.stringify({ error: value, pad: "😀".repeat(5000) });
 		assert.ok(body.length < 16384);
@@ -294,11 +302,25 @@ for (const tree of ["../node_modules/", "../packages/cli/node_modules/"]) {
 				const result = display(sdk(429, inner(code, message)), prefix);
 				assert.ok(result.length <= 1800);
 				assert.ok(result.isWellFormed());
+				assert.ok(result.includes(prefix === undefined ? "429: " : " (429): "));
 				if (heading.length < 1800) assert.equal(result.includes("[truncated]"), size > 1800);
 			}
 		}
 		const norm = normalizeProviderError(sdk(429, value));
 		assert.equal(formatProviderError({ ...norm, messageCarriesBody: true }), `429: ${value.message} (${code})`);
+	});
+
+	test(`${tree} clipping helper respects budgets smaller than its marker`, async () => {
+		const source = await readFile(new URL("error-body.js", base), "utf8");
+		const helper = source.match(/function clipStructuredText\(text, budget\) \{[\s\S]*?\n\}/)[0];
+		const clip = runInNewContext(`${helper}; clipStructuredText`, {
+			ownedSlice: (text, start, end) => text.slice(start, end),
+		});
+		for (const budget of [0, 1, 5, 14, 15, 16, 32]) {
+			const result = clip("😀".repeat(100), budget);
+			assert.ok(result.length <= budget);
+			assert.ok(result.isWellFormed());
+		}
 	});
 
 	test(`${tree} HTTP adapters and SSE errors exercise the installed SDK`, async (t) => {
@@ -372,6 +394,49 @@ for (const tree of ["../node_modules/", "../packages/cli/node_modules/"]) {
 			},
 		).result();
 		assert.equal(result.errorMessage, `429: ${value.message} (${value.code})`);
+	});
+
+	test(`${tree} Responses preserves structured bounds and unadmitted account guidance`, async () => {
+		const { stream } = await import(new URL("../api/openai-responses.js", base));
+		for (const trigger of [
+			"subscription_sharing_usage_limit_exceeded",
+			"subscription_sharing_workplace_individual_usage_limit_exceeded",
+		]) {
+			for (const admitted of [true, false]) {
+				const value = inner("free_allowance_exhausted", `${trigger} ${"x".repeat(2000)}`);
+				if (!admitted) value.type = "other_provider";
+				const result = await stream(
+					{
+						id: "fixture",
+						name: "fixture",
+						provider: "fixture",
+						api: "openai-responses",
+						baseUrl: "https://fixture.invalid/v1",
+						reasoning: false,
+						input: ["text"],
+						contextWindow: 4096,
+						maxTokens: 32,
+						cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+					},
+					{ messages: [{ role: "user", content: "hello", timestamp: 1 }] },
+					{
+						apiKey: "fixture",
+						maxTokens: 32,
+						fetch: async () =>
+							new Response(JSON.stringify({ error: value }), {
+								status: 429,
+								headers: { "content-type": "application/json" },
+							}),
+					},
+				).result();
+				assert.equal(result.stopReason, "error");
+				if (admitted) {
+					assert.ok(result.errorMessage.length <= 1800);
+					assert.ok(result.errorMessage.endsWith(" (free_allowance_exhausted)"));
+					assert.doesNotMatch(result.errorMessage, /\n|ChatGPT/);
+				} else assert.match(result.errorMessage, /\n.*ChatGPT/);
+			}
+		}
 	});
 
 	test(`${tree} the interactive bug hint remains conditional for account errors`, async () => {
