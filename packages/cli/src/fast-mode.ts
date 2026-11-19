@@ -47,14 +47,6 @@ export function createFastModeExtension(catalog: CatalogBundle = defaultCatalog(
 						return;
 					}
 					if (action) {
-						if (!ctx.isIdle()) {
-							report(ctx, catalogText(catalog, "jouzu.cli.fast.busy"), "warning");
-							return;
-						}
-						if (action === "on" && !canRequestFastMode(ctx.model)) {
-							report(ctx, catalogText(catalog, "jouzu.cli.fast.ineligible"), "warning");
-							return;
-						}
 						const enabled = action === "on";
 						if (savedFastMode(ctx) !== enabled) pi.appendEntry(FAST_MODE_ENTRY, { enabled });
 					}
@@ -74,9 +66,11 @@ export function createFastModeExtension(catalog: CatalogBundle = defaultCatalog(
 			pi.on("model_select", (_event, ctx) => sync(ctx));
 			pi.on("session_shutdown", (_event, ctx) => ctx.ui.setStatus(FAST_MODE_STATUS, undefined));
 			pi.on("before_provider_request", (event, ctx) => {
+				// Each new request reads the branch's current preference and uses the prepared model,
+				// including virtual-model routing and auth overrides.
+				if (!canRequestFastMode(event.request?.model)) return;
 				const enabled = savedFastMode(ctx);
-				// Use the prepared request's model, including virtual-model routing and auth overrides.
-				if (enabled === undefined || !canRequestFastMode(event.request?.model)) return;
+				if (enabled === undefined) return;
 				if (!event.payload || typeof event.payload !== "object" || Array.isArray(event.payload)) return;
 				return { ...event.payload, service_tier: enabled ? "priority" : "default" };
 			});

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createFastModeExtension, FAST_MODE_STATUS } from "../dist/fast-mode.js";
-import { codexTransport } from "./fixtures/codex-transport.mjs";
+import { codexMessage, codexTransport } from "./fixtures/codex-transport.mjs";
 
 const model = {
 	id: "gpt-6.1-sol",
@@ -25,7 +25,6 @@ function harness(selected = model) {
 	const ctx = {
 		model: selected,
 		mode: "tui",
-		isIdle: () => true,
 		sessionManager: { getBranch: () => entries },
 		ui: {
 			setStatus: (key, value) => (value === undefined ? statuses.delete(key) : statuses.set(key, value)),
@@ -79,23 +78,27 @@ test("on/off is explicit, idempotent, persisted in the session, and independent 
 	);
 });
 
-test("invalid arguments, unsupported selections, and busy sessions do not change the choice", async () => {
+test("invalid arguments do not change the choice", async () => {
 	const h = harness();
 	for (const action of ["toggle", "on off", "yes"]) {
 		await h.command(action);
 		assert.equal(h.notices.at(-1).type, "warning");
 	}
-	h.ctx.isIdle = () => false;
-	await h.command("on");
-	assert.match(h.notices.at(-1).message, /Wait/);
-	h.ctx.isIdle = () => true;
-	for (const selection of [undefined, { ...model, api: "anthropic-messages" }, { ...model, id: "glm-5" }]) {
-		h.ctx.model = selection;
-		await h.command("on");
-		assert.equal(h.notices.at(-1).type, "warning");
-	}
 	assert.equal(h.entries.length, 0);
 	assert.equal(h.statuses.size, 0);
+});
+
+test("an ineligible selection can save Fast mode for the next eligible request", async () => {
+	const unsupported = { ...model, id: "claude-sonnet", api: "anthropic-messages" };
+	const h = harness(unsupported);
+	const payload = { input: [] };
+	await h.command("on");
+	assert.match(h.notices.at(-1).message, /inactive/);
+	assert.equal(h.statuses.has(FAST_MODE_STATUS), false);
+	assert.equal(h.payload(payload), payload);
+	assert.equal(h.payload(payload, model).service_tier, "priority");
+	await h.command("off");
+	assert.equal(h.payload(payload, model).service_tier, "default");
 });
 
 test("resume, branch navigation, model switches, and shutdown restore the indicator", async () => {
@@ -167,7 +170,7 @@ for (const transport of ["sse", "websocket"]) {
 	});
 }
 
-test("registered session commands reach the real OpenAI request hook and survive reload", async (t) => {
+test("busy Fast mode commands apply to the next OpenAI request and survive reload", async (t) => {
 	const { mkdtemp, rm } = await import("node:fs/promises");
 	const { tmpdir } = await import("node:os");
 	const { join } = await import("node:path");
@@ -194,6 +197,8 @@ test("registered session commands reach the real OpenAI request hook and survive
 		refreshOnCreate: false,
 	});
 	const bodies = [];
+	const firstRequest = Promise.withResolvers();
+	const releaseFirstRequest = Promise.withResolvers();
 	const selected = { ...model, provider: "openai", api: "openai-responses", baseUrl: "https://api.openai.com/v1" };
 	runtime.registerProvider("openai", {
 		api: selected.api,
@@ -205,9 +210,26 @@ test("registered session commands reach the real OpenAI request hook and survive
 				...options,
 				fetch: async (_url, init) => {
 					bodies.push(JSON.parse(init.body));
-					return new Response('{"error":{"message":"fixture capture"}}', {
-						status: 400,
-						headers: { "content-type": "application/json" },
+					const index = bodies.length;
+					let item = codexMessage(`msg_${index}`);
+					if (index === 1) {
+						firstRequest.resolve();
+						await releaseFirstRequest.promise;
+						item = {
+							type: "function_call",
+							id: "fc_step",
+							call_id: "call_step",
+							name: "step",
+							arguments: "{}",
+							status: "completed",
+						};
+					}
+					const events = [
+						{ type: "response.output_item.done", output_index: 0, item },
+						{ type: "response.completed", response: { id: `response_${index}`, status: "completed", output: [item] } },
+					];
+					return new Response(events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join(""), {
+						headers: { "content-type": "text/event-stream" },
 					});
 				},
 			});
@@ -220,7 +242,20 @@ test("registered session commands reach the real OpenAI request hook and survive
 		noSkills: true,
 		noContextFiles: true,
 		noPromptTemplates: true,
-		extensionFactories: [createFastModeExtension()],
+		extensionFactories: [
+			createFastModeExtension(),
+			(pi) => {
+				pi.registerTool({
+					name: "step",
+					label: "Step",
+					description: "Return a fixture result.",
+					parameters: { type: "object", properties: {} },
+					async execute() {
+						return { content: [{ type: "text", text: "Step done" }], details: {} };
+					},
+				});
+			},
+		],
 	});
 	await loader.reload();
 	({ session } = await createAgentSession({
@@ -239,10 +274,26 @@ test("registered session commands reach the real OpenAI request hook and survive
 			throw error;
 		},
 	});
-	await session.prompt("/fast on");
+	await session.prompt("/fast off");
 	assert.equal(bodies.length, 0);
-	await session.prompt("Hello");
-	assert.equal(bodies.at(-1).service_tier, "priority");
+	const active = session.prompt("Hello");
+	try {
+		await Promise.race([firstRequest.promise, active]);
+		assert.equal(session.isIdle, false);
+		for (const action of ["on", "off", "on"]) await session.prompt(`/fast ${action}`);
+		assert.deepEqual(
+			bodies.map((body) => body.service_tier),
+			["default"],
+		);
+	} finally {
+		releaseFirstRequest.resolve();
+		await active;
+	}
+	assert.deepEqual(
+		bodies.map((body) => body.service_tier),
+		["default", "priority"],
+	);
+	assert.ok(bodies[1].input.some((item) => item.type === "function_call_output" && item.call_id === "call_step"));
 	await session.reload();
 	await session.prompt("Again");
 	assert.equal(bodies.at(-1).service_tier, "priority");

@@ -26,6 +26,7 @@ const cli = join(packageRoot, "dist", "cli.js");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
 const piVersion = packageJson.dependencies["@earendil-works/pi-coding-agent"];
 const piLock = JSON.parse(readFileSync(join(packageRoot, "dist", "pi.lock.json"), "utf8"));
+const coreProfile = JSON.parse(readFileSync(join(packageRoot, "profiles", "core", "manifest.json"), "utf8"));
 const buildInfoPath = join(packageRoot, "dist", "build-info.json");
 const buildInfo = existsSync(buildInfoPath)
 	? parseBuildInfo(JSON.parse(readFileSync(buildInfoPath, "utf8")))
@@ -99,7 +100,7 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 		assert.equal(result.stdout.trim(), piVersion);
 		const state = JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8"));
 		assert.equal(state.activeProfile, "core");
-		assert.equal(state.profileVersion, 17);
+		assert.equal(state.profileVersion, coreProfile.version);
 		assert.equal(existsSync(join(jouzuHome, "state", "profile-choice.json")), false);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });

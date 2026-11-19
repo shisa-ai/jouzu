@@ -69,7 +69,7 @@ Catalog recommendations apply only when no model choice is saved. They can also 
 - The model line shows `fast` beside the thinking level, for example `gpt-6.1-sol (high · fast)`. Thinking level is a separate choice.
 - The choice is saved in the session and restored on resume and branch navigation. New sessions start with Fast mode off. Switching to another API or a non-GPT model suspends Fast mode until a matching model is selected.
 - Fast mode applies to the session's conversation requests, including tool continuations. Compaction, automatic labels, and child sessions use their own request settings.
-- Change the setting while the agent is idle. Requests already in progress keep their processing tier.
+- You can change the setting while the agent is working. The next eligible request uses the saved choice. Requests already sent keep their processing tier.
 
 Fast mode uses higher rates. With ChatGPT sign-in, included subscription limits are consumed at 2.5× the standard rate, and purchased credits at 2×. API keys and gateways use their provider's rates. See [Codex speed](https://developers.openai.com/codex/speed/) and [API Fast mode](https://developers.openai.com/api/docs/guides/priority-processing/).
 

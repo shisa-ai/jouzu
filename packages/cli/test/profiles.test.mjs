@@ -74,8 +74,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "8871fa5c6663683cbc67aee34b854a56d30b74b7a04f1818ad3039f440ea595e");
-	assert.equal(ja.manifestSha256, "3983f8018be48d3da18e678df8bff6a78c4a0763d89785730de3bf1856965e93");
+	assert.equal(core.manifestSha256, "1133237dff7a9d2a790c7b8cd664efe68617af2cc789c786d2222e78f8ab4743");
+	assert.equal(ja.manifestSha256, "f99b0e3638b744832bcc67305ebf797b38a7024a533e8a1a2444bf4f0a7dd148");
 });
 
 test("reference skill has compact entry and offline links in both profiles", () => {

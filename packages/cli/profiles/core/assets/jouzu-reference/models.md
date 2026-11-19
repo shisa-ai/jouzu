@@ -8,7 +8,7 @@ Startup preference: explicit `--model`, resumed model, project default, last mod
 
 Thinking is remembered per model; catalog defaults precede Pi defaults. Startup arguments, resume and scoped pins can override saved choices. Catalog-supported levels constrain selection.
 
-`/fast` reports the session choice; `/fast on|off` selects priority/standard processing for eligible GPT Responses/Codex connections. It is separate from thinking, can cost more, survives resume, and starts off in new sessions. Change while idle; do not enable incidentally.
+`/fast` reports the session choice; `/fast on|off` selects priority/standard processing for eligible GPT Responses/Codex requests. The choice is separate from thinking, survives resume, and starts off in new sessions. Changes apply to the next eligible request, including tool continuations. Priority processing can cost more; do not enable it incidentally.
 
 A switch needs context plus a 4,096-token margin to fit. Models can offer compaction and recheck; Esc cancels. Settings / Catalogs offers a global context ceiling (128K–1M or off). Local `models.json` `modelOverrides.contextWindow` overrides it; authenticated gateway models remain capped by it.
 
