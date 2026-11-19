@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createFastModeExtension, FAST_MODE_STATUS } from "../dist/fast-mode.js";
 import { codexMessage, codexTransport } from "./fixtures/codex-transport.mjs";
+import { assembledSession } from "./fixtures/flow-assembly.mjs";
 
 const model = {
 	id: "gpt-6.1-sol",
@@ -130,8 +131,9 @@ test("only eligible prepared requests change, including gateway routes and route
 	const h = harness();
 	await h.command("on");
 	const payload = { model: model.id, input: [] };
-	for (const api of ["openai-responses", "openai-codex-responses"]) {
-		assert.equal(h.payload(payload, { ...model, api, provider: "catalog:example:codex" }).service_tier, "priority");
+	for (const api of ["openai-responses", "openai-codex-responses", "openai-completions"]) {
+		const selected = { ...model, id: "pool/gpt-6.2-sol", api, provider: "catalog:example:codex" };
+		assert.equal(h.payload(payload, selected).service_tier, "priority");
 	}
 	for (const selected of [
 		{ ...model, api: "anthropic-messages" },
@@ -144,6 +146,93 @@ test("only eligible prepared requests change, including gateway routes and route
 	h.ctx.model = { ...model, id: "router", api: "virtual" };
 	assert.equal(h.payload(payload, model).service_tier, "priority");
 });
+
+test("re-enabling Fast mode clears only the selected route's rejection", async () => {
+	const h = harness();
+	const other = { ...model, provider: "another-provider" };
+	await h.command("on");
+	for (const { api, id, provider } of [model, other]) {
+		h.entries.push({ type: "custom", customType: "jouzu-fast-mode", data: { unsupported: { api, id, provider } } });
+	}
+	await h.command();
+	assert.match(h.notices.at(-1).message, /disabled for this route/);
+	assert.equal(h.statuses.has(FAST_MODE_STATUS), false);
+	await h.command("on");
+	assert.equal(h.payload({ input: [] }).service_tier, "priority");
+	assert.equal(h.payload({ input: [] }, other).service_tier, undefined);
+});
+
+function captureFastNotices(session) {
+	const notices = [];
+	const runner = session.extensionRunner;
+	runner.setUIContext({ ...runner.getUIContext(), notify: (text) => notices.push(text) }, "rpc");
+	return notices;
+}
+
+const rejectedPriority = {
+	httpStatus: 400,
+	httpBody: { error: { message: 'service_tier "priority" is unsupported by this translated export' } },
+};
+
+test("a priority rejection retries once without the tier, records both attempts, and disables Fast for the route", async (t) => {
+	const f = await assembledSession(t, {
+		modelId: "pool/gpt-6.2-sol",
+		producerExtensions: [createFastModeExtension()],
+		script: [rejectedPriority, { text: "Standard worked" }, { text: "Still standard" }, { text: "Priority reprobe" }],
+	});
+	await f.session.bindExtensions({ mode: "rpc", onError: (error) => assert.fail(error.message) });
+	const notices = captureFastNotices(f.session);
+	await f.session.prompt("/fast on");
+	await f.session.prompt("Hello");
+	assert.deepEqual(
+		f.bodies.map((body) => body.service_tier),
+		["priority", undefined],
+	);
+	assert.deepEqual(f.bodies[1].messages, f.bodies[0].messages);
+	assert.match(notices.at(-1), /Retried without Fast mode/);
+	const records = await f.ingress.branch().attachment.nativeRequests.snapshot();
+	assert.deepEqual(
+		records.filter((record) => record.payload).map((record) => record.outcome),
+		["failure", "success"],
+	);
+	await f.session.reload();
+	await f.session.prompt("Again");
+	assert.equal(f.bodies.length, 3);
+	assert.equal(f.bodies[2].service_tier, undefined);
+	await f.session.prompt("/fast on");
+	await f.session.prompt("Try priority again");
+	assert.equal(f.bodies.length, 4);
+	assert.equal(f.bodies[3].service_tier, "priority");
+});
+
+for (const [name, script, tiers] of [
+	["unrelated error", [{ httpStatus: 403, httpBody: { error: { message: "Access denied" } } }], ["priority"]],
+	["server failure", [{ ...rejectedPriority, httpStatus: 500 }], ["priority"]],
+	["failed standard retry", [rejectedPriority, { httpStatus: 400 }], ["priority", undefined]],
+]) {
+	test(`Fast mode does not report a successful fallback after ${name}`, async (t) => {
+		const f = await assembledSession(t, {
+			modelId: "gpt-example",
+			producerExtensions: [createFastModeExtension()],
+			settings: { providerRetry: { maxRetries: 0 } },
+			script,
+		});
+		await f.session.bindExtensions({ mode: "rpc", onError: (error) => assert.fail(error.message) });
+		const notices = captureFastNotices(f.session);
+		await f.session.prompt("/fast on");
+		await f.session.prompt("Hello");
+		assert.deepEqual(
+			f.bodies.map((body) => body.service_tier),
+			tiers,
+		);
+		assert.equal(f.session.agent.state.messages.at(-1).stopReason, "error");
+		assert.ok(notices.every((text) => !text.includes("Retried without Fast mode")));
+		assert.equal(
+			f.sessionManager.getBranch().some((entry) => entry.data?.unsupported),
+			false,
+		);
+	});
+}
 
 for (const transport of ["sse", "websocket"]) {
 	test(`Codex ${transport} sends priority then default across requests`, async (t) => {
