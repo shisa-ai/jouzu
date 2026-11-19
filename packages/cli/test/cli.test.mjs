@@ -107,7 +107,7 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 	}
 });
 
-test("Core registers its five optional skills and review prompt", () => {
+test("Core registers its six optional skills and review prompt", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-core-skills-"));
 	try {
 		const result = run(
@@ -121,6 +121,7 @@ test("Core registers its five optional skills and review prompt", () => {
 			commandNames.filter((name) => name === "jouzu-review" || name.startsWith("skill:jouzu-")),
 			[
 				"jouzu-review",
+				"skill:jouzu-analysis",
 				"skill:jouzu-anti-slop",
 				"skill:jouzu-clear-writing",
 				"skill:jouzu-delegation",
@@ -191,6 +192,7 @@ test("Core loads the selected release-owned tool, command, and skill surfaces", 
 			"multiloop",
 			"pi-vcc",
 			"schedule-prompt",
+			"skill:jouzu-analysis",
 			"skill:jouzu-anti-slop",
 			"skill:jouzu-clear-writing",
 			"skill:jouzu-delegation",

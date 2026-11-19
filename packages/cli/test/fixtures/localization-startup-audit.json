@@ -555,6 +555,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "skill:jouzu-analysis",
+      "registered_extension": false,
+      "english": "Turn evidence into findings or recommendations in analysis documents",
+      "japanese": "根拠に基づく判断や推奨事項を分析文書にまとめる",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuAnalysis"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "skill:jouzu-anti-slop",
       "registered_extension": false,
       "english": "Remove filler, marketing language, and unsupported emphasis from existing prose without losing facts",

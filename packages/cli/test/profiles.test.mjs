@@ -47,6 +47,7 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 		core.assets.map((asset) => asset.target),
 		[
 			"prompts/jouzu-review.md",
+			"skills/jouzu-analysis/SKILL.md",
 			"skills/jouzu-anti-slop/SKILL.md",
 			"skills/jouzu-clear-writing/SKILL.md",
 			"skills/jouzu-delegation/SKILL.md",
@@ -63,6 +64,7 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 		[
 			"APPEND_SYSTEM.md",
 			"prompts/jouzu-review.md",
+			"skills/jouzu-analysis/SKILL.md",
 			"skills/jouzu-anti-slop/SKILL.md",
 			"skills/jouzu-clear-writing/SKILL.md",
 			"skills/jouzu-delegation/SKILL.md",
@@ -74,8 +76,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "8c6007d93a061f2135c00e9549924af9b1c3631069d1975bcabea82571478059");
-	assert.equal(ja.manifestSha256, "1c25d38f92b55833473daf78685cf3f068e69347e6f398a594e298c324878baa");
+	assert.equal(core.manifestSha256, "ee2fc3a8c00b81f57f2dc6791f44a983752427b528cff11ac5e3e21c1579e72d");
+	assert.equal(ja.manifestSha256, "b62d044514b42f1e207e69f0f088ac0826b31a5e38e7d3c112bf93f7ee821ac4");
 });
 
 test("reference skill has compact entry and offline links in both profiles", () => {

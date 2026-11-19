@@ -4,7 +4,7 @@ A profile is a set of instructions, skills, and prompts that Jouzu installs into
 
 | Profile | Adds |
 | --- | --- |
-| `core` (default) | Default instructions, five optional skills, and the `jouzu-review` prompt. Selects no provider or response language. |
+| `core` (default) | Default instructions, six optional skills, and the `jouzu-review` prompt. Selects no provider or response language. |
 | `ja` (preview) | Everything in `core`, plus Japanese responses. Code, commands, identifiers, paths, URLs, logs, and error messages stay unchanged. |
 
 The UI locale does not select a response language. See [Language, locale and prompt instructions](language.md) for how identity, shared guidance, profiles, response settings, artifact policies and custom prompts combine. To use language settings without the JA profile's independent Japanese instruction, select Core.
@@ -27,6 +27,7 @@ To select a profile for a launch and save it as the active profile, run `jz --jo
 
 | Skill | Use |
 | --- | --- |
+| `jouzu-analysis` | Turn evidence into findings and recommendations in comparisons, evaluations, and decision memos |
 | `jouzu-anti-slop` | Remove filler from existing prose without losing facts or qualifiers |
 | `jouzu-clear-writing` | Write or revise lasting technical text while keeping facts and terminology |
 | `jouzu-delegation` | Write clear child-agent assignments, follow-ups, acceptance checks, and stopping points |

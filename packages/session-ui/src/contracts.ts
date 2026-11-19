@@ -116,6 +116,7 @@ export const SESSION_UI_SLASH_COMMAND_IDS: Readonly<Record<string, string>> = Ob
 	"jouzu-review": "jouzu.cli.session.slash.jouzuReview",
 	"skill:jouzu-reference": "jouzu.cli.session.slash.skillJouzuReference",
 	"skill:jouzu-clear-writing": "jouzu.cli.session.slash.skillJouzuClearWriting",
+	"skill:jouzu-analysis": "jouzu.cli.session.slash.skillJouzuAnalysis",
 	"skill:jouzu-anti-slop": "jouzu.cli.session.slash.skillJouzuAntiSlop",
 	"skill:jouzu-delegation": "jouzu.cli.session.slash.skillJouzuDelegation",
 	"skill:jouzu-source-check": "jouzu.cli.session.slash.skillJouzuSourceCheck",
@@ -204,6 +205,9 @@ export const SESSION_UI_INSTALLED_SLASH_COMMAND_DESCRIPTIONS: Readonly<Record<st
 		],
 		"skill:jouzu-clear-writing": [
 			"Draft, revise, or audit durable user-facing technical artifacts without changing facts. Use for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, diagnostics, or other prose intended to persist or leave the current chat.",
+		],
+		"skill:jouzu-analysis": [
+			"Write, revise, or review analysis documents that turn evidence into findings or recommendations. Use for technical comparisons, benchmark reports, evaluations, incident analyses, design tradeoffs, or decision memos.",
 		],
 		"skill:jouzu-anti-slop": [
 			"Remove filler, marketing language, and unsupported emphasis from existing prose without losing facts, qualifiers, or exact technical content. Use for a filler-removal pass over a draft, README, release note, issue, pull request, or documentation, or to check a document against recurring filler patterns.",

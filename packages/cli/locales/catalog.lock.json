@@ -18,7 +18,7 @@
     "en/plugins.ftl": "296252ed7b3adb7f720f182ff695b4765f5c91dfeeea5a64807d83ce3339a5a9",
     "en/profile-migration-command.ftl": "3e1ed9789c9f80c9f9c4d8076b3115425a5e82a5a975e1d1cea6397e7d1166e9",
     "en/runtime.ftl": "9630705abe032d95ee55ad60f15b25418f29bb0a6cb5399f87645252b2bbcb6a",
-    "en/slash-commands.ftl": "8649c1f0d1ef064b941fa4706fc99f6a1395ffd3034ea44fe2e3d27a7cf20ad4",
+    "en/slash-commands.ftl": "f192bac865f1a7aa70aa9c3db1824e322ce2b32e2df8ff5b53304cb2c021064d",
     "en/user-input.ftl": "0ba85cac7baace66ce14ef3666f162db7e2457c159db73d01b797f1f6ad20a92",
     "ja/btw.ftl": "31ca96cc93a14facbabbf56d5ea2849f46663e27bec8dc9b7209ea1a9128ca39",
     "ja/compaction.ftl": "58432b76d1edc7c7dea1c49d13303c226c42e33fd3b6a2aea03c7fe2373dfb73",
@@ -31,7 +31,7 @@
     "ja/plugins.ftl": "4a69d1746c1b97d1ea46800730b974cd28b9b0d62ef76169906e98343ba47df1",
     "ja/profile-migration-command.ftl": "6b5683a0923c48a69d1521e0d1d7bfda8b0b734a921133a2f33563ee80aa496e",
     "ja/runtime.ftl": "0e8877d3ac8dce21d1506fafe55b29ebeaa93c1174a5640c2b4d5132456ea872",
-    "ja/slash-commands.ftl": "c55e3442d918f1f840965efa2cbc1b299e5bd1348068f951a8bb7c58f8c8b34c",
+    "ja/slash-commands.ftl": "dabdfee985b20812d854aef411e01317958ba131a196c6ed0b374da4fe865ac9",
     "ja/user-input.ftl": "121191b999beebfd34bb9ba0b8126de320a46fb9914e2cc26b72c9053ae1398f",
     "zh-Hans/btw.ftl": "3d422506e1b781530f9e688f2feb391002eb3aafef142a432aa8557849f009a8",
     "zh-Hans/compaction.ftl": "04cd2f1efd45825c059a598dcab4a805432323d6a2a875e92e3f8e0e2cf9e54d",
@@ -44,7 +44,7 @@
     "zh-Hans/plugins.ftl": "00265b053ab15d90b4766ad8b2b1569fcfedc3a777eb546948ccb8fb5683f380",
     "zh-Hans/profile-migration-command.ftl": "0f4746c4435a9235317e4c9c844a1cea5dd6099569012daa4daff1cdb89f17ff",
     "zh-Hans/runtime.ftl": "ece4432850764d5a6ff13bb429e83fb5094d1e41bde971660f3c77f9be665f1d",
-    "zh-Hans/slash-commands.ftl": "5d7d725f0d6271cbd1cab3f62b98e5b3904cd95e271cde2e64d2465b280bd70e",
+    "zh-Hans/slash-commands.ftl": "d77e93be03cf473ccac971c1037431ea071290f72129dede3b3c15aeaa82cbf8",
     "zh-Hans/user-input.ftl": "f5654e271da53728a42398a29c3ab65d3c2a5483c2053d5fa7db38b0e7ccb193",
     "zh-Hant/btw.ftl": "3d422506e1b781530f9e688f2feb391002eb3aafef142a432aa8557849f009a8",
     "zh-Hant/compaction.ftl": "04cd2f1efd45825c059a598dcab4a805432323d6a2a875e92e3f8e0e2cf9e54d",
@@ -57,7 +57,7 @@
     "zh-Hant/plugins.ftl": "4e6d5ef9ca66089dae349245730d2277bfba03747495b8c53116cec8e1cf9f5c",
     "zh-Hant/profile-migration-command.ftl": "860619721097f5fcd659a06c403be9fca529625dfba62db3ab9685ee6d836fb0",
     "zh-Hant/runtime.ftl": "a2c348163ac683964fb3cbf47d6758b9a9397465826d98ac3899fd752b42a0f8",
-    "zh-Hant/slash-commands.ftl": "256646cfd3db64e4d21a823142f1b242b50b213bf105caea3b43f640434295ca",
+    "zh-Hant/slash-commands.ftl": "ab038ecdc7455876ba1b15f4ae4067dae3ebe92aad42ae02e1a34f1fe872bc03",
     "zh-Hant/user-input.ftl": "502d2957ff2c242fd7cf407ce3668da414b5560fcc7deffb5abba1618279eb65"
   }
 }
