@@ -103,7 +103,7 @@ entries the `zh-Hant` catalog uses and points to that page for the full set.
   `jz doctor --json`, `jz catalog status`, `jz keybindings plan`,
   `jz keybindings apply`, `jz profile plan`, `jz profile apply`,
   `jz update --extensions`, `/login shisa`, `/logout shisa`, `/reload`,
-  `/textguard`, `/voice`, `/flow`, `/subagents`, `/workflow`, `/labels`,
+  `/textguard`, `/voice`, `/flow`, `/images`, `/subagents`, `/workflow`, `/labels`,
   `/model`, `--jouzu-home`, `--jouzu-profile`, `--jouzu-ui-locale`, `--json`,
   `--profile`, `--yes`, and the `auto-restart`, `notify`, and `off` policy
   values.

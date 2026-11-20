@@ -31,7 +31,7 @@ another script.
   `jz profile apply`, `jz update --extensions`, `--json`, `--jouzu-home`,
   `--jouzu-profile`, `--jouzu-ui-locale`, `--profile`, `--yes`.
 - **Slash commands:** `/login shisa`, `/logout shisa`, `/reload`, `/textguard`,
-  `/voice`, `/flow`, `/subagents`, `/workflow`, `/labels`, `/model`,
+  `/voice`, `/flow`, `/images`, `/subagents`, `/workflow`, `/labels`, `/model`,
   `/catalogs`.
 - **Policy and mode values:** `auto`, `auto-restart`, `notify`, `off`, `none`,
   `guarded`, `strict`, `bearer` and `Bearer`.
