@@ -100,9 +100,13 @@ export function inspectStateLock(path: string, now: Date): StateLockInspection {
 			return { exists: true, status: "owner-unknown", ageMs: now.getTime() - metadata.mtimeMs };
 		}
 		const ageMs = now.getTime() - Date.parse(record.startedAt);
+		// A lock naming this process's PID but taken before this process started was left by an earlier
+		// process that had the same PID, as happens in containers that restart with fixed PIDs.
+		const reusedPid =
+			record.pid === process.pid && Date.parse(record.startedAt) < Date.now() - process.uptime() * 1000 - 1000;
 		return {
 			exists: true,
-			status: pidIsAlive(record.pid) ? "held-live" : "held-dead",
+			status: !reusedPid && pidIsAlive(record.pid) ? "held-live" : "held-dead",
 			ageMs,
 		};
 	} catch (error) {
@@ -146,7 +150,12 @@ export function acquireStateLock(options: AcquireStateLockOptions): () => void {
 	try {
 		writeNew();
 	} catch (error) {
-		if (!(error instanceof Error && "code" in error && error.code === "EEXIST")) throw error;
+		const code = error instanceof Error && "code" in error ? error.code : undefined;
+		// Windows refuses to create a file another process is still deleting, which is the moment
+		// a lock is being released: the lock is still busy, not unusable.
+		if (code === "EPERM" && process.platform === "win32")
+			throw options.onBusy({ exists: true, status: "held-live", ageMs: null });
+		if (code !== "EEXIST") throw error;
 		const inspection = inspectStateLock(options.path, now);
 		if (inspection.status === "free") {
 			writeNew();

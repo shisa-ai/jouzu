@@ -1,7 +1,7 @@
 import { readdir, readFile, rename, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ensurePrivateDirectory } from "../private-fs.js";
-import { createJournalSession, openJournalSession } from "./journal-storage.js";
+import { createJournalSession, type DeferredJournal, openJournalSession } from "./journal-storage.js";
 import { FlowOwnershipError } from "./ownership.js";
 import type { Session } from "./scalar-storage.js";
 
@@ -46,6 +46,40 @@ export async function reconcileFlowStateVersion(directory: string): Promise<stri
 	return isolated;
 }
 
+/**
+ * A journal records the absolute folder it was created in. Its identity is the folder's location
+ * inside the flow root: the owner's digest folder and the store folder that holds it. A home that
+ * was moved, copied, or reached through another absolute path keeps that identity, so the
+ * comparison uses only those last two components of either path style.
+ */
+function sameFlowLocation(recorded: string, directories: readonly string[]): boolean {
+	const tail = (path: string) =>
+		path
+			.split(/[\\/]+/u)
+			.filter(Boolean)
+			.slice(-2)
+			.join("/");
+	const recordedTail = tail(recorded);
+	return recordedTail.includes("/") && directories.some((directory) => tail(directory) === recordedTail);
+}
+
+/** The journal file a new branch directory gets, at the same place a fresh open would create it. */
+function newJournalPath(directory: string): { path: string; createdAt: number } {
+	const root = join(directory, "sessions");
+	const folder = join(root, "flow");
+	ensurePrivateDirectory(root, folder);
+	const createdAt = Date.now();
+	const filename = `${new Date(createdAt).toISOString().replace(/[:.]/g, "-")}_flow.jsonl`;
+	return { path: join(folder, filename), createdAt };
+}
+
+/** Write a deferred journal into a newly claimed flow directory. Called inside its writer reservation. */
+export async function materializeLocalFlowSession(journal: DeferredJournal, directory: string): Promise<void> {
+	if (journal.materialized) return;
+	const { path, createdAt } = newJournalPath(directory);
+	await journal.materialize(path, { id: "flow", cwd: directory, createdAt });
+}
+
 /** Called only inside the per-branch writer reservation. Preserve existing journal paths and records. */
 export async function openLocalFlowSession(
 	directory: string,
@@ -67,11 +101,8 @@ export async function openLocalFlowSession(
 	}
 	const path = files[0];
 	if (!path) {
-		const folder = join(root, "flow");
-		ensurePrivateDirectory(root, folder);
-		const createdAt = Date.now();
-		const filename = `${new Date(createdAt).toISOString().replace(/[:.]/g, "-")}_flow.jsonl`;
-		return createJournalSession(join(folder, filename), { id: "flow", cwd: directory, createdAt });
+		const created = newJournalPath(directory);
+		return createJournalSession(created.path, { id: "flow", cwd: directory, createdAt: created.createdAt });
 	}
 	// Validate identity before opening can repair a torn tail or compact the journal.
 	let header: Record<string, unknown>;
@@ -86,7 +117,7 @@ export async function openLocalFlowSession(
 			header.storageVersion !== 1 ||
 			header.id !== "flow" ||
 			typeof header.cwd !== "string" ||
-			(header.cwd !== directory && !acceptedDirectories.includes(header.cwd)) ||
+			!sameFlowLocation(header.cwd, [directory, ...acceptedDirectories]) ||
 			!Number.isSafeInteger(header.createdAt) ||
 			Number(header.createdAt) < 0
 		)
@@ -99,7 +130,7 @@ export async function openLocalFlowSession(
 		validateMetadata: (metadata) => {
 			if (
 				metadata.id !== "flow" ||
-				(metadata.cwd !== directory && !acceptedDirectories.includes(metadata.cwd)) ||
+				!sameFlowLocation(metadata.cwd, [directory, ...acceptedDirectories]) ||
 				metadata.path !== path
 			)
 				throw new FlowOwnershipError("storage", "Flow session metadata is missing or inconsistent.");

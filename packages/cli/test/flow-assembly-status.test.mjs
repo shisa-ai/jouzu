@@ -427,10 +427,11 @@ test("an interrupted turn is listed and resolved from /flow", async (t) => {
 	assert.equal(resolved.phase, "settled");
 	assert.equal(resolved.outcome, "failure");
 	// Writing ledger state underneath a live controller races its own reconcile pass, which can report
-	// that the attempt it was about to cancel became uncertain first. That is an artifact of staging
-	// the state directly; no other error is tolerated.
+	// that the attempt it was about to cancel had already moved on to a later staged phase. That is an
+	// artifact of staging the state directly; no other error is tolerated.
+	const staged = new Set(["Flow attempt is handed-off.", "Flow attempt is uncertain."]);
 	assert.deepEqual(
-		f.errors.map((error) => error.message).filter((message) => message !== "Flow attempt is uncertain."),
+		f.errors.map((error) => error.message).filter((message) => !staged.has(message)),
 		[],
 	);
 });

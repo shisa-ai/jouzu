@@ -8,8 +8,9 @@
  */
 
 import { isUtf8 } from "node:buffer";
-import { appendFile, mkdir, readFile, truncate, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
+import { randomUUID } from "node:crypto";
+import { appendFile, mkdir, open, readFile, rename, rm, truncate, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 import { checkpointFlowJournal, FLOW_JOURNAL_CHECKPOINT_BYTES } from "./journal-checkpoint.js";
 import {
 	applyValueWrites,
@@ -265,6 +266,163 @@ class JournalScalarStorage implements ScalarStorage {
 		// Live history cannot be compacted away. Wait for proportional growth before scanning it again.
 		if (size !== undefined) this.checkpointBytes = Math.max(FLOW_JOURNAL_CHECKPOINT_BYTES, size * 2);
 	}
+}
+
+/**
+ * Storage for a journal that has no file yet. Commits apply in memory until `materialize` writes
+ * the file with every value committed so far, after which it behaves as a journal at that path.
+ */
+class DeferredJournalStorage implements ScalarStorage {
+	private readonly values: ScalarState = new Map();
+	private nextSeq = 1;
+	private journal?: JournalScalarStorage;
+	private state: "open" | "closing" | "closed" = "open";
+	private queue: Promise<unknown> = Promise.resolve();
+	private closePromise: Promise<void> | undefined;
+
+	/** Runs before the first write that reaches this storage while it has no file. */
+	beforeFirstWrite?: () => Promise<void>;
+
+	constructor(private readonly options: JournalStorageOptions) {}
+
+	get materialized(): boolean {
+		return !!this.journal;
+	}
+
+	private serial<T>(work: () => Promise<T>): Promise<T> {
+		const result = this.queue.then(work);
+		this.queue = result.then(
+			() => undefined,
+			() => undefined,
+		);
+		return result;
+	}
+
+	commit(writes: readonly Write[], context: ScalarContext): Promise<CommitResult> {
+		if (this.state !== "open") return Promise.reject(new Error("Flow journal storage is closed"));
+		const first = !this.journal ? this.beforeFirstWrite : undefined;
+		if (first)
+			return first().then(() => {
+				if (this.state !== "open") throw new Error("Flow journal storage is closed");
+				return this.serial(() => this.write(writes, context));
+			});
+		return this.serial(() => this.write(writes, context));
+	}
+
+	private async write(writes: readonly Write[], context: ScalarContext): Promise<CommitResult> {
+		if (this.journal) return this.journal.commit(writes, context);
+		const prepared = prepareValueCommit(writes, this.nextSeq, Date.now());
+		applyValueWrites(this.values, prepared.writes);
+		this.nextSeq = prepared.result.firstSeq + prepared.writes.length;
+		return prepared.result;
+	}
+
+	getValue<T>(address: Value<T>, _context: ScalarContext): Promise<StoredValue<T> | undefined> {
+		if (this.state !== "open") return Promise.reject(new Error("Flow journal storage is closed"));
+		return Promise.resolve(readStoredValue(this.values, address));
+	}
+
+	scanValues<T>(prefix: Value<T>, _context: ScalarContext): Promise<StoredValue<T>[]> {
+		if (this.state !== "open") return Promise.reject(new Error("Flow journal storage is closed"));
+		return Promise.resolve(scanStoredValues(this.values, prefix));
+	}
+
+	/**
+	 * Write the journal: its header and one transaction holding every current value, through a
+	 * temporary file so a crash leaves either no journal or a complete one. Later commits append.
+	 */
+	materialize(path: string, metadata: JournalCreateMetadata): Promise<void> {
+		if (this.state !== "open") return Promise.reject(new Error("Flow journal storage is closed"));
+		validateCreateMetadata(metadata);
+		return this.serial(async () => {
+			if (this.journal) return;
+			const header: JournalHeader = {
+				v: JOURNAL_FORMAT_VERSION,
+				kind: "header",
+				id: metadata.id,
+				storageVersion: JOURNAL_STORAGE_VERSION,
+				createdAt: metadata.createdAt ?? Date.now(),
+				cwd: metadata.cwd,
+				nextSeq: this.nextSeq,
+			};
+			const records = [...this.values.values()]
+				.sort((left, right) => left.seq - right.seq)
+				.map((record) => ({
+					kind: "value",
+					op: "set",
+					namespace: record.address.namespace,
+					key: record.address.key,
+					value: record.value,
+					seq: record.seq,
+				}));
+			const text = `${JSON.stringify(header)}\n${records.length ? `${JSON.stringify(records)}\n` : ""}`;
+			await mkdir(dirname(path), { recursive: true, mode: 0o700 });
+			// The temporary file lives beside the owner directory's sessions folder, as checkpoints do, so a
+			// crash before the rename can never leave a stray file where journals are discovered.
+			const temporary = join(dirname(dirname(dirname(path))), `.materialize-${randomUUID()}`);
+			try {
+				const output = await open(temporary, "wx", 0o600);
+				try {
+					await output.writeFile(text);
+					await output.sync();
+				} finally {
+					await output.close();
+				}
+				await rename(temporary, path);
+			} catch (error) {
+				await rm(temporary, { force: true }).catch(() => {});
+				throw error;
+			}
+			this.journal = new JournalScalarStorage(
+				path,
+				this.options.append ?? appendText,
+				this.values,
+				this.nextSeq,
+				this.options.checkpointBytes ?? FLOW_JOURNAL_CHECKPOINT_BYTES,
+			);
+		});
+	}
+
+	close(context: ScalarContext): Promise<void> {
+		if (this.closePromise !== undefined) return this.closePromise;
+		this.state = "closing";
+		this.closePromise = this.serial(async () => {
+			await this.journal?.close(context);
+			this.state = "closed";
+		});
+		return this.closePromise;
+	}
+}
+
+/** A flow journal kept in memory until its owner decides it has something worth keeping. */
+export interface DeferredJournal {
+	readonly session: Session;
+	readonly materialized: boolean;
+	/** Create the journal file at `path` from everything committed so far. Idempotent once done. */
+	materialize(path: string, metadata: JournalCreateMetadata): Promise<void>;
+	/**
+	 * Run `hook` before the first commit that arrives while there is no file, so recording anything
+	 * creates the file first. Commits made before this is set stay in memory.
+	 */
+	beforeFirstWrite(hook: () => Promise<void>): void;
+}
+
+export function createDeferredJournal(options: JournalStorageOptions = {}): DeferredJournal {
+	const storage = new DeferredJournalStorage(options);
+	const session = createScalarSession(
+		{ id: "flow", createdAt: Date.now(), storageVersion: JOURNAL_STORAGE_VERSION },
+		storage,
+	);
+	return {
+		session,
+		get materialized() {
+			return storage.materialized;
+		},
+		materialize: (path, metadata) => storage.materialize(path, metadata),
+		beforeFirstWrite: (hook) => {
+			storage.beforeFirstWrite = hook;
+		},
+	};
 }
 
 /** Create a new journal at an explicit path. An existing file is never replaced. */

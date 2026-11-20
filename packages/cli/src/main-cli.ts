@@ -59,6 +59,7 @@ import { writeProfileChoice } from "./profile-choice.js";
 import {
 	applyProfile,
 	formatProfilePlan,
+	ProfileBusyError,
 	ProfileConflictError,
 	ProfileStateError,
 	planProfile,
@@ -893,6 +894,12 @@ export function handleMainCliError(error: unknown, catalog: CatalogBundle = defa
 	}
 	if (error instanceof KeybindingConfigError) {
 		console.error(text(CliMessageId.keybindingConfig, { message: protectedSourceError(error.message) }));
+		process.exitCode = error.exitCode;
+		return;
+	}
+	if (error instanceof ProfileBusyError) {
+		// Another live process is applying the profile; nothing needs repair.
+		console.error(error.message);
 		process.exitCode = error.exitCode;
 		return;
 	}
