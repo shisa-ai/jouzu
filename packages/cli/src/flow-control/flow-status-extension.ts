@@ -1,8 +1,15 @@
-import type { InlineExtension } from "@earendil-works/pi-coding-agent";
+import type { ExtensionContext, InlineExtension } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
 import { renderFlowMessage } from "./flow-message-renderer.js";
-import { COMMAND_PAUSE, flowPauseText, INTERRUPTED_PAUSE, isProviderPause, REOPENED_PAUSE } from "./flow-pause.js";
+import {
+	COMMAND_PAUSE,
+	flowPauseText,
+	INTERRUPTED_PAUSE,
+	isAdmissionPause,
+	isProviderPause,
+	REOPENED_PAUSE,
+} from "./flow-pause.js";
 import { styleFlowReport } from "./flow-report-style.js";
 import { type FlowUnaccountableWork, formatFlowStatus, projectFlowStatus } from "./flow-status.js";
 import { captureFlowStatusContext, flowDisplayText, FlowStatusMessageId as Id } from "./flow-status-context.js";
@@ -30,6 +37,37 @@ export interface FlowStatusOptions {
 /** Flow control is on unless the host says otherwise; a host without the switch never turns it off. */
 function flowOn(options: FlowStatusOptions): boolean {
 	return options.enabled?.() !== false;
+}
+
+/** Status key under which clients without a terminal receive flow-control state as JSON. */
+export const FLOW_STATUS_KEY = "jouzu-flow";
+
+/**
+ * Read-only flow-control state for clients without a terminal. It reports what is held and why;
+ * releasing anything stays with the user's own `/flow` commands.
+ */
+export interface FlowClientStatus {
+	version: 1;
+	enabled: boolean;
+	/** Automated work is paused; `code` is stable, `text` is localized for display. */
+	paused?: { code: string; text: string };
+	/** A recovery decision holds model admission. */
+	recovery?: { code: string; text: string };
+	held: { id: string; code: string; text: string }[];
+	/** Model requests withheld until the user retries or clears them with `/flow`. */
+	withheld: { id: string; code: string; text: string }[];
+	/** Requests whose outcome is unknown after an interruption; never resent automatically. */
+	uncertain: string[];
+}
+
+/** A stable code for a pause reason; the localized text travels beside it. */
+export function flowPauseCode(reason: string): string {
+	if (reason === INTERRUPTED_PAUSE) return "interrupted";
+	if (reason === REOPENED_PAUSE) return "reopened";
+	if (reason === COMMAND_PAUSE) return "command";
+	if (isProviderPause(reason)) return "provider";
+	if (isAdmissionPause(reason)) return "admission";
+	return "other";
 }
 
 /**
@@ -74,17 +112,92 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		if (reportedHolds.size >= 256) reportedHolds.delete(reportedHolds.values().next().value as string);
 		reportedHolds.add(key);
 	};
-	/** Report what a recovery decision is holding, once per session boundary, and only when it holds. */
-	const announceRecoveryHold = async (): Promise<void> => {
-		if (!announce || !flowOn(options)) return;
-		const ingress = options.ingress();
-		const reason = await ingress.recoveryHold();
-		if (!reason) return;
-		const inspected = await ingress.inspect();
-		if (!inspected.submissions.some((submission) => submission.admission === "held") && !inspected.uncertain.length)
-			return;
-		announce(text("recoveryHold", { reason: holdReason(reason) }));
+	const holdCode = (reason: string) =>
+		Object.hasOwn(recoveryReasons, reason) ? recoveryReasons[reason] : flowPauseCode(reason);
+	// Status reads and announcements run one at a time, so a reading taken before a release can
+	// never be published or announced after it.
+	let serial: Promise<void> = Promise.resolve();
+	const serialized = (work: () => Promise<void>): Promise<void> => {
+		const next = serial.then(work).catch(() => {});
+		serial = next;
+		return next;
 	};
+	let statusContext: ExtensionContext | undefined;
+	let lastStatus = "";
+	const readStatus = async (): Promise<FlowClientStatus> => {
+		const enabled = flowOn(options);
+		if (!enabled) return { version: 1, enabled, held: [], withheld: [], uncertain: [] };
+		const ingress = options.ingress();
+		const paused = ingress.automatedPause();
+		const recovery = await ingress.recoveryHold();
+		const inspected = await ingress.inspect();
+		return {
+			version: 1,
+			enabled,
+			...(paused ? { paused: { code: flowPauseCode(paused), text: flowPauseText(paused, catalog, 200) } } : {}),
+			...(recovery ? { recovery: { code: holdCode(recovery), text: holdReason(recovery) } } : {}),
+			// The same reading /flow reports: input held with a reason, and withheld requests.
+			held: inspected.submissions.flatMap((submission) =>
+				submission.admission === "held" && submission.reason
+					? [{ id: submission.id, code: holdCode(submission.reason), text: holdReason(submission.reason) }]
+					: [],
+			),
+			// One request can serve several submissions; /flow lists it once, and so does this.
+			withheld: [
+				...new Map(
+					inspected.submissions.flatMap((submission) =>
+						(submission.nativeRequests ?? []).flatMap((request) =>
+							request.hold && !request.retryRequestId
+								? [
+										[
+											request.requestId,
+											{ id: request.requestId, code: request.hold.reason, text: text("requestDecision") },
+										] as const,
+									]
+								: [],
+						),
+					),
+				).values(),
+			],
+			uncertain: inspected.uncertain.map((attempt) => attempt.id),
+		};
+	};
+	/** Publish the current state to a client without a terminal; the terminal reads it with /flow. */
+	const publishStatus = (): Promise<void> =>
+		serialized(async () => {
+			const ctx = statusContext;
+			if (!ctx?.hasUI || ctx.mode === "tui") return;
+			const text = JSON.stringify(await readStatus());
+			if (text === lastStatus) return;
+			lastStatus = text;
+			ctx.ui.setStatus(FLOW_STATUS_KEY, text);
+		});
+	// A recovery hold is announced once per hold, not once per session start.
+	let announcedRecovery = "";
+	/** Report what a recovery decision is holding, only while it still holds when the notice is sent. */
+	const announceRecoveryHold = (): Promise<void> =>
+		serialized(async () => {
+			if (!announce || !flowOn(options)) return;
+			const ingress = options.ingress();
+			const reason = await ingress.recoveryHold();
+			if (!reason) {
+				announcedRecovery = "";
+				return;
+			}
+			const inspected = await ingress.inspect();
+			const held = inspected.submissions.filter((submission) => submission.admission === "held");
+			if (!held.length && !inspected.uncertain.length) return;
+			// Re-read after the inspection: a release that finished meanwhile wins.
+			if ((await ingress.recoveryHold()) !== reason) return;
+			const identity = JSON.stringify([
+				reason,
+				held.map((submission) => submission.id),
+				inspected.uncertain.map((attempt) => attempt.id),
+			]);
+			if (identity === announcedRecovery) return;
+			announcedRecovery = identity;
+			announce(text("recoveryHold", { reason: holdReason(reason) }));
+		});
 	return {
 		name: "jouzu-flow-status",
 		/**
@@ -92,6 +205,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		 * failures are always reported so the user knows future automatic turns need intervention.
 		 */
 		async announcePause() {
+			void publishStatus();
 			const reason = options.ingress().automatedPause();
 			if (!reason || !announce || !flowOn(options)) return;
 			if (isProviderPause(reason)) {
@@ -110,6 +224,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		 * reply, so without this the only sign is a notice from whatever command issued it.
 		 */
 		announceHeldInput(input) {
+			void publishStatus();
 			if (!announce || !flowOn(options)) return;
 			const key = `${input.id}:${input.reason}`;
 			if (reportedHolds.has(key)) return;
@@ -123,6 +238,9 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 				renderFlowMessage(message, options, theme, catalog),
 			);
 			pi.on("session_start", (_event, ctx) => {
+				statusContext = ctx;
+				lastStatus = "";
+				void publishStatus();
 				if (!ctx.hasUI || !flowOn(options)) return;
 				// Kept fresh here as well as on every turn end: a refusal can arrive before the first turn.
 				announce = (text) => ctx.ui.notify(text, "info");
@@ -134,7 +252,11 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			});
 			pi.on("agent_end", async (_event, ctx) => {
 				// Kept fresh here rather than captured at load: the context is replaced with the session.
-				if (ctx) announce = (text) => ctx.ui.notify(text, "info");
+				if (ctx) {
+					announce = (text) => ctx.ui.notify(text, "info");
+					statusContext = ctx;
+				}
+				void publishStatus();
 			});
 			pi.registerCommand("flow", {
 				description: catalogText(catalog, "jouzu.cli.session.slash.flow"),
@@ -143,6 +265,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 					const FLOW_OFF_NOTICE = Array.from({ length: 3 }, (_, index) => text(`offNotice${index + 1}`)).join("\n");
 					const [verb, target, choice, ...rest] = args.trim().split(/\s+/).filter(Boolean);
 					const notify = (text: string, level: "info" | "error" = "info") => ctx.ui.notify(text, level);
+					statusContext = ctx;
 					try {
 						if (verb === "runtime" && !target && !choice && !rest.length) {
 							notify(
@@ -486,6 +609,9 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							`${text("operationFailed1", { detail: flowDisplayText(error instanceof Error ? error.message : String(error), 500) })}\n${text("operationFailed2")}`,
 							"error",
 						);
+					} finally {
+						// Every command may change what is held, so clients get the state that follows it.
+						void publishStatus();
 					}
 				},
 			});

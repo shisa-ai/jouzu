@@ -78,6 +78,21 @@ If automatic replies are paused, the run reports the pause and exits with a
 failure status instead of reporting completion. Terminating the process cancels
 settlement and closes the runtime.
 
+## RPC clients
+
+In RPC mode flow control publishes its state as a `setStatus` request with key
+`jouzu-flow` whose text is JSON: `version`, `enabled`, `paused` and `recovery`
+(each a stable `code` and localized `text`, present only while they apply),
+`held` (input held with a reason: submission `id`, `code`, `text`), `withheld`
+(model requests waiting for `/flow retry` or `/flow clear`: request `id`, `code`,
+`text`), and `uncertain` (attempt ids). It is
+sent at session start, after every `/flow` command, and when a turn ends, only
+when it changed. The latest state replaces earlier ones. It is read-only: holds
+are released only by the `/flow` commands.
+
+A recovery hold is announced once per hold, and not at all if it was released
+before the announcement.
+
 ## Request history capacity
 
 Request history records delivery and recovery separately from the model's token
