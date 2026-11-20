@@ -55,6 +55,14 @@ notification naming the source and what the scan found. The same content
 notifies once per session. Findings that block nothing never interrupt the
 session.
 
+In RPC mode notifications arrive as `notify` UI requests. The client also
+receives the current state as a `setStatus` request with key `jouzu-textguard`
+whose text is JSON: `version`, `mode` (`guarded`, `strict`, or `off`), and
+`pending`, the items waiting for review with their `id`, display `source`, scan
+`status`, `reason`, and finding kinds and severities. The state never contains
+withheld text and is read-only: approving content stays with the interactive
+review.
+
 ## Review withheld content
 
 1. Run `/textguard` without arguments in an interactive session.

@@ -647,6 +647,62 @@ test("aborted responses keep valid assistant messages for session stats and late
 	assert.ok(Number.isFinite(session.getSessionStats().tokens.total));
 });
 
+test("only a user abort cancels prompts submitted before it, and the session says which abort it was", async (t) => {
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-stop-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const runtime = await ModelRuntime.create({
+		credentials: {
+			read: async () => undefined,
+			list: async () => [],
+			modify: async () => undefined,
+			delete: async () => {},
+		},
+		modelsPath: null,
+		modelsStorePath: join(directory, "models.json"),
+		refreshOnCreate: false,
+		allowModelNetwork: false,
+	});
+	const loader = new DefaultResourceLoader({ cwd: directory, agentDir: directory, noExtensions: true, noSkills: true });
+	await loader.reload();
+	const { session } = await createAgentSession({
+		cwd: directory,
+		agentDir: directory,
+		resourceLoader: loader,
+		modelRuntime: runtime,
+		model: fixtureModel,
+		sessionManager: SessionManager.inMemory(directory),
+		settingsManager: SettingsManager.inMemory(),
+		tools: [],
+	});
+	t.after(() => session.dispose());
+	session._modelRuntime.hasConfiguredAuth = () => true;
+	session._modelRuntime.checkAuth = async () => "fixture-key";
+	let calls = 0;
+	session.agent.streamFunction = async () => {
+		calls++;
+		return doneStream(assistantMessage("answer"));
+	};
+	const submitted = session._promptAbortEpoch;
+	// An abort that keeps prompts, as compaction's does, cancels nothing the user already sent.
+	await session.abort({ keepPrompts: true });
+	const kept = [];
+	await session.prompt("kept", { abortEpoch: submitted, preflightResult: (value) => kept.push(value) });
+	assert.deepEqual(kept, ["started"]);
+	assert.equal(calls, 1);
+	// The user's abort cancels a prompt submitted before it, before any run starts.
+	await session.abort();
+	const cancelled = [];
+	await session.prompt("cancelled", { abortEpoch: submitted, preflightResult: (value) => cancelled.push(value) });
+	assert.deepEqual(cancelled, ["aborted"]);
+	assert.equal(calls, 1, "the cancelled prompt never reached the provider");
+	assert.ok(!JSON.stringify(session.agent.state.messages).includes("cancelled"), "nor the conversation");
+	// A prompt submitted after the abort runs.
+	const after = [];
+	await session.prompt("after", { preflightResult: (value) => after.push(value) });
+	assert.deepEqual(after, ["started"]);
+	assert.equal(calls, 2);
+});
+
 test("message_end policy failures keep unscanned roles intact and fail closed with valid shapes", async (t) => {
 	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-message-end-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));

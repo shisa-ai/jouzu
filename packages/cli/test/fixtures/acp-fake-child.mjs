@@ -377,6 +377,10 @@ rl.on("line", (line) => {
 				setTimeout(() => respond(command.id, "prompt", { disposition: "handled" }), 20);
 				return;
 			}
+			if (command.message.includes("aborted-before-start")) {
+				respond(command.id, "prompt", { disposition: "aborted" });
+				return;
+			}
 			if (command.message.includes("slow-ack")) {
 				setTimeout(() => {
 					respond(command.id, "prompt", { disposition: "started" });

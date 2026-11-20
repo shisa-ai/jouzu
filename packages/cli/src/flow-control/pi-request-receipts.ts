@@ -59,15 +59,20 @@ export class PiRequestReceipts {
 		try {
 			this.assertActive(signal);
 		} catch (error) {
-			await this.withhold(request);
+			// A user abort leaves the unsent request for host settlement, which cancels an attempt that
+			// never reached the provider. Withholding it would turn the user's own Stop into a request
+			// that needs a recovery decision.
+			if (!signal?.aborted) await this.withhold(request);
 			throw error;
 		}
 		return request;
 	}
 
 	/** The provider accepted the body; the composed attempt is now in flight. */
-	async handedOff(request: FlowCompositionRequest, signal?: AbortSignal): Promise<void> {
-		this.assertActive(signal);
+	async handedOff(request: FlowCompositionRequest, _signal?: AbortSignal): Promise<void> {
+		// The native store has already admitted the body, so the ledger records the same handoff even
+		// when the user aborts now; the abort then ends the request with an aborted outcome.
+		this.assertActive();
 		await this.ledger.handoff(request.composition.attemptId, request.id);
 		request.handedOff = true;
 	}
@@ -99,7 +104,9 @@ export class PiRequestReceipts {
 	private assertActive(signal?: AbortSignal): void {
 		if (this.closed || this.session.sessionId !== this.ledger.scope.sessionId)
 			throw new FlowLedgerError("stale", "Request receipt attachment is closed or replaced.");
-		if (signal?.aborted) throw new FlowLedgerError("transition", "Request was cancelled before handoff.");
+		// The user's cancellation is not a ledger fault: it ends the run as aborted, like an abort
+		// during streaming, so it never pauses admission or asks for recovery.
+		if (signal?.aborted) throw new DOMException("Request was cancelled before handoff.", "AbortError");
 	}
 	register(composition: FlowModelInput): void {
 		this.assertActive();

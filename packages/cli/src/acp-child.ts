@@ -170,12 +170,18 @@ export class AcpChild {
 		message: string,
 		images: ImageContent[] | undefined,
 		timeoutMs: number,
-	): Promise<"started" | "queued" | "handled"> {
+	): Promise<"started" | "queued" | "handled" | "aborted"> {
 		const data = await this.request<{ disposition?: unknown }>(
 			{ type: "prompt", message, ...(images && images.length > 0 ? { images } : {}) },
 			timeoutMs,
 		);
-		if (data.disposition === "started" || data.disposition === "queued" || data.disposition === "handled") {
+		// `aborted`: a Stop arrived before the prompt's turn started, so no turn ran.
+		if (
+			data.disposition === "started" ||
+			data.disposition === "queued" ||
+			data.disposition === "handled" ||
+			data.disposition === "aborted"
+		) {
 			return data.disposition;
 		}
 		throw new Error("Pi RPC prompt response did not contain a disposition");

@@ -345,6 +345,7 @@ export class AcpSession {
 			}));
 			if (active.cancelled) return { stopReason: "cancelled" };
 			const disposition = await this.child.prompt(converted.message, images, this.controlTimeoutMs);
+			if (disposition === "aborted") return { stopReason: "cancelled" };
 			if (disposition === "handled") {
 				await this.eventChain;
 				await this.updateChain;

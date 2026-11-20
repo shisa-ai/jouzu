@@ -219,6 +219,8 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				// A refused send the user asked for is reported the same way: it produced no turn, and the
 				// session's own view of the hold is only visible to someone who runs /flow.
 				onHeldUserInput: (input) => status.announceHeldInput(input),
+				// A Stop is recorded after its run settles, so clients get the state that follows it then.
+				onStopRecorded: () => status.refresh(),
 				// State from an earlier record shape is isolated rather than migrated, and the user is
 				// told where it went so nothing disappears silently.
 				onIsolatedState: (path) =>
