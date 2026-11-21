@@ -13,7 +13,23 @@
 		},
 		"dist/api/openai-completions.js": {
 			"before": "3221deb8b506eab9722d27694fc1bceb752d8786180999add590c2489ac91846",
-			"after": "8ab66972a312307b6ea851940042c36de45c1949d9fb6ebd2422f8c1abf72738"
+			"after": "91ca23eb1e0f2f9a17df73ad2547d5bf38654900ab4dca0d9bd525b26b462732"
+		},
+		"dist/api/openai-responses.js": {
+			"before": "c35b80b2eb7f84b0ea1d939784943038956aefec7b624ed7862ebe2fd9d40c4b",
+			"after": "42ee3fbc907ccdbae089836167ebfa398a992d38e8b987cc476ca1c566d48f7f"
+		},
+		"dist/utils/error-body.js": {
+			"before": "801ecb214fdd46b059454c515f09624c3c968eb669722dcec846b79017bd04f2",
+			"after": "410609f18fe551b2a4e94566ea6ff3472828703a025a272978c629b0f1c1736f"
+		},
+		"dist/utils/error-body.d.ts": {
+			"before": "574370734ade69dcd0eb29b698e462d158ec99d26a80235909d4d76c81e8425e",
+			"after": "03a95b2821bbea211012ae829882b6b8f1ad12ede22cd3640936d6fc10e555a7"
+		},
+		"dist/utils/retry.js": {
+			"before": "facb92a9f5f7688467f9ce25feab125055ea606c72a37eda36dfe27d1596c466",
+			"after": "89762029c8438e0735d0f3f2ecf84721e3be9ec5d974317b49881ebd2d812d97"
 		},
 		"dist/utils/oauth-page.js": {
 			"before": "82ff736f89ccd7a5a780e97eba656aa73ee2a435eb231938b340ffd9167086c1",

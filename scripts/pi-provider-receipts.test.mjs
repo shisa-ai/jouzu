@@ -8,6 +8,7 @@ import { test } from "node:test";
 import { applyProviderReceipts } from "./apply-pi-provider-receipts.mjs";
 import { assistant } from "./fixtures/pi-flow-session.mjs";
 import "./pi-oauth-branding.test.mjs";
+import "./pi-structured-errors.test.mjs";
 
 for (const api of [
 	"openai-completions",

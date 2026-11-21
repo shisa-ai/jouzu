@@ -437,6 +437,66 @@ test("a real child reports the provider error instead of an opaque failure", { t
 	}
 });
 
+test("a real child preserves a bounded structured allowance error", { timeout: 20000 }, async () => {
+	const { createServer } = await import("node:http");
+	const { once } = await import("node:events");
+	let requests = 0;
+	const server = createServer((_req, res) => {
+		requests++;
+		res.writeHead(429, { "Content-Type": "application/json" });
+		res.end(
+			JSON.stringify({
+				error: {
+					code: "free_allowance_exhausted",
+					type: "free_allowance_exhausted",
+					message: `Add credits at https://platform.shisa.ai.\u001b\u202e\r\n${"😀".repeat(3000)}`,
+				},
+			}),
+		);
+	});
+	server.listen(0, "127.0.0.1");
+	await once(server, "listening");
+	const p = paths();
+	let completed;
+	const done = new Promise((resolve) => {
+		completed = resolve;
+	});
+	const manager = new SubagentManager(p, "structured-error-parent", 2, undefined, (run) => completed(run));
+	try {
+		manager.launch({
+			role: { ...defaultAgentConfig().roles[2], model: "fixture/test", thinking: "off" },
+			model: {
+				...model,
+				provider: "fixture",
+				name: "Fixture",
+				baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
+				reasoning: false,
+				input: ["text"],
+				contextWindow: 32000,
+				maxTokens: 512,
+				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+			},
+			auth: { apiKey: "fixture-key" },
+			cwd: p.cwd,
+			task: "Report fixture result.",
+		});
+		const result = await done;
+		assert.equal(result.status, "failed");
+		assert.equal(requests, 1);
+		assert.match(result.result, /Provider error: 429: Add credits at https:\/\/platform.shisa.ai\./);
+		assert.match(result.result, /\[truncated\] \(free_allowance_exhausted\)$/);
+		const providerError = result.result.split("Provider error: ")[1];
+		assert.ok(providerError.length <= 1800);
+		assert.doesNotMatch(providerError, /[\u202e\r\n]|"type":|fixture-key/);
+		assert.equal(providerError.includes("\u001b"), false);
+		assert.ok(result.result.isWellFormed());
+	} finally {
+		await manager.dispose();
+		server.closeAllConnections();
+		server.close();
+	}
+});
+
 test("real child process completes through the pinned Pi SDK and persists a recoverable session", {
 	timeout: 20000,
 }, async () => {

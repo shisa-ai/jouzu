@@ -192,7 +192,10 @@ async function runPrompt(message) {
 		textUpdate("partial");
 		send({
 			type: "message_end",
-			message: assistantMessage("partial", { stopReason: "error", errorMessage: "provider failed" }),
+			message: assistantMessage("partial", {
+				stopReason: "error",
+				errorMessage: process.env.ACP_FAKE_PROVIDER_ERROR ?? "provider failed",
+			}),
 		});
 		send({ type: "agent_settled", aborted: false });
 		pendingPrompt = undefined;
