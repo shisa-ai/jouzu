@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Keep Flow state usable when the Jouzu home folder moves or is reached through another absolute path. See [Flow control](docs/flow-control.md#branches-and-resuming).
+- Wait for another live process that is applying the profile at startup instead of exiting with a misleading "profile state is unreadable" error.
+
 ## 0.2.6 - 2026-11-16
 
 ### Added

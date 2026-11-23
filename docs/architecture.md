@@ -100,6 +100,10 @@ released by `state-lock.ts`, the state-lock primitive used by the
 updater, profile, Pi-import, keybinding, model-picker, and catalog operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and
 recovers a dead owner's or owner-unknown lock after the stale threshold.
+Startup profile convergence is the exception to an immediate refusal: when another
+live process holds `profile.lock`, a start waits up to 15 seconds, re-planning as it
+waits. It continues as soon as the profile is converged or the lock is free, and
+otherwise exits reporting that another profile operation is in progress.
 
 A subagent session's `owner.sqlite` and each workspace-writer
 `<digest>.sqlite`, which the `serialize` writer policy takes, use
