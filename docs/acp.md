@@ -43,6 +43,22 @@ Extension selection and confirmation dialogs are relayed through ACP permission 
 
 The adapter uses local Jouzu tools rather than delegating filesystem or terminal operations to the host. It rejects nonempty host MCP server lists and additional workspace directories. ACP plan updates are not emitted.
 
+## Jouzu status
+
+Jouzu publishes read-only flow-control and TextGuard state as `_jouzu/status` notifications to hosts that opt in during `initialize`:
+
+```json
+{ "clientCapabilities": { "_meta": { "jouzu": { "status": true } } } }
+```
+
+The adapter advertises the notification with `agentCapabilities._meta.jouzu.status` set to `true`. Each notification carries one key:
+
+```json
+{ "sessionId": "…", "key": "jouzu-flow", "status": { "version": 1, "enabled": true, "held": [], "withheld": [], "uncertain": [] } }
+```
+
+`key` is `jouzu-flow` or `jouzu-textguard`, and `status` is the latest state for that key; it replaces the previous one. [Flow control](flow-control.md#rpc-and-acp-clients) and [TextGuard](textguard.md#notifications) describe each payload. After `session/new` or `session/load` responds, the adapter sends the latest state the session has published for each key, then every change. Nothing in these notifications can approve content or release a hold.
+
 ## Qualification
 
 Automated tests exercise the ACP SDK client, protocol edge cases, and the full CLI-to-RPC path with a local model fixture. These checks do not certify an editor's interface behavior. Zed-specific interaction testing and native Windows/macOS qualification are separate from the Linux protocol tests.

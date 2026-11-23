@@ -7,6 +7,7 @@ import { clearSideContext } from "../side-context.js";
 import type { CatalogBundle } from "../locale-catalog.js";
 import { retiredMemberHash } from "./attempt-retention.js";
 import { type FlowProducer, retainedByReceipt } from "./controller.js";
+import { flowInputHoldReason, flowRecoveryHoldReason } from "./flow-hold-reasons.js";
 import { admissionPause, INTERRUPTED_PAUSE, isAdmissionPause, providerPause } from "./flow-pause.js";
 import type { FlowInputItem } from "./model-input.js";
 import {
@@ -996,7 +997,7 @@ export class PiSessionFlowIngress implements Ingress {
 			id,
 			record.revision,
 			{ phase, ...(input?.queue ? { queue: input.queue } : {}) },
-			"External input authorization is unavailable; review the configuration before retrying.",
+			flowInputHoldReason("external-authorization"),
 		);
 	}
 
@@ -1096,7 +1097,7 @@ export class PiSessionFlowIngress implements Ingress {
 					submission.id,
 					records.find((record) => record.id === submission.id)?.revision ?? 0,
 					{ phase, ...(input?.queue ? { queue: input.queue } : {}) },
-					"Host admission policy failed; review input before retry.",
+					flowInputHoldReason("host-policy-failed"),
 				);
 				throw error;
 			}
@@ -1202,17 +1203,17 @@ export class PiSessionFlowIngress implements Ingress {
 		state: FlowLedgerState,
 	): string | undefined {
 		const waits = branch.attachment.waits.gate();
-		if (policy.recoveryBlocked) return "host recovery is still in progress";
-		if (branch.attachment.nativeRequests.recoveryBlocked) return "a withheld request needs a decision";
+		if (policy.recoveryBlocked) return flowRecoveryHoldReason("host-recovery");
+		if (branch.attachment.nativeRequests.recoveryBlocked) return flowRecoveryHoldReason("request-decision");
 		if (state.attempts.some((attempt) => attempt.phase === "uncertain"))
-			return "an interrupted turn has an unknown outcome";
-		if (waits.updating || branch.attachment.waitProducers.updating) return "wait sources are still being reconciled";
+			return flowRecoveryHoldReason("interrupted-outcome");
+		if (waits.updating || branch.attachment.waitProducers.updating) return flowRecoveryHoldReason("wait-reconciliation");
 		if (
 			branch.recovery.unresolved > 0 ||
 			branch.sourceRecovery.unresolved > 0 ||
 			branch.waitSourceRecovery.missing.length > 0
 		)
-			return "saved work needs a recovery decision";
+			return flowRecoveryHoldReason("saved-decision");
 		return undefined;
 	}
 
