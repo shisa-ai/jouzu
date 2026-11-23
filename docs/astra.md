@@ -1,11 +1,11 @@
 # GPT-6 Astra
 
-Jouzu adds model-specific working guidance when the selected model ID is
-`gpt-6-astra` and the session uses the default system prompt. The guidance asks
-Astra to finish authorized work, carry steering across turns, keep responses
-concise, and stop expanding verification after required checks pass. Delegation
-instructions appear when the session exposes the `subagent` tool. Custom system
-prompts remain user-owned.
+Jouzu adds the same working guidance for `gpt-6-astra`, `gpt-6.1-sol`,
+`gpt-6.1-terra`, and `gpt-6.2-astra` when the session uses the default system
+prompt. It asks the model to finish authorized work, carry steering across turns,
+keep responses concise, and stop expanding verification after required checks
+pass. Delegation instructions appear when the session exposes the `subagent`
+tool. Custom system prompts remain user-owned.
 
 For configured `openai/gpt-6-astra` entries using `openai-responses` at
 `https://api.openai.com/v1`, Jouzu exposes `low`, `medium`, `high`, `xhigh`, and
@@ -25,16 +25,16 @@ ID, and endpoint.
 
 ## Task completion guidance
 
-For implementation and repair assignments, the Astra instructions ask the agent
+For implementation and repair assignments, the guidance asks the agent
 to diagnose failed checks, make authorized in-scope repairs, rerun affected checks,
 and continue toward every requested deliverable. Review-only and diagnosis-only
 requests keep their stated boundaries. The instructions prohibit weakening checks
 or silently reducing scope to obtain a passing result.
 
 For assignments with three or more independently verifiable deliverables, the
-instructions ask Astra to create an overall completion checklist covering each
+the guidance asks the agent to create an overall completion checklist covering each
 requested deliverable and verification row before implementation. In Jouzu
-sessions with task tools, Astra uses those tools selectively for bounded,
+sessions with task tools, the agent uses those tools selectively for bounded,
 coherent work packages. Cascade task progress is an execution queue: an
 `in_progress` task is prompted before pending tasks, so holds and dependencies
 use the corresponding task controls rather than an informal status or a `Next`

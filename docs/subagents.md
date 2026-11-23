@@ -8,6 +8,13 @@ The editable `orchestrator` preset applies to the main conversation. In Workflow
 
 Workflow and subagent summaries show the provider or catalog's friendly model name. The picker also shows the provider and catalog source; saved selections retain exact identifiers. Expand role or run output to inspect those identifiers.
 
+## Side conversations
+
+`/btw` uses a user-owned child session with no tools or extension resources. Its
+answers are not delegated-worker completions and do not appear in Workflow or
+wake the main agent. The Subagents switch does not disable side questions. See
+[Side conversations](side-conversations.md).
+
 ## Language inheritance
 
 Each launch or explicit resume inherits the calling agent's active response-language preference. Artifact-producing children also inherit its per-field artifact policy. Running and queued children retain their launch snapshot; staged Settings changes apply only after the next-turn boundary. UI locale does not select child language, and preservation-only or structured roles keep their output restrictions. See [Language, locale and prompt instructions](language.md#child-agents) for profile fallback, precedence and exact-text boundaries.

@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
+import { clearSideContext } from "../side-context.js";
 import type { CatalogBundle } from "../locale-catalog.js";
 import { retiredMemberHash } from "./attempt-retention.js";
 import { type FlowProducer, retainedByReceipt } from "./controller.js";
@@ -427,6 +428,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (this.disposed) throw new FlowLedgerError("stale", "Flow ingress is closed.");
 		if (this.suspended) return { flushed: 0, waits: 0 };
 		this.suspended = true;
+		if (this.session) clearSideContext(this.session);
 		this.stopReleaseNotifications();
 		await this.external.drain();
 		for (const [id, pending] of this.pending) {
@@ -1240,6 +1242,8 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	async runCommand(submission: Submission, run: () => Promise<void>): Promise<void> {
 		if (this.suspended) return run();
+		// Side Q&A owns no main input and must not hold automatic work while its panel is open.
+		if (/^\/btw(?:\s|$)/.test((submission.args[0] as string).trim())) return run();
 		const branch = this.branch();
 		try {
 			// User priority covers every await and parse below, so its release cannot be skipped by a read

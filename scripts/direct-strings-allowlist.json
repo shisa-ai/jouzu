@@ -1,5 +1,12 @@
 [
 	{
+		"file": "packages/cli/src/side-conversation.ts",
+		"kind": "apply-argument",
+		"text": "→ {…}",
+		"category": "protected-values",
+		"reason": "Selection arrow preceding an already localized action label."
+	},
+	{
 		"file": "packages/session-ui/src/contracts.ts",
 		"kind": "record-value",
 		"text": "Manage tasks — view, create, clear completed. '/tasks auto' enters auto-advance mode.",

@@ -1,6 +1,8 @@
+const MODELS_WITH_FOLLOW_THROUGH_GUIDANCE = new Set(["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6.2-astra"]);
+
 /** Model-specific behavior guidance; protocol compatibility is handled separately. */
 export function buildModelGuidance(modelId: string | undefined, selectedTools: readonly string[] = []): string {
-	if (modelId !== "gpt-6-astra") return "";
+	if (!modelId || !MODELS_WITH_FOLLOW_THROUGH_GUIDANCE.has(modelId)) return "";
 	const guidance = [
 		"Treat 'can you' and 'help me' as requests to do the work. Diagnose and fix issues within the requested scope, then verify the fixes. Carry authorized work through implementation and required verification; do not substitute a plan, acknowledgement, or offer to continue. Resolve routine choices from context. Ask only when missing information affects correctness or authorization, and continue independent work while awaiting an answer. Respect diagnosis-only, review-only, pause, and cancellation requests.",
 		"For three or more independently verifiable deliverables, keep a completion checklist covering every requested deliverable, matrix row, file, command, test, gate, and external action. Preserve it across turns and compaction. After an intermediate result, continue to the next unfinished requirement. Record concrete blockers and their clearing actions; plans and status reports do not complete checklist items.",
