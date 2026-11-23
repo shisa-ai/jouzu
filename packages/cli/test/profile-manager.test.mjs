@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import fs, { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { syncBuiltinESMExports } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { Worker } from "node:worker_threads";
 import {
 	applyProfile,
+	ProfileBusyError,
 	ProfileConflictError,
 	ProfileStateError,
 	planProfile,
@@ -339,6 +342,127 @@ test("an existing operation lock is preserved", () => {
 		writeFileSync(lock, "other operation\n");
 		assert.throws(() => applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0"), ProfileStateError);
 		assert.equal(readFileSync(lock, "utf8"), "other operation\n");
+	} finally {
+		cleanup(fixture.root);
+	}
+});
+
+function liveLock(stateDir) {
+	mkdirSync(stateDir, { recursive: true, mode: 0o700 });
+	const lock = join(stateDir, "profile.lock");
+	const record = `${JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString(), token: "other" })}\n`;
+	writeFileSync(lock, record, { mode: 0o600 });
+	return { lock, record };
+}
+
+/** Run `body` on another thread after `delayMs`, while the caller is blocked in a synchronous wait. */
+function later(delayMs, body, data) {
+	const source = `const { workerData } = require("node:worker_threads"); const fs = require("node:fs");
+		Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ${delayMs});
+		(${body.toString()})(workerData, fs);`;
+	const worker = new Worker(source, { eval: true, workerData: data });
+	return new Promise((resolve, reject) => {
+		worker.once("error", reject);
+		worker.once("exit", resolve);
+	});
+}
+
+test("a start waits for a live profile owner and finds the profile converged", async () => {
+	const converged = temporary();
+	const fixture = temporary();
+	try {
+		applyProfile(loadBundledProfile("core"), converged.paths, "0.1.0");
+		const { lock, record } = liveLock(fixture.paths.stateDir);
+		// The other process finishes applying the same profile while still holding its lock.
+		const owner = later(
+			300,
+			({ from, to }, fs) => {
+				fs.cpSync(from.agentDir, to.agentDir, { recursive: true });
+				fs.copyFileSync(from.profileStatePath, to.profileStatePath);
+			},
+			{ from: converged.paths, to: fixture.paths },
+		);
+		const result = applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, { lockWaitMs: 10_000 });
+		await owner;
+		assert.equal(result.changed, false);
+		assert.equal(result.plan.actions.length, 0);
+		assert.equal(readFileSync(lock, "utf8"), record);
+	} finally {
+		cleanup(converged.root);
+		cleanup(fixture.root);
+	}
+});
+
+test("a start waits for a live profile owner to release the lock and then applies", async () => {
+	const fixture = temporary();
+	try {
+		const { lock } = liveLock(fixture.paths.stateDir);
+		const owner = later(300, ({ lock }, fs) => fs.unlinkSync(lock), { lock });
+		const result = applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, { lockWaitMs: 10_000 });
+		await owner;
+		assert.equal(result.changed, true);
+		assert.equal(existsSync(lock), false);
+		assert.equal(planProfile(loadBundledProfile("core"), fixture.paths, "0.1.0").actions.length, 0);
+	} finally {
+		cleanup(fixture.root);
+	}
+});
+
+test("Windows EPERM creating profile.lock retries and reports a busy profile", (t) => {
+	const fixture = temporary();
+	const profile = loadBundledProfile("core");
+	const lock = join(fixture.paths.stateDir, "profile.lock");
+	const platform = Object.getOwnPropertyDescriptor(process, "platform");
+	const started = Date.now();
+	const lockWaitMs = 200;
+	const attempts = [];
+	const open = fs.openSync;
+	let elapsed = 0;
+	const now = t.mock.method(Date, "now", () => started + elapsed);
+	const wait = t.mock.method(Atomics, "wait", (_buffer, _index, _expected, ms) => {
+		assert.ok(ms > 0);
+		elapsed += ms;
+		return "timed-out";
+	});
+	const create = t.mock.method(fs, "openSync", (path, flags, ...args) => {
+		if (path !== lock || flags !== "wx") return open(path, flags, ...args);
+		attempts.push(elapsed);
+		throw Object.assign(new Error("lock deletion is in progress"), { code: "EPERM" });
+	});
+	try {
+		Object.defineProperty(process, "platform", { ...platform, value: "win32" });
+		syncBuiltinESMExports();
+		assert.throws(
+			() => applyProfile(profile, fixture.paths, "0.1.0", undefined, { lockWaitMs }),
+			(error) => error instanceof ProfileBusyError && error.message.includes(lock),
+		);
+		assert.ok(wait.mock.callCount() > 0);
+		assert.equal(attempts[0], 0);
+		assert.ok(attempts.length > 1, "the lock creation was retried");
+		assert.ok(attempts.at(-1) >= lockWaitMs, "the busy error waited for the deadline");
+		assert.equal(existsSync(fixture.paths.profileStatePath), false);
+		assert.equal(existsSync(lock), false);
+	} finally {
+		Object.defineProperty(process, "platform", platform);
+		create.mock.restore();
+		syncBuiltinESMExports();
+		wait.mock.restore();
+		now.mock.restore();
+		cleanup(fixture.root);
+	}
+});
+
+test("a live profile owner that keeps the lock ends the wait with a busy error, not a repair hint", () => {
+	const fixture = temporary();
+	try {
+		const { lock, record } = liveLock(fixture.paths.stateDir);
+		const started = Date.now();
+		assert.throws(
+			() => applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, { lockWaitMs: 300 }),
+			(error) => error instanceof ProfileBusyError && !(error instanceof ProfileStateError),
+		);
+		assert.ok(Date.now() - started >= 300);
+		assert.equal(readFileSync(lock, "utf8"), record);
 	} finally {
 		cleanup(fixture.root);
 	}

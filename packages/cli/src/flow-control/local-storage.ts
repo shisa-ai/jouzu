@@ -46,6 +46,23 @@ export async function reconcileFlowStateVersion(directory: string): Promise<stri
 	return isolated;
 }
 
+/**
+ * A journal records the absolute folder it was created in. Its identity is the folder's location
+ * inside the flow root: the owner's digest folder and the store folder that holds it. A home that
+ * was moved, copied, or reached through another absolute path keeps that identity, so the
+ * comparison uses only those last two components of either path style.
+ */
+function sameFlowLocation(recorded: string, directories: readonly string[]): boolean {
+	const tail = (path: string) =>
+		path
+			.split(/[\\/]+/u)
+			.filter(Boolean)
+			.slice(-2)
+			.join("/");
+	const recordedTail = tail(recorded);
+	return recordedTail.includes("/") && directories.some((directory) => tail(directory) === recordedTail);
+}
+
 /** Called only inside the per-branch writer reservation. Preserve existing journal paths and records. */
 export async function openLocalFlowSession(
 	directory: string,
@@ -86,7 +103,7 @@ export async function openLocalFlowSession(
 			header.storageVersion !== 1 ||
 			header.id !== "flow" ||
 			typeof header.cwd !== "string" ||
-			(header.cwd !== directory && !acceptedDirectories.includes(header.cwd)) ||
+			!sameFlowLocation(header.cwd, [directory, ...acceptedDirectories]) ||
 			!Number.isSafeInteger(header.createdAt) ||
 			Number(header.createdAt) < 0
 		)
@@ -99,7 +116,7 @@ export async function openLocalFlowSession(
 		validateMetadata: (metadata) => {
 			if (
 				metadata.id !== "flow" ||
-				(metadata.cwd !== directory && !acceptedDirectories.includes(metadata.cwd)) ||
+				!sameFlowLocation(metadata.cwd, [directory, ...acceptedDirectories]) ||
 				metadata.path !== path
 			)
 				throw new FlowOwnershipError("storage", "Flow session metadata is missing or inconsistent.");

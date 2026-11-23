@@ -395,28 +395,71 @@ function stateBytes(profile: ResolvedProfile, jouzuVersion: string, transactionI
 	return Buffer.from(`${JSON.stringify(state, null, 2)}\n`);
 }
 
+/** How long a start waits for another live process that is applying the same profile. */
+export const PROFILE_LOCK_WAIT_MS = 15_000;
+const PROFILE_LOCK_POLL_MS = 100;
+
+/** Another live process kept the profile lock for the whole bounded wait. Nothing is damaged. */
+export class ProfileBusyError extends Error {
+	readonly exitCode = 1;
+	constructor(message: string) {
+		super(message);
+		this.name = "ProfileBusyError";
+	}
+}
+
+class ProfileLockHeldLive extends Error {}
+
+function pause(ms: number): void {
+	Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
 export function applyProfile(
 	profile: ResolvedProfile,
 	paths: JouzuPaths,
 	jouzuVersion: string,
 	catalog: CatalogBundle = defaultCatalog(),
+	options: { lockWaitMs?: number } = {},
 ): ApplyProfileResult {
 	const initialPlan = planProfile(profile, paths, jouzuVersion, catalog);
 	if (initialPlan.actions.some((action) => action.type === "conflict")) throw new ProfileConflictError(initialPlan);
 	if (initialPlan.actions.length === 0) return { changed: false, plan: initialPlan };
 
 	ensurePrivateDirectory(paths.stateDir);
-	const releaseLock = acquireStateLock({
-		path: join(paths.stateDir, "profile.lock"),
-		staleMs: STATE_LOCK_STALE_MS,
-		describe: "profile",
-		onBusy: (inspection) =>
-			new ProfileStateError(
-				inspection.status === "invalid"
-					? "profile.lock is not a regular lock file"
-					: catalogText(catalog, PROFILE_LOCK_BUSY_ID),
-			),
-	});
+	// Concurrent starts converge the same profile. A start that finds a live owner waits for it and
+	// re-plans: the owner has usually applied everything already, so there is nothing left to do.
+	const deadline = Date.now() + (options.lockWaitMs ?? PROFILE_LOCK_WAIT_MS);
+	let releaseLock: () => void;
+	for (;;) {
+		try {
+			releaseLock = acquireStateLock({
+				path: join(paths.stateDir, "profile.lock"),
+				staleMs: STATE_LOCK_STALE_MS,
+				describe: "profile",
+				onBusy: (inspection) =>
+					inspection.status === "held-live"
+						? new ProfileLockHeldLive()
+						: new ProfileStateError(
+								inspection.status === "invalid"
+									? "profile.lock is not a regular lock file"
+									: catalogText(catalog, PROFILE_LOCK_BUSY_ID),
+							),
+			});
+			break;
+		} catch (error) {
+			if (!(error instanceof ProfileLockHeldLive)) throw error;
+			// Name the lock, so a lock whose owner is not really Jouzu can be found and removed.
+			if (Date.now() >= deadline)
+				throw new ProfileBusyError(
+					`${catalogText(catalog, PROFILE_LOCK_BUSY_ID)} (${join(paths.stateDir, "profile.lock")})`,
+				);
+			pause(PROFILE_LOCK_POLL_MS);
+			// The owner may be between writes, so only a converged plan ends the wait early; conflicts
+			// are judged under the lock.
+			const plan = planProfile(profile, paths, jouzuVersion, catalog);
+			if (plan.actions.length === 0) return { changed: false, plan };
+		}
+	}
 	try {
 		const plan = planProfile(profile, paths, jouzuVersion, catalog);
 		if (plan.actions.some((action) => action.type === "conflict")) throw new ProfileConflictError(plan);
