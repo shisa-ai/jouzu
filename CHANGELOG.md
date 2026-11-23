@@ -6,6 +6,10 @@
 
 - Publish read-only TextGuard and flow-control state as JSON status (`jouzu-textguard`, `jouzu-flow`) to RPC clients, and to ACP hosts that opt in, as `_jouzu/status` notifications: mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications), [Flow control](docs/flow-control.md#rpc-and-acp-clients), and [ACP](docs/acp.md#jouzu-status).
 
+### Changed
+
+- Retry transient provider failures for up to 50 attempts with jittered backoff: 1s, 2s, 4s, 15s, 30s, 60s, 2m, 4m, then 8m. Compaction, branch summaries, and bug-report summaries keep a 3-retry, 60-second budget. See [Configuration](docs/configuration.md#provider-retries).
+
 ### Fixed
 
 - Send TextGuard messages to RPC and ACP clients as notifications instead of stderr.

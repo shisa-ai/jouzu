@@ -68,6 +68,36 @@ export function transform(path, source) {
 			"return mode !== undefined && CACHE_WARMING_MODES.includes(mode) ? mode : SETTINGS_DEFAULTS.cacheWarming;",
 			'return mode !== undefined && CACHE_WARMING_MODES.includes(mode) ? mode : "off";',
 		);
+	} else if (path === "dist/core/settings-defaults.js") {
+		change(
+			`    retry: {
+        enabled: true,
+        maxRetries: 3,
+        baseDelayMs: 2000,
+        maxAgentDelayMs: DEFAULT_MAX_AGENT_RETRY_DELAY_MS,
+        provider: {
+            maxRetryDelayMs: 60000,
+        },
+    },`,
+			`    retry: {
+        enabled: true,
+        maxRetries: 50,
+        baseDelayMs: 1000,
+        maxAgentDelayMs: 480000,
+        provider: {
+            maxRetryDelayMs: 60000,
+        },
+    },`,
+		);
+	} else if (path === "dist/core/settings-defaults.d.ts") {
+		change("    readonly maxRetries: 3;", "    readonly maxRetries: 50;");
+		change("    readonly baseDelayMs: 2000;", "    readonly baseDelayMs: 1000;");
+		change("    readonly maxAgentDelayMs: 60000;", "    readonly maxAgentDelayMs: 480000;");
+	} else if (path === "dist/core/settings-schema.js") {
+		change(
+			'        description: "Exponential backoff base delay in milliseconds: 2s, 4s, 8s.",',
+			'        description: "Exponential backoff base delay in milliseconds: 1s, 2s, 4s, then a steeper ramp up to the agent delay cap.",',
+		);
 	} else if (path === "dist/core/cache-warmer.js") {
 		change(
 			`            const message = await this.models
@@ -723,6 +753,60 @@ export function sessionEntryToContextMessages(entry) {`,
 		change(
 			'        if (trigger.messageType === "custom") {\n            messages.push(trigger.message);\n        }\n        else {',
 			'        if (trigger.messageType === "custom") {\n            messages.push(trigger.message);\n        }\n        else if (trigger.messageType !== "queued") {',
+		);
+		// Agent-turn retries use a longer, jittered ramp than Pi's default. Summaries keep a short
+		// budget so a stalled compaction cannot hold the session for the agent-turn budget.
+		change(
+			"        const delayMs = retryDelayMs(settings, this._retryAttempt);",
+			"        const delayMs = this._agentRetryDelayMs(settings, this._retryAttempt);",
+		);
+		change(
+			`    /**
+     * Prepare a retryable error for continuation with exponential backoff.
+     * @returns true if the caller should continue the agent, false otherwise
+     */
+    async _prepareRetry(message) {`,
+			`    /**
+     * Delay before an agent-turn retry. The first three attempts stay quick, then the delay grows
+     * steeply to the configured cap. Jitter keeps concurrent sessions from retrying in lockstep.
+     */
+    _agentRetryDelayMs(settings, attempt) {
+        const multipliers = [1, 2, 4, 15, 30, 60, 120, 240, 480];
+        const multiplier = multipliers[Math.min(Math.max(0, attempt - 1), multipliers.length - 1)];
+        const cap = settings.maxAgentDelayMs ?? 480000;
+        const scheduled = Math.min(settings.baseDelayMs * multiplier, cap);
+        return Math.min(cap, Math.round(scheduled * (0.75 + Math.random() * 0.5)));
+    }
+    /**
+     * Retry policy for compaction, branch summaries, and bug-report summaries. They share the
+     * transient-error classifier but not the long agent-turn budget: a stalled summary should
+     * surface instead of holding the session for hours.
+     */
+    _summarizationRetrySettings() {
+        const settings = this.settingsManager.getRetrySettings();
+        return {
+            ...settings,
+            maxRetries: Math.min(settings.maxRetries, 3),
+            maxAgentDelayMs: Math.min(settings.maxAgentDelayMs, 60000),
+        };
+    }
+    /**
+     * Prepare a retryable error for continuation with exponential backoff.
+     * @returns true if the caller should continue the agent, false otherwise
+     */
+    async _prepareRetry(message) {`,
+		);
+		change(
+			'        return compact(preparation, request.model, request.apiKey, request.headers, customInstructions, signal, request.thinkingLevel, this.agent.streamFunction, request.env, this.settingsManager.getRetrySettings(), this._summarizationRetryCallbacks({ source: "compaction", reason }), undefined);',
+			'        return compact(preparation, request.model, request.apiKey, request.headers, customInstructions, signal, request.thinkingLevel, this.agent.streamFunction, request.env, this._summarizationRetrySettings(), this._summarizationRetryCallbacks({ source: "compaction", reason }), undefined);',
+		);
+		change(
+			"                    retry: this.settingsManager.getRetrySettings(),",
+			"                    retry: this._summarizationRetrySettings(),",
+		);
+		change(
+			"            retry: this.settingsManager.getRetrySettings(),",
+			"            retry: this._summarizationRetrySettings(),",
 		);
 		change(
 			"    async _startRun(trigger, onStarted) {",
@@ -2060,5 +2144,8 @@ export const paths = [
 	"dist/core/model-runtime.d.ts",
 	"dist/core/cache-warmer.js",
 	"dist/core/settings-manager.js",
+	"dist/core/settings-defaults.js",
+	"dist/core/settings-defaults.d.ts",
+	"dist/core/settings-schema.js",
 	"dist/core/system-prompt.js",
 ];

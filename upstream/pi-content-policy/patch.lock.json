@@ -73,7 +73,7 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "ee756f6f74afe9f8930ebf216c95334605d913a275a0eec2c9702f101baef3c3",
-			"after": "9966e02a0907848d12b4a92fdc3be54640bbbb4d9db36ad2a8c1dcb0e6a09426"
+			"after": "05e86a57e5db996e89f5469900bc78302e31260fd36c12e484c9193ccef660af"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "56d24887a400d77a77b428deb1cce25576cac27e18089e722f536d600fa32c3a",
@@ -142,6 +142,18 @@
 		"dist/core/settings-manager.js": {
 			"before": "66edb495ff9767e7f2ce0d2f4e2d102532e4b396ad7bc7c3c648c7c12c0fe71d",
 			"after": "df0056b52df36dc3b54f9c49d5fad2c642e11b82231226a177e1f38f2477f504"
+		},
+		"dist/core/settings-defaults.js": {
+			"before": "e0567d94626f760007fd3511df8a4556c571d8e882b8fe8c2b69c87dbcb094e0",
+			"after": "17a894d2ab4eaa5c3495e169d1e0fba7cb36dbd61c94d8d72b5327ce20ff721f"
+		},
+		"dist/core/settings-defaults.d.ts": {
+			"before": "3797deac77ce0a8a85ec6544d313c716ca981ba633c6a86b97a7aa4766f493c4",
+			"after": "732e09b85f87031a5e3c05364951b53a323f48fc6e1e24e890e5a999a4ab3852"
+		},
+		"dist/core/settings-schema.js": {
+			"before": "d6cd7270a3421b5ab435eae10f9d08ef0c6995ee63f64e300b52ad94de9dab22",
+			"after": "bd5c679e25a86b6328147f8d4c33324d99d2e340fcf316237cb854b18ead5937"
 		},
 		"dist/core/system-prompt.js": {
 			"before": "5f68e89c31ba3d4d1af8ad2bfd0c7c548879d47ee6ab4aabee50a826100da32c",
