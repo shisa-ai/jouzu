@@ -1,6 +1,7 @@
 import type { ExtensionContext, ExtensionFactory, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type Component, type TUI, truncateToWidth, visibleWidth, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogMessageId, catalogText, defaultCatalog } from "./cli-messages.js";
+import { TEXTGUARD_STATUS_KEY } from "./client-status.js";
 import { protectedCommand } from "./human-messages.js";
 import { formatEffectiveKeybinding } from "./keybinding-hints.js";
 import type { CatalogBundle } from "./locale-catalog.js";
@@ -556,8 +557,7 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 	};
 }
 
-/** Status key under which clients without a terminal receive TextGuard state as JSON. */
-export const TEXTGUARD_STATUS_KEY = "jouzu-textguard";
+export { TEXTGUARD_STATUS_KEY };
 
 /** Read-only TextGuard state for clients: the mode and the items waiting for a user decision. */
 export interface TextGuardStatus {
@@ -693,7 +693,11 @@ export function createTextGuardReviewExtension(
 				notify(ctx, msg(CatalogMessageId.textguardReviewPendingSummary, { count: pending.length, advice }));
 			}
 		};
-		pi.on("session_start", report);
+		pi.on("session_start", (event, ctx) => {
+			// A new or resumed session may reach a client that cleared its statuses, so the first state is always sent.
+			lastState = "";
+			report(event, ctx);
+		});
 		pi.on("agent_end", report);
 		pi.registerCommand("textguard", {
 			description: catalogText(catalog, CHROME_MESSAGE_ID.commandDescription),
