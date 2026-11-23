@@ -665,6 +665,9 @@ export function createCanonicalBackgroundStore(deps: CanonicalBackgroundStoreDep
 		const sessionId = deps.sessionId();
 		const path = storePath();
 		if (!sessionId || !path) throw new Error("No active session owns the background store.");
+		// A session that never ran a background task has nothing to record. Creating its
+		// store would leave files behind for every session that is opened and closed unused.
+		if (!priorState() && deps.tasks().length === 0 && deps.results().length === 0) return;
 		const next = buildState(sessionId);
 		commitCanonicalStore(path, next, io);
 		state = next;

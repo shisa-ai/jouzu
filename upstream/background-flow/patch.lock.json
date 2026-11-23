@@ -5,7 +5,7 @@
 	"commit": "1ab9fef053de921ea9d1741bf547cfed47808147",
 	"runtime": "e7ead6229ba83c20924f29fa8d6258631df017c72e2533d11515285b2a12c04d",
 	"previousRuntime": "5b598ab5687b19a6898ab46a6b50f2ec4e5951e6a6caaeba887cb9d8e2222707",
-	"store": "ccac3ac61ebf21e09e6af97a48b9bcf5ba02c696664528c523cd833ba18ec357",
+	"store": "a1d27471d3fd013dc5d6c79dffb2fe94a4276fe555e2e225ce0de166b4dc4c8e",
 	"files": {
 		"extensions/background-tasks.ts": {
 			"before": "e2ebf180ebaff5d627d4bd8658224ded0eebc6f38f008fc75bff567faa37c088",
