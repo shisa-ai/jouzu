@@ -4,6 +4,7 @@ import fs, { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSy
 import { syncBuiltinESMExports } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { performance } from "node:perf_hooks";
 import { test } from "node:test";
 import { Worker } from "node:worker_threads";
 import {
@@ -367,27 +368,40 @@ function later(delayMs, body, data) {
 	});
 }
 
-test("a start waits for a live profile owner and finds the profile converged", async () => {
+test("a start waits for a live profile owner and finds the profile converged", (t) => {
 	const converged = temporary();
 	const fixture = temporary();
+	const now = Date.now;
+	let wallStepMs = 0;
+	const clock = t.mock.method(Date, "now", () => now() + wallStepMs);
+	let polls = 0;
 	try {
 		applyProfile(loadBundledProfile("core"), converged.paths, "0.1.0");
 		const { lock, record } = liveLock(fixture.paths.stateDir);
-		// The other process finishes applying the same profile while still holding its lock.
-		const owner = later(
-			300,
-			({ from, to }, fs) => {
-				fs.cpSync(from.agentDir, to.agentDir, { recursive: true });
-				fs.copyFileSync(from.profileStatePath, to.profileStatePath);
-			},
-			{ from: converged.paths, to: fixture.paths },
-		);
-		const result = applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, { lockWaitMs: 10_000 });
-		await owner;
-		assert.equal(result.changed, false);
-		assert.equal(result.plan.actions.length, 0);
-		assert.equal(readFileSync(lock, "utf8"), record);
+		const wait = t.mock.method(Atomics, "wait", () => {
+			polls++;
+			// Step the wall clock while the live owner still has work left. Converge only after
+			// another poll confirms the same owner is still live and the wait has not timed out.
+			if (polls === 1) wallStepMs = 75_000;
+			if (polls === 2) {
+				fs.cpSync(converged.paths.agentDir, fixture.paths.agentDir, { recursive: true });
+				fs.copyFileSync(converged.paths.profileStatePath, fixture.paths.profileStatePath);
+			}
+			return "timed-out";
+		});
+		try {
+			const result = applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, {
+				lockWaitMs: 10_000,
+			});
+			assert.equal(polls, 2);
+			assert.equal(result.changed, false);
+			assert.equal(result.plan.actions.length, 0);
+			assert.equal(readFileSync(lock, "utf8"), record);
+		} finally {
+			wait.mock.restore();
+		}
 	} finally {
+		clock.mock.restore();
 		cleanup(converged.root);
 		cleanup(fixture.root);
 	}
@@ -413,12 +427,11 @@ test("Windows EPERM creating profile.lock retries and reports a busy profile", (
 	const profile = loadBundledProfile("core");
 	const lock = join(fixture.paths.stateDir, "profile.lock");
 	const platform = Object.getOwnPropertyDescriptor(process, "platform");
-	const started = Date.now();
 	const lockWaitMs = 200;
 	const attempts = [];
 	const open = fs.openSync;
 	let elapsed = 0;
-	const now = t.mock.method(Date, "now", () => started + elapsed);
+	const now = t.mock.method(performance, "now", () => elapsed);
 	const wait = t.mock.method(Atomics, "wait", (_buffer, _index, _expected, ms) => {
 		assert.ok(ms > 0);
 		elapsed += ms;

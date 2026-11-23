@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, unlinkSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
+import { performance } from "node:perf_hooks";
 import { CatalogMessageId, type CatalogRenderOptions, catalogText, defaultCatalog } from "./cli-messages.js";
 import { CommandReport, type CommandReportEntry } from "./command-report.js";
 import type { CatalogBundle } from "./locale-catalog.js";
@@ -428,7 +429,7 @@ export function applyProfile(
 	ensurePrivateDirectory(paths.stateDir);
 	// Concurrent starts converge the same profile. A start that finds a live owner waits for it and
 	// re-plans: the owner has usually applied everything already, so there is nothing left to do.
-	const deadline = Date.now() + (options.lockWaitMs ?? PROFILE_LOCK_WAIT_MS);
+	const deadline = performance.now() + (options.lockWaitMs ?? PROFILE_LOCK_WAIT_MS);
 	let releaseLock: () => void;
 	for (;;) {
 		try {
@@ -449,7 +450,7 @@ export function applyProfile(
 		} catch (error) {
 			if (!(error instanceof ProfileLockHeldLive)) throw error;
 			// Name the lock, so a lock whose owner is not really Jouzu can be found and removed.
-			if (Date.now() >= deadline)
+			if (performance.now() >= deadline)
 				throw new ProfileBusyError(
 					`${catalogText(catalog, PROFILE_LOCK_BUSY_ID)} (${join(paths.stateDir, "profile.lock")})`,
 				);
