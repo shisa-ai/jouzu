@@ -11,6 +11,7 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
+import { performance } from "node:perf_hooks";
 import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 
 /** Stale threshold after which a dead or owner-unknown lock may be recovered. */
@@ -100,10 +101,9 @@ export function inspectStateLock(path: string, now: Date): StateLockInspection {
 			return { exists: true, status: "owner-unknown", ageMs: now.getTime() - metadata.mtimeMs };
 		}
 		const ageMs = now.getTime() - Date.parse(record.startedAt);
-		// A lock naming this process's PID but taken before this process started was left by an earlier
-		// process that had the same PID, as happens in containers that restart with fixed PIDs.
-		const reusedPid =
-			record.pid === process.pid && Date.parse(record.startedAt) < Date.now() - process.uptime() * 1000 - 1000;
+		// A lock naming this PID from before process startup may belong to an earlier process.
+		// Use the fixed startup timestamp so a wall-clock step cannot move the cutoff between polls.
+		const reusedPid = record.pid === process.pid && Date.parse(record.startedAt) < performance.timeOrigin - 1000;
 		return {
 			exists: true,
 			status: !reusedPid && pidIsAlive(record.pid) ? "held-live" : "held-dead",
