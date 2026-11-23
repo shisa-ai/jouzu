@@ -158,16 +158,67 @@ export function piTranscriptBranchOwners(manager: SessionManager): Set<string> {
 	return owners;
 }
 
+/**
+ * Write the marker of a first branch that `bindPiFlowBranch` left unbound, and bind its position.
+ * The marker is durable in the Pi transcript before the registry records it.
+ */
+export async function bindPiFlowInitialMarker(registry: PiFlowSessionRegistry, manager: SessionManager): Promise<void> {
+	await registry.run(async () => {
+		const state = await registry.snapshot();
+		assertSession(state, manager);
+		const branch = state.branches.find((record) => record.id === state.activeBranchId);
+		if (!branch) throw new FlowLedgerError("schema", "Active branch record is missing.");
+		if (branch.position) return;
+		if (state.transition || !neverNavigated(state))
+			throw new FlowLedgerError("identity", "Unbound branch marker cannot establish initial ownership.");
+		// A marker this attachment appended before a failed flush is reused: flushing it again makes it
+		// durable, and a second marker would leave the first one unowned.
+		const existing = latestMarker(manager);
+		if (
+			existing &&
+			(existing.data.sessionId !== state.sessionId ||
+				existing.data.branchId !== branch.id ||
+				existing.data.transitionId !== undefined)
+		)
+			throw new FlowLedgerError("identity", "Unbound branch marker cannot establish initial ownership.");
+		// Entries recorded since the session opened are settings such as a session name, or messages
+		// sent while flow control was off; navigation stores the session before it moves, so the
+		// branch still starts where the session did.
+		let marker = existing;
+		if (marker) manager.flush();
+		else marker = appendMarker(manager, { version: 1, sessionId: state.sessionId, branchId: branch.id });
+		const position = await evidence(manager, marker);
+		await registry.bindInitialPosition(state.revision, position, marker.parentId ?? null);
+		await assertRegistry(registry, { sessionId: state.sessionId, branchId: branch.id }, state.revision + 1);
+	});
+}
+
 /** Reconcile an owned registry with the active Pi transcript before attaching a controller. */
 export async function bindPiFlowBranch(
 	registry: PiFlowSessionRegistry,
 	manager: SessionManager,
 	onRebuiltRegistry?: (droppedStatePath?: string) => void,
+	deferMarker = false,
+	/** Whether a branch has flow storage. Without it, every branch is assumed to have some. */
+	branchStored: (branchId: string) => boolean = () => true,
 ): Promise<FlowScope> {
 	return registry.run(async () => {
 		const state = await registry.snapshot();
 		assertSession(state, manager);
 		let marker = latestMarker(manager);
+		const initial = state.branches.find((record) => record.id === state.activeBranchId);
+		// A new session's first branch needs no marker until it has something to record: writing it
+		// would create a transcript file for a session nobody used. `bindPiFlowInitialMarker` writes it.
+		if (
+			deferMarker &&
+			!state.transition &&
+			!marker &&
+			initial &&
+			!initial.position &&
+			neverNavigated(state) &&
+			manager.getLeafId() === initial.enteredAtLeafId
+		)
+			return { sessionId: state.sessionId, branchId: initial.id };
 		const pending = state.transition;
 		if (pending) {
 			if (marker && marker.data.branchId === pending.branchId && marker.data.transitionId === pending.id) {
@@ -245,8 +296,15 @@ export async function bindPiFlowBranch(
 			// writes the marker as its branch position, so this is what a registry from an earlier
 			// version looks like. The marker is the durable evidence and the registry is derived, so
 			// rebuild from the marker and report the dropped state rather than refusing to open.
-			const rebuilt = await registry.rebuildFromMarker(marker.data.branchId, marker.parentId ?? null, position);
-			onRebuiltRegistry?.(rebuilt.isolated);
+			// A first save that stopped after the marker leaves no registry and no branch storage, so the new
+			// registry takes the marker's branch without reporting a drop. Anything else lost real state.
+			const adopted =
+				!branchStored(marker.data.branchId) &&
+				(await registry.adoptInitialMarker(marker.data.branchId, marker.parentId ?? null, position));
+			if (!adopted) {
+				const rebuilt = await registry.rebuildFromMarker(marker.data.branchId, marker.parentId ?? null, position);
+				onRebuiltRegistry?.(rebuilt.isolated);
+			}
 			revision = state.revision + 1;
 			active = (await registry.snapshot()).branches[0];
 		}

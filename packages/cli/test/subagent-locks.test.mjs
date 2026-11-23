@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
 import { once } from "node:events";
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
@@ -233,6 +233,8 @@ test("a failed writer-lock release fails completed and queued runs and rejects f
 test("a failed owner-lock release rejects disposal and retains ownership", async (t) => {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-owner-release-")));
 	const paths = { cwd: root, stateDir: join(root, "state") };
+	// A session that already has child-agent state takes ownership when it attaches.
+	mkdirSync(join(paths.stateDir, "subagents", pathDigest("parent")), { recursive: true });
 	const manager = new SubagentManager(paths, "parent", 1);
 	manager.attach();
 	const lock = manager.releaseOwner;
@@ -291,4 +293,17 @@ test("a child's flow storage path stays inside the Windows SQLite limit", () => 
 		"owner.sqlite",
 	);
 	assert.ok(lockPath.length < 250, `child flow lock path is ${lockPath.length} characters: ${lockPath}`);
+});
+
+test("a session that never started a child agent writes no subagent state", async () => {
+	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-owner-unused-")));
+	const paths = { cwd: root, stateDir: join(root, "state") };
+	const manager = new SubagentManager(paths, "parent", 1);
+	try {
+		manager.attach();
+		await manager.dispose();
+		assert.equal(existsSync(join(paths.stateDir, "subagents")), false);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });

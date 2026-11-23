@@ -1,7 +1,7 @@
 import { readdir, readFile, rename, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ensurePrivateDirectory } from "../private-fs.js";
-import { createJournalSession, openJournalSession } from "./journal-storage.js";
+import { createJournalSession, type DeferredJournal, openJournalSession } from "./journal-storage.js";
 import { FlowOwnershipError } from "./ownership.js";
 import type { Session } from "./scalar-storage.js";
 
@@ -63,6 +63,23 @@ function sameFlowLocation(recorded: string, directories: readonly string[]): boo
 	return recordedTail.includes("/") && directories.some((directory) => tail(directory) === recordedTail);
 }
 
+/** The journal file a new branch directory gets, at the same place a fresh open would create it. */
+function newJournalPath(directory: string): { path: string; createdAt: number } {
+	const root = join(directory, "sessions");
+	const folder = join(root, "flow");
+	ensurePrivateDirectory(root, folder);
+	const createdAt = Date.now();
+	const filename = `${new Date(createdAt).toISOString().replace(/[:.]/g, "-")}_flow.jsonl`;
+	return { path: join(folder, filename), createdAt };
+}
+
+/** Write a deferred journal into a newly claimed flow directory. Called inside its writer reservation. */
+export async function materializeLocalFlowSession(journal: DeferredJournal, directory: string): Promise<void> {
+	if (journal.materialized) return;
+	const { path, createdAt } = newJournalPath(directory);
+	await journal.materialize(path, { id: "flow", cwd: directory, createdAt });
+}
+
 /** Called only inside the per-branch writer reservation. Preserve existing journal paths and records. */
 export async function openLocalFlowSession(
 	directory: string,
@@ -84,11 +101,8 @@ export async function openLocalFlowSession(
 	}
 	const path = files[0];
 	if (!path) {
-		const folder = join(root, "flow");
-		ensurePrivateDirectory(root, folder);
-		const createdAt = Date.now();
-		const filename = `${new Date(createdAt).toISOString().replace(/[:.]/g, "-")}_flow.jsonl`;
-		return createJournalSession(join(folder, filename), { id: "flow", cwd: directory, createdAt });
+		const created = newJournalPath(directory);
+		return createJournalSession(created.path, { id: "flow", cwd: directory, createdAt: created.createdAt });
 	}
 	// Validate identity before opening can repair a torn tail or compact the journal.
 	let header: Record<string, unknown>;

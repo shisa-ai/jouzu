@@ -170,7 +170,7 @@ test("many progress updates coalesce to one bounded store write and no transcrip
 test("force commits before the marker and retries a failed marker append idempotently", async (t) => {
 	const { store } = await loadStore(t);
 	const { file } = await temporaryStore(t);
-	const options = newOptions(file, { failMarker: true });
+	const options = newOptions(file, { failMarker: true, tasks: () => [snapshot()] });
 	const adapter = adapterFor(store, options);
 	assert.deepEqual(adapter.persist("force"), { appendEntry: true, sidecar: true, appendReason: "appended" });
 	const committed = JSON.parse(await readFile(file, "utf8"));
@@ -184,6 +184,25 @@ test("force commits before the marker and retries a failed marker append idempot
 	assert.equal(store.isCanonicalMarker(marker), true);
 	assert.equal(store.isCanonicalMarker({ ...marker, sessionId: "" }), false);
 	assert.equal(JSON.stringify(marker).includes("/"), false, "the marker never embeds absolute paths");
+});
+
+test("a session without background work creates no store and no marker", async (t) => {
+	const { store } = await loadStore(t);
+	const { file } = await temporaryStore(t);
+	let tasks = [];
+	const options = newOptions(file, { tasks: () => tasks });
+	const adapter = adapterFor(store, options);
+	assert.equal(adapter.persist("force").sidecar, true, "an empty state is already durable");
+	adapter.flush();
+	await assert.rejects(readFile(file, "utf8"), { code: "ENOENT" });
+	assert.deepEqual(options.markers, []);
+	tasks = [snapshot()];
+	adapter.persist("force");
+	assert.equal(JSON.parse(await readFile(file, "utf8")).tasks.length, 1);
+	// Once a store exists, an emptied state is still written so the cleared tasks stay cleared.
+	tasks = [];
+	adapter.persist("force");
+	assert.equal(JSON.parse(await readFile(file, "utf8")).tasks.length, 0);
 });
 
 test("a failed write or rename leaves the previous revision intact", async (t) => {
@@ -208,7 +227,7 @@ test("a failed write or rename leaves the previous revision intact", async (t) =
 			store.nodeCanonicalStoreIo.rename(from, to);
 		},
 	};
-	const options = newOptions(file, { overrides: { io } });
+	const options = newOptions(file, { tasks: () => [snapshot()], overrides: { io } });
 	const adapter = adapterFor(store, options);
 	assert.equal(adapter.persist("force").sidecar, true);
 	const first = JSON.parse(await readFile(file, "utf8"));
