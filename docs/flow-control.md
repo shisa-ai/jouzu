@@ -78,17 +78,60 @@ If automatic replies are paused, the run reports the pause and exits with a
 failure status instead of reporting completion. Terminating the process cancels
 settlement and closes the runtime.
 
-## RPC clients
+## RPC and ACP clients
 
-In RPC mode flow control publishes its state as a `setStatus` request with key
-`jouzu-flow` whose text is JSON: `version`, `enabled`, `paused` and `recovery`
-(each a stable `code` and localized `text`, present only while they apply),
-`held` (input held with a reason: submission `id`, `code`, `text`), `withheld`
-(model requests waiting for `/flow retry` or `/flow clear`: request `id`, `code`,
-`text`), and `uncertain` (attempt ids). It is
-sent at session start, after every `/flow` command, and when a turn ends, only
-when it changed. The latest state replaces earlier ones. It is read-only: holds
-are released only by the `/flow` commands.
+Flow control publishes its state as JSON under the status key `jouzu-flow`.
+RPC clients receive it as a `setStatus` request. ACP hosts that opt in receive
+it as a `_jouzu/status` notification; see [ACP status](acp.md#jouzu-status).
+The state is sent at session start, after every `/flow` command, and when a
+turn ends, only when it changed. The latest state replaces earlier ones. It is
+read-only: holds are released only by the `/flow` commands.
+
+| Field | Content |
+| --- | --- |
+| `version` | `1` |
+| `enabled` | Whether flow control is on |
+| `paused` | While automated work is paused: `code` and localized `text` |
+| `recovery` | While a recovery decision holds model requests: `code` and `text` |
+| `held` | Input held with a reason: submission `id`, `code`, and `text` |
+| `withheld` | Model requests waiting for `/flow retry` or `/flow clear`: request `id`, `code`, and `text` |
+| `uncertain` | Ids of attempts whose outcome is unknown after an interruption |
+
+Codes are stable identifiers; `text` follows the session language. A reason
+without a code below reports `other`, as can a hold recorded while the session
+used another language.
+
+| Field | Code | Meaning |
+| --- | --- | --- |
+| `paused` | `interrupted` | A turn was interrupted |
+| `paused` | `reopened` | The session was reopened |
+| `paused` | `command` | Held from `/flow` |
+| `paused` | `provider` | A provider request failed after automatic recovery stopped |
+| `paused` | `admission` | A flow-control check refused an input |
+| `recovery` | `host-recovery` | Host recovery is still in progress |
+| `recovery` | `request-decision` | A withheld request needs `/flow retry` or `/flow clear` |
+| `recovery` | `interrupted-outcome` | An interrupted turn has an unknown outcome |
+| `recovery` | `wait-reconciliation` | Wait sources are still being reconciled |
+| `recovery` | `saved-decision` | Saved work needs a recovery decision |
+| `held` | `input-missing` | The input is missing or was cancelled |
+| `held` | `input-recovery` | The input waits for recovery reconciliation |
+| `held` | `host-retry` | The input waits for a host retry or compaction |
+| `held` | `queue-revision` | The input has no exact queue revision |
+| `held` | `input-paused` | Automated input is paused until the next user turn starts |
+| `held` | `input-interrupted` | Automated input waits for an interrupted turn to be resolved |
+| `held` | `context-receipt` | Deferred context needs a persistence receipt before release |
+| `held` | `context-idle` | Context that does not start a turn waits for the session to be idle |
+| `held` | `input-independence` | Unclassified input cannot proceed while a wait is live |
+| `held` | `queued-work` | The input waits for queued user work |
+| `held` | `host-idle` | Automated input waits for the host to be idle |
+| `held` | `earlier-input` | The input waits for an earlier instruction in its lane |
+| `held` | `host-policy-failed` | The host admission policy failed; review the input before retrying |
+| `held` | `external-authorization` | External input authorization is unavailable |
+| `held` | `host-admission` | The host admission policy holds the input |
+| `held` | `semantic-admission` | Automated input waits while admission is re-evaluated |
+| `held` | `unavailable` | The input was not dispatched and cannot be delivered; submit it again |
+| `withheld` | `required-input` | A retained input could not be included in the request |
+| `withheld` | `required-context` | Required host context could not be included in the request |
 
 A recovery hold is announced once per hold, and not at all if it was released
 before the announcement.

@@ -70,6 +70,13 @@ if (loadedPath) {
 
 log({ type: "start", pid: process.pid, args, sessionId, sessionFile });
 
+// Jouzu publishes its client status while the session starts, before the adapter has attached.
+if (process.env.ACP_FAKE_STATUS === "1") {
+	setStatus("jouzu-flow", { version: 1, enabled: true, held: [], withheld: [], uncertain: [] });
+	setStatus("jouzu-textguard", { version: 1, mode: "guarded", pending: [] });
+	setStatus("fake-footer", "not Jouzu state");
+}
+
 if (loadedPath && failLoadOnceMarker && !existsSync(failLoadOnceMarker)) {
 	writeFileSync(failLoadOnceMarker, "");
 	log({ type: "crash", stage: "load-once" });
@@ -86,6 +93,16 @@ function extensionRequest(method, fields) {
 	send({ type: "extension_ui_request", id, method, ...fields });
 	return new Promise((resolve) => {
 		extensionWaiters.set(id, resolve);
+	});
+}
+
+function setStatus(statusKey, status) {
+	send({
+		type: "extension_ui_request",
+		id: `extension-${++nextExtensionId}`,
+		method: "setStatus",
+		statusKey,
+		statusText: typeof status === "string" ? status : JSON.stringify(status),
 	});
 }
 
@@ -186,6 +203,14 @@ async function runPrompt(message) {
 		send({ type: "auto_retry_end", success: false, attempt: 1, finalError: "retry failed" });
 		send({ type: "agent_settled", aborted: false });
 		pendingPrompt = undefined;
+		return;
+	}
+	if (message.includes("status-update")) {
+		const strict = { version: 1, mode: "strict", pending: [] };
+		setStatus("jouzu-textguard", strict);
+		setStatus("jouzu-textguard", strict);
+		setStatus("jouzu-flow", "not JSON");
+		settle("status changed");
 		return;
 	}
 	if (message.includes("error")) {
