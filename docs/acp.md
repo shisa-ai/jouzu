@@ -28,7 +28,7 @@ The host must send `initialize` before session requests and an absolute working 
 - `session/new` starts a Jouzu session in the requested working directory.
 - `session/prompt` accepts text, images, embedded text or image resources, and resource links. Resource links are passed to the model as references; they are not automatically downloaded. Image handling depends on the selected model.
 - `session/update` streams assistant text, reasoning when supplied by the model, and tool calls and results.
-- `session/cancel` cancels the active turn. Prompt completion waits for the runtime to settle, including automatic retries and follow-up work.
+- `session/cancel` cancels the active turn, including a prompt whose turn has not started, which ends with stop reason `cancelled`. Prompt completion waits for the runtime to settle, including automatic retries and follow-up work. See [Stopping a turn](flow-control.md#stopping-a-turn).
 - `session/list` lists persisted Jouzu sessions. `session/load` takes a session ID, not a file path, and replays conversation history. Use the session's original working directory.
 - `session/close` stops the session's child process. Closing the host connection stops all children owned by that connection.
 - The `model` session configuration option lists available models. Use `session/set_config_option` to change it between turns.

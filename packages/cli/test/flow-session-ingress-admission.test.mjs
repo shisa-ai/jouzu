@@ -877,3 +877,126 @@ test("ingress management inspects and cancels an edited native queue without a m
 	await assert.rejects(f.ingress.inspect(), { code: "stale" });
 	assert.throws(() => f.ingress.cancelNativeQueue(item.id, 2), { code: "stale" });
 });
+
+for (const stage of [
+	"in its request checkpoint",
+	"at the end of its request checkpoint",
+	"before handoff",
+	"after handoff",
+])
+	test(`a Stop ${stage} is recorded before its run ends, so the next message is never held, however slow storage is`, async (t) => {
+		const reached = deferred();
+		const providerGate = deferred();
+		const held = [];
+		let gated = false;
+		const gate = async () => {
+			if (!gated) return;
+			gated = false;
+			reached.resolve();
+			await providerGate.promise;
+		};
+		const f = await fixture(t, {
+			provider: true,
+			// Before handoff the Stop lands while an extension prepares the payload; after handoff it
+			// lands while the provider holds the request.
+			...(stage === "before handoff"
+				? {
+						extensions: [
+							(pi) =>
+								pi.on("before_provider_request", async (event) => {
+									await gate();
+									return event.payload;
+								}),
+						],
+					}
+				: { onRequest: gate }),
+			onHeldUserInput: (input) => held.push(input),
+			autoRelease: { onError: (error) => assert.fail(error) },
+		});
+		await f.session.prompt("warm up");
+		const branch = f.ingress.branch();
+		const store = branch.attachment.nativeRequests;
+		if (stage === "in its request checkpoint") {
+			// The Stop lands after the request is recorded and before the checkpoint returns, where
+			// nothing else in the checkpoint observes the signal.
+			const begin = store.begin.bind(store);
+			store.begin = async (...args) => {
+				const result = await begin(...args);
+				await gate();
+				return result;
+			};
+		}
+		if (stage === "at the end of its request checkpoint") {
+			// The Stop lands after every step of the checkpoint that observes the signal has run.
+			const receipts = branch.requests.composition;
+			const prepare = receipts.prepare.bind(receipts);
+			receipts.prepare = async (...args) => {
+				const result = await prepare(...args);
+				await gate();
+				return result;
+			};
+		}
+		// Recording the stopped request is slow, and so is the next message's admission write.
+		let armed = false;
+		const recording = deferred();
+		const recordGate = deferred();
+		for (const method of ["cancel", "finish"]) {
+			const original = store[method].bind(store);
+			store[method] = async (...args) => {
+				if (armed) {
+					armed = false;
+					recording.resolve();
+					await recordGate.promise;
+				}
+				return original(...args);
+			};
+		}
+		const writeGate = deferred();
+		const writing = deferred();
+		const write = branch.attachment.submissions.recordAdmission.bind(branch.attachment.submissions);
+		let delayNext = false;
+		branch.attachment.submissions.recordAdmission = async (...args) => {
+			if (delayNext) {
+				delayNext = false;
+				writing.resolve();
+				await writeGate.promise;
+			}
+			return write(...args);
+		};
+		gated = true;
+		const stopped = f.session.prompt("stop me").catch(() => {});
+		await reached.promise;
+		armed = true;
+		const stopping = f.session.abort();
+		providerGate.resolve();
+		await Promise.race([
+			recording.promise,
+			new Promise((_resolve, reject) =>
+				setTimeout(() => reject(new Error("the stopped request was never recorded")), 5000).unref(),
+			),
+		]);
+		// The run cannot end while its stopped request is unrecorded.
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		assert.equal(f.session.isIdle, false, "the stopped run waits for its record");
+		recordGate.resolve();
+		await Promise.all([stopping, stopped]);
+		const stoppedRequest = (await store.snapshot()).at(-1);
+		if (stage !== "after handoff") {
+			assert.equal(stoppedRequest.payload, undefined, "the stopped request never reached the provider");
+			assert.equal(stoppedRequest.outcome, "withheld");
+			assert.equal(stoppedRequest.reset, true, "and its hold is released with it");
+		} else assert.equal(stoppedRequest.outcome, "aborted");
+		assert.equal(store.recoveryBlocked, false, "nothing waits for a recovery decision once the run has ended");
+		const requests = f.sent.length;
+		delayNext = true;
+		const next = f.session.prompt("right after the stop").catch((error) => error);
+		await writing.promise;
+		writeGate.resolve();
+		assert.equal((await next) instanceof Error, false);
+		await waitForFlow(() => f.sent.some((messages) => JSON.stringify(messages).includes("right after the stop")));
+		assert.equal(f.sent.length, requests + 1, "the stopped request is never sent again");
+		// The stopped message's turn had started, so it stays in the conversation, as after a Stop
+		// without flow control.
+		assert.ok(JSON.stringify(f.sent.at(-1)).includes("stop me"));
+		assert.deepEqual(held, [], "no message is reported as held");
+	});
