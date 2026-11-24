@@ -58,6 +58,15 @@ function nativeFailure(
 }
 
 /** Retain native request lifecycle around Pi's final payload callback, without inferring input membership. */
+/** The end of one run: resolved once it has settled and its outcome is recorded. */
+function runEnd(stoppedByUser: boolean): { promise: Promise<void>; resolve: () => void; stoppedByUser: boolean } {
+	let resolve = () => {};
+	const promise = new Promise<void>((done) => {
+		resolve = done;
+	});
+	return { promise, resolve, stoppedByUser };
+}
+
 export class PiNativeRequests {
 	private readonly hooks = new PiHostHooks();
 	private readonly enabled: () => boolean;
@@ -162,7 +171,12 @@ export class PiNativeRequests {
 		// keeps prompts, such as compaction's, is not the user's and does not change that record.
 		const abort = session.abort;
 		this.hooks.set(session, "abort", (options?: { keepPrompts?: boolean }) => {
-			if (!options?.keepPrompts && this.runEnd) this.runEnd.stoppedByUser = true;
+			if (!options?.keepPrompts) {
+				if (this.runEnd) this.runEnd.stoppedByUser = true;
+				// Pi starts a run before it reports agent_start. A Stop made in between belongs to that run,
+				// so its record starts here and agent_start keeps it.
+				else if (session.isStreaming) this.runEnd = runEnd(true);
+			}
 			return abort.call(session, options);
 		});
 		if (identifySources) {
@@ -908,11 +922,8 @@ export class PiNativeRequests {
 		if (event.type === "agent_start") {
 			this.lastAssistant = undefined;
 			this.runRequests = new Set();
-			let resolve = () => {};
-			const promise = new Promise<void>((done) => {
-				resolve = done;
-			});
-			this.runEnd = { promise, resolve, stoppedByUser: false };
+			// Keep the record of a Stop made after Pi started this run but before it reported starting.
+			if (!this.runEnd?.stoppedByUser) this.runEnd = runEnd(false);
 		}
 		if (event.type === "message_end" && event.message.role === "assistant") this.lastAssistant = event.message;
 		if (event.type !== "agent_settled") return;
