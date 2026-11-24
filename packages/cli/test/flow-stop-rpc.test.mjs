@@ -164,6 +164,53 @@ test("a message sent together with a Stop runs after it, without a hold and with
 	assert.equal((await f.close()).code, 0);
 });
 
+test("a message sent with a Stop runs after it when the stopped run is slow to end", async (t) => {
+	// Pi keeps a stopped run active until its end handlers return, so the next message reaches Pi
+	// while the run is still ending. An extension holds that end open, as a slow extension or a busy
+	// machine would; on Windows the same happens when the Stop lands as the run starts.
+	const provider = await slowProvider(t);
+	const home = await rpcHome(t, provider.port);
+	const extension = join(home.workspace, "slow-end.mjs");
+	await writeFile(
+		extension,
+		[
+			"export default function (pi) {",
+			'\tpi.on("agent_end", () => new Promise((resolve) => setTimeout(resolve, 1000)));',
+			"}",
+			"",
+		].join("\n"),
+	);
+	const f = launchRpc(t, home, ["--extension", extension]);
+	f.send({ id: "ready", type: "get_state" });
+	await f.waitFor(() => response(f.frames, "ready"), "rpc ready");
+	f.send({ id: "warm", type: "prompt", message: "warm up" });
+	await f.waitFor(() => count(f.frames, "agent_settled") > 0, "warm-up answered", 20_000);
+	const starts = count(f.frames, "agent_start");
+	const settled = count(f.frames, "agent_settled");
+	const next = "right after the stop";
+	f.send({ id: "early", type: "prompt", message: "stop me" });
+	await f.waitFor(() => count(f.frames, "agent_start") > starts, "run started");
+	f.send({ id: "early-abort", type: "abort" }, { id: "early-next", type: "prompt", message: next });
+	const reply = await f.waitFor(() => response(f.frames, "early-next"), "next response", 20_000);
+	assert.equal(reply.success, true, JSON.stringify(reply));
+	await f.waitFor(
+		() =>
+			f.frames
+				.filter((frame) => frame.type === "agent_end")
+				.at(-1)
+				?.messages.at(-1)?.stopReason === "stop" && count(f.frames, "agent_settled") > settled + 1,
+		"next message answered",
+		20_000,
+	);
+	assert.ok(JSON.stringify(provider.bodies.at(-1)).includes(next), "the next message reaches the model");
+	const holds = f.frames.filter(
+		(frame) =>
+			frame.type === "extension_ui_request" && frame.method === "notify" && /holding your message/.test(frame.message),
+	);
+	assert.deepEqual(holds, [], "no message is reported as held");
+	assert.equal((await f.close()).code, 0);
+});
+
 test("a message sent after a stopped run ended but before it settled is not reported held", async (t) => {
 	const provider = await slowProvider(t);
 	const home = await rpcHome(t, provider.port);

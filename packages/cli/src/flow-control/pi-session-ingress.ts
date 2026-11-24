@@ -1147,6 +1147,19 @@ export class PiSessionFlowIngress implements Ingress {
 				reason: catalogText(this.catalog, CatalogMessageId.flowIngressRecoveryReconciliation),
 			};
 		stopPending ||= branch.requests.userStopPending;
+		// A prompt the user sends while their own Stop is still ending the run reaches Pi before the run
+		// ends when the Stop lands as the run starts, and Pi refuses a plain prompt during a run. It waits
+		// for the Stop instead and is released below once the Stop has been recorded.
+		if (
+			decision.allowed &&
+			phase === "submission" &&
+			stopPending &&
+			session.isStreaming &&
+			submission.api === "prompt" &&
+			isUserInstruction(submission) &&
+			!(submission.args[1] as { streamingBehavior?: unknown } | undefined)?.streamingBehavior
+		)
+			decision = { allowed: false, reason: flowInputHoldReason("host-idle") };
 		const current = records.find((record) => record.id === submission.id);
 		if (!current) return false;
 		const saved = await branch.attachment.submissions.recordAdmission(
