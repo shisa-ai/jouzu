@@ -6,6 +6,7 @@ import { retainAutomaticWork } from "./automatic-work.js";
 import { SessionFlowController } from "./controller.js";
 import { isNativeUserInput, isUserInstruction } from "./native-admission.js";
 import { reconcileNativeSources } from "./native-source-reconciliation.js";
+import type { FlowOwnership } from "./ownership.js";
 import { PiFlowAttachment } from "./pi-attachment.js";
 import { bindPiFlowBranch, completePiFlowNavigation, piTranscriptBranchOwners } from "./pi-branch-binding.js";
 import { PiControllerHost, type PiControllerHostOptions } from "./pi-controller-host.js";
@@ -31,6 +32,8 @@ export interface PiFlowSessionOptions {
 	/** Set only when attaching at the SDK creation boundary, before extensions can replace the stream. */
 	qualifyProviderRoute?: boolean;
 	root: string;
+	/** Take ownership reserved before opening the resume target. */
+	takeRegistryOwnership?(): FlowOwnership | undefined;
 	/** Reported once when state written under an earlier record shape is moved aside on open. */
 	onIsolatedState?(path: string): void;
 	/** Reported once when a registry from an earlier version is dropped and rebuilt from the transcript. */
@@ -119,6 +122,8 @@ export class PiFlowSessionService {
 			options.root,
 			session.sessionId,
 			session.sessionManager.getLeafId(),
+			undefined,
+			captured.takeRegistryOwnership,
 		);
 		let service: PiFlowSessionService | undefined;
 		try {

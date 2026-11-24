@@ -66,6 +66,10 @@ const validPosition = (position: FlowBranchPosition) =>
 const samePosition = (a?: FlowBranchPosition, b?: FlowBranchPosition) =>
 	a?.entryId === b?.entryId && a?.entryHash === b?.entryHash && a?.memoryInstanceId === b?.memoryInstanceId;
 
+export function flowRegistryScope(root: string, sessionId: string) {
+	return { root: join(root, "session-registry-v1"), scope: { sessionId, branchId: "registry" } };
+}
+
 /** Session-wide writer reservation and branch identities in Pi storage. Reads grant no dispatch authority. */
 export class PiFlowSessionRegistry {
 	private initialized = false;
@@ -81,9 +85,11 @@ export class PiFlowSessionRegistry {
 			directory: string,
 			acceptedDirectories?: readonly string[],
 		) => Promise<Session> = openLocalFlowSession,
+		takeOwnership?: () => FlowOwnership | undefined,
 	): Promise<PiFlowSessionRegistry> {
 		if (!leaf(initialLeafId)) throw new FlowLedgerError("identity", "Invalid initial transcript position.");
-		const ownership = FlowOwnership.acquire(join(root, "session-registry-v1"), { sessionId, branchId: "registry" });
+		const target = flowRegistryScope(root, sessionId);
+		const ownership = takeOwnership?.() ?? FlowOwnership.acquire(target.root, target.scope);
 		let session: Session | undefined;
 		try {
 			session = await openSession(ownership.directory, ownership.sessionDirectories);

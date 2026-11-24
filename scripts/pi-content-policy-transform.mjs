@@ -179,6 +179,39 @@ ${text}`;
 			"    /** Check the API registry used by this runtime's provider dispatcher. */\n    isBuiltinApiProvider(api: Api): boolean;\n    getRegisteredProviderConfig(providerId: string): ProviderConfigInput | undefined;",
 		);
 	} else if (path === "dist/core/session-manager.js") {
+		for (const [before, after] of [
+			["export function loadEntriesFromFile(filePath)", "export function loadEntriesFromFile(filePath, repair = true)"],
+			[
+				"    if (pending)\n        appendFileSync(resolvedFilePath,",
+				"    if (pending && repair)\n        appendFileSync(resolvedFilePath,",
+			],
+			[
+				"const sourceEntries = loadEntriesFromFile(resolvedSourcePath);",
+				"const sourceEntries = loadEntriesFromFile(resolvedSourcePath, false);",
+			],
+			["static continueRecent(cwd, sessionDir) {", "static continueRecent(cwd, sessionDir, openRecent) {"],
+			[
+				"return new SessionManager(cwd, dir, mostRecent, true);",
+				"return openRecent ? openRecent(mostRecent, dir, cwd) : new SessionManager(cwd, dir, mostRecent, true);",
+			],
+		])
+			change(before, after);
+		change(
+			"    static open(path, sessionDir, cwdOverride) {",
+			`    static resumeTarget(path) {
+        const resolvedPath = resolvePath(path);
+        if (!existsSync(resolvedPath)) return undefined;
+        let header;
+        try {
+            header = readSessionHeader(resolvedPath);
+        } catch (error) {
+            if (!(error instanceof SessionHeaderScanLimitError)) throw error;
+            header = loadEntriesFromFile(resolvedPath, false)[0];
+        }
+        if (header?.type === "session") return { id: header.id, cwd: getSessionHeaderCwd(header) };
+    }
+    static open(path, sessionDir, cwdOverride) {`,
+		);
 		change(
 			"    _persist(entry) {",
 			"    flush() {\n        if (!this.persist || !this.sessionFile || this.flushed) return;\n        this._persist(this.fileEntries[this.fileEntries.length - 1], true);\n    }\n    _persist(entry, force = false) {",
@@ -300,6 +333,67 @@ export function sessionEntryToContextMessages(entry) {`,
 			"    /** Persist buffered entries without requiring an assistant turn; never overwrite an existing file. */\n    flush(): void;\n    _persist(entry: SessionEntry): void;",
 		);
 	} else if (path === "dist/main.js") {
+		change(
+			'import { createInterface } from "node:readline";',
+			'import { existsSync } from "node:fs";\nimport { createInterface } from "node:readline";',
+		);
+		change(
+			"export async function createSessionManager(parsed, cwd, sessionDir, settingsManager) {",
+			`export async function createSessionManager(parsed, cwd, sessionDir, settingsManager, resume) {
+    const open = resume?.open ?? ((path, dir, cwdOverride) => SessionManager.open(path, dir, cwdOverride));`,
+		);
+		change(
+			"return openSessionOrExit(resolved.path, sessionDir);",
+			"return resume ? open(resolved.path, sessionDir) : openSessionOrExit(resolved.path, sessionDir);",
+		);
+		change("return SessionManager.open(selectedPath, sessionDir);", "return open(selectedPath, sessionDir);");
+		change(
+			"return SessionManager.continueRecent(cwd, sessionDir);",
+			"return SessionManager.continueRecent(cwd, sessionDir, resume?.open);",
+		);
+		change(
+			"return SessionManager.open(existingSession.path, sessionDir);",
+			"return open(existingSession.path, sessionDir);",
+		);
+		change(
+			"SessionManager.listAll(sessionDir, onProgress, signal), settingsManager);",
+			"SessionManager.listAll(sessionDir, onProgress, signal), settingsManager, resume?.inUseLabel);",
+		);
+		change(
+			"    let sessionManager = await createSessionManager(parsed, cwd, sessionDir, startupSettingsManager);",
+			`    const sessionResume = options?.sessionResume;
+    const canPromptForResume = appMode === "interactive" && process.env.TERM !== "dumb";
+    let releaseResume;
+    const resume = sessionResume && {
+        inUseLabel: sessionResume.inUseLabel,
+        async open(path, dir, cwdOverride) {
+            const target = SessionManager.resumeTarget(path);
+            try {
+                if (target) releaseResume = sessionResume.reserve(target.id);
+            } catch (error) {
+                if (!canPromptForResume || !sessionResume.isBusyError(error)) throw error;
+                const { title, fork, cancel } = sessionResume.prompt;
+                const choice = await showStartupSelector(startupSettingsManager, title, [{ label: cancel }, { label: fork, value: "fork" }]);
+                if (choice !== "fork") process.exit(0);
+                const targetCwd = cwdOverride ?? target.cwd ?? cwd;
+                return SessionManager.forkFrom(path, existsSync(targetCwd) ? targetCwd : cwd, dir);
+            }
+            return SessionManager.open(path, dir, cwdOverride);
+        },
+    };
+    try {
+    if (sessionResume && parsed.resume && !canPromptForResume && !parsed.session && !parsed.fork && !parsed.help && !parsed.noSession && parsed.listModels === undefined)
+        throw new Error(sessionResume.needsTerminal);
+    let sessionManager = await createSessionManager(parsed, cwd, sessionDir, startupSettingsManager, resume);`,
+		);
+		change(
+			'                case "fork":\n                    sessionManager = forkSessionOrExit(sessionFile, cwd, sessionDir);',
+			'                case "fork":\n                    await releaseResume?.();\n                    sessionManager = forkSessionOrExit(sessionFile, cwd, sessionDir);',
+		);
+		change(
+			'    time("createAgentSessionRuntime");',
+			'    await releaseResume?.();\n    runtime.sessionResume = sessionResume;\n    time("createAgentSessionRuntime");',
+		);
 		// Explicit ID lookup must include sessions persisted for recovery before any conversation.
 		change(
 			"await SessionManager.list(cwd, sessionDir);",
@@ -337,14 +431,90 @@ export function sessionEntryToContextMessages(entry) {`,
 			"        if (options?.flowIngressFactory) await runtime.session.dispose();\n        process.exit(1);",
 			3,
 		);
-		text = `${text.slice(0, start)}    try {\n${body}\n    } finally {\n        if (options?.flowIngressFactory) await runtime.session.dispose();\n    }${text.slice(end)}`;
+		text = `${text.slice(0, start)}    try {\n${body}\n    } finally {\n        if (options?.flowIngressFactory) await runtime.session.dispose();\n    }\n    } finally {\n        await releaseResume?.();\n    }${text.slice(end)}`;
 	} else if (path === "dist/main.d.ts") {
 		text = `import type { ContentPolicy } from "./core/jouzu-content-policy.js";\nimport type { FlowIngress } from "./core/jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"export interface MainOptions {",
-			"export interface MainOptions {\n    sessionInfoFooter?: () => string;\n    flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;\n    contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;",
+			`export interface SessionResumeHooks {
+    reserve(sessionId: string): () => Promise<void>;
+    inUseLabel(sessionId: string): string | undefined;
+    isBusyError(error: unknown): boolean;
+    readonly needsTerminal: string;
+    readonly prompt: { title: string; fork: string; cancel: string };
+}
+export interface MainOptions {
+    sessionResume?: SessionResumeHooks;
+    sessionInfoFooter?: () => string;
+    flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;
+    contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;`,
 		);
+	} else if (path === "dist/cli/session-picker.js") {
+		change("allSessionsLoader, settingsManager) {", "allSessionsLoader, settingsManager, inUseLabel) {");
+		change("{ showRenameHint: false, keybindings }", "{ showRenameHint: false, keybindings, inUseLabel }");
+	} else if (path === "dist/modes/interactive/components/session-selector.js") {
+		change(
+			"        this.buildBaseLayout(this.sessionList);\n        this.renameInput.onSubmit",
+			"        this.sessionList.inUseLabel = options?.inUseLabel;\n        this.buildBaseLayout(this.sessionList);\n        this.renameInput.onSubmit",
+		);
+		change(
+			'            const normalizedMessage = displayText.replace(/[\\x00-\\x1f\\x7f]/g, " ").trim();',
+			'            const normalizedMessage = displayText.replace(/[\\x00-\\x1f\\x7f]/g, " ").trim();\n            const inUse = !isCurrent && this.inUseLabel?.(session.id);\n            const badge = inUse ? "[" + inUse + "] " : "";',
+		);
+		change(
+			'            const truncatedMsg = truncateToWidth(normalizedMessage, Math.max(10, availableForMsg), "…");',
+			'            const truncatedMsg = truncateToWidth(normalizedMessage, Math.max(10, availableForMsg - visibleWidth(badge)), "…");',
+		);
+		change('cursor + theme.fg("dim", prefix) + styledMsg', 'cursor + badge + theme.fg("dim", prefix) + styledMsg');
 	} else if (path === "dist/modes/interactive/interactive-mode.js") {
+		change(
+			"                showRenameHint: true,\n                keybindings: this.keybindings,",
+			"                showRenameHint: true,\n                keybindings: this.keybindings,\n                inUseLabel: this.runtimeHost.sessionResume?.inUseLabel,",
+		);
+		change(
+			"    async handleResumeSession(sessionPath, options) {",
+			`    async recoverBusyResume(sessionPath, error, options, cwdOverride) {
+        const hooks = this.runtimeHost.sessionResume;
+        if (!hooks?.isBusyError(error)) return undefined;
+        const { title, fork, cancel } = hooks.prompt;
+        if (await this.showExtensionSelector(title, [cancel, fork]) !== fork) return { cancelled: true };
+        let copy;
+        try {
+            const cwd = cwdOverride ?? SessionManager.resumeTarget(sessionPath)?.cwd ?? this.sessionManager.getCwd();
+            copy = SessionManager.forkFrom(sessionPath, fs.existsSync(cwd) ? cwd : this.sessionManager.getCwd(), this.sessionManager.getSessionDir());
+        } catch (forkError) {
+            this.showError(forkError instanceof Error ? forkError.message : String(forkError));
+            return { cancelled: true };
+        }
+        try {
+            return await this.switchToForkedSession(sessionPath, copy.getCwd(), options, copy);
+        } catch (forkError) {
+            return this.handleFatalRuntimeError("Failed to fork session", forkError);
+        }
+    }
+    async handleResumeSession(sessionPath, options) {`,
+		);
+		change(
+			'            if (error instanceof MissingSessionCwdError) {\n                switch (await this.promptForMissingSessionCwd(error)) {\n                    case "continue": {\n                        const result = await this.runtimeHost.switchSession(sessionPath, {',
+			'            const busy = await this.recoverBusyResume(sessionPath, error, options);\n            if (busy) return busy;\n            if (error instanceof MissingSessionCwdError) {\n                switch (await this.promptForMissingSessionCwd(error)) {\n                    case "continue": {\n                        const result = await this.runtimeHost.switchSession(sessionPath, {',
+		);
+		change(
+			"    async switchToForkedSession(sourcePath, cwd, options) {\n        const fork = SessionManager.forkFrom(sourcePath, cwd, this.sessionManager.getSessionDir());",
+			"    async switchToForkedSession(sourcePath, cwd, options, fork = SessionManager.forkFrom(sourcePath, cwd, this.sessionManager.getSessionDir())) {",
+		);
+		change(
+			"                        const result = await this.runtimeHost.switchSession(sessionPath, {\n                            cwdOverride: error.issue.fallbackCwd,\n                            withSession: options?.withSession,\n                            projectTrustContextFactory: (cwd) => this.createProjectTrustContext(cwd),\n                        });",
+			`                        let result;
+                        try {
+                            result = await this.runtimeHost.switchSession(sessionPath, {
+                                cwdOverride: error.issue.fallbackCwd,
+                                withSession: options?.withSession,
+                                projectTrustContextFactory: (cwd) => this.createProjectTrustContext(cwd),
+                            });
+                        } catch (cause) {
+                            return (await this.recoverBusyResume(sessionPath, cause, options, error.issue.fallbackCwd)) ?? this.handleFatalRuntimeError("Failed to resume session", cause);
+                        }`,
+		);
 		change("export class InteractiveMode {", `${JOUZU_IME_SLASH_SOURCE}export class InteractiveMode {`);
 		change(
 			`        this.defaultEditor.onSubmit = async (text) => {
@@ -1179,6 +1349,20 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 	} else if (path === "dist/core/agent-session-runtime.js") {
 		change("        this.session.dispose();", "        await this.session.dispose();", 2);
+		change(
+			"        const previousSessionFile = this.session.sessionFile;\n        const sessionManager = SessionManager.open(sessionPath, undefined, options?.cwdOverride);",
+			`        const previousSessionFile = this.session.sessionFile;
+        const target = this.sessionResume && SessionManager.resumeTarget(sessionPath);
+        if (target?.id === this.session.sessionId && previousSessionFile && pathsEqual(previousSessionFile, sessionPath))
+            return { cancelled: true };
+        const release = target && this.sessionResume.reserve(target.id);
+        try {
+        const sessionManager = SessionManager.open(sessionPath, undefined, options?.cwdOverride);`,
+		);
+		change(
+			"        return { cancelled: false };\n    }\n    async newSession(options)",
+			"        return { cancelled: false };\n        } finally {\n            await release?.();\n        }\n    }\n    async newSession(options)",
+		);
 	} else if (path === "dist/modes/print-mode.js") {
 		change("    let disposing;", "    let disposing;\n    const settlement = new AbortController();");
 		change(
@@ -2194,6 +2378,8 @@ export const paths = [
 	"dist/main.js",
 	"dist/modes/print-mode.js",
 	"dist/main.d.ts",
+	"dist/cli/session-picker.js",
+	"dist/modes/interactive/components/session-selector.js",
 	"dist/modes/interactive/interactive-mode.js",
 	"dist/modes/interactive/interactive-mode.d.ts",
 	"dist/modes/interactive/components/custom-editor.js",

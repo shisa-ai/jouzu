@@ -774,6 +774,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const startPi = () =>
 		pi.main(piArgs, {
 			sessionInfoFooter: runtimeDiagnostics.summary,
+			sessionResume: flow?.resume,
 			contentPolicyFactory: nativeTextguard.createPolicy,
 			flowIngressFactory: async (context) =>
 				modelPicker.wrapSessionIngress(scrollbackSession.wrap(await flow?.flowIngressFactory(context))),

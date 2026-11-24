@@ -1525,6 +1525,13 @@ jouzu-cli-flow-message-alert = ⚠ 警示
 jouzu-cli-flow-registry-rebuilt = 此工作階段的流程登錄與目前版本不相容，已被捨棄。流程狀態已從文字記錄重建。
 jouzu-cli-flow-registry-rebuiltSaved = 此工作階段的流程登錄與目前版本不相容，已被捨棄。流程狀態已從文字記錄重建。被捨棄的狀態已儲存至 { $path }。
 jouzu-cli-flow-noReply-label = 結束回合而不回覆
+jouzu-cli-resume-busyHeadless = 此工作階段正在使用。請執行 jz --fork 並指定工作階段 ID 或路徑，以在副本中繼續。
+jouzu-cli-resume-busyTitle = 此工作階段正在使用
+jouzu-cli-resume-fork = 分支為新的工作階段
+jouzu-cli-resume-cancel = 取消
+jouzu-cli-resume-inUse = 使用中
+jouzu-cli-resume-needsTerminal = 繼續選單需要互動式終端機。請執行 jz --session 並指定工作階段 ID 或路徑。
+
 jouzu-cli-flow-ownership-busy = 此工作階段分支已由另一個附加項目擁有。
 jouzu-cli-flow-ownership-failed = 無法取得流程擁有權。
 jouzu-cli-flow-native-editedInput = 已編輯的原生輸入需要新的觀察。

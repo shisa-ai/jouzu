@@ -5,7 +5,7 @@
 	"files": {
 		"dist/main.js": {
 			"before": "29d5564f1a397eeb8a9c771b8e42c4fb88420e676bddbd096854a3ad84f4d49e",
-			"after": "d2b2c17badb41fbc34f3cf781b7ffb68c9ac0e9cfec55b4e88867968219b3b3f"
+			"after": "86ccc5b17baaa2e8d387b7d739972ca036f0dbfb66ae103584b3840d9efb6c4f"
 		},
 		"dist/modes/print-mode.js": {
 			"before": "d299d32642059b61e040e4da815f6d47e2db35f8b2a2f2d8b3e2103c0260ce78",
@@ -13,11 +13,11 @@
 		},
 		"dist/main.d.ts": {
 			"before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
-			"after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
+			"after": "ce9f6db2633706e3e1b95a6883c5375fcbe6b0ccdf265414362d81b382286424"
 		},
 		"dist/modes/interactive/interactive-mode.js": {
 			"before": "a316502682c68544e1950b80e3b19d584c7a43331cfb7029765b5c04d18e4465",
-			"after": "d56e7fb28a0ea02715346132c72c8ce215d9921019152e70aea34744c0588477"
+			"after": "a6a6d5fda2b233843a9134c57efe2788eb3d6b4d05a22f3f515ce32a85309959"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
 			"before": "21887f2277e81d34ffb85e5bb669e8f4c929f5bc5a07c55fa069fd62569f5455",
@@ -89,7 +89,7 @@
 		},
 		"dist/core/agent-session-runtime.js": {
 			"before": "44beede45451cef172d7137077e7e84867b9aaa9f20575143fb9a93fcc00261a",
-			"after": "b11760ecc92d1827aae75a4615a7cb4f9677762d6b8d713401c4698d3d2a1d45"
+			"after": "0e0e56a495bf14614c6c5342471833b97d868d1f95ccccaad4f2453fcee2b2fb"
 		},
 		"dist/modes/rpc/rpc-mode.js": {
 			"before": "505297dba2df1de3003c0399b3312fd581359a4e27a5e9262b274b6cb5cb4ef3",
@@ -121,7 +121,7 @@
 		},
 		"dist/core/session-manager.js": {
 			"before": "7e24f1c857c9f0e7be6485e9be12ba528fad9eea3423abf2c96fc27585a88b61",
-			"after": "6534f98bc827a3adfc78534707c2c761f3e997cfd43f931c0f1ba1386d1e95d1"
+			"after": "8a28486ff648275ba645b6669967fab7d97b5d7416c1d7d7c3633af94d00771b"
 		},
 		"dist/core/session-manager.d.ts": {
 			"before": "ec861a04237f371ef5998e1fe1d02c4acfbeef809ffc1167fa9f7952cad21c44",
@@ -158,6 +158,14 @@
 		"dist/core/system-prompt.js": {
 			"before": "5f68e89c31ba3d4d1af8ad2bfd0c7c548879d47ee6ab4aabee50a826100da32c",
 			"after": "a4dafe636c2ff19abaa92e45c781b0e8c1835350c587d6615604832b4d277568"
+		},
+		"dist/cli/session-picker.js": {
+			"before": "b5b3cc89815cc11f4519af27b9abb5a972a110fcfa08096f70dc0623e763cd44",
+			"after": "e4f793cd8c5259e07b5c42a4ea0ad83233a3ca7af55fc3cf5d64ee5c19eb22de"
+		},
+		"dist/modes/interactive/components/session-selector.js": {
+			"before": "fb45456c5f847dede4ddb2ff1046d0828275a3dde933591953fe804528c99ac5",
+			"after": "c0dee219b9fa38c90a92f91f29fefca70fde14ecbbe26ae684793a9d2f5ebc35"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

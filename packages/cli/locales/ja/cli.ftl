@@ -1656,6 +1656,13 @@ jouzu-cli-flow-message-alert = ⚠ 警告
 jouzu-cli-flow-registry-rebuilt = このセッションのフロー登録情報は現在のバージョンと互換性がなかったため破棄されました。フロー状態は会話記録から再構築されました。
 jouzu-cli-flow-registry-rebuiltSaved = このセッションのフロー登録情報は現在のバージョンと互換性がなかったため破棄されました。フロー状態は会話記録から再構築されました。破棄された状態は { $path } に保存されました。
 jouzu-cli-flow-noReply-label = 返信せずにターンを終了
+jouzu-cli-resume-busyHeadless = このセッションは使用中です。セッション ID またはパスを指定して jz --fork を実行すると、コピーで続けられます。
+jouzu-cli-resume-busyTitle = このセッションは使用中です
+jouzu-cli-resume-fork = 新しいセッションに分岐
+jouzu-cli-resume-cancel = キャンセル
+jouzu-cli-resume-inUse = 使用中
+jouzu-cli-resume-needsTerminal = 再開メニューには対話型ターミナルが必要です。セッション ID またはパスを指定して jz --session を実行してください。
+
 jouzu-cli-flow-ownership-busy = このセッションブランチは既に別の接続が使用しています。
 jouzu-cli-flow-ownership-failed = フローの所有権を取得できませんでした。
 jouzu-cli-flow-native-editedInput = ネイティブ入力を編集したため、状態の再確認が必要です。

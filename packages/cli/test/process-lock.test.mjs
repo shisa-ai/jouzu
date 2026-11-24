@@ -17,7 +17,7 @@ import { DatabaseSync } from "node:sqlite";
 import { test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
-import { acquireProcessLock, ProcessLockError } from "../dist/process-lock.js";
+import { acquireProcessLock, isProcessLockBusy, ProcessLockError } from "../dist/process-lock.js";
 
 const holder = new URL("./fixtures/process-lock-holder.mjs", import.meta.url);
 const contender = fileURLToPath(new URL("./fixtures/process-lock-contender.mjs", import.meta.url));
@@ -101,6 +101,20 @@ test("a held lock excludes another process and release admits it", async (t) => 
 	const lock = acquireProcessLock(path);
 	lock.release();
 	assert.ok(existsSync(path), "the lock file stays in place after release");
+});
+
+test("the picker probe observes another process without creating or writing lock files", async (t) => {
+	const path = join(makeDir(t), "state", "owner#.sqlite");
+	assert.equal(isProcessLockBusy(path), false);
+	assert.equal(existsSync(dirname(path)), false);
+	const child = await holdInChild(t, path);
+	assert.equal(isProcessLockBusy(path), true);
+	const exited = once(child, "exit");
+	child.kill("SIGKILL");
+	await exited;
+	assert.equal(isProcessLockBusy(path), false);
+	assert.equal(statSync(path).size, 0);
+	assert.equal(existsSync(`${path}-journal`), false);
 });
 
 test("long lock paths preserve ownership across processes and path aliases", async (t) => {
