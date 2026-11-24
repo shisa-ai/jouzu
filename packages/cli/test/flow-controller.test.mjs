@@ -105,6 +105,7 @@ async function fixture(t, native, options = {}) {
 				begin: async (record) => void observed.push({ ...record }),
 				handoff: async () => true,
 				finish: async () => {},
+				cancel: async () => {},
 			},
 			100000,
 		);
@@ -820,6 +821,68 @@ test("Pi: user arrival during native claim cancels automation before the provide
 	const attempt = (await ledger.snapshot()).attempts[0];
 	assert.equal(attempt.phase, "cancelled");
 	assert.equal(attempt.consumed, false);
+});
+
+test("Pi: a Stop before handoff keeps held work and does not send the stopped automated input again", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	let gated = true;
+	const sent = [];
+	// The automated inputs each request carries, in conversation order.
+	const carried = (body) =>
+		body.messages.flatMap((message) => {
+			if (message.role !== "user") return [];
+			const text = typeof message.content === "string" ? message.content : message.content[0].text;
+			try {
+				return [JSON.parse(text).flowInput[2]];
+			} catch {
+				return [];
+			}
+		});
+	const { controller, session, ledger, policy } = await fixture(t, true, {
+		extensions: [
+			(pi) =>
+				pi.on("before_provider_request", async ({ payload }) => {
+					if (gated) {
+						gated = false;
+						entered.resolve();
+						await release.promise;
+					}
+					return payload;
+				}),
+		],
+		fetch: async (_url, init) => {
+			sent.push(carried(JSON.parse(init.body)));
+			return answer();
+		},
+	});
+	controller.register(producer("alpha", [{ ...descriptor("alpha"), independent: true }]));
+	controller.register(producer("beta"));
+	// Flow holds beta behind a wait while alpha's request is stopped during payload preparation.
+	policy.waitingWorkIds = ["beta"];
+	const running = controller.wake();
+	await entered.promise;
+	const stopping = session.abort();
+	release.resolve();
+	await Promise.all([running, stopping]);
+	assert.deepEqual(sent, []);
+	// Pi took alpha into the conversation before the Stop. Its attempt is cancelled with the input
+	// consumed, so it is not dispatched again, and later requests leave its copy out (#81).
+	const [stopped] = (await ledger.snapshot()).attempts;
+	assert.equal(stopped.phase, "cancelled");
+	assert.equal(stopped.consumed, true);
+	await controller.wake();
+	assert.deepEqual(sent, []);
+	await session.prompt("next");
+	assert.deepEqual(sent, [[]]);
+	// Held work still runs once released.
+	policy.waitingWorkIds = [];
+	await controller.wake();
+	assert.deepEqual(sent, [[], ["beta"]]);
+	assert.deepEqual(
+		(await ledger.snapshot()).attempts.map((attempt) => attempt.phase),
+		["cancelled", "settled"],
+	);
 });
 
 test("duplicate namespaces and disposed producer callbacks are rejected", async (t) => {

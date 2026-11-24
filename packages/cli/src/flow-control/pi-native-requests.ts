@@ -68,7 +68,13 @@ export class PiNativeRequests {
 		this.assertActive();
 		return this.store.blocksQueueing(this.executing ?? this.pending);
 	}
-	private prepared?: { modelHash: string; capture?: NativeSourceCapture; projections?: NativeProjectionCapture };
+	private prepared?: {
+		modelHash: string;
+		capture?: NativeSourceCapture;
+		projections?: NativeProjectionCapture;
+		/** The session's prompt-cancelling abort count when the request began. */
+		stops: number;
+	};
 	private active = 0;
 	private closed = false;
 	/** Latest response in this run, even if host recovery removes it from projected history. */
@@ -407,6 +413,12 @@ export class PiNativeRequests {
 				this.warmGeneration++;
 				this.assertActive();
 				this.active++;
+				// A Stop is an abort that cancels prompts: the user's Stop or Esc, a session switch, or
+				// shutdown. A request whose signal aborts after the session's prompt-cancelling count moved
+				// was stopped. Compaction and an extension's own abort keep prompts and leave the count
+				// alone, so a request they stop keeps its hold for the user to decide.
+				const stops = session.promptAbortCount;
+				const stopped = () => signal?.aborted === true && session.promptAbortCount !== stops;
 				try {
 					await previous?.beforeRequest?.(input, signal);
 					this.assertActive();
@@ -452,13 +464,29 @@ export class PiNativeRequests {
 						this.capture,
 						await userOperations?.(),
 					);
-					this.composed = await this.composition?.prepare(input, signal, carriesUserInput);
+					this.composed = await this.composition?.prepare(input, signal, carriesUserInput, stopped);
 					this.prepared = {
 						modelHash: hash(input.modelMessages),
 						capture: this.capture ? structuredClone(this.capture) : undefined,
 						projections: this.projections ? structuredClone(this.projections) : undefined,
+						stops,
 					};
+					// Pi calls the provider right after this checkpoint and checks the signal first, with no
+					// I/O in between, and a Stop arrives from I/O. Checking here as well means a request
+					// recorded above never ends at Pi's check without being settled by this handler.
+					signal?.throwIfAborted();
 				} catch (error) {
+					if (stopped()) {
+						// A Stop is a cancellation, never a failure. A request recorded above never reached
+						// the provider, so it is released now, before the run ends.
+						this.turn?.aborted();
+						if (this.pending === input.requestId) {
+							this.pending = undefined;
+							this.prepared = undefined;
+							await store.cancel(input.requestId);
+						}
+						throw error;
+					}
 					this.turn?.failed?.(error);
 					throw error;
 				} finally {
@@ -594,8 +622,12 @@ export class PiNativeRequests {
 			this.executing = id;
 			const prepared = this.prepared;
 			this.prepared = undefined;
+			// As in beforeRequest: an abort after the prompt-cancelling count moved is a Stop.
+			const stopped = () =>
+				options?.signal?.aborted === true && prepared !== undefined && session.promptAbortCount !== prepared.stops;
 			this.active++;
 			let handedOff = false;
+			let outcomeRecorded = false;
 			let admitting = false;
 			let admissionFailure: { error: unknown } | undefined;
 			let failure: NativeRequestFailure | undefined;
@@ -626,6 +658,13 @@ export class PiNativeRequests {
 			});
 			const withheld = async (error?: unknown) => {
 				if (handedOff) return;
+				if (stopped()) {
+					// Stopped before the provider received it: nothing was sent, and nothing waits for a
+					// decision. A composed attempt is left to host settlement, which cancels an attempt
+					// that never reached the provider.
+					await store.cancel(id);
+					return;
+				}
 				if (error !== undefined)
 					failure ??= nativeFailure(
 						error,
@@ -636,6 +675,25 @@ export class PiNativeRequests {
 				await store.finish(id, "withheld", failure);
 				if (composed) await this.composition?.withhold(composed);
 			};
+			// A request that ends without an outcome is recorded once, by whichever route reports it
+			// first: the result, the stream iterator, or the stream call itself.
+			let ending: Promise<void> | undefined;
+			const ended = (error?: unknown) =>
+				(ending ??= (async () => {
+					// An interrupt usually rejects the request rather than returning an aborted outcome, so
+					// the signal is what identifies it. Both routes are reported: a provider that answers
+					// with `aborted` is the same event to the user.
+					if (options?.signal?.aborted) this.turn?.aborted();
+					if (handedOff && !outcomeRecorded && stopped()) {
+						// The provider may have received it, and it was stopped: aborted, as when the stream
+						// itself ends aborted, rather than an unknown outcome.
+						await store.finish(id, "aborted");
+						outcomeRecorded = true;
+						if (composed?.handedOff) await this.composition?.settled(composed, { stopReason: "aborted" });
+						return;
+					}
+					await withheld(error);
+				})());
 			try {
 				if (!prepared || hash(context.messages) !== prepared.modelHash)
 					throw new FlowLedgerError("stale", "Native provider context differs from its checkpoint.");
@@ -690,7 +748,7 @@ export class PiNativeRequests {
 									"Native request withheld because required input was changed or unresolved at conversion. Run /flow to identify the input and recovery options.",
 								);
 							handedOff = true;
-							if (composed) await this.composition?.handedOff(composed, options?.signal);
+							if (composed) await this.composition?.handedOff(composed);
 							this.assertActive();
 							options?.signal?.throwIfAborted();
 							warming.capture(rawPayload, owned);
@@ -738,15 +796,12 @@ export class PiNativeRequests {
 								id,
 								message.stopReason === "error" ? "failure" : message.stopReason === "aborted" ? "aborted" : "success",
 							);
+							outcomeRecorded = true;
 							if (message.stopReason === "aborted") this.turn?.aborted();
 							if (composed) await this.composition?.settled(composed, message);
 							return message;
 						} catch (error) {
-							// An interrupt usually rejects the request rather than returning an aborted
-							// outcome, so the signal is what identifies it. Both routes are reported: a
-							// provider that answers with `aborted` is the same event to the user.
-							if (options?.signal?.aborted) this.turn?.aborted();
-							await withheld(error);
+							await ended(error);
 							throw error;
 						} finally {
 							settle();
@@ -764,7 +819,7 @@ export class PiNativeRequests {
 								} finally {
 									if (!drained) {
 										try {
-											await withheld();
+											await ended();
 										} finally {
 											settle();
 										}
@@ -777,7 +832,7 @@ export class PiNativeRequests {
 				});
 			} catch (error) {
 				settle();
-				await withheld(error);
+				await ended(error);
 				throw error;
 			}
 		});

@@ -17,7 +17,7 @@
 		},
 		"dist/modes/interactive/interactive-mode.js": {
 			"before": "a316502682c68544e1950b80e3b19d584c7a43331cfb7029765b5c04d18e4465",
-			"after": "13af8f6080e4aeeab00df9563cd90b3c794a0c46adef8fdd4c666d8e43cccfbe"
+			"after": "d56e7fb28a0ea02715346132c72c8ce215d9921019152e70aea34744c0588477"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
 			"before": "21887f2277e81d34ffb85e5bb669e8f4c929f5bc5a07c55fa069fd62569f5455",
@@ -73,11 +73,11 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "ee756f6f74afe9f8930ebf216c95334605d913a275a0eec2c9702f101baef3c3",
-			"after": "9966e02a0907848d12b4a92fdc3be54640bbbb4d9db36ad2a8c1dcb0e6a09426"
+			"after": "7001bc0cb97f7f876059f92beaf6f69147a40d7a84a4b39e610faad2bc7616d6"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "56d24887a400d77a77b428deb1cce25576cac27e18089e722f536d600fa32c3a",
-			"after": "54a56c6f2f3c3f838b66da18659c3812e7d83deea8b488f5990f8adacc9a4abb"
+			"after": "a80f955ae3defa2eb51036e9a949fe6a4683928ef68552290691629bd1364873"
 		},
 		"dist/core/agent-session-services.js": {
 			"before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
@@ -93,7 +93,7 @@
 		},
 		"dist/modes/rpc/rpc-mode.js": {
 			"before": "505297dba2df1de3003c0399b3312fd581359a4e27a5e9262b274b6cb5cb4ef3",
-			"after": "5a3de1b3ddca0e5a98a51ca554e5a8e8faa8880cbadcd81ce39075be999cd1a4"
+			"after": "2f9f276cbc0cee768c64027c4267578305b70746acbc762f285b57ed168cec11"
 		},
 		"dist/core/extensions/loader.js": {
 			"before": "55e794b969dd4692a553b21767fe876537fe06083586816f62848e76c553ef7c",
@@ -143,12 +143,24 @@
 			"before": "66edb495ff9767e7f2ce0d2f4e2d102532e4b396ad7bc7c3c648c7c12c0fe71d",
 			"after": "df0056b52df36dc3b54f9c49d5fad2c642e11b82231226a177e1f38f2477f504"
 		},
+		"dist/core/settings-defaults.js": {
+			"before": "e0567d94626f760007fd3511df8a4556c571d8e882b8fe8c2b69c87dbcb094e0",
+			"after": "17a894d2ab4eaa5c3495e169d1e0fba7cb36dbd61c94d8d72b5327ce20ff721f"
+		},
+		"dist/core/settings-defaults.d.ts": {
+			"before": "3797deac77ce0a8a85ec6544d313c716ca981ba633c6a86b97a7aa4766f493c4",
+			"after": "732e09b85f87031a5e3c05364951b53a323f48fc6e1e24e890e5a999a4ab3852"
+		},
+		"dist/core/settings-schema.js": {
+			"before": "d6cd7270a3421b5ab435eae10f9d08ef0c6995ee63f64e300b52ad94de9dab22",
+			"after": "bd5c679e25a86b6328147f8d4c33324d99d2e340fcf316237cb854b18ead5937"
+		},
 		"dist/core/system-prompt.js": {
 			"before": "5f68e89c31ba3d4d1af8ad2bfd0c7c548879d47ee6ab4aabee50a826100da32c",
 			"after": "a4dafe636c2ff19abaa92e45c781b0e8c1835350c587d6615604832b4d277568"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
-	"flowIngress": "263f28a402c4de6a85adcaa403221639bde9dfb70775dbbd04a0a56e264e3c60",
+	"flowIngress": "7d3fccc387badf1db77a7925a2b963706b0c7f22d2f0b2e275f28ca7dd82f188",
 	"flowIngressTypes": "a9339519cb51a5a8bf845aa304b3caf0e64902c79426cffc52bd11b90f345843"
 }

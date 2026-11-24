@@ -15,6 +15,7 @@ import {
 	AgentSession,
 	createAgentSession,
 	DefaultResourceLoader,
+	InteractiveMode,
 	loadSkills,
 	ModelRuntime,
 	SessionManager,
@@ -645,6 +646,109 @@ test("aborted responses keep valid assistant messages for session stats and late
 	await session.prompt("try again");
 	assert.equal(session.agent.state.messages.at(-1).content[0].text, "recovered answer");
 	assert.ok(Number.isFinite(session.getSessionStats().tokens.total));
+});
+
+test("only an abort without keepPrompts cancels prompts sent before it, in RPC and the terminal", async (t) => {
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-stop-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const runtime = await ModelRuntime.create({
+		credentials: {
+			read: async () => undefined,
+			list: async () => [],
+			modify: async () => undefined,
+			delete: async () => {},
+		},
+		modelsPath: null,
+		modelsStorePath: join(directory, "models.json"),
+		refreshOnCreate: false,
+		allowModelNetwork: false,
+	});
+	const loader = new DefaultResourceLoader({ cwd: directory, agentDir: directory, noExtensions: true, noSkills: true });
+	await loader.reload();
+	const { session } = await createAgentSession({
+		cwd: directory,
+		agentDir: directory,
+		resourceLoader: loader,
+		modelRuntime: runtime,
+		model: fixtureModel,
+		sessionManager: SessionManager.inMemory(directory),
+		settingsManager: SettingsManager.inMemory(),
+		tools: [],
+	});
+	t.after(() => session.dispose());
+	session._modelRuntime.hasConfiguredAuth = () => true;
+	session._modelRuntime.checkAuth = async () => "fixture-key";
+	let calls = 0;
+	session.agent.streamFunction = async () => {
+		calls++;
+		return doneStream(assistantMessage("answer"));
+	};
+	const submitted = session.promptAbortCount;
+	// An abort that keeps prompts, as compaction's does, cancels nothing the user already sent.
+	await session.abort({ keepPrompts: true });
+	assert.equal(session.promptAbortCount, submitted, "an abort that keeps prompts is not counted");
+	const kept = [];
+	await session.prompt("kept", { abortEpoch: submitted, preflightResult: (value) => kept.push(value) });
+	assert.deepEqual(kept, ["started"]);
+	assert.equal(calls, 1);
+	// The user's abort cancels a prompt submitted before it, before any run starts.
+	await session.abort();
+	assert.equal(session.promptAbortCount, submitted + 1, "the user's abort is counted");
+	const cancelled = [];
+	await session.prompt("cancelled", { abortEpoch: submitted, preflightResult: (value) => cancelled.push(value) });
+	assert.deepEqual(cancelled, ["aborted"]);
+	assert.equal(calls, 1, "the cancelled prompt never reached the provider");
+	assert.ok(!JSON.stringify(session.agent.state.messages).includes("cancelled"), "nor the conversation");
+	// A prompt submitted after the abort runs.
+	const after = [];
+	await session.prompt("after", { preflightResult: (value) => after.push(value) });
+	assert.deepEqual(after, ["started"]);
+	assert.equal(calls, 2);
+	// The terminal binds an extension's ctx.abort(), from its handlers and its shortcuts, to the
+	// queue-restoring abort that Esc uses. Only Esc cancels prompts.
+	const terminal = Object.create(InteractiveMode.prototype);
+	let bindings;
+	let shortcut;
+	Object.assign(terminal, {
+		runtimeHost: {
+			session: {
+				bindExtensions: async (value) => {
+					bindings = value;
+					throw new Error("bound");
+				},
+			},
+		},
+		createExtensionUIContext: () => ({}),
+		clearAllQueues: () => ({ steering: [], followUp: [] }),
+		updatePendingMessagesDisplay: () => {},
+		keybindings: { getEffectiveConfig: () => ({}) },
+		defaultEditor: {},
+	});
+	await assert.rejects(InteractiveMode.prototype.bindCurrentSessionExtensions.call(terminal), /bound/);
+	terminal.runtimeHost.session = session;
+	terminal.setupExtensionShortcuts({
+		getShortcuts: () =>
+			new Map([
+				[
+					"ctrl+x",
+					{
+						handler: (ctx) => {
+							shortcut = ctx;
+						},
+					},
+				],
+			]),
+		getModelRegistry: () => undefined,
+	});
+	assert.equal(terminal.defaultEditor.onExtensionShortcut("\x18"), true);
+	const counted = session.promptAbortCount;
+	bindings.abortHandler();
+	shortcut.abort();
+	await session.waitForIdle();
+	assert.equal(session.promptAbortCount, counted, "a terminal extension's abort keeps prompts");
+	terminal.restoreQueuedMessagesToEditor({ abort: true });
+	await session.waitForIdle();
+	assert.equal(session.promptAbortCount, counted + 1, "Esc cancels them");
 });
 
 test("message_end policy failures keep unscanned roles intact and fail closed with valid shapes", async (t) => {

@@ -68,6 +68,36 @@ export function transform(path, source) {
 			"return mode !== undefined && CACHE_WARMING_MODES.includes(mode) ? mode : SETTINGS_DEFAULTS.cacheWarming;",
 			'return mode !== undefined && CACHE_WARMING_MODES.includes(mode) ? mode : "off";',
 		);
+	} else if (path === "dist/core/settings-defaults.js") {
+		change(
+			`    retry: {
+        enabled: true,
+        maxRetries: 3,
+        baseDelayMs: 2000,
+        maxAgentDelayMs: DEFAULT_MAX_AGENT_RETRY_DELAY_MS,
+        provider: {
+            maxRetryDelayMs: 60000,
+        },
+    },`,
+			`    retry: {
+        enabled: true,
+        maxRetries: 50,
+        baseDelayMs: 1000,
+        maxAgentDelayMs: 480000,
+        provider: {
+            maxRetryDelayMs: 60000,
+        },
+    },`,
+		);
+	} else if (path === "dist/core/settings-defaults.d.ts") {
+		change("    readonly maxRetries: 3;", "    readonly maxRetries: 50;");
+		change("    readonly baseDelayMs: 2000;", "    readonly baseDelayMs: 1000;");
+		change("    readonly maxAgentDelayMs: 60000;", "    readonly maxAgentDelayMs: 480000;");
+	} else if (path === "dist/core/settings-schema.js") {
+		change(
+			'        description: "Exponential backoff base delay in milliseconds: 2s, 4s, 8s.",',
+			'        description: "Exponential backoff base delay in milliseconds: 1s, 2s, 4s, then a steeper ramp up to the agent delay cap.",',
+		);
 	} else if (path === "dist/core/cache-warmer.js") {
 		change(
 			`            const message = await this.models
@@ -373,6 +403,24 @@ export function sessionEntryToContextMessages(entry) {`,
 		change(
 			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,",
 			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,\n            runtimeIdentity: this.options.sessionInfoFooter?.(),\n            showReport: (markdown) => {\n                this.chatContainer.addChild(new Text(markdown, this.outputPad, 1));\n                this.ui.requestRender();\n            },",
+		);
+		// An extension's ctx.abort(), from its handlers or its shortcuts, stops the current run as in
+		// RPC: queued messages still return to the editor, but prompts the user already sent are kept.
+		change(
+			"            abortHandler: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true });",
+			"            abortHandler: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true, keepPrompts: true });",
+		);
+		change(
+			"            abort: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true });",
+			"            abort: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true, keepPrompts: true });",
+		);
+		change(
+			"            if (options?.abort) {\n                void this.session.abort();\n            }\n            return 0;",
+			"            if (options?.abort) {\n                void this.session.abort({ keepPrompts: options.keepPrompts });\n            }\n            return 0;",
+		);
+		change(
+			"        if (options?.abort) {\n            void this.session.abort();\n        }\n        return allQueued.length;",
+			"        if (options?.abort) {\n            void this.session.abort({ keepPrompts: options.keepPrompts });\n        }\n        return allQueued.length;",
 		);
 	} else if (path === "dist/modes/interactive/interactive-mode.d.ts") {
 		change(
@@ -724,6 +772,60 @@ export function sessionEntryToContextMessages(entry) {`,
 			'        if (trigger.messageType === "custom") {\n            messages.push(trigger.message);\n        }\n        else {',
 			'        if (trigger.messageType === "custom") {\n            messages.push(trigger.message);\n        }\n        else if (trigger.messageType !== "queued") {',
 		);
+		// Agent-turn retries use a longer, jittered ramp than Pi's default. Summaries keep a short
+		// budget so a stalled compaction cannot hold the session for the agent-turn budget.
+		change(
+			"        const delayMs = retryDelayMs(settings, this._retryAttempt);",
+			"        const delayMs = this._agentRetryDelayMs(settings, this._retryAttempt);",
+		);
+		change(
+			`    /**
+     * Prepare a retryable error for continuation with exponential backoff.
+     * @returns true if the caller should continue the agent, false otherwise
+     */
+    async _prepareRetry(message) {`,
+			`    /**
+     * Delay before an agent-turn retry. The first three attempts stay quick, then the delay grows
+     * steeply to the configured cap. Jitter keeps concurrent sessions from retrying in lockstep.
+     */
+    _agentRetryDelayMs(settings, attempt) {
+        const multipliers = [1, 2, 4, 15, 30, 60, 120, 240, 480];
+        const multiplier = multipliers[Math.min(Math.max(0, attempt - 1), multipliers.length - 1)];
+        const cap = settings.maxAgentDelayMs ?? 480000;
+        const scheduled = Math.min(settings.baseDelayMs * multiplier, cap);
+        return Math.min(cap, Math.round(scheduled * (0.75 + Math.random() * 0.5)));
+    }
+    /**
+     * Retry policy for compaction, branch summaries, and bug-report summaries. They share the
+     * transient-error classifier but not the long agent-turn budget: a stalled summary should
+     * surface instead of holding the session for hours.
+     */
+    _summarizationRetrySettings() {
+        const settings = this.settingsManager.getRetrySettings();
+        return {
+            ...settings,
+            maxRetries: Math.min(settings.maxRetries, 3),
+            maxAgentDelayMs: Math.min(settings.maxAgentDelayMs, 60000),
+        };
+    }
+    /**
+     * Prepare a retryable error for continuation with exponential backoff.
+     * @returns true if the caller should continue the agent, false otherwise
+     */
+    async _prepareRetry(message) {`,
+		);
+		change(
+			'        return compact(preparation, request.model, request.apiKey, request.headers, customInstructions, signal, request.thinkingLevel, this.agent.streamFunction, request.env, this.settingsManager.getRetrySettings(), this._summarizationRetryCallbacks({ source: "compaction", reason }), undefined);',
+			'        return compact(preparation, request.model, request.apiKey, request.headers, customInstructions, signal, request.thinkingLevel, this.agent.streamFunction, request.env, this._summarizationRetrySettings(), this._summarizationRetryCallbacks({ source: "compaction", reason }), undefined);',
+		);
+		change(
+			"                    retry: this.settingsManager.getRetrySettings(),",
+			"                    retry: this._summarizationRetrySettings(),",
+		);
+		change(
+			"            retry: this.settingsManager.getRetrySettings(),",
+			"            retry: this._summarizationRetrySettings(),",
+		);
 		change(
 			"    async _startRun(trigger, onStarted) {",
 			`    async continueQueued() {
@@ -991,8 +1093,58 @@ export function sessionEntryToContextMessages(entry) {`,
             event = { ...event, result: { content: event.result.content, details: event.result.details, structuredContent: event.result.structuredContent, usage: event.result.usage, terminate: event.result.terminate } };
         }`,
 		);
+		// A user abort cancels every prompt the host submitted before it that has not started a run,
+		// including one still in input handling and auth checks or held by flow admission. Each prompt
+		// carries the abort count from when the host submitted it; the checks still finish as a whole,
+		// but a prompt that an abort overtook never starts. Prompts from automated work are unaffected.
+		change(
+			"\n    _agentRunAbortRequested = false;\n",
+			"\n    _agentRunAbortRequested = false;\n    _promptAbortEpoch = 0;\n",
+		);
+		change(
+			`    async abort() {
+        if (this._isAgentRunActive) {
+            this._agentRunAbortRequested = true;
+        }`,
+			`    /** Aborts so far that cancel prompts: every abort without keepPrompts. */
+    get promptAbortCount() {
+        return this._promptAbortEpoch;
+    }
+    async abort(options) {
+        if (this._isAgentRunActive) {
+            this._agentRunAbortRequested = true;
+        }
+        if (!options?.keepPrompts)
+            this._promptAbortEpoch++;`,
+		);
+		// Compaction and an extension's own abort stop the current run, not prompts the user already sent.
+		change(
+			"    async compact(customInstructions) {\n        await this.abort();",
+			"    async compact(customInstructions) {\n        await this.abort({ keepPrompts: true });",
+		);
+		change(
+			"                    this._extensionAbortHandler();\n                    return;\n                }\n                void this.abort();",
+			"                    this._extensionAbortHandler();\n                    return;\n                }\n                void this.abort({ keepPrompts: true });",
+		);
+		change(
+			"        const expandPromptTemplates = options?.expandPromptTemplates ?? true;\n        const preflightResult = options?.preflightResult;\n        // Handle extension commands first",
+			"        const abortEpoch = options?.abortEpoch ?? this._promptAbortEpoch;\n        const expandPromptTemplates = options?.expandPromptTemplates ?? true;\n        const preflightResult = options?.preflightResult;\n        // Handle extension commands first",
+		);
+		change(
+			'        if (trigger)\n            await this._startRun(trigger, () => preflightResult?.("started"));',
+			`        if (trigger && this._promptAbortEpoch !== abortEpoch) {
+            preflightResult?.("aborted");
+            return;
+        }
+        if (trigger)
+            await this._startRun(trigger, () => preflightResult?.("started"));`,
+		);
 	} else if (path === "dist/core/agent-session.d.ts") {
 		change("    dispose(): void;", "    dispose(): Promise<void>;");
+		change(
+			"    abort(): Promise<void>;",
+			"    /** Aborts so far that cancel prompts: every abort without `keepPrompts`, such as the user's Stop, a session switch or shutdown. Compaction and extension aborts keep prompts. */\n    readonly promptAbortCount: number;\n    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
+		);
 		change(
 			"export declare class AgentSession {",
 			"export declare class AgentSession {\n    /** Observe exact native next-turn input before Pi retains it. Failure prevents enqueue. */\n    flowNextTurn?: (message: AgentMessage, cancel: () => boolean) => Promise<void>;",
@@ -1003,6 +1155,14 @@ export function sessionEntryToContextMessages(entry) {`,
 			"    /** Drain queued input through native retries, compaction, and settlement without appending a prompt. */\n    continueQueued(): Promise<boolean>;\n    private _startRun;",
 		);
 		change("    private _handlePostAgentRun;", "    private _handlePostAgentRun;\n    private _continueAgentRun;");
+		change(
+			"    preflightResult?: (disposition: PromptDisposition) => void;",
+			"    preflightResult?: (disposition: PromptDisposition) => void;\n    /** The session's abort count when the host submitted this prompt; a later abort cancels it before it starts. */\n    abortEpoch?: number;",
+		);
+		change(
+			'export type PromptDisposition = QueuedInputDisposition | "started";',
+			'/** `aborted`: a user abort arrived while the prompt was being prepared, so no run started. */\nexport type PromptDisposition = QueuedInputDisposition | "started" | "aborted";',
+		);
 		change(
 			"export interface AgentSessionConfig {",
 			"export interface AgentSessionConfig {\n    flowIngress?: FlowIngress;",
@@ -1273,6 +1433,12 @@ export function sessionEntryToContextMessages(entry) {`,
                 activeCommands++;
                 void (async () => session
 `,
+		);
+		// The prompt's position on the input stream decides which Stop cancels it: a later abort line
+		// cancels it even while host admission still holds the call.
+		change(
+			'                    source: "rpc",\n                    preflightResult: (disposition) => {\n',
+			'                    source: "rpc",\n                    abortEpoch: session._promptAbortEpoch,\n                    preflightResult: (disposition) => {\n',
 		);
 		change(
 			"                        preflightSucceeded = true;\n" +
@@ -2060,5 +2226,8 @@ export const paths = [
 	"dist/core/model-runtime.d.ts",
 	"dist/core/cache-warmer.js",
 	"dist/core/settings-manager.js",
+	"dist/core/settings-defaults.js",
+	"dist/core/settings-defaults.d.ts",
+	"dist/core/settings-schema.js",
 	"dist/core/system-prompt.js",
 ];

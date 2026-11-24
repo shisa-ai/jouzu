@@ -23,7 +23,7 @@
 		},
 		{
 			"path": "upstream/pi-content-policy/patch.lock.json",
-			"sha256": "2a4088a9ca00677f4d47205b259434230891cb7b54a74c021a72fb68f77e9f4e"
+			"sha256": "3b72faa4eee814c7c09c42e187a310f410341275dcd5d25bbe04145b324e69e0"
 		},
 		{
 			"path": "upstream/pi-flow-control/patch.lock.json",
