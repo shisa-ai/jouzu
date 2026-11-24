@@ -529,6 +529,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		{ createJouzuHelpExtension },
 		{ createPluginsExtension },
 		{ createScrollbackExtension },
+		{ createSideConversationExtension },
 		{ createSessionUiExtension, SESSION_UI_MESSAGE_IDS, WorkDashboardController, selectWork },
 	] = await Promise.all([
 		import("./presentation.js"),
@@ -536,6 +537,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		import("./help.js"),
 		import("./plugins.js"),
 		import("./scrollback.js"),
+		import("./side-conversation.js"),
 		import("./session-ui/index.js"),
 	]);
 	presentation.clearInteractiveStartup(parsed.args);
@@ -606,6 +608,11 @@ export async function runMainCli(args: string[]): Promise<void> {
 		textguardFiles: parsed.options.textguardFiles,
 		// Read at launch time: a child inherits whatever mode the session is in.
 		textguardMode: () => nativeTextguard.currentMode(),
+		filterSideContext: async (sessionId, messages) => {
+			const policy = nativeTextguard.forSession(sessionId);
+			if (!policy) throw new Error(preRuntime.catalog.bundle.format("jouzu.cli.btw.contextUnavailable"));
+			return policy.filterContext(messages);
+		},
 		profile: () => profile.id,
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
@@ -831,6 +838,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				}),
 				modelPicker.extension,
 				modelPicker.workflowExtension,
+				createSideConversationExtension(modelPicker.workflowService, preRuntime.catalog.bundle),
 				createAstraCompatibilityExtension(),
 				createFastModeExtension(preRuntime.catalog.bundle),
 				createPluginsExtension(preRuntime.catalog.bundle),

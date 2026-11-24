@@ -114,6 +114,7 @@ export interface JouzuModelPickerOptions {
 	textguardFiles?: boolean;
 	/** Reads the live TextGuard mode when a child agent launches. */
 	textguardMode?: () => TextGuardMode;
+	filterSideContext?: import("./side-context.js").SideContextFilter;
 	profile?: () => "core" | "ja";
 	applyProjectDefaultAtStartup?: boolean;
 	restoreLastModelAtStartup?: boolean;
@@ -1286,6 +1287,7 @@ export function createJouzuModelPicker(
 	const messageCatalog = options.catalog ?? defaultCatalog();
 	const workflow = createWorkflowIntegration(paths, undefined, {
 		textguardFiles: options.textguardFiles,
+		filterSideContext: options.filterSideContext,
 		...(options.dashboardVisibility ? { dashboardVisibility: options.dashboardVisibility } : {}),
 		profile: options.profile,
 		...(options.textguardMode ? { textguardMode: options.textguardMode } : {}),

@@ -180,7 +180,16 @@ function sseFor(reply) {
 
 export async function createQualifiedFlowSession(
 	t,
-	{ ingress, extensions = [], sessionManager, root: fixtureRoot, script, persist = false, settings = {} } = {},
+	{
+		ingress,
+		extensions = [],
+		sessionManager,
+		root: fixtureRoot,
+		script,
+		persist = false,
+		settings = {},
+		modelId = "fixture",
+	} = {},
 ) {
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-qualified-")));
 	const bodies = [];
@@ -250,7 +259,7 @@ export async function createQualifiedFlowSession(
 		baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
 		models: [
 			{
-				id: "fixture",
+				id: modelId,
 				name: "fixture",
 				reasoning: false,
 				input: ["text", "image"],
@@ -273,7 +282,7 @@ export async function createQualifiedFlowSession(
 		agentDir: root,
 		resourceLoader: loader,
 		modelRuntime: runtime,
-		model: runtime.getModel("fixture", "fixture"),
+		model: runtime.getModel("fixture", modelId),
 		sessionManager:
 			sessionManager ??
 			(persist ? cliPi.SessionManager.create(root, join(root, "history")) : cliPi.SessionManager.inMemory(root)),

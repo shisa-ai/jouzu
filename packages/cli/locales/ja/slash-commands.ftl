@@ -47,6 +47,7 @@ jouzu-cli-session-slash-codePreviewSettings = コードプレビューの設定�
 jouzu-cli-session-slash-jouzuReview = 現在の変更の正確性、リグレッション、データ安全性、テスト、ドキュメント整合性をレビュー
 jouzu-cli-session-slash-skillJouzuReference = Jouzu の設定、言語、モデル/カタログ、プロファイル、セッション・トレースの場所、操作、トラブルシューティングを参照
 jouzu-cli-session-slash-skillJouzuClearWriting = 事実を変えずに利用者向けの技術文書やメッセージを作成・改稿・監査
+jouzu-cli-session-slash-skillJouzuAnalysis = 根拠に基づく判断や推奨事項を分析文書にまとめる
 jouzu-cli-session-slash-skillJouzuAntiSlop = 事実や条件を失わずに既存の文章から冗長な表現や宣伝文句を除去
 jouzu-cli-session-slash-skillJouzuDelegation = サブエージェントへの指示、軌道修正メッセージ、再開時の引き継ぎを作成・確認
 jouzu-cli-session-slash-skillJouzuSourceCheck = 一次根拠、反証、確信度に基づいて主張や情報源を調査・ファクトチェック

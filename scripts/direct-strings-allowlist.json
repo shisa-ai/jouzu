@@ -1,5 +1,12 @@
 [
 	{
+		"file": "packages/cli/src/side-conversation.ts",
+		"kind": "apply-argument",
+		"text": "→ {…}",
+		"category": "protected-values",
+		"reason": "Selection arrow preceding an already localized action label."
+	},
+	{
 		"file": "packages/session-ui/src/contracts.ts",
 		"kind": "record-value",
 		"text": "Manage tasks — view, create, clear completed. '/tasks auto' enters auto-advance mode.",
@@ -194,6 +201,139 @@
 		"text": "a provider request failed",
 		"category": "protected-values",
 		"reason": "Prefix of persisted provider failure reasons used to classify retry behavior."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "host recovery is still in progress",
+		"category": "protected-values",
+		"reason": "Recovery hold reason compared across flow components; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "a withheld request needs a decision",
+		"category": "protected-values",
+		"reason": "Recovery hold reason compared across flow components; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "an interrupted turn has an unknown outcome",
+		"category": "protected-values",
+		"reason": "Recovery hold reason compared across flow components; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "wait sources are still being reconciled",
+		"category": "protected-values",
+		"reason": "Recovery hold reason compared across flow components; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "saved work needs a recovery decision",
+		"category": "protected-values",
+		"reason": "Recovery hold reason compared across flow components; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Input is missing or cancelled.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Input is waiting for recovery reconciliation.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Input is waiting for host retry or compaction.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Input has no exact native queue revision.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Automated input is paused until the next user turn is under way.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Automated input is waiting for an interrupted turn to be resolved.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Deferred context requires a persistence receipt before release.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Non-waking context is waiting for an idle append boundary.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Unclassified input cannot establish independence from a live wait.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Input is waiting for queued user work.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Automated input is waiting for an idle host boundary.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Input is waiting for an earlier retained instruction in its lane.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; users read the localized message beside it and clients read its code."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "Host admission policy failed; review input before retry.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; clients read its code, and the terminal shows it as bounded diagnostic text."
+	},
+	{
+		"file": "packages/cli/src/flow-control/flow-hold-reasons.ts",
+		"kind": "record-value",
+		"text": "External input authorization is unavailable; review the configuration before retrying.",
+		"category": "protected-values",
+		"reason": "Persisted input hold reason recorded with the submission and compared on recovery; clients read its code, and the terminal shows it as bounded diagnostic text."
 	},
 	{
 		"file": "packages/cli/src/model-picker.ts",

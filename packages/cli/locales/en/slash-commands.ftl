@@ -48,6 +48,7 @@ jouzu-cli-session-slash-codePreviewSettings = Configure code preview settings
 jouzu-cli-session-slash-jouzuReview = Review the current change for correctness, regressions, data safety, tests, and documentation parity
 jouzu-cli-session-slash-skillJouzuReference = Look up Jouzu settings, language, models/catalogs, profiles, session and trace locations, controls, and troubleshooting
 jouzu-cli-session-slash-skillJouzuClearWriting = Draft, revise, or audit durable user-facing technical artifacts without changing facts
+jouzu-cli-session-slash-skillJouzuAnalysis = Turn evidence into findings or recommendations in analysis documents
 jouzu-cli-session-slash-skillJouzuAntiSlop = Remove filler, marketing language, and unsupported emphasis from existing prose without losing facts
 jouzu-cli-session-slash-skillJouzuDelegation = Write and review subagent assignments, steering messages, and resume handoffs
 jouzu-cli-session-slash-skillJouzuSourceCheck = Research and fact-check claims or sources through primary evidence, counterevidence, and confidence

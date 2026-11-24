@@ -87,6 +87,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "btw",
+      "registered_extension": true,
+      "english": "Ask a side question without interrupting main work",
+      "japanese": "メインの作業を中断せずに別の質問をする",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.btw.description"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "bug",
       "registered_extension": false,
       "english": "Draft a bug report for Jouzu",
@@ -550,6 +562,18 @@
       "catalog": "translation-exists",
       "message_ids": [
         "jouzu.cli.session.slash.share"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:jouzu-analysis",
+      "registered_extension": false,
+      "english": "Turn evidence into findings or recommendations in analysis documents",
+      "japanese": "根拠に基づく判断や推奨事項を分析文書にまとめる",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuAnalysis"
       ],
       "startup_description": "catalog-japanese-observed",
       "detail_surfaces": "not-exercised"

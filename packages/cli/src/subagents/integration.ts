@@ -20,6 +20,7 @@ import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
 import { promptCapabilities } from "../prompt-capabilities.js";
 import { setPromptSections } from "../prompt-sections.js";
+import { prepareSideContext, type SideContextFilter, sideContextFor } from "../side-context.js";
 import type { TextGuardMode } from "../textguard-policy.js";
 import {
 	observedSubagentResults,
@@ -61,6 +62,9 @@ export interface WorkflowService {
 	save(snapshot: RoleSnapshot): void;
 	models(): AgentModel[];
 	runs(): AgentRun[];
+	sideRuns(): AgentRun[];
+	askSide(task: string, previousRunId?: string): Promise<AgentRun>;
+	stopSide(id: string): Promise<void>;
 	read(id: string, offset?: number): { text: string; nextOffset: number | null; totalBytes: number };
 	trace(id?: string, options?: TraceQuery): ReturnType<typeof readSessionTrace>;
 	launch(roleId: string, task: string, options?: LaunchOptions): Promise<AgentRun>;
@@ -80,6 +84,7 @@ export function createWorkflowIntegration(
 	options: {
 		textguardFiles?: boolean;
 		textguardMode?: () => TextGuardMode;
+		filterSideContext?: SideContextFilter;
 		profile?: () => "core" | "ja";
 		dashboardVisibility?: (visible: boolean) => void;
 		/** The resolved catalog the subagent result renderer reads its display text from. */
@@ -118,7 +123,7 @@ export function createWorkflowIntegration(
 		sessionFile: run.sessionFile,
 	});
 	const notify = () => {
-		dashboard.update(manager?.list() ?? []);
+		dashboard.update(manager?.list().filter((run) => !run.purpose) ?? []);
 		for (const listener of listeners) listener();
 	};
 	const context = () => {
@@ -128,6 +133,11 @@ export function createWorkflowIntegration(
 	const controller = () => {
 		if (!manager) throw new Error(catalogText(catalog, CatalogMessageId.subagentWorkflowRequiresSession));
 		return manager;
+	};
+	const delegatedRun = (id: string) => {
+		const run = controller().get(id);
+		if (run.purpose) throw new Error(catalogText(catalog, CatalogMessageId.subagentRunNotFoundInSession));
+		return run;
 	};
 	const availableModels = () => {
 		const registry = context().modelRegistry;
@@ -161,8 +171,9 @@ export function createWorkflowIntegration(
 		previousRunId?: string,
 		modelSelector?: string,
 		launchOptions: LaunchOptions = {},
+		side = false,
 	) => {
-		requireSubagents();
+		if (!side) requireSubagents();
 		const revision = enableRevision;
 		const active = context();
 		const generation = sessionGeneration;
@@ -173,16 +184,17 @@ export function createWorkflowIntegration(
 			catalog,
 		);
 		const parentEntryId = active.sessionManager.getLeafId() ?? undefined;
-		const childContext = previousRunId
-			? undefined
-			: captureChildContext(
-					launchOptions,
-					role.judging,
-					active.sessionManager.getSessionId(),
-					active.sessionManager.getBranch(),
-					parentEntryId,
-					catalog,
-				);
+		const childContext =
+			previousRunId || side
+				? undefined
+				: captureChildContext(
+						launchOptions,
+						role.judging,
+						active.sessionManager.getSessionId(),
+						active.sessionManager.getBranch(),
+						parentEntryId,
+						catalog,
+					);
 		const model = resolveModel(modelSelector ?? role.model);
 		const thinkingLevel = resolveAgentThinking(role.thinking, api?.getThinkingLevel?.(), catalog);
 		const registered = active.modelRegistry.getRegisteredProviderConfig(model.provider);
@@ -190,8 +202,8 @@ export function createWorkflowIntegration(
 		const auth = await active.modelRegistry.getApiKeyAndHeaders(model);
 		if (sessionGeneration !== generation || manager !== targetManager)
 			throw new Error(catalogText(catalog, CatalogMessageId.subagentSessionChangedBeforeStart));
-		requireSubagents();
-		if (revision !== enableRevision)
+		if (!side) requireSubagents();
+		if (!side && revision !== enableRevision)
 			throw new Error(catalogText(catalog, CatalogMessageId.subagentSettingChangedBeforeLaunch));
 		if (!auth.ok) throw new Error(catalogText(catalog, CatalogMessageId.subagentAuthenticationSignIn));
 		if (auth.env && Object.keys(auth.env).length)
@@ -200,8 +212,49 @@ export function createWorkflowIntegration(
 		if (settings.drainErrors().length)
 			throw new Error(catalogText(catalog, CatalogMessageId.subagentCacheWarmingSettingsUnreadable));
 		const profile = options.profile?.() ?? "core";
+		const effectiveModel = { ...model, baseUrl: auth.baseUrl ?? model.baseUrl };
+		if (
+			side &&
+			(active.model?.provider !== model.provider ||
+				active.model.id !== model.id ||
+				(parentEntryId && !active.sessionManager.getBranch().some((entry) => entry.id === parentEntryId)))
+		)
+			throw new Error(catalog.format("jouzu.cli.btw.diverged"));
+		const sideContext = side
+			? options.filterSideContext
+				? await prepareSideContext(
+						{ sessionId: active.sessionManager.getSessionId(), sessionManager: active.sessionManager },
+						effectiveModel,
+						options.filterSideContext,
+					)
+				: sideContextFor(
+						{ sessionId: active.sessionManager.getSessionId(), sessionManager: active.sessionManager },
+						effectiveModel,
+					)
+			: undefined;
+		if (sessionGeneration !== generation || manager !== targetManager)
+			throw new Error(catalogText(catalog, CatalogMessageId.subagentSessionChangedBeforeStart));
+		if (side && (active.model?.provider !== model.provider || active.model.id !== model.id))
+			throw new Error(catalog.format("jouzu.cli.btw.diverged"));
+		if (side && !sideContext) throw new Error(catalog.format("jouzu.cli.btw.contextUnavailable"));
+		if (side && previousRunId) {
+			const previous = targetManager.get(previousRunId);
+			if (
+				previous.purpose !== "side-conversation" ||
+				previous.sideDestination !== sideContext?.destination ||
+				previous.model.provider !== model.provider ||
+				previous.model.id !== model.id ||
+				(previous.parentEntryId &&
+					!active.sessionManager.getBranch().some((entry) => entry.id === previous.parentEntryId))
+			)
+				throw new Error(catalog.format("jouzu.cli.btw.diverged"));
+			// The persisted child identity survives process-local context capture IDs.
+			// Ancestry and destination were checked above before retaining that identity.
+			if (sideContext) sideContext.branchId = previous.sideBranchId;
+		}
 		return targetManager.launch(
 			{
+				...(side ? { purpose: "side-conversation" as const, sideContext } : {}),
 				cacheWarming: settings.getCacheWarmingMode(),
 				role,
 				model,
@@ -240,7 +293,7 @@ export function createWorkflowIntegration(
 			enableRevision++;
 			notify();
 			if (!enabled) {
-				settingChange = controller().stopAll("Subagents disabled. Changes already made remain.");
+				settingChange = controller().stopAll("Subagents disabled. Changes already made remain.", true);
 				try {
 					await settingChange;
 				} finally {
@@ -257,10 +310,37 @@ export function createWorkflowIntegration(
 			notify();
 		},
 		models: availableModels,
-		runs: () => manager?.list() ?? [],
-		read: (id, offset) => controller().read(id, offset),
+		runs: () => manager?.list().filter((run) => !run.purpose) ?? [],
+		sideRuns: () => manager?.list().filter((run) => run.purpose === "side-conversation") ?? [],
+		askSide(task, previousRunId) {
+			const role: AgentRole = {
+				id: "side-conversation",
+				description: "User side conversation",
+				model: SAME_MODEL,
+				instructions: "Answer the user's side question.",
+				placement: "child",
+				judging: false,
+				tools: [],
+				thinking: "same",
+				timeoutSeconds: 180,
+				maxTurns: 1,
+			};
+			return dispatch(role, task, previousRunId, SAME_MODEL, {}, true);
+		},
+		stopSide(id) {
+			if (controller().get(id).purpose !== "side-conversation")
+				throw new Error(catalog.format("jouzu.cli.btw.diverged"));
+			return controller().stop(id, catalog.format("jouzu.cli.btw.cancelled"));
+		},
+		read: (id, offset) => {
+			delegatedRun(id);
+			return controller().read(id, offset);
+		},
 		trace: (id, options) => {
-			if (id) return controller().trace(id, options);
+			if (id) {
+				delegatedRun(id);
+				return controller().trace(id, options);
+			}
 			const file = context().sessionManager.getSessionFile();
 			if (!file) throw new Error(catalogText(catalog, CatalogMessageId.subagentParentTranscriptUnavailable));
 			return readSessionTrace(file, options, catalog);
@@ -271,7 +351,7 @@ export function createWorkflowIntegration(
 		},
 		async resume(id, task) {
 			requireSubagents();
-			const previous = controller().get(id);
+			const previous = delegatedRun(id);
 			// Saved selectors remain authoritative; inherited settings follow the parent.
 			return dispatch(
 				previous.role,
@@ -282,9 +362,13 @@ export function createWorkflowIntegration(
 		},
 		steer: (id, text) => {
 			requireSubagents();
+			delegatedRun(id);
 			return controller().steer(id, text);
 		},
-		stop: (id) => controller().stop(id),
+		stop: (id) => {
+			delegatedRun(id);
+			return controller().stop(id);
+		},
 		async activate(id) {
 			const active = context();
 			const role = roleById(id);
@@ -324,7 +408,9 @@ export function createWorkflowIntegration(
 							manager?.parentSessionId === request.sessionId
 								? manager
 								: new SubagentManager(paths, request.sessionId, 1, workerFactory, undefined, catalog);
-						return owner.get(id);
+						const run = owner.get(id);
+						if (run.purpose) throw new Error(catalogText(catalog, CatalogMessageId.subagentRunNotFoundInSession));
+						return run;
 					},
 					subscribe: service.subscribe,
 				});

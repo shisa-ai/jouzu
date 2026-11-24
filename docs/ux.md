@@ -48,6 +48,14 @@ the transcript without starting a model turn or adding model context. Opening it
 does not browse the web, install packages, or change configuration. It also appears
 in `/help` and slash-command completion.
 
+## Side conversations
+
+Run `/btw <question>` to open a user-owned, tool-free side conversation. Bare
+`/btw` reopens it. The main agent continues independently; side answers enter its
+context only through an explicit draft or instruction handoff. See
+[Side conversations](side-conversations.md) for snapshot limits, cancellation,
+history, usage, and delivery receipts.
+
 ## Session status bar
 
 The right side shows context, cumulative tokens, cache share, and cost:

@@ -64,12 +64,13 @@ Catalog recommendations apply only when no model choice is saved. They can also 
 
 ## Fast mode
 
-- `/fast on` requests priority processing for GPT models using OpenAI Responses or Codex connections, including compatible gateways. The provider determines model and account eligibility.
+- `/fast on` requests priority processing for `gpt-` models using OpenAI Responses, Codex Responses, or Chat Completions, including IDs with a prefix such as `pool/gpt-example`. The provider determines model and account eligibility.
 - `/fast off` requests standard processing. `/fast` reports the session's choice.
 - The model line shows `fast` beside the thinking level, for example `gpt-6.1-sol (high · fast)`. Thinking level is a separate choice.
 - The choice is saved in the session and restored on resume and branch navigation. New sessions start with Fast mode off. Switching to another API or a non-GPT model suspends Fast mode until a matching model is selected.
 - Fast mode applies to the session's conversation requests, including tool continuations. Compaction, automatic labels, and child sessions use their own request settings.
-- Change the setting while the agent is idle. Requests already in progress keep their processing tier.
+- You can change the setting while the agent is working. The next eligible request uses the saved choice. Requests already sent keep their processing tier.
+- If the provider explicitly rejects priority processing before generating output, Jouzu retries once without Fast mode. If that retry succeeds, Jouzu reports the fallback and leaves Fast mode off for that model and provider on the session branch. To try priority again on that route, run `/fast on`.
 
 Fast mode uses higher rates. With ChatGPT sign-in, included subscription limits are consumed at 2.5× the standard rate, and purchased credits at 2×. API keys and gateways use their provider's rates. See [Codex speed](https://developers.openai.com/codex/speed/) and [API Fast mode](https://developers.openai.com/api/docs/guides/priority-processing/).
 

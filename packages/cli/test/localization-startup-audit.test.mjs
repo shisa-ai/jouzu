@@ -15,6 +15,7 @@ test("real Japanese startup localizes shared extension commands and matches revi
 	assert.match(english.runtimeSummary, /^Runtime: Jouzu /u);
 	assert.match(japanese.runtimeSummary, /^実行環境: Jouzu /u);
 	for (const [name, id] of [
+		["btw", "jouzu.cli.btw.description"],
 		["labels", "jouzu.cli.sessionLabels.command.description"],
 		["plugins", "jouzu.cli.plugins.description"],
 		["textguard", "jouzu.cli.textguard.commandDescription"],
@@ -37,7 +38,7 @@ test("real Japanese startup localizes shared extension commands and matches revi
 		actual.commands.filter((row) => row.startup_description === "english-observed").map((row) => row.command),
 		[],
 	);
-	for (const name of ["labels", "plugins", "textguard"]) {
+	for (const name of ["btw", "labels", "plugins", "textguard"]) {
 		const command = actual.commands.find((row) => row.command === name);
 		assert.equal(command.catalog, "translation-exists", "catalog presence is not startup wiring evidence");
 		assert.equal(command.startup_description, "catalog-japanese-observed");

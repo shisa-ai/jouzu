@@ -157,6 +157,34 @@ export default function(pi) {
 		const restored = (await contexts())[2];
 		assert.doesNotMatch(JSON.stringify(restored), /RESTORED_RPC_SECRET|CHANGED_RPC_DESCRIPTION|CHANGED_RPC_BODY/);
 		assert.match(JSON.stringify(restored), /TextGuard withheld/);
+		// Messages reach the client as notify, and the state as read-only structured status.
+		const ui = (method) => seen.filter((event) => event.type === "extension_ui_request" && event.method === method);
+		const statuses = () =>
+			ui("setStatus")
+				.filter((event) => event.statusKey === "jouzu-textguard")
+				.map((event) => JSON.parse(event.statusText));
+		assert.ok(ui("notify").some((event) => /TextGuard withheld/.test(event.message)));
+		assert.doesNotMatch(stderr, /TextGuard/);
+		assert.equal(statuses()[0]?.mode, "guarded");
+		assert.doesNotMatch(JSON.stringify(statuses()), /RESTORED_RPC_SECRET/);
+		const strict = wait(
+			(event) =>
+				event.type === "extension_ui_request" &&
+				event.statusKey === "jouzu-textguard" &&
+				JSON.parse(event.statusText).mode === "strict",
+		);
+		await command("prompt", { message: "/textguard strict" });
+		await strict;
+		assert.ok(ui("notify").some((event) => /withholds every flagged input/.test(event.message)));
+		// Review stays with the terminal; RPC gets the explanation, never an approval path.
+		const terminalOnly = wait(
+			(event) =>
+				event.type === "extension_ui_request" &&
+				event.method === "notify" &&
+				/interactive terminal/.test(event.message),
+		);
+		await command("prompt", { message: "/textguard" });
+		await terminalOnly;
 		assert.equal(seen.filter((event) => event.type === "extension_error").length, 0);
 	} finally {
 		child?.kill("SIGKILL");

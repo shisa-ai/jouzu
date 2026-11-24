@@ -47,6 +47,7 @@ jouzu-cli-session-slash-codePreviewSettings = 設定程式碼預覽選項
 jouzu-cli-session-slash-jouzuReview = 審查目前變更的正確性、迴歸風險、資料安全、測試與文件一致性
 jouzu-cli-session-slash-skillJouzuReference = 查詢 Jouzu 設定、語言、模型/目錄、設定檔、工作階段與追蹤位置、控制及疑難排解
 jouzu-cli-session-slash-skillJouzuClearWriting = 在不改變事實的前提下起草、修訂或審查面向使用者的技術文件與訊息
+jouzu-cli-session-slash-skillJouzuAnalysis = 在分析文件中根據證據得出結論或提出建議
 jouzu-cli-session-slash-skillJouzuAntiSlop = 在不遺失事實與限定條件的前提下移除現有文本中的冗餘表達與宣傳用語
 jouzu-cli-session-slash-skillJouzuDelegation = 撰寫並審查子代理任務指派、引導訊息與恢復交接
 jouzu-cli-session-slash-skillJouzuSourceCheck = 基於主要證據、反證與信賴度調查並核查主張或資訊來源

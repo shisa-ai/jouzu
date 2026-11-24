@@ -4,7 +4,18 @@
 
 ### Added
 
+- Publish read-only TextGuard and flow-control state as JSON status (`jouzu-textguard`, `jouzu-flow`) to RPC clients, and to ACP hosts that opt in, as `_jouzu/status` notifications: mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications), [Flow control](docs/flow-control.md#rpc-and-acp-clients), and [ACP](docs/acp.md#jouzu-status).
 - Report a provider's rejection of an image in the conversation and add `/images omit` and `/images restore`, so a session whose image a provider refuses can continue. RPC clients receive the state as `jouzu-images` status JSON. See [Models](docs/models.md#images-a-provider-rejects).
+
+### Changed
+
+- Retry transient provider failures for up to 50 attempts with jittered backoff: 1s, 2s, 4s, 15s, 30s, 60s, 2m, 4m, then 8m. Compaction, branch summaries, and bug-report summaries keep a 3-retry, 60-second budget. See [Configuration](docs/configuration.md#provider-retries).
+
+### Fixed
+
+- Send TextGuard messages to RPC and ACP clients as notifications instead of stderr.
+- Announce a flow-control recovery hold once per hold, and never after it was released.
+- Make Stop final. A prompt stopped before its turn starts is cancelled instead of running later; RPC answers it with the disposition `aborted`, and ACP reports `cancelled`. A model request the Stop reaches before the provider receives it no longer holds later messages for a recovery decision. See [Flow control](docs/flow-control.md#stopping-a-turn).
 
 ## 0.2.6 - 2026-11-16
 
