@@ -269,42 +269,51 @@ for (const stage of ["prepare", "payload", "native-handoff", "handoff"])
 			}
 		});
 
-for (const byUser of [false, true])
-	test(`a stopped stream that rejects after handoff, byUser=${byUser}`, async (t) => {
-		const entered = deferred();
-		const result = await fixture(t, {
-			native: async (model, ctx, options) => {
-				await options.onPayload({ messages: ctx.messages }, model);
-				entered.resolve();
-				const stopped = new Promise((resolve) => options.signal.addEventListener("abort", resolve, { once: true }));
-				return {
-					// The stream ends without events once stopped.
-					[Symbol.asyncIterator]: () => ({
-						next: async () => {
-							await stopped;
-							return { done: true, value: undefined };
-						},
-					}),
-					// An interrupt that rejects the request instead of answering with an aborted message.
-					result: async () => {
+// result: the stream ends and its result rejects; iterator: the stream throws, so Pi never asks for
+// the result; call: the stream call itself rejects after the payload was handed off.
+for (const route of ["result", "iterator", "call"])
+	for (const byUser of [false, true])
+		test(`a stopped request that fails after handoff, route=${route}, byUser=${byUser}`, async (t) => {
+			const entered = deferred();
+			const aborted = () => new DOMException("The operation was aborted.", "AbortError");
+			const result = await fixture(t, {
+				native: async (model, ctx, options) => {
+					await options.onPayload({ messages: ctx.messages }, model);
+					entered.resolve();
+					const stopped = new Promise((resolve) => options.signal.addEventListener("abort", resolve, { once: true }));
+					if (route === "call") {
 						await stopped;
-						throw new DOMException("The operation was aborted.", "AbortError");
-					},
-				};
-			},
+						throw aborted();
+					}
+					return {
+						[Symbol.asyncIterator]: () => ({
+							next: async () => {
+								await stopped;
+								if (route === "iterator") throw aborted();
+								// The stream ends without events once stopped.
+								return { done: true, value: undefined };
+							},
+						}),
+						// An interrupt that rejects the request instead of answering with an aborted message.
+						result: async () => {
+							await stopped;
+							throw aborted();
+						},
+					};
+				},
+			});
+			const running = result.session.agent.continue().catch(() => {});
+			await entered.promise;
+			const stopping = byUser ? result.session.abort() : result.session.agent.abort();
+			await Promise.all([running, stopping]);
+			const attempt = (await result.ledger.snapshot()).attempts[0];
+			const [request] = await result.records.snapshot();
+			assert.equal(attempt.requests[0].handedOff, true);
+			// The provider may have received it. A Stop makes its outcome known; any other abort leaves
+			// it unknown, for the user to resolve.
+			assert.equal(request.outcome, byUser ? "aborted" : undefined);
+			assert.equal(attempt.requests[0].outcome, byUser ? "aborted" : undefined);
 		});
-		const running = result.session.agent.continue().catch(() => {});
-		await entered.promise;
-		const stopping = byUser ? result.session.abort() : result.session.agent.abort();
-		await Promise.all([running, stopping]);
-		const attempt = (await result.ledger.snapshot()).attempts[0];
-		const [request] = await result.records.snapshot();
-		assert.equal(attempt.requests[0].handedOff, true);
-		// The provider may have received it. The user's Stop makes its outcome known; any other abort
-		// leaves it unknown, for the user to resolve.
-		assert.equal(request.outcome, byUser ? "aborted" : undefined);
-		assert.equal(attempt.requests[0].outcome, byUser ? "aborted" : undefined);
-	});
 
 for (const viaCommand of [false, true])
 	test(`queued AgentSession execution retries without an unrelated user prompt: command=${viaCommand}`, async (t) => {
