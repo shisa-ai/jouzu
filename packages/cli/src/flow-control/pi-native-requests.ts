@@ -19,7 +19,7 @@ import type {
 	NativeSourceCapture,
 	NativeSourceClaim,
 } from "./native-request-store.js";
-import { nativeHoldHash, nativeHoldPending, nativeSourceKey } from "./native-request-store.js";
+import { nativeSourceKey } from "./native-request-store.js";
 import { copyFlowPayload } from "./payload-copy.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { preparePiProviderRoute } from "./pi-provider-route.js";
@@ -68,35 +68,17 @@ export class PiNativeRequests {
 		this.assertActive();
 		return this.store.blocksQueueing(this.executing ?? this.pending);
 	}
-	/**
-	 * The user stopped the current run and its outcome is not recorded yet. Both facts are recorded
-	 * when they happen: the Stop when the session is aborted, the recording when it completes. Pi's
-	 * own run state cannot stand in for them, because Pi ends the run, and clears its abort signal,
-	 * before it reports the run settled.
-	 */
-	get userStopPending(): boolean {
-		return !!this.runEnd?.stoppedByUser || this.recordingUserStop > 0;
-	}
-	/** Resolves once a pending user Stop has ended its run and recorded its requests. */
-	async userStopSettled(): Promise<void> {
-		if (this.runEnd?.stoppedByUser) await this.runEnd.promise;
-		await this.abortedRun;
-	}
-	private prepared?: { modelHash: string; capture?: NativeSourceCapture; projections?: NativeProjectionCapture };
+	private prepared?: {
+		modelHash: string;
+		capture?: NativeSourceCapture;
+		projections?: NativeProjectionCapture;
+		/** The session's prompt-cancelling abort count when the request began. */
+		stops: number;
+	};
 	private active = 0;
 	private closed = false;
 	/** Latest response in this run, even if host recovery removes it from projected history. */
 	private lastAssistant?: AssistantMessage;
-	/** Requests begun in the current run, so a user abort can close exactly those. */
-	private runRequests = new Set<string>();
-	/** Recording the outcome of a run the user aborted; the next request waits for it. */
-	private abortedRun: Promise<void> = Promise.resolve();
-	/**
-	 * Resolves when the current run has settled and recorded its outcome. `stoppedByUser` is set when
-	 * the user aborts the session during the run, whatever aborts the run after that.
-	 */
-	private runEnd?: { promise: Promise<void>; resolve: () => void; stoppedByUser: boolean };
-	private recordingUserStop = 0;
 	private readonly unsubscribeTurn: () => void;
 	private guardedStream?: AgentSession["agent"]["streamFunction"];
 	private guardTransport = false;
@@ -122,7 +104,7 @@ export class PiNativeRequests {
 		decorateContext?: NativeContextDecorator,
 		trustedStream?: AgentSession["agent"]["streamFunction"],
 		/** Operation IDs of host-verified user submissions, used to place user instruction in a run. */
-		private readonly userOperations?: () => Promise<ReadonlySet<string>>,
+		userOperations?: () => Promise<ReadonlySet<string>>,
 		/**
 		 * Turn-level signals the session acts on as a whole.
 		 *
@@ -135,8 +117,6 @@ export class PiNativeRequests {
 			aborted(): void;
 			failed?(error: unknown): void;
 			providerFailed?(detail: string): void;
-			/** A stopped run's requests are recorded; this follows the run's settlement. */
-			stopRecorded?(): void;
 		},
 		reconcileSources?: () => Promise<unknown>,
 		/**
@@ -158,13 +138,6 @@ export class PiNativeRequests {
 		attached.add(session);
 		this.enabled = flowEnabled ?? (() => true);
 		this.unsubscribeTurn = session.subscribe((event) => this.observeTurn(event));
-		// The user's Stop is recorded against the run it stops at the moment it is made. An abort that
-		// keeps prompts, such as compaction's, is not the user's and does not change that record.
-		const abort = session.abort;
-		this.hooks.set(session, "abort", (options?: { keepPrompts?: boolean }) => {
-			if (!options?.keepPrompts && this.runEnd) this.runEnd.stoppedByUser = true;
-			return abort.call(session, options);
-		});
 		if (identifySources) {
 			const transform = session.agent.transformContext;
 			this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
@@ -440,8 +413,12 @@ export class PiNativeRequests {
 				this.warmGeneration++;
 				this.assertActive();
 				this.active++;
+				// A request whose signal aborts after the session's prompt-cancelling abort count moved was
+				// stopped by the user. Compaction and an extension's own abort keep prompts and leave the
+				// count alone, so a request they stop keeps its hold for the user to decide.
+				const stops = session.promptAbortCount;
+				const stoppedByUser = () => signal?.aborted === true && session.promptAbortCount !== stops;
 				try {
-					await this.abortedRun;
 					await previous?.beforeRequest?.(input, signal);
 					this.assertActive();
 					signal?.throwIfAborted();
@@ -478,7 +455,6 @@ export class PiNativeRequests {
 						this.enabled(),
 					);
 					this.pending = input.requestId;
-					this.runRequests.add(input.requestId);
 					// One checkpoint records both facts: the native request and, when this turn carries a
 					// controller composition, its ledger preparation. Whether the run carries user
 					// instruction is decided from carried membership and recorded positions.
@@ -487,16 +463,27 @@ export class PiNativeRequests {
 						this.capture,
 						await userOperations?.(),
 					);
-					this.composed = await this.composition?.prepare(input, signal, carriesUserInput);
+					this.composed = await this.composition?.prepare(input, signal, carriesUserInput, stoppedByUser);
 					this.prepared = {
 						modelHash: hash(input.modelMessages),
 						capture: this.capture ? structuredClone(this.capture) : undefined,
 						projections: this.projections ? structuredClone(this.projections) : undefined,
+						stops,
 					};
+					// Pi calls the provider right after this checkpoint and checks the signal first, with no
+					// I/O in between, and a Stop arrives from I/O. Checking here as well means a request
+					// recorded above never ends at Pi's check without being settled by this handler.
+					signal?.throwIfAborted();
 				} catch (error) {
-					if (signal?.aborted) {
-						// The user stopped the turn; run settlement records its open requests as aborted.
+					if (stoppedByUser()) {
+						// The user's Stop is a cancellation, never a failure. A request recorded above never
+						// reached the provider, so it is released now, before the run ends.
 						this.turn?.aborted();
+						if (this.pending === input.requestId) {
+							this.pending = undefined;
+							this.prepared = undefined;
+							await store.cancel(input.requestId);
+						}
 						throw error;
 					}
 					this.turn?.failed?.(error);
@@ -634,8 +621,12 @@ export class PiNativeRequests {
 			this.executing = id;
 			const prepared = this.prepared;
 			this.prepared = undefined;
+			// As in beforeRequest: an abort after the prompt-cancelling count moved is the user's Stop.
+			const stoppedByUser = () =>
+				options?.signal?.aborted === true && prepared !== undefined && session.promptAbortCount !== prepared.stops;
 			this.active++;
 			let handedOff = false;
+			let outcomeRecorded = false;
 			let admitting = false;
 			let admissionFailure: { error: unknown } | undefined;
 			let failure: NativeRequestFailure | undefined;
@@ -664,20 +655,13 @@ export class PiNativeRequests {
 						throw new FlowLedgerError("stale", "Cache refresh was replaced by a new request.");
 				},
 			});
-			// The user's own abort is a cancellation, never a failure: it records an aborted outcome,
-			// raises no hold, and asks for no recovery decision.
-			const cancelledByUser = () => options?.signal?.aborted === true;
-			const recordUserAbort = async () => {
-				await store.finish(id, "aborted");
-				if (handedOff && composed)
-					await this.composition?.settled(composed, { stopReason: "aborted" } as AssistantMessage);
-			};
 			const withheld = async (error?: unknown) => {
 				if (handedOff) return;
-				if (cancelledByUser()) {
-					// Never sent: recorded as withheld with no failure, and its attempt is left to host
-					// settlement, which cancels an attempt that never reached the provider.
-					await store.finish(id, "withheld");
+				if (stoppedByUser()) {
+					// The user stopped it before the provider received it: nothing was sent, and nothing
+					// waits for a decision. A composed attempt is left to host settlement, which cancels an
+					// attempt that never reached the provider.
+					await store.cancel(id);
 					return;
 				}
 				if (error !== undefined)
@@ -744,7 +728,7 @@ export class PiNativeRequests {
 									"Native request withheld because required input was changed or unresolved at conversion. Run /flow to identify the input and recovery options.",
 								);
 							handedOff = true;
-							if (composed) await this.composition?.handedOff(composed, options?.signal);
+							if (composed) await this.composition?.handedOff(composed);
 							this.assertActive();
 							options?.signal?.throwIfAborted();
 							warming.capture(rawPayload, owned);
@@ -765,11 +749,6 @@ export class PiNativeRequests {
 							const message = await response.result();
 							this.assertActive();
 							if (!handedOff && admissionFailure) throw admissionFailure.error;
-							if (!handedOff && message.stopReason === "aborted" && cancelledByUser()) {
-								await store.finish(id, "withheld");
-								this.turn?.aborted();
-								return message;
-							}
 							if (!handedOff) {
 								if (message.stopReason === "error" && message.errorMessage)
 									failure ??= nativeFailure(
@@ -797,6 +776,7 @@ export class PiNativeRequests {
 								id,
 								message.stopReason === "error" ? "failure" : message.stopReason === "aborted" ? "aborted" : "success",
 							);
+							outcomeRecorded = true;
 							if (message.stopReason === "aborted") this.turn?.aborted();
 							if (composed) await this.composition?.settled(composed, message);
 							return message;
@@ -805,10 +785,12 @@ export class PiNativeRequests {
 							// outcome, so the signal is what identifies it. Both routes are reported: a
 							// provider that answers with `aborted` is the same event to the user.
 							if (options?.signal?.aborted) this.turn?.aborted();
-							if (handedOff && cancelledByUser()) {
-								// The request may have reached the provider, but the user stopped it: record
-								// it as aborted, as when the stream itself ends aborted, not as unknown.
-								await recordUserAbort();
+							if (handedOff && !outcomeRecorded && stoppedByUser()) {
+								// The provider may have received it, and the user stopped it: aborted, as when
+								// the stream itself ends aborted, rather than an unknown outcome.
+								await store.finish(id, "aborted");
+								if (composed?.handedOff)
+									await this.composition?.settled(composed, { stopReason: "aborted" } as AssistantMessage);
 								throw error;
 							}
 							await withheld(error);
@@ -905,58 +887,15 @@ export class PiNativeRequests {
 	 */
 	private observeTurn(event: AgentSessionEvent): void {
 		if (this.closed || this.session.sessionId !== this.store.scope.sessionId) return;
-		if (event.type === "agent_start") {
-			this.lastAssistant = undefined;
-			this.runRequests = new Set();
-			let resolve = () => {};
-			const promise = new Promise<void>((done) => {
-				resolve = done;
-			});
-			this.runEnd = { promise, resolve, stoppedByUser: false };
-		}
+		if (event.type === "agent_start") this.lastAssistant = undefined;
 		if (event.type === "message_end" && event.message.role === "assistant") this.lastAssistant = event.message;
 		if (event.type !== "agent_settled") return;
-		const ended = this.runEnd;
-		this.runEnd = undefined;
 		const last = this.lastAssistant;
 		this.lastAssistant = undefined;
-		if (event.aborted) {
-			// The run was stopped. Whatever point each of its requests reached, its outcome is known:
-			// record it, so nothing is left unresolved. Requests from earlier runs or processes keep their
-			// recorded state.
-			const ids = [...this.runRequests];
-			this.runRequests = new Set();
-			const byUser = ended?.stoppedByUser === true;
-			if (byUser) this.recordingUserStop++;
-			this.abortedRun = this.abortedRun
-				.then(() => this.finishAborted(ids, byUser))
-				.catch(() => {})
-				.finally(() => {
-					if (byUser) this.recordingUserStop--;
-					if (!this.closed) this.turn?.stopRecorded?.();
-				});
-			void this.abortedRun.then(ended?.resolve);
-			return;
-		}
-		ended?.resolve();
-		if (!this.enabled()) return;
+		if (!this.enabled() || event.aborted) return;
 		if (last?.stopReason === "error") this.turn?.providerFailed?.(last.errorMessage ?? "");
 		else if (last?.stopReason === "length")
 			this.turn?.providerFailed?.("Response was truncated before completion.");
-	}
-	private async finishAborted(ids: string[], byUser: boolean): Promise<void> {
-		if (!ids.length || this.closed) return;
-		const open = (await this.store.snapshot()).filter(
-			(record) => ids.includes(record.id) && record.outcome === undefined && !record.reset,
-		);
-		// A request that reached the provider ends aborted; one that never did is withheld, unsent.
-		for (const record of open) await this.store.finish(record.id, record.payload ? "aborted" : "withheld");
-		// The user's Stop is their decision, so an unsent request never becomes a hold that asks for one.
-		// Its hold is released, keeping its receipts: the input stays in the conversation, as it does
-		// after a Stop without flow control, and nothing is sent again on its own. A run something else
-		// stopped, such as compaction, leaves its unsent request held for the user to decide.
-		if (byUser) await this.store.reset(ids);
-		if (this.pending && ids.includes(this.pending)) this.pending = undefined;
 	}
 	async close(): Promise<void> {
 		if (this.closed) return;

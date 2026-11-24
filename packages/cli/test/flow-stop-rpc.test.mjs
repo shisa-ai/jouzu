@@ -95,27 +95,6 @@ test("Stop is final at every point of a prompt and never leaves Flow work behind
 	assert.equal((await f.close()).code, 0, "the runtime shuts down cleanly after the Stops");
 });
 
-test("a request cut off by a killed process is reported as uncertain after a restart", async (t) => {
-	const provider = await slowProvider(t);
-	const home = await rpcHome(t, provider.port);
-	const first = launchRpc(t, home);
-	first.send({ id: "p", type: "prompt", message: "interrupted" });
-	await first.waitFor(() => provider.requests.length > 0, "provider request");
-	await quiet(300);
-	await first.stop();
-
-	const second = launchRpc(t, home, ["--continue"]);
-	second.send({ id: "ready", type: "get_state" });
-	await second.waitFor(() => response(second.frames, "ready"), "rpc ready");
-	const status = await second.waitFor(() => {
-		const latest = lastStatus(second.frames, "jouzu-flow");
-		return latest?.recovery ? latest : undefined;
-	}, "recovery status");
-	assert.ok(status.uncertain.length > 0, JSON.stringify(status));
-	assert.equal(provider.requests.length, 1, "the cut-off request is never resent");
-	assert.equal((await second.close()).code, 0);
-});
-
 test("a message sent together with a Stop runs after it, without a hold and with the stopped message kept", async (t) => {
 	const provider = await slowProvider(t);
 	const f = launchRpc(t, await rpcHome(t, provider.port));

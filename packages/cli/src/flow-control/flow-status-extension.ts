@@ -57,7 +57,7 @@ export interface FlowClientStatus {
 	held: { id: string; code: string; text: string }[];
 	/** Model requests withheld until the user retries or clears them with `/flow`. */
 	withheld: { id: string; code: string; text: string }[];
-	/** Attempts and provider requests whose outcome is unknown after an interruption; never resent automatically. */
+	/** Requests whose outcome is unknown after an interruption; never resent automatically. */
 	uncertain: string[];
 }
 
@@ -78,7 +78,6 @@ export function flowPauseCode(reason: string): string {
 export function createFlowStatusExtension(options: FlowStatusOptions): InlineExtension & {
 	announcePause(): Promise<void>;
 	announceHeldInput(input: { id: string; reason: string }): void;
-	refresh(): void;
 } {
 	const now = () => options.now?.() ?? Date.now();
 	const catalog = options.catalog ?? defaultCatalog();
@@ -115,14 +114,6 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		const paused = ingress.automatedPause();
 		const recovery = await ingress.recoveryHold();
 		const inspected = await ingress.inspect();
-		// A provider request with no recorded outcome after a restart is as unknown as an interrupted
-		// attempt; /flow reports it the same way, and the next message waits for the user's decision.
-		const turnActive = statusContext?.isIdle?.() === false;
-		const unresolved = turnActive
-			? []
-			: (await ingress.branch().attachment.nativeRequests.snapshot())
-					.filter((request) => request.outcome === undefined && !request.reset)
-					.map((request) => request.id);
 		return {
 			version: 1,
 			enabled,
@@ -151,7 +142,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 					),
 				).values(),
 			],
-			uncertain: [...new Set([...inspected.uncertain.map((attempt) => attempt.id), ...unresolved])],
+			uncertain: inspected.uncertain.map((attempt) => attempt.id),
 		};
 	};
 	/** Publish the current state to a client without a terminal; the terminal reads it with /flow. */
@@ -215,10 +206,6 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		 * Report a submission the user asked for that admission refused. The send produced no turn and no
 		 * reply, so without this the only sign is a notice from whatever command issued it.
 		 */
-		/** Publish the current state to clients without a terminal; nothing is announced. */
-		refresh() {
-			void publishStatus();
-		},
 		announceHeldInput(input) {
 			void publishStatus();
 			if (!announce || !flowOn(options)) return;

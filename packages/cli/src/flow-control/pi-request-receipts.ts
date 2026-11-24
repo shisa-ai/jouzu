@@ -39,6 +39,8 @@ export class PiRequestReceipts {
 		input: FlowRequestInput,
 		signal: AbortSignal | undefined,
 		containsUserInput: boolean,
+		/** The user stopped this request; any other abort leaves its attempt withheld for the user. */
+		stoppedByUser?: () => boolean,
 	): Promise<FlowCompositionRequest | undefined> {
 		this.assertActive(signal);
 		const state = await this.ledger.snapshot();
@@ -59,19 +61,20 @@ export class PiRequestReceipts {
 		try {
 			this.assertActive(signal);
 		} catch (error) {
-			// A user abort leaves the unsent request for host settlement, which cancels an attempt that
-			// never reached the provider. Withholding it would turn the user's own Stop into a request
-			// that needs a recovery decision.
-			if (!signal?.aborted) await this.withhold(request);
+			// The user's Stop leaves the attempt to host settlement, which cancels an attempt that never
+			// reached the provider. Withholding it would ask the user to decide about their own Stop.
+			if (!stoppedByUser?.()) await this.withhold(request);
 			throw error;
 		}
 		return request;
 	}
 
-	/** The provider accepted the body; the composed attempt is now in flight. */
-	async handedOff(request: FlowCompositionRequest, _signal?: AbortSignal): Promise<void> {
-		// The native store has already admitted the body, so the ledger records the same handoff even
-		// when the user aborts now; the abort then ends the request with an aborted outcome.
+	/**
+	 * The provider accepted the body; the composed attempt is now in flight. The native store has
+	 * already admitted the body, so the ledger records the same handoff even when an abort arrives
+	 * now; the request then ends with an aborted outcome.
+	 */
+	async handedOff(request: FlowCompositionRequest): Promise<void> {
 		this.assertActive();
 		await this.ledger.handoff(request.composition.attemptId, request.id);
 		request.handedOff = true;
@@ -104,9 +107,7 @@ export class PiRequestReceipts {
 	private assertActive(signal?: AbortSignal): void {
 		if (this.closed || this.session.sessionId !== this.ledger.scope.sessionId)
 			throw new FlowLedgerError("stale", "Request receipt attachment is closed or replaced.");
-		// The user's cancellation is not a ledger fault: it ends the run as aborted, like an abort
-		// during streaming, so it never pauses admission or asks for recovery.
-		if (signal?.aborted) throw new DOMException("Request was cancelled before handoff.", "AbortError");
+		if (signal?.aborted) throw new FlowLedgerError("transition", "Request was cancelled before handoff.");
 	}
 	register(composition: FlowModelInput): void {
 		this.assertActive();

@@ -61,11 +61,6 @@ export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitN
 	 * a stall: the message produced no turn, and nothing in the session says why.
 	 */
 	onHeldUserInput?(input: { id: string; reason: string }): void;
-	/**
-	 * Called when a stopped run's requests have been recorded. That happens after the run settles, so
-	 * a view of what Flow holds must be refreshed then rather than at the end of the turn.
-	 */
-	onStopRecorded?(): void;
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -262,7 +257,6 @@ export class PiSessionFlowIngress implements Ingress {
 					providerFailed: (detail) => {
 						if (this.pauseAutomated(providerPause(detail))) this.options.onAutomatedPause?.();
 					},
-					stopRecorded: () => this.options.onStopRecorded?.(),
 				},
 				decorateNativeContext: async (messages, sources, signal) => {
 					const branch = this.branch();
@@ -1070,9 +1064,6 @@ export class PiSessionFlowIngress implements Ingress {
 			branch.sourceRecovery.unresolved > 0 ||
 			branch.waitSourceRecovery.missing.length > 0;
 		const outcomeUnresolved = state.attempts.some((attempt) => attempt.phase === "uncertain");
-		// Read with the gates above: a hold decided while the user's Stop is still being recorded is the
-		// Stop's, whatever the Stop has finished by the time the admission itself is written.
-		let stopPending = branch.requests.userStopPending;
 		let decision = decideNativeAdmission(
 			submission,
 			records,
@@ -1146,7 +1137,6 @@ export class PiSessionFlowIngress implements Ingress {
 				allowed: false,
 				reason: catalogText(this.catalog, CatalogMessageId.flowIngressRecoveryReconciliation),
 			};
-		stopPending ||= branch.requests.userStopPending;
 		const current = records.find((record) => record.id === submission.id);
 		if (!current) return false;
 		const saved = await branch.attachment.submissions.recordAdmission(
@@ -1160,12 +1150,8 @@ export class PiSessionFlowIngress implements Ingress {
 		// Only the first refusal is reported: a hold that lasts is reported once, and the status view
 		// keeps showing it for as long as it holds. Reporting a submission the user did not make would
 		// make every automated hold a notification, so user instruction is what qualifies.
-		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission)) {
-			// Input sent while the user's own Stop is finishing waits for it, the way a message sent during
-			// a turn waits for the turn: it is released when the Stop has been recorded, not reported held.
-			if (stopPending) void branch.requests.userStopSettled().then(() => this.requestRelease());
-			else this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
-		}
+		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission))
+			this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
 		return (
 			saved &&
 			decision.allowed &&

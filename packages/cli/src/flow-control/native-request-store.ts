@@ -725,20 +725,34 @@ export class FlowNativeRequestStore {
 	snapshot(): Promise<NativeRequest[]> {
 		return this.transact((records) => structuredClone(records));
 	}
-	/** Preserve receipts while explicitly releasing their unresolved holds; `ids` limits it to those requests. */
-	reset(ids?: readonly string[]): Promise<number> {
-		const only = ids ? new Set(ids) : undefined;
+	/** Preserve receipts while explicitly releasing their unresolved holds. */
+	reset(): Promise<number> {
 		return this.transact((records) => {
 			let released = 0;
 			for (const record of records)
-				if (only && !only.has(record.id)) continue;
-				else if ((!record.reset && record.outcome === undefined) || nativeHoldPending(record)) {
+				if ((!record.reset && record.outcome === undefined) || nativeHoldPending(record)) {
 					record.reset = true;
 					// A used authorization is the retained retry's provenance, not permission to send again.
 					if (!record.retryAuthorization?.requestId) delete record.retryAuthorization;
 					released++;
 				}
 			return released;
+		});
+	}
+	/**
+	 * The user stopped this request before the provider received it. It is recorded as withheld,
+	 * since nothing was sent, and released in the same write, so it never holds later input: the
+	 * Stop is the user's decision. Its receipts stay, as `reset` keeps them.
+	 */
+	cancel(id: string): Promise<void> {
+		return this.transact((records) => {
+			const record = this.owned(records, id);
+			if (record.payload || (record.outcome && record.outcome !== "withheld"))
+				throw new FlowLedgerError("transition", "Native request outcome conflicts with retained evidence.");
+			record.outcome = "withheld";
+			record.reset = true;
+			// A used authorization is the retained retry's provenance, not permission to send again.
+			if (!record.retryAuthorization?.requestId) delete record.retryAuthorization;
 		});
 	}
 	/** Only the host may supply source identities proven absent from the current context. */

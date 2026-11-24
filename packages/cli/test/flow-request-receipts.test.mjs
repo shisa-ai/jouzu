@@ -60,6 +60,11 @@ async function fixture(t, { transform, fetch, native, reversed = false, inputs, 
 			const record = records.find((item) => item.id === id);
 			record.outcome = outcome;
 		},
+		cancel: async (id) => {
+			const record = records.find((item) => item.id === id);
+			record.outcome = "withheld";
+			record.reset = true;
+		},
 	};
 	const observer = new PiNativeRequests(session, nativeStore, 100000);
 	observer.attachComposition(bridge);
@@ -193,46 +198,112 @@ test("outcome receipt failure keeps ownership and prevents tool execution", asyn
 	assert.equal(state.attempts[0].phase, "handed-off");
 });
 
-for (const afterHandoff of [false, true])
-	test(`abort during receipt boundary, afterHandoff=${afterHandoff}`, async (t) => {
+// prepare: while the composed request is recorded; payload: while an extension prepares the payload;
+// native-handoff: after the request store admitted the body, before the ledger records the handoff;
+// handoff: after both recorded it.
+for (const stage of ["prepare", "payload", "native-handoff", "handoff"])
+	for (const byUser of [false, true])
+		test(`abort during receipt boundary, stage=${stage}, byUser=${byUser}`, async (t) => {
+			const entered = deferred();
+			const release = deferred();
+			const result = await fixture(
+				t,
+				stage === "payload"
+					? {
+							transform: async ({ payload }) => {
+								entered.resolve();
+								await release.promise;
+								return payload;
+							},
+						}
+					: {},
+			);
+			if (stage === "native-handoff") {
+				const native = result.records.handoff;
+				result.records.handoff = async (...args) => {
+					const value = await native(...args);
+					entered.resolve();
+					await release.promise;
+					return value;
+				};
+			} else if (stage !== "payload") {
+				const method = stage === "prepare" ? "prepare" : "handoff";
+				const native = result.ledger[method].bind(result.ledger);
+				t.mock.method(result.ledger, method, async (...args) => {
+					const value = await native(...args);
+					entered.resolve();
+					await release.promise;
+					return value;
+				});
+			}
+			const running = result.session.agent.continue().catch(() => {});
+			await entered.promise;
+			// The user's Stop goes through the session; a bare agent abort stands for any other abort.
+			const stopping = byUser ? result.session.abort() : result.session.agent.abort();
+			release.resolve();
+			await Promise.all([running, stopping]);
+			const attempt = (await result.ledger.snapshot()).attempts[0];
+			const [request] = await result.records.snapshot();
+			assert.equal(result.sent.length, 0);
+			const handedOff = stage.endsWith("handoff");
+			assert.equal(attempt.requests[0].handedOff, handedOff);
+			if (handedOff) {
+				assert.equal(attempt.phase, "running");
+				assert.equal(attempt.requests[0].outcome, "aborted");
+				assert.equal(request.outcome, "aborted");
+			} else if (!byUser) {
+				// Any other abort before handoff leaves the attempt withheld for the user to decide.
+				assert.equal(attempt.phase, "withheld");
+				assert.equal(request.reset, undefined);
+				// A request stopped while its payload is prepared ends withheld; one stopped inside the
+				// checkpoint stays pending until the next request or close records it, as before.
+				assert.equal(request.outcome, stage === "payload" ? "withheld" : undefined);
+			} else {
+				// The user's Stop before handoff is not a provider failure: the request is released at
+				// once, and the idle host cancels the attempt instead of asking for a recovery decision.
+				assert.equal(attempt.phase, "prepared");
+				assert.equal(request.outcome, "withheld");
+				assert.equal(request.reset, true);
+				assert.equal((await result.boundary.reconcile(result.ledger, "attempt")).value.kind, "cancelled");
+				assert.equal((await result.ledger.snapshot()).attempts[0].phase, "cancelled");
+			}
+		});
+
+for (const byUser of [false, true])
+	test(`a stopped stream that rejects after handoff, byUser=${byUser}`, async (t) => {
 		const entered = deferred();
-		const release = deferred();
-		const result = await fixture(
-			t,
-			afterHandoff
-				? {}
-				: {
-						transform: async ({ payload }) => {
-							entered.resolve();
-							await release.promise;
-							return payload;
-						},
-					},
-		);
-		if (afterHandoff) {
-			const native = result.ledger.handoff.bind(result.ledger);
-			t.mock.method(result.ledger, "handoff", async (...args) => {
-				await native(...args);
+		const result = await fixture(t, {
+			native: async (model, ctx, options) => {
+				await options.onPayload({ messages: ctx.messages }, model);
 				entered.resolve();
-				await release.promise;
-			});
-		}
-		const running = result.session.agent.continue();
+				const stopped = new Promise((resolve) => options.signal.addEventListener("abort", resolve, { once: true }));
+				return {
+					// The stream ends without events once stopped.
+					[Symbol.asyncIterator]: () => ({
+						next: async () => {
+							await stopped;
+							return { done: true, value: undefined };
+						},
+					}),
+					// An interrupt that rejects the request instead of answering with an aborted message.
+					result: async () => {
+						await stopped;
+						throw new DOMException("The operation was aborted.", "AbortError");
+					},
+				};
+			},
+		});
+		const running = result.session.agent.continue().catch(() => {});
 		await entered.promise;
-		result.session.agent.abort();
-		release.resolve();
-		await running;
+		const stopping = byUser ? result.session.abort() : result.session.agent.abort();
+		await Promise.all([running, stopping]);
 		const attempt = (await result.ledger.snapshot()).attempts[0];
-		assert.equal(result.sent.length, 0);
-		assert.equal(attempt.requests[0].handedOff, afterHandoff);
-		assert.equal(attempt.phase, afterHandoff ? "running" : "prepared");
-		if (afterHandoff) assert.equal(attempt.requests[0].outcome, "aborted");
-		else {
-			// A user abort before handoff is not a provider failure: the idle host cancels the attempt
-			// instead of withholding a request that would need a recovery decision.
-			assert.equal((await result.boundary.reconcile(result.ledger, "attempt")).value.kind, "cancelled");
-			assert.equal((await result.ledger.snapshot()).attempts[0].phase, "cancelled");
-		}
+		const [request] = await result.records.snapshot();
+		assert.equal(attempt.requests[0].handedOff, true);
+		// The provider may have received it. The user's Stop makes its outcome known; any other abort
+		// leaves it unknown, for the user to resolve.
+		assert.equal(request.outcome, byUser ? "aborted" : undefined);
+		assert.equal(attempt.requests[0].outcome, byUser ? "aborted" : undefined);
 	});
 
 for (const viaCommand of [false, true])
