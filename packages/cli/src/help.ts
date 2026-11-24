@@ -47,6 +47,7 @@ export function createJouzuHelpExtension(catalog: CatalogBundle = defaultCatalog
 								}),
 								catalogText(catalog, "jouzu.cli.helpOverlay.fastMode", { command: accent("/fast on|off") }),
 								catalogText(catalog, "jouzu.cli.helpOverlay.plugins", { command: accent("/plugins") }),
+								catalogText(catalog, "jouzu.cli.helpOverlay.btw", { command: accent("/btw") }),
 								catalogText(catalog, CatalogMessageId.helpOverlayRuntimeBuilds, {
 									command: accent("/about"),
 								}),

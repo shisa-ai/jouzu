@@ -32,6 +32,7 @@ export async function assembledSession(
 		script,
 		persist = false,
 		settings,
+		modelId,
 		sessionManager: supplied,
 		...overrides
 	} = {},
@@ -54,6 +55,7 @@ export async function assembledSession(
 		persist,
 		extensions,
 		script,
+		modelId,
 		...(settings ? { settings } : {}),
 		ingress: {
 			version: 1,

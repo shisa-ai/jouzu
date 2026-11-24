@@ -4,7 +4,7 @@
 
 ### Added
 
-- Publish read-only TextGuard and flow-control state to RPC clients as JSON status (`jouzu-textguard`, `jouzu-flow`): mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications) and [Flow control](docs/flow-control.md#rpc-clients).
+- Publish read-only TextGuard and flow-control state as JSON status (`jouzu-textguard`, `jouzu-flow`) to RPC clients, and to ACP hosts that opt in, as `_jouzu/status` notifications: mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications), [Flow control](docs/flow-control.md#rpc-and-acp-clients), and [ACP](docs/acp.md#jouzu-status).
 
 ### Fixed
 

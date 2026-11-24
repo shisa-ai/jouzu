@@ -1,5 +1,6 @@
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { FlowAdmissionGates } from "./admission.js";
+import { type FlowInputHoldCode, flowInputHoldReason } from "./flow-hold-reasons.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
 
 type FlowSubmission = RetainedSubmission["submission"];
@@ -133,12 +134,15 @@ export function decideNativeAdmission(
 	input?: FlowNativeInput,
 	liveQueue?: ReadonlySet<string>,
 ): NativeAdmissionDecision {
-	const hold = (reason: string): NativeAdmissionDecision => ({ allowed: false, reason });
+	const hold = (code: FlowInputHoldCode): NativeAdmissionDecision => ({
+		allowed: false,
+		reason: flowInputHoldReason(code),
+	});
 	const index = records.findIndex((record) => record.id === submission.id);
-	if (index < 0 || records[index].status !== "retained") return hold("Input is missing or cancelled.");
-	if (gates.recoveryBlocked) return hold("Input is waiting for recovery reconciliation.");
-	if (host.isRetrying || host.isCompacting) return hold("Input is waiting for host retry or compaction.");
-	if (phase === "queue" && !input?.queue) return hold("Input has no exact native queue revision.");
+	if (index < 0 || records[index].status !== "retained") return hold("input-missing");
+	if (gates.recoveryBlocked) return hold("input-recovery");
+	if (host.isRetrying || host.isCompacting) return hold("host-retry");
+	if (phase === "queue" && !input?.queue) return hold("queue-revision");
 	// An unresolved outcome holds automated admission but never the user: resolving it is the user's
 	// decision, and the controls for it arrive as user input, so holding those would make the state
 	// unrecoverable. Host-assigned provenance is what passes here, never a caller-supplied label.
@@ -146,26 +150,22 @@ export function decideNativeAdmission(
 	// Checked immediately after the user-input allow: an interrupt holds everything automated and
 	// nothing the user typed, and it outranks the ordinary boundary reasons below because the user
 	// asked for it directly rather than the controller inferring it from session state.
-	if (gates.automatedPaused) return hold("Automated input is paused until the next user turn is under way.");
-	if (gates.outcomeUnresolved) return hold("Automated input is waiting for an interrupted turn to be resolved.");
+	if (gates.automatedPaused) return hold("input-paused");
+	if (gates.outcomeUnresolved) return hold("input-interrupted");
 	if (submission.api === "sendCustomMessage") {
 		const options = submission.args[1] as { deliverAs?: string; triggerTurn?: boolean } | undefined;
 		const wakes = options?.triggerTurn ?? submission.hostState?.streaming;
 		if (options?.deliverAs === "nextTurn") return { allowed: true };
-		if (wakes === undefined) return hold("Deferred context requires a persistence receipt before release.");
-		if (wakes === false)
-			return host.isIdle && !host.isStreaming
-				? { allowed: true }
-				: hold("Non-waking context is waiting for an idle append boundary.");
+		if (wakes === undefined) return hold("context-receipt");
+		if (wakes === false) return host.isIdle && !host.isStreaming ? { allowed: true } : hold("context-idle");
 	}
-	if (gates.waitingWorkIds.length) return hold("Unclassified input cannot establish independence from a live wait.");
+	if (gates.waitingWorkIds.length) return hold("input-independence");
 	if (
 		gates.userPending ||
 		records.some((record) => isUserInstruction(record.submission) && awaitingNativeInput(record, liveQueue))
 	)
-		return hold("Input is waiting for queued user work.");
-	if (phase === "submission" && (!host.isIdle || host.isStreaming))
-		return hold("Automated input is waiting for an idle host boundary.");
+		return hold("queued-work");
+	if (phase === "submission" && (!host.isIdle || host.isStreaming)) return hold("host-idle");
 	if (
 		records
 			.slice(0, index)
@@ -176,6 +176,6 @@ export function decideNativeAdmission(
 					(phase === "submission" || !record.dispatch?.inputs?.every((input) => !!input.queue)),
 			)
 	)
-		return hold("Input is waiting for an earlier retained instruction in its lane.");
+		return hold("earlier-input");
 	return { allowed: true };
 }

@@ -30,7 +30,7 @@
 		"packages/cli/test/cli.test.mjs :: an ordinary launch recovers a stale empty profile lock": "integration",
 		"packages/cli/test/cli.test.mjs :: configured copies of release entrypoints are suppressed without changing settings": "integration",
 		"packages/cli/test/cli.test.mjs :: Core loads the selected release-owned tool, command, and skill surfaces": "integration",
-		"packages/cli/test/cli.test.mjs :: Core registers its four optional skills and review prompt": "integration",
+		"packages/cli/test/cli.test.mjs :: Core registers its six optional skills and review prompt": "integration",
 		"packages/cli/test/cli.test.mjs :: doctor text and experimental JSON preserve diagnostics, exit status, and roots": "integration",
 		"packages/cli/test/cli.test.mjs :: forwards explicit Pi version requests through the pinned runtime": "integration",
 		"packages/cli/test/cli.test.mjs :: Jouzu-owned directories get deterministic private modes regardless of umask or order": "integration",

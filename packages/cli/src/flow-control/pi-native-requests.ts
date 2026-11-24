@@ -4,6 +4,7 @@ import { type AssistantMessage, getCurrentSystemPrompt, type Message } from "@ea
 import type { AgentSession, AgentSessionEvent } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
+import { captureSideContext, clearSideContext } from "../side-context.js";
 import { cacheWarmAdmission } from "./cache-warm-admission.js";
 import { flowDiagnosticText } from "./diagnostic-text.js";
 import {
@@ -168,6 +169,7 @@ export class PiNativeRequests {
 			const transform = session.agent.transformContext;
 			this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
 				this.assertActive();
+				clearSideContext(session);
 				this.active++;
 				this.capture = undefined;
 				this.projections = undefined;
@@ -694,6 +696,8 @@ export class PiNativeRequests {
 				const flowValidateProvider = trustedStream
 					? preparePiProviderRoute(session.modelRuntime, model, () => this.assertActive())
 					: undefined;
+				clearSideContext(session);
+				const sideMessages = structuredClone(context.messages);
 				const response = await native(model, context, {
 					...options,
 					// Keep final-payload receipts bound to the complete admitted Anthropic request.
@@ -744,6 +748,8 @@ export class PiNativeRequests {
 							this.assertActive();
 							options?.signal?.throwIfAborted();
 							warming.capture(rawPayload, owned);
+							// Payload-only redactions cannot be mapped back to messages safely.
+							if (this.enabled() && hash(rawPayload) === hash(owned)) captureSideContext(session, model, sideMessages, store.scope.branchId);
 							return owned;
 						} catch (error) {
 							admissionFailure = { error };
@@ -962,6 +968,7 @@ export class PiNativeRequests {
 		this.projections = undefined;
 		this.projectionWaitTokens = undefined;
 		this.references = undefined;
+		clearSideContext(this.session);
 		this.closed = true;
 		this.lastAssistant = undefined;
 		this.unsubscribeTurn();

@@ -1,6 +1,8 @@
 import type { ExtensionContext, InlineExtension } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
+import { FLOW_STATUS_KEY } from "../client-status.js";
 import type { CatalogBundle } from "../locale-catalog.js";
+import { flowHold } from "./flow-hold-reasons.js";
 import { renderFlowMessage } from "./flow-message-renderer.js";
 import {
 	COMMAND_PAUSE,
@@ -39,8 +41,7 @@ function flowOn(options: FlowStatusOptions): boolean {
 	return options.enabled?.() !== false;
 }
 
-/** Status key under which clients without a terminal receive flow-control state as JSON. */
-export const FLOW_STATUS_KEY = "jouzu-flow";
+export { FLOW_STATUS_KEY };
 
 /**
  * Read-only flow-control state for clients without a terminal. It reports what is held and why;
@@ -83,27 +84,10 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 	const catalog = options.catalog ?? defaultCatalog();
 	const text = (key: string, args: Record<string, string | number> = {}) =>
 		catalogText(catalog, `jouzu.cli.flow.control.${key}`, args);
-	const recoveryReasons: Record<string, string> = {
-		"host recovery is still in progress": "hostRecovery",
-		"a withheld request needs a decision": "requestDecision",
-		"an interrupted turn has an unknown outcome": "interruptedOutcome",
-		"wait sources are still being reconciled": "waitReconciliation",
-		"saved work needs a recovery decision": "savedDecision",
-		"Input is missing or cancelled.": "inputMissing",
-		"Input is waiting for recovery reconciliation.": "inputRecovery",
-		"Input is waiting for host retry or compaction.": "hostRetry",
-		"Input has no exact native queue revision.": "queueRevision",
-		"Automated input is paused until the next user turn is under way.": "inputPaused",
-		"Automated input is waiting for an interrupted turn to be resolved.": "inputInterrupted",
-		"Deferred context requires a persistence receipt before release.": "contextReceipt",
-		"Non-waking context is waiting for an idle append boundary.": "contextIdle",
-		"Unclassified input cannot establish independence from a live wait.": "inputIndependence",
-		"Input is waiting for queued user work.": "queuedWork",
-		"Automated input is waiting for an idle host boundary.": "hostIdle",
-		"Input is waiting for an earlier retained instruction in its lane.": "earlierInput",
+	const holdReason = (reason: string) => {
+		const message = flowHold(reason, catalog)?.message;
+		return message ? text(message) : flowPauseText(reason, catalog);
 	};
-	const holdReason = (reason: string) =>
-		Object.hasOwn(recoveryReasons, reason) ? text(recoveryReasons[reason]) : flowPauseText(reason, catalog);
 	let announce: ((text: string) => void) | undefined;
 	// A hold is reported once per reason. Re-admission runs on every release pass, so without this a
 	// single blocked message would notify for as long as it stays blocked. The set is bounded because
@@ -113,8 +97,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		if (reportedHolds.size >= 256) reportedHolds.delete(reportedHolds.values().next().value as string);
 		reportedHolds.add(key);
 	};
-	const holdCode = (reason: string) =>
-		Object.hasOwn(recoveryReasons, reason) ? recoveryReasons[reason] : flowPauseCode(reason);
+	const holdCode = (reason: string): string => flowHold(reason, catalog)?.code ?? flowPauseCode(reason);
 	// Status reads and announcements run one at a time, so a reading taken before a release can
 	// never be published or announced after it.
 	let serial: Promise<void> = Promise.resolve();

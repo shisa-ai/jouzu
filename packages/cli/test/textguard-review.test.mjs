@@ -569,3 +569,38 @@ test("the component renders a bounded list for many items", async (t) => {
 	component.handleInput(ESC);
 	await pending;
 });
+
+test("each session start sends the TextGuard client status, even when it is unchanged", async (t) => {
+	const runtime = new TextGuardRuntime({
+		mode: "guarded",
+		scanner: {
+			async initialize() {
+				return "a".repeat(64);
+			},
+			async scan() {
+				return evidence;
+			},
+			async close() {},
+		},
+	});
+	t.after(() => runtime.close());
+	const events = new Map();
+	createTextGuardReviewExtension(runtime, { writeDiagnostic: () => {} })({
+		on: (name, handler) => events.set(name, handler),
+		registerCommand: () => {},
+	});
+	const statuses = [];
+	const ctx = {
+		mode: "rpc",
+		hasUI: true,
+		sessionManager: { getSessionId: () => "one" },
+		ui: { notify() {}, setStatus: (key, text) => statuses.push({ key, mode: JSON.parse(text).mode }) },
+	};
+	events.get("session_start")({}, ctx);
+	events.get("agent_end")({}, ctx);
+	events.get("session_start")({}, ctx);
+	assert.deepEqual(statuses, [
+		{ key: "jouzu-textguard", mode: "guarded" },
+		{ key: "jouzu-textguard", mode: "guarded" },
+	]);
+});

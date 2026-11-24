@@ -111,7 +111,7 @@ function formatAge(catalog: CatalogBundle, milliseconds: number): string {
 	return catalogText(catalog, `${ID}.ageDays`, { days: Math.floor(hours / 24), hours: hours % 24 });
 }
 
-function formatClock(time: number): string {
+export function formatClock(time: number): string {
 	const date = new Date(time);
 	const pad = (value: number) => String(value).padStart(2, "0");
 	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;

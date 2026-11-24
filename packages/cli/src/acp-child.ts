@@ -10,6 +10,7 @@ import type {
 	RpcResponse,
 	RpcSessionState,
 } from "@earendil-works/pi-coding-agent";
+import { CLIENT_STATUS_KEYS } from "./client-status.js";
 
 const MAX_STDOUT_RECORD_CHARS = 32 * 1024 * 1024;
 
@@ -64,6 +65,9 @@ export class AcpChild {
 	private readonly pending = new Map<string, PendingRequest>();
 	private readonly eventListeners = new Set<(event: JsonAgentSessionEvent) => void>();
 	private readonly extensionUiListeners = new Set<(request: RpcExtensionUIRequest) => void>();
+	// The latest Jouzu client status per key, kept from startup on: a status published while the session
+	// opens arrives before any listener is attached.
+	private readonly statuses = new Map<string, string | undefined>();
 	private readonly fatalListeners = new Set<(error: Error) => void>();
 	private readonly decoder = new StringDecoder("utf8");
 	private stdoutBuffer = "";
@@ -199,6 +203,11 @@ export class AcpChild {
 	onExtensionUi(listener: (request: RpcExtensionUIRequest) => void): () => void {
 		this.extensionUiListeners.add(listener);
 		return () => this.extensionUiListeners.delete(listener);
+	}
+
+	/** The latest text of each Jouzu client status the child has published. */
+	clientStatuses(): ReadonlyMap<string, string | undefined> {
+		return this.statuses;
 	}
 
 	onFatal(listener: (error: Error) => void): () => void {
@@ -439,6 +448,8 @@ export class AcpChild {
 	}
 
 	private handleExtensionUiRequest(request: RpcExtensionUIRequest): void {
+		if (request.method === "setStatus" && CLIENT_STATUS_KEYS.has(request.statusKey))
+			this.statuses.set(request.statusKey, request.statusText);
 		if (this.extensionUiListeners.size === 0) {
 			void this.respondExtensionUi({ type: "extension_ui_response", id: request.id, cancelled: true }).catch(() => {});
 			return;

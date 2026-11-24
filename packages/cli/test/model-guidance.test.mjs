@@ -8,6 +8,7 @@ import { buildModelGuidance } from "../dist/model-guidance.js";
 import { createJouzuPresentationExtension } from "../dist/presentation.js";
 import { childResourceLoader } from "../dist/subagents/worker.js";
 
+const gpt6Models = ["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6.2-astra"];
 const base =
 	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
 function hook() {
@@ -36,7 +37,7 @@ function assertRecoveryGuidance(prompt) {
 	}
 }
 
-test("Astra guidance follows the selected model on every turn without accumulating", async () => {
+test("GPT-6 guidance follows the selected model on every turn without accumulating", () => {
 	const before = hook();
 	const turn = (ctx) => runPromptHook(before, { systemPrompt: base, options: { selectedTools: ["read"] }, ctx });
 	const astra = { model: { id: "gpt-6-astra", provider: "configured-provider" } };
@@ -52,14 +53,23 @@ test("Astra guidance follows the selected model on every turn without accumulati
 	const other = turn({ model: { id: "gpt-5.6-sol" } });
 	assert.doesNotMatch(other.systemPrompt, /Carry authorized work through implementation/);
 	// Each run starts from fresh options, so guidance is set once per turn and never accumulates.
-	assert.deepEqual(turn(astra).sections, first.sections);
+	for (const id of gpt6Models) assert.deepEqual(turn({ model: { id } }).sections, first.sections);
 	assert.equal(first.systemPrompt.split("Carry authorized work through implementation").length, 2);
 });
 
 test("delegation guidance describes only the active Jouzu tool", () => {
 	assert.match(buildModelGuidance("gpt-6-astra", ["subagent"]), /Follow its role-discovery and assignment contract/);
 	assert.doesNotMatch(buildModelGuidance("gpt-6-astra", ["read"]), /subagent|configured roles/);
-	for (const id of [undefined, "gpt-6-astra-preview", "custom-gpt-6-astra", "gpt-5.6-sol"])
+	for (const id of [
+		undefined,
+		"gpt-6-astra-preview",
+		"custom-gpt-6-astra",
+		"gpt-6.1-sol-preview",
+		"office-pool/gpt-6.1-terra",
+		"gpt-6.2",
+		"gpt-6.2-astra-preview",
+		"gpt-5.6-sol",
+	])
 		assert.equal(buildModelGuidance(id, ["subagent"]), "");
 });
 
@@ -84,11 +94,14 @@ test("child sessions receive the same model guidance as main sessions", async (t
 		model: { id, provider: "configured-provider" },
 		auth: {},
 	});
-	const astraPrompt = (await childResourceLoader(launch("gpt-6-astra"))).getAppendSystemPrompt();
-	assert.ok(astraPrompt.includes("Review the change."));
-	assert.ok(astraPrompt.includes(buildModelGuidance("gpt-6-astra", ["read"])));
-	assert.match(astraPrompt.join("\n"), /offer to continue/);
-	assertRecoveryGuidance(astraPrompt.join("\n"));
+	const expected = buildModelGuidance("gpt-6-astra", ["read"]);
+	for (const id of gpt6Models) {
+		const prompt = (await childResourceLoader(launch(id))).getAppendSystemPrompt();
+		assert.ok(prompt.includes("Review the change."));
+		assert.ok(prompt.includes(expected));
+		assert.match(prompt.join("\n"), /offer to continue/);
+		assertRecoveryGuidance(prompt.join("\n"));
+	}
 	const other = (await childResourceLoader(launch("gpt-5.6-sol"))).getAppendSystemPrompt();
 	assert.ok(other.includes("Review the change."));
 	assert.doesNotMatch(other.join("\n"), /Carry authorized work through implementation/);

@@ -248,6 +248,74 @@ test("child writers share one workspace by default and serialize on request", as
 	assert.equal(f.children.length, 3, "sharing again starts the queued writer beside the running ones");
 	await f.manager.dispose();
 });
+for (const sideFirst of [true, false]) {
+	test(`side requests share capacity but not writer conflicts: side first=${sideFirst}`, async () => {
+		const f = fixture(2);
+		try {
+			f.manager.setWorkspaceWriters("serialize");
+			const writerRole = defaultAgentConfig().roles[1];
+			const side = () =>
+				f.manager.launch({
+					purpose: "side-conversation",
+					role: { ...writerRole, tools: [] },
+					model,
+					auth: {},
+					cwd: f.p.cwd,
+					task: "Side question",
+				});
+			const first = sideFirst ? side() : f.launch(writerRole);
+			const second = sideFirst ? f.launch(writerRole) : side();
+			assert.equal(f.manager.get(first.id).status, "starting");
+			assert.equal(f.manager.get(second.id).status, "starting");
+			const queuedSide = side();
+			assert.equal(f.manager.get(queuedSide.id).status, "queued", "side requests still use concurrency slots");
+			f.children[sideFirst ? 0 : 1].exit(true);
+			assert.equal(f.manager.get(queuedSide.id).status, "starting");
+			f.manager.setConcurrency(3);
+			const queuedWriter = f.launch(writerRole);
+			const reader = f.launch({ ...writerRole, tools: ["read"] });
+			assert.equal(f.manager.get(queuedWriter.id).status, "queued", "ordinary writers remain serialized");
+			assert.equal(f.manager.get(reader.id).status, "queued", "ordinary readers still wait for writers");
+		} finally {
+			await f.manager.dispose();
+			rmSync(f.p.cwd, { recursive: true, force: true });
+		}
+	});
+}
+
+test("a cancelled queued side question keeps its record and can start the thread transcript on retry", async () => {
+	const f = fixture(1);
+	try {
+		const blocker = f.launch();
+		const side = {
+			purpose: "side-conversation",
+			role: { ...defaultAgentConfig().roles[1], tools: [] },
+			model,
+			auth: {},
+			cwd: f.p.cwd,
+			task: "Side question",
+		};
+		const first = f.manager.launch(side);
+		assert.equal(first.status, "queued");
+		await f.manager.stop(first.id, "Cancelled by user");
+		assert.equal(f.manager.get(first.id).status, "cancelled");
+		const retry = f.manager.launch({ ...side, task: "Retry question" }, undefined, first.id);
+		assert.equal(retry.previousRunId, first.id);
+		assert.equal(retry.status, "queued");
+		assert.throws(
+			() => f.manager.launch({ ...side, task: "Duplicate retry" }, undefined, first.id),
+			/already has an active follow-up/,
+		);
+		await f.manager.stop(blocker.id, "Done");
+		assert.equal(f.manager.get(retry.id).status, "starting");
+		assert.equal(f.children[1].launch.sessionFile, undefined);
+		assert.equal(f.manager.get(first.id).status, "cancelled");
+	} finally {
+		await f.manager.dispose();
+		rmSync(f.p.cwd, { recursive: true, force: true });
+	}
+});
+
 test("writer children serialize on request; result is terminal only after process exit; secrets stay out of records", async () => {
 	const f = fixture();
 	f.manager.setWorkspaceWriters("serialize");

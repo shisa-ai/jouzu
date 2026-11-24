@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { CombinedAutocompleteProvider, Editor } from "@earendil-works/pi-tui";
 import { createFastModeExtension, FAST_MODE_STATUS } from "../dist/fast-mode.js";
-import { codexTransport } from "./fixtures/codex-transport.mjs";
+import { codexMessage, codexTransport } from "./fixtures/codex-transport.mjs";
+import { assembledSession } from "./fixtures/flow-assembly.mjs";
 
 const model = {
 	id: "gpt-6.1-sol",
@@ -25,7 +27,6 @@ function harness(selected = model) {
 	const ctx = {
 		model: selected,
 		mode: "tui",
-		isIdle: () => true,
 		sessionManager: { getBranch: () => entries },
 		ui: {
 			setStatus: (key, value) => (value === undefined ? statuses.delete(key) : statuses.set(key, value)),
@@ -79,23 +80,67 @@ test("on/off is explicit, idempotent, persisted in the session, and independent 
 	);
 });
 
-test("invalid arguments, unsupported selections, and busy sessions do not change the choice", async () => {
+test("the editor submits complete Fast mode commands on the first Enter", async () => {
+	const h = harness();
+	const identity = (value) => value;
+	const editor = new Editor(
+		{ requestRender() {} },
+		{
+			borderColor: identity,
+			selectList: {
+				selectedPrefix: identity,
+				selectedText: identity,
+				description: identity,
+				scrollInfo: identity,
+				noMatch: identity,
+			},
+		},
+	);
+	editor.setAutocompleteProvider(new CombinedAutocompleteProvider([{ name: "fast", ...h.commands.get("fast") }]));
+	const submitted = [];
+	editor.onSubmit = (value) => {
+		submitted.push(value);
+		void h.command(value.slice("/fast".length));
+	};
+	const settle = () => new Promise((resolve) => setImmediate(resolve));
+	for (const action of ["on", "off"]) {
+		for (const char of "/fast o") editor.handleInput(char);
+		await settle();
+		assert.equal(editor.isShowingAutocomplete(), true, "partial arguments still offer completions");
+		for (const char of action.slice(1)) editor.handleInput(char);
+		await settle();
+		editor.handleInput("\r");
+		assert.equal(submitted.at(-1), `/fast ${action}`);
+		assert.equal(h.entries.at(-1).data.enabled, action === "on");
+	}
+	for (const char of "/fast") editor.handleInput(char);
+	await settle();
+	editor.handleInput("\r");
+	assert.deepEqual(submitted, ["/fast on", "/fast off", "/fast"]);
+	assert.equal(h.entries.length, 2, "the bare command only reports status");
+});
+
+test("invalid arguments do not change the choice", async () => {
 	const h = harness();
 	for (const action of ["toggle", "on off", "yes"]) {
 		await h.command(action);
 		assert.equal(h.notices.at(-1).type, "warning");
 	}
-	h.ctx.isIdle = () => false;
-	await h.command("on");
-	assert.match(h.notices.at(-1).message, /Wait/);
-	h.ctx.isIdle = () => true;
-	for (const selection of [undefined, { ...model, api: "anthropic-messages" }, { ...model, id: "glm-5" }]) {
-		h.ctx.model = selection;
-		await h.command("on");
-		assert.equal(h.notices.at(-1).type, "warning");
-	}
 	assert.equal(h.entries.length, 0);
 	assert.equal(h.statuses.size, 0);
+});
+
+test("an ineligible selection can save Fast mode for the next eligible request", async () => {
+	const unsupported = { ...model, id: "claude-sonnet", api: "anthropic-messages" };
+	const h = harness(unsupported);
+	const payload = { input: [] };
+	await h.command("on");
+	assert.match(h.notices.at(-1).message, /inactive/);
+	assert.equal(h.statuses.has(FAST_MODE_STATUS), false);
+	assert.equal(h.payload(payload), payload);
+	assert.equal(h.payload(payload, model).service_tier, "priority");
+	await h.command("off");
+	assert.equal(h.payload(payload, model).service_tier, "default");
 });
 
 test("resume, branch navigation, model switches, and shutdown restore the indicator", async () => {
@@ -127,8 +172,9 @@ test("only eligible prepared requests change, including gateway routes and route
 	const h = harness();
 	await h.command("on");
 	const payload = { model: model.id, input: [] };
-	for (const api of ["openai-responses", "openai-codex-responses"]) {
-		assert.equal(h.payload(payload, { ...model, api, provider: "catalog:example:codex" }).service_tier, "priority");
+	for (const api of ["openai-responses", "openai-codex-responses", "openai-completions"]) {
+		const selected = { ...model, id: "pool/gpt-6.2-sol", api, provider: "catalog:example:codex" };
+		assert.equal(h.payload(payload, selected).service_tier, "priority");
 	}
 	for (const selected of [
 		{ ...model, api: "anthropic-messages" },
@@ -141,6 +187,93 @@ test("only eligible prepared requests change, including gateway routes and route
 	h.ctx.model = { ...model, id: "router", api: "virtual" };
 	assert.equal(h.payload(payload, model).service_tier, "priority");
 });
+
+test("re-enabling Fast mode clears only the selected route's rejection", async () => {
+	const h = harness();
+	const other = { ...model, provider: "another-provider" };
+	await h.command("on");
+	for (const { api, id, provider } of [model, other]) {
+		h.entries.push({ type: "custom", customType: "jouzu-fast-mode", data: { unsupported: { api, id, provider } } });
+	}
+	await h.command();
+	assert.match(h.notices.at(-1).message, /disabled for this route/);
+	assert.equal(h.statuses.has(FAST_MODE_STATUS), false);
+	await h.command("on");
+	assert.equal(h.payload({ input: [] }).service_tier, "priority");
+	assert.equal(h.payload({ input: [] }, other).service_tier, undefined);
+});
+
+function captureFastNotices(session) {
+	const notices = [];
+	const runner = session.extensionRunner;
+	runner.setUIContext({ ...runner.getUIContext(), notify: (text) => notices.push(text) }, "rpc");
+	return notices;
+}
+
+const rejectedPriority = {
+	httpStatus: 400,
+	httpBody: { error: { message: 'service_tier "priority" is unsupported by this translated export' } },
+};
+
+test("a priority rejection retries once without the tier, records both attempts, and disables Fast for the route", async (t) => {
+	const f = await assembledSession(t, {
+		modelId: "pool/gpt-6.2-sol",
+		producerExtensions: [createFastModeExtension()],
+		script: [rejectedPriority, { text: "Standard worked" }, { text: "Still standard" }, { text: "Priority reprobe" }],
+	});
+	await f.session.bindExtensions({ mode: "rpc", onError: (error) => assert.fail(error.message) });
+	const notices = captureFastNotices(f.session);
+	await f.session.prompt("/fast on");
+	await f.session.prompt("Hello");
+	assert.deepEqual(
+		f.bodies.map((body) => body.service_tier),
+		["priority", undefined],
+	);
+	assert.deepEqual(f.bodies[1].messages, f.bodies[0].messages);
+	assert.match(notices.at(-1), /Retried without Fast mode/);
+	const records = await f.ingress.branch().attachment.nativeRequests.snapshot();
+	assert.deepEqual(
+		records.filter((record) => record.payload).map((record) => record.outcome),
+		["failure", "success"],
+	);
+	await f.session.reload();
+	await f.session.prompt("Again");
+	assert.equal(f.bodies.length, 3);
+	assert.equal(f.bodies[2].service_tier, undefined);
+	await f.session.prompt("/fast on");
+	await f.session.prompt("Try priority again");
+	assert.equal(f.bodies.length, 4);
+	assert.equal(f.bodies[3].service_tier, "priority");
+});
+
+for (const [name, script, tiers] of [
+	["unrelated error", [{ httpStatus: 403, httpBody: { error: { message: "Access denied" } } }], ["priority"]],
+	["server failure", [{ ...rejectedPriority, httpStatus: 500 }], ["priority"]],
+	["failed standard retry", [rejectedPriority, { httpStatus: 400 }], ["priority", undefined]],
+]) {
+	test(`Fast mode does not report a successful fallback after ${name}`, async (t) => {
+		const f = await assembledSession(t, {
+			modelId: "gpt-example",
+			producerExtensions: [createFastModeExtension()],
+			settings: { providerRetry: { maxRetries: 0 } },
+			script,
+		});
+		await f.session.bindExtensions({ mode: "rpc", onError: (error) => assert.fail(error.message) });
+		const notices = captureFastNotices(f.session);
+		await f.session.prompt("/fast on");
+		await f.session.prompt("Hello");
+		assert.deepEqual(
+			f.bodies.map((body) => body.service_tier),
+			tiers,
+		);
+		assert.equal(f.session.agent.state.messages.at(-1).stopReason, "error");
+		assert.ok(notices.every((text) => !text.includes("Retried without Fast mode")));
+		assert.equal(
+			f.sessionManager.getBranch().some((entry) => entry.data?.unsupported),
+			false,
+		);
+	});
+}
 
 for (const transport of ["sse", "websocket"]) {
 	test(`Codex ${transport} sends priority then default across requests`, async (t) => {
@@ -167,7 +300,7 @@ for (const transport of ["sse", "websocket"]) {
 	});
 }
 
-test("registered session commands reach the real OpenAI request hook and survive reload", async (t) => {
+test("busy Fast mode commands apply to the next OpenAI request and survive reload", async (t) => {
 	const { mkdtemp, rm } = await import("node:fs/promises");
 	const { tmpdir } = await import("node:os");
 	const { join } = await import("node:path");
@@ -194,6 +327,8 @@ test("registered session commands reach the real OpenAI request hook and survive
 		refreshOnCreate: false,
 	});
 	const bodies = [];
+	const firstRequest = Promise.withResolvers();
+	const releaseFirstRequest = Promise.withResolvers();
 	const selected = { ...model, provider: "openai", api: "openai-responses", baseUrl: "https://api.openai.com/v1" };
 	runtime.registerProvider("openai", {
 		api: selected.api,
@@ -205,9 +340,26 @@ test("registered session commands reach the real OpenAI request hook and survive
 				...options,
 				fetch: async (_url, init) => {
 					bodies.push(JSON.parse(init.body));
-					return new Response('{"error":{"message":"fixture capture"}}', {
-						status: 400,
-						headers: { "content-type": "application/json" },
+					const index = bodies.length;
+					let item = codexMessage(`msg_${index}`);
+					if (index === 1) {
+						firstRequest.resolve();
+						await releaseFirstRequest.promise;
+						item = {
+							type: "function_call",
+							id: "fc_step",
+							call_id: "call_step",
+							name: "step",
+							arguments: "{}",
+							status: "completed",
+						};
+					}
+					const events = [
+						{ type: "response.output_item.done", output_index: 0, item },
+						{ type: "response.completed", response: { id: `response_${index}`, status: "completed", output: [item] } },
+					];
+					return new Response(events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join(""), {
+						headers: { "content-type": "text/event-stream" },
 					});
 				},
 			});
@@ -220,7 +372,20 @@ test("registered session commands reach the real OpenAI request hook and survive
 		noSkills: true,
 		noContextFiles: true,
 		noPromptTemplates: true,
-		extensionFactories: [createFastModeExtension()],
+		extensionFactories: [
+			createFastModeExtension(),
+			(pi) => {
+				pi.registerTool({
+					name: "step",
+					label: "Step",
+					description: "Return a fixture result.",
+					parameters: { type: "object", properties: {} },
+					async execute() {
+						return { content: [{ type: "text", text: "Step done" }], details: {} };
+					},
+				});
+			},
+		],
 	});
 	await loader.reload();
 	({ session } = await createAgentSession({
@@ -239,10 +404,26 @@ test("registered session commands reach the real OpenAI request hook and survive
 			throw error;
 		},
 	});
-	await session.prompt("/fast on");
+	await session.prompt("/fast off");
 	assert.equal(bodies.length, 0);
-	await session.prompt("Hello");
-	assert.equal(bodies.at(-1).service_tier, "priority");
+	const active = session.prompt("Hello");
+	try {
+		await Promise.race([firstRequest.promise, active]);
+		assert.equal(session.isIdle, false);
+		for (const action of ["on", "off", "on"]) await session.prompt(`/fast ${action}`);
+		assert.deepEqual(
+			bodies.map((body) => body.service_tier),
+			["default"],
+		);
+	} finally {
+		releaseFirstRequest.resolve();
+		await active;
+	}
+	assert.deepEqual(
+		bodies.map((body) => body.service_tier),
+		["default", "priority"],
+	);
+	assert.ok(bodies[1].input.some((item) => item.type === "function_call_output" && item.call_id === "call_step"));
 	await session.reload();
 	await session.prompt("Again");
 	assert.equal(bodies.at(-1).service_tier, "priority");
