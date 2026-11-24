@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import fs, { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import fs, {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	symlinkSync,
+	utimesSync,
+	writeFileSync,
+} from "node:fs";
 import { syncBuiltinESMExports } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -417,6 +426,52 @@ test("a start waits for a live profile owner to release the lock and then applie
 		assert.equal(result.changed, true);
 		assert.equal(existsSync(lock), false);
 		assert.equal(planProfile(loadBundledProfile("core"), fixture.paths, "0.1.0").actions.length, 0);
+	} finally {
+		cleanup(fixture.root);
+	}
+});
+
+test("a start that reads profile.lock before its owner writes the record waits for the owner", async () => {
+	const fixture = temporary();
+	try {
+		mkdirSync(fixture.paths.stateDir, { recursive: true, mode: 0o700 });
+		const lock = join(fixture.paths.stateDir, "profile.lock");
+		// The owner has created the lock file and not yet written its record into it.
+		writeFileSync(lock, "", { mode: 0o600 });
+		const record = `${JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString(), token: "other" })}\n`;
+		const owner = later(
+			150,
+			({ lock, record }, fs) => {
+				fs.writeFileSync(lock, record);
+				Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 150);
+				fs.unlinkSync(lock);
+			},
+			{ lock, record },
+		);
+		const result = applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, { lockWaitMs: 10_000 });
+		await owner;
+		assert.equal(result.changed, true);
+		assert.equal(existsSync(lock), false);
+	} finally {
+		cleanup(fixture.root);
+	}
+});
+
+test("an empty profile.lock older than a record write is refused at once", () => {
+	const fixture = temporary();
+	try {
+		mkdirSync(fixture.paths.stateDir, { recursive: true, mode: 0o700 });
+		const lock = join(fixture.paths.stateDir, "profile.lock");
+		writeFileSync(lock, "", { mode: 0o600 });
+		const old = new Date(Date.now() - 60_000);
+		utimesSync(lock, old, old);
+		const started = performance.now();
+		assert.throws(
+			() => applyProfile(loadBundledProfile("core"), fixture.paths, "0.1.0", undefined, { lockWaitMs: 10_000 }),
+			(error) => error instanceof ProfileStateError,
+		);
+		assert.ok(performance.now() - started < 5_000, "no wait for a lock that is not being created");
+		assert.equal(readFileSync(lock, "utf8"), "");
 	} finally {
 		cleanup(fixture.root);
 	}

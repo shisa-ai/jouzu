@@ -13,7 +13,7 @@ import {
 	writeFilePrivateAtomic,
 } from "./private-fs.js";
 import type { ResolvedProfile } from "./profiles.js";
-import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
+import { acquireStateLock, STATE_LOCK_STALE_MS, type StateLockInspection } from "./state-lock.js";
 
 /**
  * The catalog ID for the profile lock message. It stays local rather than
@@ -411,6 +411,26 @@ export class ProfileBusyError extends Error {
 
 class ProfileLockHeldLive extends Error {}
 
+/** How young an empty profile lock must be to count as one whose owner is still writing its record. */
+const PROFILE_LOCK_RECORD_MS = 5_000;
+
+/**
+ * The owner creates the lock file first and writes its record into it next, so a start that reads
+ * the lock between the two finds it empty. Treat a young empty lock as held by a live owner. A lock
+ * that has other content, or stays empty longer, is not one being created.
+ */
+function ownerIsLive(path: string, inspection: StateLockInspection): boolean {
+	if (inspection.status === "held-live") return true;
+	if (inspection.status !== "owner-unknown" || inspection.ageMs === null || inspection.ageMs > PROFILE_LOCK_RECORD_MS)
+		return false;
+	try {
+		return lstatSync(path).size === 0;
+	} catch (error) {
+		// Released since it was inspected: the next attempt can take it.
+		return (error as { code?: string }).code === "ENOENT";
+	}
+}
+
 function pause(ms: number): void {
 	Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 }
@@ -430,15 +450,16 @@ export function applyProfile(
 	// Concurrent starts converge the same profile. A start that finds a live owner waits for it and
 	// re-plans: the owner has usually applied everything already, so there is nothing left to do.
 	const deadline = performance.now() + (options.lockWaitMs ?? PROFILE_LOCK_WAIT_MS);
+	const lockPath = join(paths.stateDir, "profile.lock");
 	let releaseLock: () => void;
 	for (;;) {
 		try {
 			releaseLock = acquireStateLock({
-				path: join(paths.stateDir, "profile.lock"),
+				path: lockPath,
 				staleMs: STATE_LOCK_STALE_MS,
 				describe: "profile",
 				onBusy: (inspection) =>
-					inspection.status === "held-live"
+					ownerIsLive(lockPath, inspection)
 						? new ProfileLockHeldLive()
 						: new ProfileStateError(
 								inspection.status === "invalid"
@@ -451,9 +472,7 @@ export function applyProfile(
 			if (!(error instanceof ProfileLockHeldLive)) throw error;
 			// Name the lock, so a lock whose owner is not really Jouzu can be found and removed.
 			if (performance.now() >= deadline)
-				throw new ProfileBusyError(
-					`${catalogText(catalog, PROFILE_LOCK_BUSY_ID)} (${join(paths.stateDir, "profile.lock")})`,
-				);
+				throw new ProfileBusyError(`${catalogText(catalog, PROFILE_LOCK_BUSY_ID)} (${lockPath})`);
 			pause(PROFILE_LOCK_POLL_MS);
 			// The owner may be between writes, so only a converged plan ends the wait early; conflicts
 			// are judged under the lock.
