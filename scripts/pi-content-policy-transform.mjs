@@ -179,6 +179,78 @@ ${text}`;
 			"    /** Check the API registry used by this runtime's provider dispatcher. */\n    isBuiltinApiProvider(api: Api): boolean;\n    getRegisteredProviderConfig(providerId: string): ProviderConfigInput | undefined;",
 		);
 	} else if (path === "dist/core/session-manager.js") {
+		change(
+			"async function buildSessionInfo(filePath, signal, fileStats)",
+			"async function buildSessionInfo(filePath, signal, fileStats, metadataOnly = false)",
+		);
+		change(
+			"            if (!isMessageWithContent(message))",
+			`            if (metadataOnly && (firstMessage || message.role !== "user"))
+                continue;
+            if (!isMessageWithContent(message))`,
+		);
+		change(
+			"            allMessages.push(textContent);",
+			"            if (!metadataOnly) allMessages.push(textContent);",
+		);
+		change(
+			'            firstMessage: firstMessage || "(no messages)",',
+			`            firstMessage: metadataOnly && firstMessage.length > 256
+                ? firstMessage.slice(0, 256).toWellFormed() + "…" : firstMessage || "(no messages)",`,
+		);
+		change(
+			`function buildSessionInfosWithConcurrency(files, onLoaded, signal) {
+    return mapWithConcurrency(files, MAX_CONCURRENT_SESSION_INFO_LOADS, async (file, index) => {
+        const info = await buildSessionInfo(file.path, signal, file.stats);
+        onLoaded(info, index);
+        return info;
+    }, signal);
+}`,
+			`function sessionFingerprint(stats) {
+    return [stats.dev, stats.ino, stats.size, stats.mtimeMs, stats.ctimeMs, stats.birthtimeMs].join(":");
+}
+async function cachedSessionInfo(file, signal, cache) {
+    if (!cache) return buildSessionInfo(file.path, signal, file.stats, true);
+    const stats = file.stats ?? await stat(file.path).catch(() => undefined);
+    signal?.throwIfAborted();
+    if (!stats?.isFile()) return null;
+    const fingerprint = sessionFingerprint(stats);
+    const saved = cache.get(file.path, fingerprint);
+    if (saved) return saved;
+    const info = await buildSessionInfo(file.path, signal, stats, true);
+    if (info) {
+        const after = await stat(file.path).catch(() => undefined);
+        signal?.throwIfAborted();
+        if (after && sessionFingerprint(after) === fingerprint) cache.put(file.path, fingerprint, info);
+    }
+    return info;
+}
+async function buildSessionInfosWithConcurrency(files, onLoaded, signal, openCache) {
+    const cache = openCache?.();
+    try {
+        return await mapWithConcurrency(files, MAX_CONCURRENT_SESSION_INFO_LOADS, async (file, index) => {
+            const info = openCache ? await cachedSessionInfo(file, signal, cache) : await buildSessionInfo(file.path, signal, file.stats);
+            signal?.throwIfAborted();
+            onLoaded(info, index);
+            return info;
+        }, signal);
+    } finally {
+        cache?.close();
+    }
+}`,
+		);
+		change(
+			"async function listSessionsFromDir(dir, onProgress, signal)",
+			"async function listSessionsFromDir(dir, onProgress, signal, openCache)",
+		);
+		change(
+			"        }, signal);\n        return results.filter",
+			"        }, signal, openCache);\n        return results.filter",
+		);
+		change(
+			"            }, abortSignal);\n            return sortSessionInfos(results.filter",
+			"            }, abortSignal, openCache);\n            return sortSessionInfos(results.filter",
+		);
 		for (const [before, after] of [
 			["export function loadEntriesFromFile(filePath)", "export function loadEntriesFromFile(filePath, repair = true)"],
 			[
@@ -246,7 +318,7 @@ ${text}`;
 		);
 		change(
 			"static async list(cwd, sessionDir, onProgress, signal)",
-			"static async list(cwd, sessionDir, onProgress, signal, includeEmpty = false)",
+			"static async list(cwd, sessionDir, onProgress, signal, includeEmpty = false, openCache)",
 		);
 		change(
 			"const includeSession = (session) => !filterCwd || sessionCwdMatches(session.cwd, resolvedCwd);",
@@ -254,7 +326,7 @@ ${text}`;
 		);
 		change(
 			"static async listAll(sessionDirOrOnProgress, onProgressOrSignal, signal)",
-			"static async listAll(sessionDirOrOnProgress, onProgressOrSignal, signal, includeEmpty = false)",
+			"static async listAll(sessionDirOrOnProgress, onProgressOrSignal, signal, includeEmpty = false, openCache)",
 		);
 		change(
 			"        const progress = typeof sessionDirOrOnProgress",
@@ -266,7 +338,7 @@ ${text}`;
 		);
 		change(
 			"return sortSessionInfos(await listSessionsFromDir(customSessionDir, progress, abortSignal));",
-			"return sortSessionInfos((await listSessionsFromDir(customSessionDir, progress, abortSignal)).filter(includeSession));",
+			"return sortSessionInfos((await listSessionsFromDir(customSessionDir, progress, abortSignal, openCache)).filter(includeSession));",
 		);
 		change(
 			"return sortSessionInfos(results.filter((info) => info !== null));",
@@ -304,7 +376,24 @@ export function sessionEntryToContextMessages(entry) {`,
         return [message];
     }`,
 		);
+		change(
+			"            : (onProgressOrSignal ?? signal);",
+			'            : (typeof onProgressOrSignal === "function" ? signal : onProgressOrSignal ?? signal);',
+		);
+		change(
+			"await listSessionsFromDir(dir, progress, signal)",
+			"await listSessionsFromDir(dir, progress, signal, openCache)",
+		);
 	} else if (path === "dist/core/session-manager.d.ts") {
+		change(
+			"export interface SessionInfo {",
+			`export type SessionMetadataCache = () => {
+    get(path: string, fingerprint: string): SessionInfo | undefined;
+    put(path: string, fingerprint: string, info: SessionInfo): void;
+    close(): void;
+} | undefined;
+export interface SessionInfo {`,
+		);
 		// The idle custom-message append hands the flow the object Pi emitted for the new entry, so a
 		// receipt binds to the message the projection returns rather than to a predicted message.
 		change(
@@ -322,11 +411,11 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		change(
 			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal)",
-			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean)",
+			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean, openCache?: SessionMetadataCache)",
 		);
 		change(
 			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal)",
-			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean)",
+			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean, openCache?: SessionMetadataCache)",
 		);
 		change(
 			"    _persist(entry: SessionEntry): void;",
@@ -339,7 +428,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		change(
 			"export async function createSessionManager(parsed, cwd, sessionDir, settingsManager) {",
-			`export async function createSessionManager(parsed, cwd, sessionDir, settingsManager, resume) {
+			`export async function createSessionManager(parsed, cwd, sessionDir, settingsManager, resume, sessionMetadataCache) {
     const open = resume?.open ?? ((path, dir, cwdOverride) => SessionManager.open(path, dir, cwdOverride));`,
 		);
 		change(
@@ -356,8 +445,11 @@ export function sessionEntryToContextMessages(entry) {`,
 			"return open(existingSession.path, sessionDir);",
 		);
 		change(
-			"SessionManager.listAll(sessionDir, onProgress, signal), settingsManager);",
-			"SessionManager.listAll(sessionDir, onProgress, signal), settingsManager, resume?.inUseLabel);",
+			"const selectedPath = await selectSession((onProgress, signal) => SessionManager.list(cwd, sessionDir, onProgress, signal), (onProgress, signal) => SessionManager.listAll(sessionDir, onProgress, signal), settingsManager);",
+			`const selectedPath = await selectSession(
+                (onProgress, signal, fullText) => SessionManager.list(cwd, sessionDir, onProgress, signal, false, fullText ? undefined : sessionMetadataCache),
+                (onProgress, signal, fullText) => SessionManager.listAll(sessionDir, onProgress, signal, false, fullText ? undefined : sessionMetadataCache),
+                settingsManager, resume?.inUseLabel, !!sessionMetadataCache);`,
 		);
 		change(
 			"    let sessionManager = await createSessionManager(parsed, cwd, sessionDir, startupSettingsManager);",
@@ -384,7 +476,7 @@ export function sessionEntryToContextMessages(entry) {`,
     try {
     if (sessionResume && parsed.resume && !canPromptForResume && !parsed.session && !parsed.fork && !parsed.help && !parsed.noSession && parsed.listModels === undefined)
         throw new Error(sessionResume.needsTerminal);
-    let sessionManager = await createSessionManager(parsed, cwd, sessionDir, startupSettingsManager, resume);`,
+    let sessionManager = await createSessionManager(parsed, cwd, sessionDir, startupSettingsManager, resume, options?.sessionMetadataCache);`,
 		);
 		change(
 			'                case "fork":\n                    sessionManager = forkSessionOrExit(sessionFile, cwd, sessionDir);',
@@ -392,7 +484,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		change(
 			'    time("createAgentSessionRuntime");',
-			'    await releaseResume?.();\n    runtime.sessionResume = sessionResume;\n    time("createAgentSessionRuntime");',
+			'    await releaseResume?.();\n    runtime.sessionResume = sessionResume;\n    runtime.sessionMetadataCache = options?.sessionMetadataCache;\n    time("createAgentSessionRuntime");',
 		);
 		// Explicit ID lookup must include sessions persisted for recovery before any conversation.
 		change(
@@ -433,7 +525,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		text = `${text.slice(0, start)}    try {\n${body}\n    } finally {\n        if (options?.flowIngressFactory) await runtime.session.dispose();\n    }\n    } finally {\n        await releaseResume?.();\n    }${text.slice(end)}`;
 	} else if (path === "dist/main.d.ts") {
-		text = `import type { ContentPolicy } from "./core/jouzu-content-policy.js";\nimport type { FlowIngress } from "./core/jouzu-flow-ingress.js";\n${text}`;
+		text = `import type { ContentPolicy } from "./core/jouzu-content-policy.js";\nimport type { SessionMetadataCache } from "./core/session-manager.js";\nimport type { FlowIngress } from "./core/jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"export interface MainOptions {",
 			`export interface SessionResumeHooks {
@@ -445,13 +537,20 @@ export function sessionEntryToContextMessages(entry) {`,
 }
 export interface MainOptions {
     sessionResume?: SessionResumeHooks;
+    sessionMetadataCache?: SessionMetadataCache;
     sessionInfoFooter?: () => string;
     flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;
     contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;`,
 		);
 	} else if (path === "dist/cli/session-picker.js") {
-		change("allSessionsLoader, settingsManager) {", "allSessionsLoader, settingsManager, inUseLabel) {");
-		change("{ showRenameHint: false, keybindings }", "{ showRenameHint: false, keybindings, inUseLabel }");
+		change(
+			"allSessionsLoader, settingsManager) {",
+			"allSessionsLoader, settingsManager, inUseLabel, searchOnDemand) {",
+		);
+		change(
+			"{ showRenameHint: false, keybindings }",
+			"{ showRenameHint: false, keybindings, inUseLabel, searchOnDemand }",
+		);
 	} else if (path === "dist/modes/interactive/components/session-selector.js") {
 		change(
 			"        this.buildBaseLayout(this.sessionList);\n        this.renameInput.onSubmit",
@@ -466,10 +565,97 @@ export interface MainOptions {
 			'            const truncatedMsg = truncateToWidth(normalizedMessage, Math.max(10, availableForMsg - visibleWidth(badge)), "…");',
 		);
 		change('cursor + theme.fg("dim", prefix) + styledMsg', 'cursor + badge + theme.fg("dim", prefix) + styledMsg');
+		change(
+			"    filterSessions(query) {",
+			`    filterSearchInput() {
+        const query = this.searchInput.getValue();
+        if (query.trim()) this.onSearch?.();
+        this.filterSessions(query);
+    }
+    filterSessions(query) {`,
+		);
+		change(
+			"this.searchInput.handleInput(keyData);\n                this.filterSessions(this.searchInput.getValue());",
+			"this.searchInput.handleInput(keyData);\n                this.filterSearchInput();",
+		);
+		change(
+			"this.searchInput.handleInput(keyData);\n            this.filterSessions(this.searchInput.getValue());",
+			"this.searchInput.handleInput(keyData);\n            this.filterSearchInput();",
+		);
+		change(
+			"        if (this.filteredSessions.length === 0) {\n            let emptyMessage;",
+			"        if (this.filteredSessions.length === 0) {\n            if (this.loadingSearch) return lines;\n            let emptyMessage;",
+		);
+		change(
+			"        // Start loading current sessions immediately",
+			`        if (options?.searchOnDemand) {
+            this.fullTextScopes = new Set();
+            this.sessionList.onSearch = () => this.loadFullText();
+        }
+        // Start loading current sessions immediately`,
+		);
+		change(
+			"    async loadScope(scope) {",
+			`    loadFullText() {
+        if (!this.fullTextScopes || this.fullTextScopes.has(this.scope)) return;
+        this.fullTextScopes.add(this.scope);
+        if (this.scope === "current") {
+            this.currentLoad?.abort();
+            this.currentLoad = null;
+            this.currentSessions = null;
+        } else {
+            this.allLoad?.abort();
+            this.allLoad = null;
+            this.allSessions = null;
+        }
+        this.sessionList.setSessions([], this.scope === "all");
+        void this.loadScope(this.scope);
+    }
+    async loadScope(scope) {`,
+		);
+		change(
+			'        const showCwd = scope === "all";\n        const controller',
+			'        const showCwd = scope === "all";\n        const fullText = this.fullTextScopes?.has(scope);\n        this.sessionList.loadingSearch = fullText;\n        const controller',
+		);
+		change(
+			"this.currentSessionsLoader(onProgress, controller.signal)",
+			"this.currentSessionsLoader(onProgress, controller.signal, fullText)",
+		);
+		change(
+			"this.allSessionsLoader(onProgress, controller.signal)",
+			"this.allSessionsLoader(onProgress, controller.signal, fullText)",
+		);
+		change(
+			"            this.header.setLoading(false);",
+			"            this.header.setLoading(false);\n            this.sessionList.loadingSearch = false;",
+			2,
+		);
+		change(
+			'        this.scope = this.scope === "current" ? "all" : "current";\n        const sessions',
+			`        this.scope = this.scope === "current" ? "all" : "current";
+        if (this.fullTextScopes && this.sessionList.searchInput.getValue().trim() && !this.fullTextScopes.has(this.scope)) {
+            this.loadFullText();
+            return;
+        }
+        const sessions`,
+		);
+		change(
+			"        this.header.setLoading(loading);\n        this.sessionList.setSessions",
+			"        this.header.setLoading(loading);\n        this.sessionList.loadingSearch = loading && this.fullTextScopes?.has(this.scope);\n        this.sessionList.setSessions",
+		);
 	} else if (path === "dist/modes/interactive/interactive-mode.js") {
 		change(
+			`            const selector = new SessionSelectorComponent((onProgress, signal) => SessionManager.list(this.sessionManager.getCwd(), this.sessionManager.getSessionDir(), onProgress, signal), (onProgress, signal) => this.sessionManager.usesDefaultSessionDir()
+                ? SessionManager.listAll(onProgress, signal)
+                : SessionManager.listAll(this.sessionManager.getSessionDir(), onProgress, signal), async (sessionPath) => {`,
+			`            const cache = this.runtimeHost.sessionMetadataCache;
+            const selector = new SessionSelectorComponent(
+                (onProgress, signal, fullText) => SessionManager.list(this.sessionManager.getCwd(), this.sessionManager.getSessionDir(), onProgress, signal, false, fullText ? undefined : cache),
+                (onProgress, signal, fullText) => SessionManager.listAll(this.sessionManager.usesDefaultSessionDir() ? undefined : this.sessionManager.getSessionDir(), onProgress, signal, false, fullText ? undefined : cache), async (sessionPath) => {`,
+		);
+		change(
 			"                showRenameHint: true,\n                keybindings: this.keybindings,",
-			"                showRenameHint: true,\n                keybindings: this.keybindings,\n                inUseLabel: this.runtimeHost.sessionResume?.inUseLabel,",
+			"                showRenameHint: true,\n                keybindings: this.keybindings,\n                inUseLabel: this.runtimeHost.sessionResume?.inUseLabel,\n                searchOnDemand: !!cache,",
 		);
 		change(
 			"    async handleResumeSession(sessionPath, options) {",
