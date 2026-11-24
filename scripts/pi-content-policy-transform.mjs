@@ -404,6 +404,24 @@ export function sessionEntryToContextMessages(entry) {`,
 			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,",
 			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,\n            runtimeIdentity: this.options.sessionInfoFooter?.(),\n            showReport: (markdown) => {\n                this.chatContainer.addChild(new Text(markdown, this.outputPad, 1));\n                this.ui.requestRender();\n            },",
 		);
+		// An extension's ctx.abort(), from its handlers or its shortcuts, stops the current run as in
+		// RPC: queued messages still return to the editor, but prompts the user already sent are kept.
+		change(
+			"            abortHandler: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true });",
+			"            abortHandler: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true, keepPrompts: true });",
+		);
+		change(
+			"            abort: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true });",
+			"            abort: () => {\n                this.restoreQueuedMessagesToEditor({ abort: true, keepPrompts: true });",
+		);
+		change(
+			"            if (options?.abort) {\n                void this.session.abort();\n            }\n            return 0;",
+			"            if (options?.abort) {\n                void this.session.abort({ keepPrompts: options.keepPrompts });\n            }\n            return 0;",
+		);
+		change(
+			"        if (options?.abort) {\n            void this.session.abort();\n        }\n        return allQueued.length;",
+			"        if (options?.abort) {\n            void this.session.abort({ keepPrompts: options.keepPrompts });\n        }\n        return allQueued.length;",
+		);
 	} else if (path === "dist/modes/interactive/interactive-mode.d.ts") {
 		change(
 			"export interface InteractiveModeOptions {",
@@ -1125,7 +1143,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		change("    dispose(): void;", "    dispose(): Promise<void>;");
 		change(
 			"    abort(): Promise<void>;",
-			"    /** Aborts so far that cancel prompts: every abort without `keepPrompts`. A request that sees it change was stopped by the user. */\n    readonly promptAbortCount: number;\n    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
+			"    /** Aborts so far that cancel prompts: every abort without `keepPrompts`, such as the user's Stop, a session switch or shutdown. Compaction and extension aborts keep prompts. */\n    readonly promptAbortCount: number;\n    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
 		);
 		change(
 			"export declare class AgentSession {",

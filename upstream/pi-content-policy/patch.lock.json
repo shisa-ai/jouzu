@@ -17,7 +17,7 @@
 		},
 		"dist/modes/interactive/interactive-mode.js": {
 			"before": "a316502682c68544e1950b80e3b19d584c7a43331cfb7029765b5c04d18e4465",
-			"after": "13af8f6080e4aeeab00df9563cd90b3c794a0c46adef8fdd4c666d8e43cccfbe"
+			"after": "d56e7fb28a0ea02715346132c72c8ce215d9921019152e70aea34744c0588477"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
 			"before": "21887f2277e81d34ffb85e5bb669e8f4c929f5bc5a07c55fa069fd62569f5455",
@@ -77,7 +77,7 @@
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "56d24887a400d77a77b428deb1cce25576cac27e18089e722f536d600fa32c3a",
-			"after": "1f0bd570d8ad20aa46e99c759800c235694933fb98ba28c8aafc8f4d9990df45"
+			"after": "a80f955ae3defa2eb51036e9a949fe6a4683928ef68552290691629bd1364873"
 		},
 		"dist/core/agent-session-services.js": {
 			"before": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
