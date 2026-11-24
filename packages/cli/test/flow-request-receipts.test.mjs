@@ -198,10 +198,10 @@ test("outcome receipt failure keeps ownership and prevents tool execution", asyn
 	assert.equal(state.attempts[0].phase, "handed-off");
 });
 
-// prepare: while the composed request is recorded; payload: while an extension prepares the payload;
-// native-handoff: after the request store admitted the body, before the ledger records the handoff;
-// handoff: after both recorded it.
-for (const stage of ["prepare", "payload", "native-handoff", "handoff"])
+// prepare: while the composed request is recorded; prepared: after it was recorded, before Pi starts
+// the provider call; payload: while an extension prepares the payload; native-handoff: after the
+// request store admitted the body, before the ledger records the handoff; handoff: after both did.
+for (const stage of ["prepare", "prepared", "payload", "native-handoff", "handoff"])
 	for (const byUser of [false, true])
 		test(`abort during receipt boundary, stage=${stage}, byUser=${byUser}`, async (t) => {
 			const entered = deferred();
@@ -226,6 +226,14 @@ for (const stage of ["prepare", "payload", "native-handoff", "handoff"])
 					await release.promise;
 					return value;
 				};
+			} else if (stage === "prepared") {
+				const native = result.bridge.prepare.bind(result.bridge);
+				t.mock.method(result.bridge, "prepare", async (...args) => {
+					const value = await native(...args);
+					entered.resolve();
+					await release.promise;
+					return value;
+				});
 			} else if (stage !== "payload") {
 				const method = stage === "prepare" ? "prepare" : "handoff";
 				const native = result.ledger[method].bind(result.ledger);
@@ -252,15 +260,16 @@ for (const stage of ["prepare", "payload", "native-handoff", "handoff"])
 				assert.equal(attempt.requests[0].outcome, "aborted");
 				assert.equal(request.outcome, "aborted");
 			} else if (!byUser) {
-				// Any other abort before handoff leaves the attempt withheld for the user to decide.
-				assert.equal(attempt.phase, "withheld");
+				// Any other abort before handoff leaves the attempt for the user to decide: withheld, or,
+				// once the checkpoint recorded it, left to host settlement as when Pi's own check stops it.
+				assert.equal(attempt.phase, stage === "prepared" ? "prepared" : "withheld");
 				assert.equal(request.reset, undefined);
 				// A request stopped while its payload is prepared ends withheld; one stopped inside the
 				// checkpoint stays pending until the next request or close records it, as before.
 				assert.equal(request.outcome, stage === "payload" ? "withheld" : undefined);
 			} else {
-				// The user's Stop before handoff is not a provider failure: the request is released at
-				// once, and the idle host cancels the attempt instead of asking for a recovery decision.
+				// A Stop before handoff is not a provider failure: the request is released at once, and
+				// the idle host cancels the attempt instead of asking for a recovery decision.
 				assert.equal(attempt.phase, "prepared");
 				assert.equal(request.outcome, "withheld");
 				assert.equal(request.reset, true);
