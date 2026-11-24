@@ -136,6 +136,34 @@ used another language.
 A recovery hold is announced once per hold, and not at all if it was released
 before the announcement.
 
+## Stopping a turn
+
+Stop is `abort` in RPC, Esc in the terminal, and `session/cancel` in ACP.
+Switching sessions, moving to another point in the session tree, and quitting
+stop the running turn the same way. A Stop is final:
+
+- A prompt that has not started and is not queued is cancelled. RPC answers it
+  with the prompt disposition `aborted`, and ACP reports the stop reason
+  `cancelled`. In RPC, this includes a prompt still waiting for admission.
+  Queued messages are not cancelled: in RPC they stay queued, and in the
+  terminal Esc returns them to the editor.
+- A running turn ends with stop reason `aborted`. Your message stays in the
+  conversation and is sent with the next one; nothing is sent again on its own.
+- A model request the Stop reaches is recorded before the turn ends: as aborted
+  if the provider may have received it, and as never sent otherwise. A request
+  that was never sent holds no later message and needs no recovery decision.
+- Automated work stays paused until your next message starts a turn. Work that
+  flow control was still holding is kept. Automated input that the Stop reached
+  before the provider received it, such as a task continuation or a job result,
+  is not sent later.
+
+`/compact` and an extension that aborts a turn stop the running turn without
+cancelling prompts already sent. A request they stop before the provider
+receives it holds later messages. If it was stopped while its request body was
+being prepared, it stays withheld until `/flow retry` or `/flow clear`. If it
+was stopped earlier, it has no recorded outcome and holds messages until
+`/flow clear`.
+
 ## Request history capacity
 
 Request history records delivery and recovery separately from the model's token

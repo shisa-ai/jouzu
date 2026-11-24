@@ -101,6 +101,24 @@ Jouzu still uses these Pi resources:
 - Trusted project `.pi` resources, through Pi's project-trust rules.
 - `~/.agents/skills`, Pi's shared cross-tool skills directory.
 
+## Provider retries
+
+Jouzu retries transient provider failures before it reports the error. The default agent-turn policy allows 50 retries with a jittered ramp: 1s, 2s, 4s, 15s, 30s, 60s, 2m, 4m, then 8m for every later attempt. Each delay is multiplied by a random factor between 0.75 and 1.25, so concurrent sessions do not retry in lockstep. The 8-minute cap is the longest wait between attempts.
+
+A retry is scheduled only for errors that look transient: HTTP 429, 500, 502, 503, 504, 520, 524, overloaded or capacity messages, rate limits, timeouts, and network failures. Authentication, billing, plan access, and exhausted allowance failures are reported immediately. If a later attempt returns a different non-retryable error, that error is reported instead of retrying again. Press Esc while a retry is waiting to cancel it.
+
+Compaction, branch summaries, and bug-report summaries use a shorter policy: at most 3 retries with a 60-second cap. A summary that cannot reach the provider reports the error instead of holding the session for the agent-turn budget.
+
+Set these keys in `settings.json` under the [agent/config directory](../README.md#state-and-isolation) to change the policy:
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `retry.maxRetries` | `50` | Retries after the first request. `0` disables agent-turn retries. |
+| `retry.baseDelayMs` | `1000` | Base delay in milliseconds; the ramp multipliers are 1, 2, 4, 15, 30, 60, 120, 240, and 480. |
+| `retry.maxAgentDelayMs` | `480000` | Longest delay in milliseconds before jitter. |
+
+Retries inside a single provider request are separate and off by default. Setting `retry.provider.maxRetries` enables them; they honor `Retry-After` up to `retry.provider.maxRetryDelayMs` (default 60 seconds). Leave that setting unset unless you need transport-level retries.
+
 ## Startup compile cache
 
 Jouzu uses Node's on-disk compile cache on Linux, macOS, and Windows. It reuses compiled JavaScript on later launches; the first launch populates the cache. Node selects a `node-compile-cache` directory under the operating system's temporary directory unless `NODE_COMPILE_CACHE` specifies another location. This Node-managed cache is separate from `JOUZU_HOME` and contains compiled code, not conversation history.

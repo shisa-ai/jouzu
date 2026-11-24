@@ -39,6 +39,8 @@ export class PiRequestReceipts {
 		input: FlowRequestInput,
 		signal: AbortSignal | undefined,
 		containsUserInput: boolean,
+		/** A Stop, an abort that cancels prompts, ended this request; any other abort leaves its attempt withheld for the user. */
+		stopped?: () => boolean,
 	): Promise<FlowCompositionRequest | undefined> {
 		this.assertActive(signal);
 		const state = await this.ledger.snapshot();
@@ -59,21 +61,27 @@ export class PiRequestReceipts {
 		try {
 			this.assertActive(signal);
 		} catch (error) {
-			await this.withhold(request);
+			// A Stop leaves the attempt to host settlement, which cancels an attempt that never reached
+			// the provider. Withholding it would ask the user to decide about a turn already stopped.
+			if (!stopped?.()) await this.withhold(request);
 			throw error;
 		}
 		return request;
 	}
 
-	/** The provider accepted the body; the composed attempt is now in flight. */
-	async handedOff(request: FlowCompositionRequest, signal?: AbortSignal): Promise<void> {
-		this.assertActive(signal);
+	/**
+	 * The provider accepted the body; the composed attempt is now in flight. The native store has
+	 * already admitted the body, so the ledger records the same handoff even when an abort arrives
+	 * now; the request then ends with an aborted outcome.
+	 */
+	async handedOff(request: FlowCompositionRequest): Promise<void> {
+		this.assertActive();
 		await this.ledger.handoff(request.composition.attemptId, request.id);
 		request.handedOff = true;
 	}
 
 	/** Record the provider's terminal outcome for a handed-off composed request. */
-	async settled(request: FlowCompositionRequest, message: AssistantMessage): Promise<void> {
+	async settled(request: FlowCompositionRequest, message: Pick<AssistantMessage, "stopReason">): Promise<void> {
 		this.assertActive();
 		if (!request.handedOff) {
 			await this.withhold(request);

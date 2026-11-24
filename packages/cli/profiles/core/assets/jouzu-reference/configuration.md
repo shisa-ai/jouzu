@@ -28,7 +28,7 @@ Relative to the configuration root:
 | `context-policy.json` | Context ceiling |
 | `agents.json` | Workflow definitions, concurrency and writer policy |
 | `agent/mcp.json` | User MCP servers; `/reload` after edits |
-| `agent/skills/`, `prompts/`, `extensions/`, `themes/` | Resources (all four directories are under `agent/`) |
+| `agent/skills/`, `agent/prompts/`, `agent/extensions/`, `agent/themes/` | Resources |
 
 Trusted project `.pi` resources and shared `~/.agents/skills` are separate. Do not substitute stock Pi roots. First-run Pi import offers only `models.json` and `auth.json`, separately with confirmation, without replacing existing files.
 

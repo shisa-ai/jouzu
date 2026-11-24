@@ -739,6 +739,22 @@ export class FlowNativeRequestStore {
 			return released;
 		});
 	}
+	/**
+	 * The user stopped this request before the provider received it. It is recorded as withheld,
+	 * since nothing was sent, and released in the same write, so it never holds later input: the
+	 * Stop is the user's decision. Its receipts stay, as `reset` keeps them.
+	 */
+	cancel(id: string): Promise<void> {
+		return this.transact((records) => {
+			const record = this.owned(records, id);
+			if (record.payload || (record.outcome && record.outcome !== "withheld"))
+				throw new FlowLedgerError("transition", "Native request outcome conflicts with retained evidence.");
+			record.outcome = "withheld";
+			record.reset = true;
+			// A used authorization is the retained retry's provenance, not permission to send again.
+			if (!record.retryAuthorization?.requestId) delete record.retryAuthorization;
+		});
+	}
 	/** Only the host may supply source identities proven absent from the current context. */
 	reconcileSources(claims: NativeSourceClaim[], reason: SourceReconciliation["reason"]): Promise<number> {
 		if (
