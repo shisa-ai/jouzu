@@ -157,7 +157,11 @@ for (const promptFirst of [false, true]) {
 		}
 		const { root, session, service, requests } = await fixture(t, { retainInputs: true });
 		const { scope } = service.branch();
-		const prompt = assert.rejects(session.prompt("first prompt during close"), { code: "stale" });
+		// Closing aborts the session, which cancels a prompt that has not started its turn.
+		const dispositions = [];
+		const prompt = session.prompt("first prompt during close", {
+			preflightResult: (disposition) => dispositions.push(disposition),
+		});
 		let closing;
 		try {
 			await Promise.race([entered.promise, prompt]);
@@ -167,6 +171,7 @@ for (const promptFirst of [false, true]) {
 			release.resolve();
 			await Promise.all([prompt, closing]);
 		}
+		assert.deepEqual(dispositions, ["aborted"]);
 		assert.deepEqual(requests, []);
 		await durableFirstSave(
 			root,
