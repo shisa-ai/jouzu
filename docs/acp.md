@@ -28,7 +28,7 @@ The host must send `initialize` before session requests and an absolute working 
 - `session/new` starts a Jouzu session in the requested working directory.
 - `session/prompt` accepts text, images, embedded text or image resources, and resource links. Resource links are passed to the model as references; they are not automatically downloaded. Image handling depends on the selected model.
 - `session/update` streams assistant text, reasoning when supplied by the model, and tool calls and results.
-- `session/cancel` cancels the active turn. Prompt completion waits for the runtime to settle, including automatic retries and follow-up work.
+- `session/cancel` cancels the active turn, including a prompt whose turn has not started, which ends with stop reason `cancelled`. Prompt completion waits for the runtime to settle, including automatic retries and follow-up work. See [Stopping a turn](flow-control.md#stopping-a-turn).
 - `session/list` lists persisted Jouzu sessions. `session/load` takes a session ID, not a file path, and replays conversation history. Use the session's original working directory.
 - `session/close` stops the session's child process. Closing the host connection stops all children owned by that connection.
 - The `model` session configuration option lists available models. Use `session/set_config_option` to change it between turns.
@@ -42,6 +42,22 @@ Extension selection and confirmation dialogs are relayed through ACP permission 
 **ACP is not a sandbox.** Tools run with the same operating-system access as the launched Jouzu process. A working directory does not restrict filesystem access. Relaying extension dialogs does not add approval checks to every tool call. Use trusted workspaces, extensions, and hosts, and launch Jouzu under an account with appropriate access.
 
 The adapter uses local Jouzu tools rather than delegating filesystem or terminal operations to the host. It rejects nonempty host MCP server lists and additional workspace directories. ACP plan updates are not emitted.
+
+## Jouzu status
+
+Jouzu publishes read-only flow-control and TextGuard state as `_jouzu/status` notifications to hosts that opt in during `initialize`:
+
+```json
+{ "clientCapabilities": { "_meta": { "jouzu": { "status": true } } } }
+```
+
+The adapter advertises the notification with `agentCapabilities._meta.jouzu.status` set to `true`. Each notification carries one key:
+
+```json
+{ "sessionId": "…", "key": "jouzu-flow", "status": { "version": 1, "enabled": true, "held": [], "withheld": [], "uncertain": [] } }
+```
+
+`key` is `jouzu-flow` or `jouzu-textguard`, and `status` is the latest state for that key; it replaces the previous one. [Flow control](flow-control.md#rpc-and-acp-clients) and [TextGuard](textguard.md#notifications) describe each payload. After `session/new` or `session/load` responds, the adapter sends the latest state the session has published for each key, then every change. Nothing in these notifications can approve content or release a hold.
 
 ## Qualification
 

@@ -24,7 +24,7 @@ import {
 	terminalTextWidth,
 } from "./session-ui/index.js";
 
-export type PaletteViewId = "models" | "workflow" | "settings" | "usage" | "keys" | "help";
+export type PaletteViewId = "models" | "workflow" | "settings" | "usage" | "keys" | "help" | "side";
 export type PalettePresentation = "floating" | "replace";
 
 export interface PaletteRoute {

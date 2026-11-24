@@ -40,6 +40,10 @@ import { addWorkerUsage, type RunUsage } from "./usage.js";
 
 export type RunStatus = "queued" | "starting" | "running" | "completed" | "failed" | "cancelled" | "interrupted";
 export interface AgentRun {
+	sideBranchId?: string;
+	sideDestination?: string;
+	sideReference?: { entryId: string | null; capturedAt: string; truncated: boolean };
+	purpose?: "side-conversation";
 	id: string;
 	completion?: Omit<NotificationRecord, "id">;
 	parentSessionId: string;
@@ -213,6 +217,7 @@ function ownedJson(path: string): AgentRun {
 	const run = JSON.parse(readFileSync(path, "utf8")) as AgentRun;
 	parseAgentConfig({ schemaVersion: 1, maxConcurrent: 1, roles: [run.role] });
 	if (
+		(run.purpose !== undefined && run.purpose !== "side-conversation") ||
 		!run.model ||
 		typeof run.model.id !== "string" ||
 		typeof run.model.provider !== "string" ||
@@ -416,6 +421,20 @@ export class SubagentManager {
 		const now = new Date().toISOString();
 		const run: AgentRun = {
 			id,
+			...(launch.purpose
+				? {
+						purpose: launch.purpose,
+						sideDestination: launch.sideContext?.destination,
+						sideBranchId: launch.sideContext?.branchId,
+						sideReference: launch.sideContext
+							? {
+									entryId: launch.sideContext.entryId,
+									capturedAt: launch.sideContext.capturedAt,
+									truncated: launch.sideContext.truncated,
+								}
+							: undefined,
+					}
+				: {}),
 			parentSessionId: this.parentSessionId,
 			parentEntryId,
 			previousRunId,
@@ -436,6 +455,9 @@ export class SubagentManager {
 			const previous = this.get(previousRunId);
 			if (isActiveRun(previous)) throw new Error(this.msg(CatalogMessageId.subagentResumeActiveRun));
 			if (
+				previous.purpose !== run.purpose ||
+				previous.sideBranchId !== run.sideBranchId ||
+				previous.sideDestination !== run.sideDestination ||
 				previous.cwd !== run.cwd ||
 				previous.roleRevision !== run.roleRevision ||
 				(!isSameModelSelector(previous.role.model) &&
@@ -447,16 +469,25 @@ export class SubagentManager {
 			run.parentContextFile = previous.parentContextFile;
 			if (run.parentContextFile && (!existsSync(run.parentContextFile) || !this.containsSession(run.parentContextFile)))
 				throw new Error(this.msg(CatalogMessageId.subagentParentContextUnavailable));
-			if (
-				[...this.runs.values()].some(
-					(other) =>
-						isActiveRun(other) &&
-						(other.sessionFile === sessionFile || this.pending.get(other.id)?.sessionFile === sessionFile),
+			// A side request that stopped before the worker opened a transcript still
+			// belongs to the thread. Its successor can create the first transcript.
+			if (!sessionFile) {
+				if (run.purpose !== "side-conversation" || previous.status === "completed")
+					throw new Error(this.msg(CatalogMessageId.subagentChildSessionMissing));
+				if ([...this.runs.values()].some((other) => other.previousRunId === previousRunId && isActiveRun(other)))
+					throw new Error(this.msg(CatalogMessageId.subagentChildFollowUpActive));
+			} else {
+				if (
+					[...this.runs.values()].some(
+						(other) =>
+							isActiveRun(other) &&
+							(other.sessionFile === sessionFile || this.pending.get(other.id)?.sessionFile === sessionFile),
+					)
 				)
-			)
-				throw new Error(this.msg(CatalogMessageId.subagentChildFollowUpActive));
-			if (!sessionFile || !existsSync(sessionFile) || !this.containsSession(sessionFile))
-				throw new Error(this.msg(CatalogMessageId.subagentChildSessionMissing));
+					throw new Error(this.msg(CatalogMessageId.subagentChildFollowUpActive));
+				if (!existsSync(sessionFile) || !this.containsSession(sessionFile))
+					throw new Error(this.msg(CatalogMessageId.subagentChildSessionMissing));
+			}
 		}
 		run.sessionFile = sessionFile;
 		if (run.role.judging) run.review = { candidate: captureReviewCandidate(run.cwd), status: "pending" };
@@ -534,12 +565,13 @@ export class SubagentManager {
 				const sameWorkspace = [...this.workers.keys()]
 					.map((key) => this.runs.get(key))
 					.filter((other): other is AgentRun => other !== undefined)
-					.filter((other) => other.cwd === run.cwd);
+					.filter((other) => other.cwd === run.cwd && other.purpose !== "side-conversation");
 				// "parallel" is the user's explicit choice to let writers share one
 				// workspace, so the per-workspace guard and the cross-session writer
 				// lock below are both skipped.
 				const serializeWriters = this.workspaceWriters === "serialize";
 				if (
+					run.purpose !== "side-conversation" &&
 					serializeWriters &&
 					(sameWorkspace.some((other) => roleCanWrite(other.role)) || (roleCanWrite(run.role) && sameWorkspace.length))
 				)
@@ -655,7 +687,7 @@ export class SubagentManager {
 				run.result = `Review candidate ${run.review.status}; this result does not establish the final workspace state.\n${run.result ?? ""}`;
 		}
 		run.currentTool = undefined;
-		run.completion ??= { revision: randomUUID(), handled: false };
+		if (!run.purpose) run.completion ??= { revision: randomUUID(), handled: false };
 		try {
 			this.persist(run);
 			this.event(run, { type: "terminal", status: run.status });
@@ -663,7 +695,7 @@ export class SubagentManager {
 			this.storageError = this.msg(CatalogMessageId.subagentStorageSaveFailed);
 		}
 		this.changed();
-		if (!this.disposed) this.onComplete?.(structuredClone(run));
+		if (!this.disposed && !run.purpose) this.onComplete?.(structuredClone(run));
 		this.pump();
 	}
 	steer(id: string, text: string): string {
@@ -710,11 +742,11 @@ export class SubagentManager {
 			this.finalize(run);
 		}
 	}
-	async stopAll(reason: string): Promise<void> {
+	async stopAll(reason: string, delegatedOnly = false): Promise<void> {
 		// Clear the entire queue before stopping any worker: completion pumps pending work.
-		const pending = [...this.pending.keys()];
-		this.pending.clear();
-		const ids = [...pending, ...this.workers.keys()];
+		const pending = [...this.pending.keys()].filter((id) => !delegatedOnly || !this.runs.get(id)?.purpose);
+		for (const id of pending) this.pending.delete(id);
+		const ids = [...pending, ...[...this.workers.keys()].filter((id) => !delegatedOnly || !this.runs.get(id)?.purpose)];
 		const results = await Promise.allSettled(ids.map((id) => this.stop(id, reason)));
 		if (results.some((result) => result.status === "rejected"))
 			throw new Error(this.msg(CatalogMessageId.subagentStopIncomplete));
@@ -731,7 +763,7 @@ export class SubagentManager {
 			if (!run) continue;
 			run.status = "interrupted";
 			run.result = "Parent session closed before this agent started.";
-			run.completion ??= { revision: randomUUID(), handled: false };
+			if (!run.purpose) run.completion ??= { revision: randomUUID(), handled: false };
 			try {
 				this.persist(run);
 			} catch {}

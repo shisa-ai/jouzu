@@ -14,6 +14,7 @@ Install and first steps are in the [project README](../README.md).
 | [Web tools](web.md) | Read websites, search the web, and troubleshoot browser setup |
 | [ACP hosts](acp.md) | Drive Jouzu from an Agent Client Protocol host |
 | [Agents and runs](subagents.md) | Configure child agents and manage their work |
+| [Side conversations](side-conversations.md) | Ask questions while main work continues and explicitly send information back |
 | [TextGuard](textguard.md) | Understand content scanning and review withheld results |
 | [Voice input](voice.md) | Set up a microphone and dictate a prompt |
 | [Session interface](interface.md) | Read the dashboard and status displays |

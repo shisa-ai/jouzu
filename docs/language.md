@@ -86,7 +86,7 @@ Settings and session overrides are separate files. If updating the session file 
 
 ## Profiles: Core and JA
 
-`core` provides the shared instructions, five bundled Jouzu skills and the review prompt template. It does not choose a response language.
+`core` provides the shared instructions, six bundled Jouzu skills and the review prompt template. It does not choose a response language.
 
 `ja` extends Core: it inherits those assets unchanged and installs a Japanese-first `APPEND_SYSTEM.md`. With normal append-file discovery, that policy requests concise Japanese explanations, preserves technical text, follows task/project artifact rules and yields when the user requests another language. Custom append sources can replace it, as described below. There is no separate Japanese copy of the shared runtime guidance to keep in sync.
 

@@ -1,5 +1,6 @@
 import type { CacheWarmingMode } from "@earendil-works/pi-coding-agent";
 import type { LanguageContract } from "../language-contract.js";
+import type { SideContext } from "../side-context.js";
 import type { TextGuardMode } from "../textguard-policy.js";
 import type { ChildContext } from "./context.js";
 import type { AgentModel, AgentRole, AgentThinkingLevel } from "./roles.js";
@@ -7,6 +8,9 @@ import type { WorkerUsage } from "./usage.js";
 
 /** Credentials travel only over the private parent/child pipe, never into run records. */
 export interface WorkerLaunch {
+	/** User-owned Q&A has no tools, extension discovery, or parent result delivery. */
+	purpose?: "side-conversation";
+	sideContext?: SideContext;
 	role: AgentRole;
 	model: AgentModel;
 	/** Concrete effort resolved from the parent when this run was requested. */
