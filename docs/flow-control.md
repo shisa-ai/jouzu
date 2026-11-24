@@ -138,13 +138,25 @@ before the announcement.
 
 ## Stopping a turn
 
-Stop (`abort` in RPC, Esc in the terminal) is final. A prompt that has not started
-yet is cancelled, and RPC answers it with the prompt disposition `aborted`; a
-running turn ends with stop reason `aborted`. In RPC an `abort` cancels every
-prompt sent before it, even one still waiting for admission. A stopped request is
-not a failure: it never holds later messages, asks for a recovery decision, or
-makes flow control start work on its own. A message whose turn had started stays
-in the conversation, and a message sent while a Stop is finishing runs after it.
+Stop is `abort` in RPC, Esc in the terminal, and `session/cancel` in ACP. A Stop
+is final:
+
+- A prompt whose turn has not started is cancelled. RPC answers it with the
+  prompt disposition `aborted`, and ACP reports the stop reason `cancelled`. In
+  RPC, an `abort` cancels every prompt sent before it, including one still
+  waiting for admission.
+- A running turn ends with stop reason `aborted`. Its message stays in the
+  conversation and is sent with the next message; nothing is sent again on its
+  own.
+- A model request the Stop reaches is recorded before the turn ends: as never
+  sent if the provider had not received it, and as aborted otherwise. It holds
+  no later message and needs no recovery decision.
+- Automated work stays paused until your next message starts a turn.
+
+`/compact` and an extension that aborts a turn stop the running turn without
+cancelling prompts already sent. A request they stop before the provider
+receives it stays withheld until `/flow retry` or `/flow clear`, like any
+request that could not be sent.
 
 ## Request history capacity
 
