@@ -55,6 +55,28 @@ notification naming the source and what the scan found. The same content
 notifies once per session. Findings that block nothing never interrupt the
 session.
 
+RPC clients receive notifications as `notify` UI requests. The ACP adapter
+forwards them as session notices to hosts that advertise `session.notices`.
+
+Clients also receive the current state as JSON under the status key
+`jouzu-textguard`: RPC clients as a `setStatus` request, and ACP hosts that opt
+in as a `_jouzu/status` notification (see [ACP status](acp.md#jouzu-status)).
+The state is sent at each session start, then at the end of each turn, after
+each notification, and after a mode change when it changed.
+
+| Field | Content |
+| --- | --- |
+| `version` | `1` |
+| `mode` | `guarded`, `strict`, or `off` |
+| `pending` | Items waiting for review: `id`, display `source`, scan `status` (`clear`, `findings`, or `unavailable`), `reason`, and up to 16 `findings` |
+
+`reason` is present when the scan was unavailable: `input-limit`,
+`unsupported-content`, `finding-limit`, `decode-limit`, `scanner`,
+`output-limit`, `timeout`, `process`, `version`, `protocol`, `busy`, `closed`,
+`file`, or `budget`. Each finding has the scanner's `kind` and a `severity` of
+`info`, `warn`, or `error`. The state never contains withheld text and is
+read-only: approving content stays with the interactive review.
+
 ## Review withheld content
 
 1. Run `/textguard` without arguments in an interactive session.

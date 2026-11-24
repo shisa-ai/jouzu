@@ -36,6 +36,7 @@ import {
 	userMessageUpdates,
 } from "./acp-protocol.js";
 import { CatalogMessageId, catalogText, defaultCatalog } from "./cli-messages.js";
+import { CLIENT_STATUS_KEYS } from "./client-status.js";
 import type { CatalogBundle } from "./locale-catalog.js";
 
 interface SettledEvent {
@@ -114,6 +115,15 @@ export interface AcpSessionOpenOptions {
 	onChildStopped: (child: AcpChild) => void;
 }
 
+/** ACP extension notification that carries Jouzu's read-only client status. */
+export const JOUZU_STATUS_METHOD = "_jouzu/status";
+
+/** Whether the host asked for Jouzu status in `clientCapabilities._meta.jouzu.status`. */
+export function wantsJouzuStatus(capabilities: ClientCapabilities): boolean {
+	const meta = capabilities._meta as { jouzu?: { status?: unknown } } | null | undefined;
+	return meta?.jouzu?.status === true;
+}
+
 /**
  * One ACP session backed by exactly one long-lived `jouzu --mode rpc` child.
  *
@@ -144,6 +154,8 @@ export class AcpSession {
 	private fatalError: Error | undefined;
 	private deliveryFailure: Error | undefined;
 	private stopping: Promise<void> | undefined;
+	private statusStarted = false;
+	private readonly sentStatuses = new Map<string, string | undefined>();
 	private turnCounter = 0;
 	private assistantMessageCounter = 0;
 
@@ -310,6 +322,38 @@ export class AcpSession {
 		for (const update of replayUpdates(messages)) {
 			await this.enqueueUpdate(update.update);
 		}
+	}
+
+	/**
+	 * Relay Jouzu status once the host knows this session: the latest state of each key, then every
+	 * change. A host that did not opt in receives nothing.
+	 */
+	startStatusUpdates(): void {
+		if (this.statusStarted || this.closed || !wantsJouzuStatus(this.clientCapabilities)) return;
+		this.statusStarted = true;
+		for (const [key, text] of this.child.clientStatuses()) this.relayStatus(key, text);
+	}
+
+	private relayStatus(key: string, text: string | undefined): void {
+		if (!this.statusStarted || this.closed || !CLIENT_STATUS_KEYS.has(key)) return;
+		if (this.sentStatuses.has(key) && this.sentStatuses.get(key) === text) return;
+		let status: unknown = null;
+		if (text !== undefined) {
+			try {
+				status = JSON.parse(text);
+			} catch {
+				this.diagnostic(`ACP status ${key} is not JSON`);
+				return;
+			}
+		}
+		this.sentStatuses.set(key, text);
+		// Status keeps its place among session updates, so the host reads it in order with the turn it
+		// describes. A failed status write is reported without failing the session.
+		const next = this.updateChain.then(async () => {
+			if (this.deliveryFailure) return;
+			await this.client.notify(JOUZU_STATUS_METHOD, { sessionId: this.id, key, status });
+		});
+		this.updateChain = next.catch((error) => this.diagnostic(`ACP status update failed: ${errorText(error)}`));
 	}
 
 	private async runPrompt(blocks: ContentBlock[], signal?: AbortSignal): Promise<PromptResponse> {
@@ -546,6 +590,9 @@ export class AcpSession {
 				return;
 			case "notify":
 				await this.handleNotify(request);
+				return;
+			case "setStatus":
+				this.relayStatus(request.statusKey, request.statusText);
 				return;
 			default:
 				return;

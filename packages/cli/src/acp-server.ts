@@ -115,6 +115,8 @@ class AcpServer {
 				loadSession: true,
 				promptCapabilities: { image: true, embeddedContext: true },
 				sessionCapabilities: { list: {}, close: {} },
+				// Read-only Jouzu status as `_jouzu/status` notifications, for hosts that ask for it.
+				_meta: { jouzu: { status: true } },
 			},
 			agentInfo: { name: "jouzu", version: this.options.version },
 		};
@@ -144,6 +146,8 @@ class AcpServer {
 			throw RequestError.invalidRequest(undefined, "ACP session already exists or is loading");
 		}
 		this.sessions.set(session.id, session);
+		// After the response: the SDK queues it as this handler returns, and the host needs the ID first.
+		setImmediate(() => session.startStatusUpdates());
 		return { sessionId: session.id, configOptions: session.config };
 	}
 
@@ -197,6 +201,7 @@ class AcpServer {
 				throw RequestError.internalError(undefined, session.fatal.message);
 			}
 			this.sessions.set(session.id, session);
+			setImmediate(() => session.startStatusUpdates());
 			return { configOptions: session.config };
 		} finally {
 			this.loadingSessions.delete(params.sessionId);

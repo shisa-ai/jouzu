@@ -78,7 +78,14 @@ async function harness(t, options = {}) {
 					});
 				},
 			})
-		: output;
+		: options.wire
+			? new WritableStream({
+					write(chunk) {
+						options.wire.push(...new TextDecoder().decode(chunk).split("\n").filter(Boolean));
+						output.write(chunk);
+					},
+				})
+			: output;
 	const serverPromise = runAcpServer({
 		executable: options.executable ?? process.execPath,
 		args: [fakeChild],
@@ -98,6 +105,14 @@ async function harness(t, options = {}) {
 	app.onNotification("session/update", ({ params }) => {
 		updates.push(params.update);
 	});
+	const statuses = [];
+	app.onNotification(
+		"_jouzu/status",
+		(params) => params,
+		({ params }) => {
+			statuses.push(params);
+		},
+	);
 	app.onRequest("session/request_permission", async ({ params }) => {
 		permissionRequests.push(params);
 		if (options.permissionResponse) return options.permissionResponse(params);
@@ -141,6 +156,7 @@ async function harness(t, options = {}) {
 		env,
 		diagnostics,
 		updates,
+		statuses,
 		permissionRequests,
 		request,
 		connection,
@@ -260,6 +276,69 @@ test("ACP initializes and streams a fake RPC turn", async (t) => {
 	assert.ok(log.some((entry) => entry.type === "command" && entry.command === "prompt"));
 	await h.close();
 	assert.ok(readLog(h.logPath).some((entry) => entry.type === "exit"));
+});
+
+const STATUS_CAPABILITIES = {
+	elicitation: { form: {} },
+	session: { notices: {} },
+	_meta: { jouzu: { status: true } },
+};
+
+test("ACP relays Jouzu status to a host that asks for it, after the session ID", async (t) => {
+	const wire = [];
+	const h = await harness(t, { env: { ACP_FAKE_STATUS: "1" }, wire, clientCapabilities: STATUS_CAPABILITIES });
+	assert.deepEqual(h.initialized.agentCapabilities._meta, { jouzu: { status: true } });
+	const session = await h.request("session/new", { cwd: h.cwd, mcpServers: [] });
+	// Published while the child started, before the adapter attached, and relayed once the host knows the ID.
+	await waitFor(() => h.statuses.length >= 2, "initial Jouzu status");
+	assert.deepEqual(
+		h.statuses.map(({ sessionId, key }) => ({ sessionId, key })),
+		[
+			{ sessionId: session.sessionId, key: "jouzu-flow" },
+			{ sessionId: session.sessionId, key: "jouzu-textguard" },
+		],
+	);
+	assert.equal(h.statuses[0].status.enabled, true);
+	assert.equal(h.statuses[1].status.mode, "guarded");
+	const response = wire.findIndex((line) => line.includes('"result"') && line.includes(session.sessionId));
+	const firstStatus = wire.findIndex((line) => line.includes('"method":"_jouzu/status"'));
+	assert.ok(response >= 0 && response < firstStatus, wire.join("\n"));
+	// A change is relayed once; repeated text, text that is not JSON, and other status keys are not.
+	await h.request("session/prompt", {
+		sessionId: session.sessionId,
+		prompt: [{ type: "text", text: "status-update" }],
+	});
+	await waitFor(() => h.statuses.length >= 3, "changed TextGuard status");
+	await h.request("session/prompt", { sessionId: session.sessionId, prompt: [{ type: "text", text: "hello" }] });
+	assert.deepEqual(
+		h.statuses.slice(2).map(({ key, status }) => ({ key, mode: status.mode })),
+		[{ key: "jouzu-textguard", mode: "strict" }],
+	);
+	assert.ok(!h.statuses.some(({ key }) => key === "fake-footer"));
+	assert.ok(h.diagnostics.some((message) => /jouzu-flow is not JSON/.test(message)));
+});
+
+test("ACP relays Jouzu status for a loaded session after the load response", async (t) => {
+	const wire = [];
+	const h = await harness(t, { env: { ACP_FAKE_STATUS: "1" }, wire, clientCapabilities: STATUS_CAPABILITIES });
+	writeLoadSession(h, "status-session");
+	await h.request("session/load", { sessionId: "status-session", cwd: h.cwd, mcpServers: [] });
+	await waitFor(() => h.statuses.length >= 2, "loaded session status");
+	assert.ok(h.statuses.every(({ sessionId }) => sessionId === "status-session"));
+	const replayed = wire.findLastIndex((line) => line.includes('"method":"session/update"'));
+	const response = wire.findIndex((line) => line.includes('"result"') && line.includes("configOptions"));
+	const firstStatus = wire.findIndex((line) => line.includes('"method":"_jouzu/status"'));
+	assert.ok(replayed < response && response < firstStatus, wire.join("\n"));
+});
+
+test("ACP sends no Jouzu status to a host that did not ask for it", async (t) => {
+	const h = await harness(t, { env: { ACP_FAKE_STATUS: "1" } });
+	const session = await h.request("session/new", { cwd: h.cwd, mcpServers: [] });
+	await h.request("session/prompt", {
+		sessionId: session.sessionId,
+		prompt: [{ type: "text", text: "status-update" }],
+	});
+	assert.deepEqual(h.statuses, []);
 });
 
 test("ACP streams tool calls and tool results", async (t) => {

@@ -2,8 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- Publish read-only TextGuard and flow-control state as JSON status (`jouzu-textguard`, `jouzu-flow`) to RPC clients, and to ACP hosts that opt in, as `_jouzu/status` notifications: mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications), [Flow control](docs/flow-control.md#rpc-and-acp-clients), and [ACP](docs/acp.md#jouzu-status).
+
 ### Fixed
 
+- Send TextGuard messages to RPC and ACP clients as notifications instead of stderr.
+- Announce a flow-control recovery hold once per hold, and never after it was released.
 - Keep Flow state usable when the Jouzu home folder moves or is reached through another absolute path. See [Flow control](docs/flow-control.md#branches-and-resuming).
 - Wait for another live process that is applying the profile at startup instead of exiting with a misleading "profile state is unreadable" error.
 - Leave nothing behind for a session that is started and closed without a message. Flow state and the session file are written the first time Flow records something; background-task state and the child-agent owner lock are created on first use. See [Flow control](docs/flow-control.md#branches-and-resuming).
