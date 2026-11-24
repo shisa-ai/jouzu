@@ -67,6 +67,10 @@ const validPosition = (position: FlowBranchPosition) =>
 const samePosition = (a?: FlowBranchPosition, b?: FlowBranchPosition) =>
 	a?.entryId === b?.entryId && a?.entryHash === b?.entryHash && a?.memoryInstanceId === b?.memoryInstanceId;
 
+export function flowRegistryScope(root: string, sessionId: string) {
+	return { root: join(root, "session-registry-v1"), scope: { sessionId, branchId: "registry" } };
+}
+
 /** Session-wide writer reservation and branch identities in Pi storage. Reads grant no dispatch authority. */
 export class PiFlowSessionRegistry {
 	private initialized = false;
@@ -77,7 +81,8 @@ export class PiFlowSessionRegistry {
 	) {}
 	/** Whether a session has registry storage under `root`. */
 	static exists(root: string, sessionId: string): boolean {
-		return FlowOwnership.exists(join(root, "session-registry-v1"), { sessionId, branchId: "registry" });
+		const target = flowRegistryScope(root, sessionId);
+		return FlowOwnership.exists(target.root, target.scope);
 	}
 	/**
 	 * Open the session's registry. With `deferred`, for a session that has nothing recorded yet,
@@ -91,13 +96,18 @@ export class PiFlowSessionRegistry {
 			directory: string,
 			acceptedDirectories?: readonly string[],
 		) => Promise<Session> = openLocalFlowSession,
+		takeOwnership?: () => FlowOwnership | undefined,
 		deferred = false,
 	): Promise<PiFlowSessionRegistry> {
 		if (!leaf(initialLeafId)) throw new FlowLedgerError("identity", "Invalid initial transcript position.");
-		const scope = { sessionId, branchId: "registry" };
-		const registryRoot = join(root, "session-registry-v1");
-		const ownership = deferred ? FlowOwnership.reserve(registryRoot, scope) : FlowOwnership.acquire(registryRoot, scope);
-		const journal = deferred ? createDeferredJournal() : undefined;
+		const target = flowRegistryScope(root, sessionId);
+		const ownership =
+			takeOwnership?.() ??
+			(deferred
+				? FlowOwnership.reserve(target.root, target.scope)
+				: FlowOwnership.acquire(target.root, target.scope));
+		// Ownership taken from a resume reservation is already claimed, so its storage is not deferred.
+		const journal = ownership.claimedStorage ? undefined : createDeferredJournal();
 		let session: Session | undefined;
 		try {
 			session = journal ? journal.session : await openSession(ownership.directory, ownership.sessionDirectories);

@@ -1,6 +1,7 @@
 import { closeSync, lstatSync, openSync } from "node:fs";
 import { dirname, toNamespacedPath } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { pathToFileURL } from "node:url";
 import { catalogText, defaultCatalog } from "./cli-messages.js";
 import { protectedPath } from "./human-messages.js";
 import type { CatalogBundle } from "./locale-catalog.js";
@@ -32,6 +33,29 @@ export class ProcessLockError extends Error {
 	) {
 		super(message, options);
 		this.name = "ProcessLockError";
+	}
+}
+
+function sqliteBusy(error: unknown): boolean {
+	return error instanceof Error && "errcode" in error && [5, 6].includes(Number(error.errcode) & 0xff);
+}
+
+/** Probe a lock without creating it, writing to it, or waiting for its owner. */
+export function isProcessLockBusy(path: string): boolean {
+	let database: DatabaseSync | undefined;
+	try {
+		if (!lstatSync(path, { throwIfNoEntry: false })?.isFile()) return false;
+		const uri = pathToFileURL(path);
+		// SQLite read-only opens do not take a writer reservation for BEGIN IMMEDIATE.
+		// mode=rw takes the same reservation as the owner without creating a missing file.
+		uri.search = "mode=rw";
+		database = new DatabaseSync(uri);
+		database.exec("PRAGMA busy_timeout=0; BEGIN IMMEDIATE;");
+		return false;
+	} catch (error) {
+		return sqliteBusy(error);
+	} finally {
+		database?.close();
 	}
 }
 
@@ -87,7 +111,7 @@ export function acquireProcessLock(path: string, catalog: CatalogBundle = defaul
 			});
 		}
 		if (error instanceof ProcessLockError) throw error;
-		const busy = error instanceof Error && "errcode" in error && [5, 6].includes(Number(error.errcode));
+		const busy = sqliteBusy(error);
 		throw new ProcessLockError(
 			busy ? "busy" : "storage",
 			busy

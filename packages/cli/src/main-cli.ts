@@ -772,9 +772,15 @@ export async function runMainCli(args: string[]): Promise<void> {
 				})
 			: undefined;
 	const scrollbackSession = createScrollbackSessionObserver();
+	const sessionMetadataCache =
+		interactiveStartup && process.env.JOUZU_SESSION_CACHE !== "0"
+			? (await import("./session-metadata-cache.js")).createSessionMetadataCache(paths.cacheDir)
+			: undefined;
 	const startPi = () =>
 		pi.main(piArgs, {
 			sessionInfoFooter: runtimeDiagnostics.summary,
+			sessionResume: flow?.resume,
+			sessionMetadataCache,
 			contentPolicyFactory: nativeTextguard.createPolicy,
 			flowIngressFactory: async (context) =>
 				modelPicker.wrapSessionIngress(scrollbackSession.wrap(await flow?.flowIngressFactory(context))),

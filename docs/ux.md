@@ -121,6 +121,18 @@ In the TUI, labels use the theme's muted color and values its text color;
 warnings use the warning color. The `!` and `·` markers carry their meaning
 without color. RPC and print modes produce the same text without styling.
 
+## Resume sessions
+
+Use `/resume` in a session or `jz --resume` at startup to browse saved sessions.
+An **In use** label means another attachment holds the session. If the session
+is still in use when you select it, choose **Fork into a new session** to
+continue from the saved transcript under a new session ID. The original session
+and its pending work stay with the existing attachment. **Cancel** leaves the
+original untouched and, from `/resume`, returns you to your current session.
+
+Outside an interactive terminal, use `jz --fork <session-id-or-path>` to request
+a copy explicitly.
+
 ## Flow recovery
 
 `/flow` shows held inputs and work. In an interactive terminal it also offers

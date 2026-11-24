@@ -37,6 +37,8 @@ export interface PiFlowSessionOptions {
 	/** Set only when attaching at the SDK creation boundary, before extensions can replace the stream. */
 	qualifyProviderRoute?: boolean;
 	root: string;
+	/** Take ownership reserved before opening the resume target. */
+	takeRegistryOwnership?(): FlowOwnership | undefined;
 	/** Reported once when state written under an earlier record shape is moved aside on open. */
 	onIsolatedState?(path: string): void;
 	/** Reported once when a registry from an earlier version is dropped and rebuilt from the transcript. */
@@ -141,6 +143,7 @@ export class PiFlowSessionService {
 			session.sessionId,
 			session.sessionManager.getLeafId(),
 			undefined,
+			captured.takeRegistryOwnership,
 			deferred,
 		);
 		let service: PiFlowSessionService | undefined;

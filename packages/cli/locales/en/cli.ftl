@@ -1679,6 +1679,13 @@ jouzu-cli-flow-message-alert = ⚠ alert
 jouzu-cli-flow-registry-rebuilt = This session's flow registry was incompatible with the current version and was dropped. Flow state was rebuilt from the transcript.
 jouzu-cli-flow-registry-rebuiltSaved = This session's flow registry was incompatible with the current version and was dropped. Flow state was rebuilt from the transcript. The dropped state was saved to { $path }.
 jouzu-cli-flow-noReply-label = End the turn without replying
+jouzu-cli-resume-busyHeadless = This session is in use. Use jz --fork with the session ID or path to continue in a copy.
+jouzu-cli-resume-busyTitle = This session is in use
+jouzu-cli-resume-fork = Fork into a new session
+jouzu-cli-resume-cancel = Cancel
+jouzu-cli-resume-inUse = In use
+jouzu-cli-resume-needsTerminal = The resume menu requires an interactive terminal. Use jz --session with a session ID or path.
+
 jouzu-cli-flow-ownership-busy = This session branch is already owned by another attachment.
 jouzu-cli-flow-ownership-failed = Flow ownership could not be acquired.
 jouzu-cli-flow-native-editedInput = Edited native input requires a new observation.

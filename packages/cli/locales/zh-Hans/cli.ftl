@@ -1689,6 +1689,13 @@ jouzu-cli-flow-message-alert = ⚠ 警报
 jouzu-cli-flow-registry-rebuilt = 此会话的流注册表与当前版本不兼容，已被丢弃。流状态已从记录中重建。
 jouzu-cli-flow-registry-rebuiltSaved = 此会话的流注册表与当前版本不兼容，已被丢弃。流状态已从记录中重建。被丢弃的状态已保存到 { $path }。
 jouzu-cli-flow-noReply-label = 结束轮次且不回复
+jouzu-cli-resume-busyHeadless = 此会话正在使用。请运行 jz --fork 并指定会话 ID 或路径，在副本中继续。
+jouzu-cli-resume-busyTitle = 此会话正在使用
+jouzu-cli-resume-fork = 分叉为新会话
+jouzu-cli-resume-cancel = 取消
+jouzu-cli-resume-inUse = 使用中
+jouzu-cli-resume-needsTerminal = 恢复菜单需要交互式终端。请运行 jz --session 并指定会话 ID 或路径。
+
 jouzu-cli-flow-ownership-busy = 此会话分支已被另一个附加实例拥有。
 jouzu-cli-flow-ownership-failed = 无法获取流所有权。
 jouzu-cli-flow-native-editedInput = 已编辑的原生输入需要新的观察。

@@ -6,7 +6,7 @@ import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.j
 import type { CatalogBundle } from "../locale-catalog.js";
 import { legacyPathDigest, pathDigest } from "../path-digest.js";
 import { ensurePrivateDirectory } from "../private-fs.js";
-import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
+import { acquireProcessLock, isProcessLockBusy, type ProcessLock, ProcessLockError } from "../process-lock.js";
 import type { FlowScope } from "./receipt-ledger.js";
 
 /** Whether an owned directory holds any session record; an unreadable one counts as holding some. */
@@ -42,6 +42,12 @@ function adoptLegacyDirectory(directory: string, legacy: string): void {
 	try {
 		renameSync(legacy, directory);
 	} catch {}
+}
+
+const lockFileName = "owner.sqlite";
+
+function scopeDirectories(root: string, { sessionId, branchId }: FlowScope): [string, string] {
+	return [join(root, pathDigest([sessionId, branchId])), join(root, legacyPathDigest([sessionId, branchId]))];
 }
 
 /**
@@ -94,6 +100,11 @@ export class FlowOwnership {
 		return !!this.claimed;
 	}
 
+	static isBusy(root: string, scope: FlowScope): boolean {
+		const [directory, legacyDirectory] = scopeDirectories(root, scope);
+		return isProcessLockBusy(join(existsSync(directory) ? directory : legacyDirectory, lockFileName));
+	}
+
 	static acquire(root: string, scope: FlowScope, catalog: CatalogBundle = defaultCatalog()): FlowOwnership {
 		const ownership = FlowOwnership.reserve(root, scope, catalog);
 		ownership.claim();
@@ -115,10 +126,7 @@ export class FlowOwnership {
 
 	/** Whether this scope already has storage under `root`, under either digest. */
 	static exists(root: string, scope: FlowScope): boolean {
-		return (
-			existsSync(join(root, pathDigest([scope.sessionId, scope.branchId]))) ||
-			existsSync(join(root, legacyPathDigest([scope.sessionId, scope.branchId])))
-		);
+		return scopeDirectories(root, scope).some((directory) => existsSync(directory));
 	}
 
 	/**
@@ -126,9 +134,7 @@ export class FlowOwnership {
 	 * storage a process claimed and never wrote, for example one that stopped during its first save.
 	 */
 	static hasRecords(root: string, scope: FlowScope): boolean {
-		return [pathDigest([scope.sessionId, scope.branchId]), legacyPathDigest([scope.sessionId, scope.branchId])].some(
-			(key) => hasSessionRecords(join(root, key)),
-		);
+		return scopeDirectories(root, scope).some(hasSessionRecords);
 	}
 
 	/**
@@ -157,17 +163,14 @@ export class FlowOwnership {
 		let lock: ProcessLock | undefined;
 		try {
 			ensurePrivateDirectory(root);
-			const resolved = realpathSync(root);
-			const key = pathDigest([scope.sessionId, scope.branchId]);
-			const directory = join(resolved, key);
-			const legacyDirectory = join(resolved, legacyPathDigest([scope.sessionId, scope.branchId]));
+			const [directory, legacyDirectory] = scopeDirectories(realpathSync(root), scope);
 			adoptLegacyDirectory(directory, legacyDirectory);
 			// The digest is one directory component. Creating it as a root uses
 			// recursive mkdir (safe under a competing create) and validates it.
 			ensurePrivateDirectory(directory);
 			// The lock file is a rendezvous point, not a record: its presence
 			// never means "held", so a leftover file cannot block a new owner.
-			lock = acquireProcessLock(join(directory, "owner.sqlite"));
+			lock = acquireProcessLock(join(directory, lockFileName));
 			this.lock = lock;
 			this.claimed = { directory, sessionDirectories: Object.freeze([directory, legacyDirectory]) };
 		} catch (error) {

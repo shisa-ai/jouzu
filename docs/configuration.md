@@ -125,6 +125,19 @@ Jouzu uses Node's on-disk compile cache on Linux, macOS, and Windows. It reuses 
 
 Set `NODE_DISABLE_COMPILE_CACHE=1` to turn it off, including when collecting precise JavaScript test coverage. If the cache directory is unavailable, Jouzu continues without caching. Node separates cache entries by runtime version and code content; you can remove the cache when Jouzu is stopped, and later launches recreate it.
 
+## Session list cache
+
+`/resume` and `jz --resume` use a local SQLite cache to reuse metadata for
+unchanged session files. The cache stores paths, IDs, titles, timestamps,
+message counts, and a short first-message preview, so treat it as private.
+The first search in each picker scope reads conversation text from the original
+session files. The **In use** label checks the live lock.
+
+Set `JOUZU_SESSION_CACHE=0` to bypass the cache. To clear it, remove the
+`session-list` folder under the cache directory shown by `jz doctor` after
+closing Jouzu. The next picker rebuilds it from session files. If the cache is
+unavailable, the picker reads those files directly.
+
 ## Environment variables
 
 | Variable | Effect |
@@ -137,6 +150,7 @@ Set `NODE_DISABLE_COMPILE_CACHE=1` to turn it off, including when collecting pre
 | `SHISA_API_KEY` | Shisa API key; overrides the saved login. See [Shisa AI account](shisa.md). |
 | `JOUZU_MODEL_CATALOG_URL`, `JOUZU_MODEL_CATALOG_TOKEN` | Single catalog source when `catalogs.json` does not exist. See [Model catalogs](catalogs.md). |
 | `JOUZU_FLOW_CONTROL=0` | Disable flow control. See [Flow control](flow-control.md). |
+| `JOUZU_SESSION_CACHE=0` | Bypass the [session list cache](#session-list-cache). |
 | `JOUZU_CAMOUFOX_IDLE_STOP_MS` | Browser idle shutdown delay. See [Web tools](web.md). |
 | `JOUZU_CAMOUFOX_LIBRARY_PATH` | NSS library directory for the browser. See [Web tools](web.md). |
 | `JOUZU_NO_UPDATE=1` | Skip the update check for one launch. See [Updates](updates.md). |
