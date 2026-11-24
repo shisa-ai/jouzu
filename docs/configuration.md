@@ -127,8 +127,8 @@ Set `NODE_DISABLE_COMPILE_CACHE=1` to turn it off, including when collecting pre
 
 ## Session list cache
 
-`/resume` and `jz --resume` use a local SQLite cache to reuse metadata for
-unchanged session files. The cache stores paths, IDs, titles, timestamps,
+`/resume`, `jz --resume`, and the [startup session list](#recent-sessions-at-startup)
+use a local SQLite cache to reuse metadata for unchanged session files. The cache stores paths, IDs, titles, timestamps,
 message counts, and a short first-message preview, so treat it as private.
 The first search in each picker scope reads conversation text from the original
 session files. The **In use** label checks the live lock.
@@ -137,6 +137,30 @@ Set `JOUZU_SESSION_CACHE=0` to bypass the cache. To clear it, remove the
 `session-list` folder under the cache directory shown by `jz doctor` after
 closing Jouzu. The next picker rebuilds it from session files. If the cache is
 unavailable, the picker reads those files directly.
+
+## Recent sessions at startup
+
+A launch that starts a new session, with no prompt and no session option, lists
+up to three recent sessions from the current folder under the banner. The next
+row names other folders that have sessions, newest first, with the age of each.
+Type `/resume 1` to open the first listed session, or `/resume` to browse every
+session. `/resume <text>` opens the picker with that search. An **In use** label
+means another attachment holds the session; opening it offers a fork.
+
+The list loads in the background and appears when loading finishes; startup does
+not wait for it. Once shown, it keeps its height, so the row numbers do not
+change while you type. It stops updating when you send your first prompt.
+
+Set `JOUZU_STARTUP_SESSIONS` to choose what the list shows:
+
+| Value | Shows |
+| --- | --- |
+| `all` (default) | Sessions from this folder, then other folders |
+| `project` | Sessions from this folder only |
+| `off` or `0` | No list |
+
+Session titles and folder names appear on screen at every launch. Use `project`
+or `off` if your terminal is shared or recorded.
 
 ## Environment variables
 
@@ -151,6 +175,7 @@ unavailable, the picker reads those files directly.
 | `JOUZU_MODEL_CATALOG_URL`, `JOUZU_MODEL_CATALOG_TOKEN` | Single catalog source when `catalogs.json` does not exist. See [Model catalogs](catalogs.md). |
 | `JOUZU_FLOW_CONTROL=0` | Disable flow control. See [Flow control](flow-control.md). |
 | `JOUZU_SESSION_CACHE=0` | Bypass the [session list cache](#session-list-cache). |
+| `JOUZU_STARTUP_SESSIONS` | `all`, `project`, or `off` for the [startup session list](#recent-sessions-at-startup) |
 | `JOUZU_CAMOUFOX_IDLE_STOP_MS` | Browser idle shutdown delay. See [Web tools](web.md). |
 | `JOUZU_CAMOUFOX_LIBRARY_PATH` | NSS library directory for the browser. See [Web tools](web.md). |
 | `JOUZU_NO_UPDATE=1` | Skip the update check for one launch. See [Updates](updates.md). |

@@ -775,11 +775,24 @@ export async function runMainCli(args: string[]): Promise<void> {
 		interactiveStartup && process.env.JOUZU_SESSION_CACHE !== "0"
 			? (await import("./session-metadata-cache.js")).createSessionMetadataCache(paths.cacheDir)
 			: undefined;
+	// Recent sessions under the banner, only when the launch starts a new session with no prompt.
+	const startupSessionsModule = interactiveStartup ? await import("./startup-sessions.js") : undefined;
+	const startupScope = startupSessionsModule?.startupSessionsScope() ?? "off";
+	const startupSessions =
+		startupSessionsModule && startupScope !== "off" && startupSessionsModule.launchesFreshSession(parsed.args)
+			? startupSessionsModule.createStartupSessions({
+					scope: startupScope,
+					catalog: preRuntime.catalog.bundle,
+					cache: sessionMetadataCache,
+					...(flow ? { inUseLabel: (sessionId: string) => flow.resume.inUseLabel(sessionId) } : {}),
+				})
+			: undefined;
 	const startPi = () =>
 		pi.main(piArgs, {
 			sessionInfoFooter: runtimeDiagnostics.summary,
 			sessionResume: flow?.resume,
 			sessionMetadataCache,
+			...(startupSessions ? { resumeTarget: (argument: string) => startupSessions.resumeTarget(argument) } : {}),
 			contentPolicyFactory: nativeTextguard.createPolicy,
 			flowIngressFactory: async (context) =>
 				modelPicker.wrapSessionIngress(scrollbackSession.wrap(await flow?.flowIngressFactory(context))),
@@ -803,6 +816,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				languageContract.extension,
 				presentation.createJouzuPresentationExtension(metadata, profile, {
 					catalog: preRuntime.catalog.bundle,
+					...(startupSessions ? { startupSections: [startupSessions] } : {}),
 					responseLanguageSection: () => languageContract.currentSection(),
 					promptFeatures: () => ({
 						subagentsEnabled: modelPicker.workflowService.subagentsEnabled(),

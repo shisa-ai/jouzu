@@ -56,6 +56,7 @@ Use `/bg` or `Alt+Shift+H` to open the background-job manager.
 ## Startup header
 
 - Interactive launches clear the screen and show the Jouzu header.
+- A launch that starts a new session lists recent sessions under the header. `/resume 1` opens the first one. See [Recent sessions at startup](configuration.md#recent-sessions-at-startup).
 - `JOUZU_NO_CLEAR=1` keeps existing terminal output.
 - `NO_COLOR` turns off header color.
 

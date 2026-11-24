@@ -15,6 +15,8 @@ import { buildModelGuidance } from "./model-guidance.js";
 import { type PromptFeatureState, promptCapabilities } from "./prompt-capabilities.js";
 import type { ProfileSelection } from "./runtime.js";
 import type { SessionStatusSources } from "./session-status.js";
+import { createSessionUiStyles, dockRows } from "./session-ui/index.js";
+import { renderStartupSections, type StartupSection, startupSectionRows } from "./startup-panel.js";
 import { detectTerminalColorMode, fitTerminalText, type TerminalColorMode } from "./terminal-layout.js";
 
 export { isInteractivePiStartup } from "./interactive-startup.js";
@@ -93,6 +95,8 @@ export interface BannerRenderOptions {
 	responseLanguageSection?: () => string | undefined;
 	/** Live producers `/status` reports on: cached git state, subagents, flow control, and TextGuard. */
 	status?: SessionStatusSources;
+	/** Blocks under the banner on a fresh launch, such as recent sessions, in display order. */
+	startupSections?: readonly StartupSection[];
 }
 
 function envFlagIsTrue(value: string | undefined): boolean {
@@ -496,8 +500,19 @@ export function createJouzuPresentationExtension(
 				});
 			});
 
-			pi.on("session_start", (_event, ctx) => {
+			const startupSections = options.startupSections ?? [];
+			// The first prompt starts the transcript under the banner; the blocks stop changing.
+			if (startupSections.length)
+				pi.on("input", () => {
+					for (const section of startupSections) section.freeze?.();
+				});
+
+			pi.on("session_start", (event, ctx) => {
 				if (ctx.mode !== "tui") return;
+				// A launch header keeps its blocks through `/reload`; any other session start replaces them.
+				const launch = event?.reason === "startup" || event?.reason === "reload";
+				if (!launch) for (const section of startupSections) section.reset?.();
+				const sections = launch ? startupSections : [];
 				const colorMode = options.colorMode ?? detectBannerColorMode(options);
 				ctx.ui.setTitle(jouzuWindowTitle(undefined, ctx.cwd, catalog));
 				ctx.ui.setWorkingIndicator({
@@ -509,10 +524,25 @@ export function createJouzuPresentationExtension(
 					],
 					intervalMs: 120,
 				});
-				ctx.ui.setHeader((_tui, theme) => ({
-					render: (width) => renderBannerLines(theme, metadata, width, colorMode, options.palette, options.catalog),
-					invalidate() {},
-				}));
+				ctx.ui.setHeader((tui, theme) => {
+					if (event?.reason === "startup")
+						for (const section of sections)
+							section.start?.({
+								cwd: ctx.cwd,
+								sessionManager: ctx.sessionManager,
+								requestRender: () => tui?.requestRender(),
+							});
+					const styles = createSessionUiStyles(theme, colorMode === "none" ? { colorEnabled: false } : {});
+					return {
+						render: (width) => {
+							const banner = renderBannerLines(theme, metadata, width, colorMode, options.palette, options.catalog);
+							if (!sections.length || !tui) return banner;
+							const rows = startupSectionRows(tui.terminal.rows, dockRows(tui, width), banner.length);
+							return [...banner, ...renderStartupSections(sections, width, rows, styles)];
+						},
+						invalidate() {},
+					};
+				});
 			});
 
 			// Pi's interactive mode rewrites the window title as "π - ..." whenever the

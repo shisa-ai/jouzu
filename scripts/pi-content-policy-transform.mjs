@@ -484,7 +484,7 @@ export interface SessionInfo {`,
 		);
 		change(
 			'    time("createAgentSessionRuntime");',
-			'    await releaseResume?.();\n    runtime.sessionResume = sessionResume;\n    runtime.sessionMetadataCache = options?.sessionMetadataCache;\n    time("createAgentSessionRuntime");',
+			'    await releaseResume?.();\n    runtime.sessionResume = sessionResume;\n    runtime.sessionMetadataCache = options?.sessionMetadataCache;\n    runtime.resumeTarget = options?.resumeTarget;\n    time("createAgentSessionRuntime");',
 		);
 		// Explicit ID lookup must include sessions persisted for recovery before any conversation.
 		change(
@@ -538,6 +538,8 @@ export interface SessionInfo {`,
 export interface MainOptions {
     sessionResume?: SessionResumeHooks;
     sessionMetadataCache?: SessionMetadataCache;
+    /** The session file \`/resume <argument>\` opens directly, such as a numbered startup row; otherwise the picker opens. */
+    resumeTarget?: (argument: string) => string | undefined;
     sessionInfoFooter?: () => string;
     flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;
     contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;`,
@@ -644,6 +646,28 @@ export interface MainOptions {
 			"        this.header.setLoading(loading);\n        this.sessionList.loadingSearch = loading && this.fullTextScopes?.has(this.scope);\n        this.sessionList.setSessions",
 		);
 	} else if (path === "dist/modes/interactive/interactive-mode.js") {
+		// \`/resume <n>\` opens a numbered startup row; other text opens the picker with that search.
+		change(
+			'            if (text === "/resume") {\n                this.showSessionSelector();\n                this.editor.setText("");\n                return;\n            }',
+			`            if (text === "/resume" || text.startsWith("/resume ")) {
+                const query = text.slice("/resume".length).trim();
+                this.editor.setText("");
+                const target = query ? this.runtimeHost.resumeTarget?.(query) : undefined;
+                if (target) await this.handleResumeSession(target);
+                else this.showSessionSelector(query);
+                return;
+            }`,
+		);
+		change("    showSessionSelector() {", '    showSessionSelector(initialSearch = "") {');
+		change(
+			"            }, this.sessionManager.getSessionFile());\n            return { component: selector, focus: selector };",
+			`            }, this.sessionManager.getSessionFile());
+            if (initialSearch) {
+                selector.sessionList.searchInput.setValue(initialSearch);
+                selector.sessionList.filterSearchInput();
+            }
+            return { component: selector, focus: selector };`,
+		);
 		change(
 			`            const selector = new SessionSelectorComponent((onProgress, signal) => SessionManager.list(this.sessionManager.getCwd(), this.sessionManager.getSessionDir(), onProgress, signal), (onProgress, signal) => this.sessionManager.usesDefaultSessionDir()
                 ? SessionManager.listAll(onProgress, signal)

@@ -4,6 +4,7 @@
 
 ### Added
 
+- List up to three recent sessions from the current folder, and other folders with sessions, under the startup banner. `/resume <number>` opens a listed session and `/resume <text>` opens the picker with that search. Set `JOUZU_STARTUP_SESSIONS` to `project` or `off` to narrow or hide the list. See [Configuration](docs/configuration.md#recent-sessions-at-startup).
 - Publish read-only TextGuard and flow-control state as JSON status (`jouzu-textguard`, `jouzu-flow`) to RPC clients, and to ACP hosts that opt in, as `_jouzu/status` notifications: mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications), [Flow control](docs/flow-control.md#rpc-and-acp-clients), and [ACP](docs/acp.md#jouzu-status).
 
 ### Changed

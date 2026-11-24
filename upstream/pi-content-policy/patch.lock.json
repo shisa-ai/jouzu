@@ -5,7 +5,7 @@
 	"files": {
 		"dist/main.js": {
 			"before": "29d5564f1a397eeb8a9c771b8e42c4fb88420e676bddbd096854a3ad84f4d49e",
-			"after": "1f787ba4f17c48257363c148ba683cf2e7a45b96de3a68ff12e123929b96c93d"
+			"after": "06152cf9671940a5ad1de3a6fe34e79689bf666d56610985e551507ba403a5a7"
 		},
 		"dist/modes/print-mode.js": {
 			"before": "d299d32642059b61e040e4da815f6d47e2db35f8b2a2f2d8b3e2103c0260ce78",
@@ -13,11 +13,11 @@
 		},
 		"dist/main.d.ts": {
 			"before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
-			"after": "559afea1d6668cd80df0ddd1848b35a1fea0457af9e410e2b8edba0f6bb36e0f"
+			"after": "7eb9bccc179c74aa02f070818f74bdef21b0abb271ecfb902844733c5e7c6946"
 		},
 		"dist/modes/interactive/interactive-mode.js": {
 			"before": "a316502682c68544e1950b80e3b19d584c7a43331cfb7029765b5c04d18e4465",
-			"after": "f072d73590d6caa5958a3af4572d587d90197c6ed53a5bbdd9f7cc87406e5d01"
+			"after": "25155418f332cd5058445470929023f7d2026ce7a967f445025409acd4bfec4b"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
 			"before": "21887f2277e81d34ffb85e5bb669e8f4c929f5bc5a07c55fa069fd62569f5455",

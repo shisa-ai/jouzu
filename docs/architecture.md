@@ -40,6 +40,8 @@ Runtime modules composed by main-cli.ts:
   ├─ work-dashboard-sources.ts  automatic-work dashboard adapters
   ├─ doctor.ts           diagnostics (read-only), typed report plus text renderer
   ├─ presentation.ts     startup presentation extension
+  ├─ startup-panel.ts    shared rows under the startup banner
+  ├─ startup-sessions.ts recent sessions under the banner and `/resume <number>`
   ├─ palette.ts          floating/replacement Palette surface host
   ├─ model-picker*.ts    Models view, ranking, and private picker state
   ├─ command-report.ts   shared styling for doctor/catalog/keybindings/profile text output
