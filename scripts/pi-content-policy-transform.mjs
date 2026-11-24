@@ -1088,7 +1088,11 @@ export function sessionEntryToContextMessages(entry) {`,
         if (this._isAgentRunActive) {
             this._agentRunAbortRequested = true;
         }`,
-			`    async abort(options) {
+			`    /** Aborts so far that cancel prompts: every abort without keepPrompts. */
+    get promptAbortCount() {
+        return this._promptAbortEpoch;
+    }
+    async abort(options) {
         if (this._isAgentRunActive) {
             this._agentRunAbortRequested = true;
         }
@@ -1121,7 +1125,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		change("    dispose(): void;", "    dispose(): Promise<void>;");
 		change(
 			"    abort(): Promise<void>;",
-			"    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
+			"    /** Aborts so far that cancel prompts: every abort without `keepPrompts`. A request that sees it change was stopped by the user. */\n    readonly promptAbortCount: number;\n    /** `keepPrompts` stops the current run without cancelling prompts the user already sent. */\n    abort(options?: { keepPrompts?: boolean }): Promise<void>;",
 		);
 		change(
 			"export declare class AgentSession {",
