@@ -721,7 +721,7 @@ test("a first save interrupted after its marker adopts the marker without report
 	const sessionId = manager.getSessionId();
 	// Open as a new session does, then save in the order the session service uses: claim the
 	// registry and the branch (which creates their directories), then write the marker.
-	const registry = await PiFlowSessionRegistry.open(root, sessionId, manager.getLeafId(), undefined, true);
+	const registry = await PiFlowSessionRegistry.open(root, sessionId, manager.getLeafId(), undefined, undefined, true);
 	const original = await bindPiFlowBranch(registry, manager, undefined, true);
 	registry.claimStorage();
 	const branch = FlowOwnership.reserve(root, original);
