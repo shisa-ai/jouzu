@@ -3,11 +3,14 @@ import { mkdtemp, readdir, readFile, realpath, rm, writeFile } from "node:fs/pro
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { retainedByReceipt } from "../dist/flow-control/controller.js";
 import { FLOW_STATE_VERSION, reconcileFlowStateVersion } from "../dist/flow-control/local-storage.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 
 const scope = { sessionId: "session", branchId: "branch" };
 const member = { id: "work", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) };
+/** The controller descriptor for the member above; retainedByReceipt fences it while it counts as delivered. */
+const work = { id: member.id, revision: member.revision, producer: "fixture", sequence: 0, rank: 6, runnable: true };
 const included = [
 	{ id: member.id, revision: member.revision, disposition: "included", contentHash: member.contentHash },
 ];
@@ -46,6 +49,8 @@ test("retrying an interrupted turn makes its work eligible again", async (t) => 
 	assert.equal(attempt.outcome, undefined);
 	assert.equal(attempt.reason, "Resolved from /flow as undelivered.");
 	assert.equal(attempt.requests[0].handedOff, true, "the handed-off request stays on the record");
+	assert.equal(attempt.undelivered, true);
+	assert.equal(retainedByReceipt(work, await ledger.snapshot()), false, "the work is offered again");
 });
 
 test("discarding an interrupted turn settles it so nothing runs again", async (t) => {
@@ -56,6 +61,8 @@ test("discarding an interrupted turn settles it so nothing runs again", async (t
 	assert.equal(attempt.phase, "settled");
 	assert.equal(attempt.outcome, "failure");
 	assert.equal(attempt.reason, "Resolved from /flow as spent.");
+	assert.equal(attempt.undelivered, undefined);
+	assert.equal(retainedByReceipt(work, await ledger.snapshot()), true, "the work is not offered again");
 });
 
 test("only an uncertain attempt can be resolved, and only into a known resolution", async (t) => {
@@ -86,6 +93,8 @@ test("a resolved attempt survives reattachment with its decision", async (t) => 
 		const [attempt] = (await reopened.ledger.snapshot()).attempts;
 		assert.equal(attempt.phase, "cancelled");
 		assert.equal(attempt.reason, "Resolved from /flow as undelivered.");
+		assert.equal(attempt.undelivered, true);
+		assert.equal(retainedByReceipt(work, await reopened.ledger.snapshot()), false);
 	} finally {
 		await reopened.close();
 	}

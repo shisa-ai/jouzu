@@ -364,7 +364,7 @@ export class PiHostBoundary {
 		}
 	}
 	/** Reconcile one expected attempt only after native execution and post-run work are inactive. */
-	reconcile(ledger: FlowReceiptLedger, attemptId: string): Promise<PiBoundaryResult<PiSettlement>> {
+	reconcile(ledger: FlowReceiptLedger, attemptId: string, stopped = false): Promise<PiBoundaryResult<PiSettlement>> {
 		return this.atIdle(async () => {
 			if (this.navigated) throw new FlowLedgerError("scope", "Branch navigation requires a new settlement attachment.");
 			if (ledger.scope.sessionId !== this.sessionId)
@@ -378,7 +378,7 @@ export class PiHostBoundary {
 			if (attempt.phase === "selected" || attempt.phase === "queued") return { kind: "waiting", attemptId };
 			const started = hasFlowHandoff(attempt);
 			if (attempt.phase === "claimed" || (attempt.phase === "prepared" && !started)) {
-				await ledger.cancel(attemptId, "Host became idle before transport handoff.");
+				await ledger.cancel(attemptId, "Host became idle before transport handoff.", stopped);
 				return { kind: "cancelled", attemptId };
 			}
 			let current = attempt;

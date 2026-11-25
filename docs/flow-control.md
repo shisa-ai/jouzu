@@ -155,7 +155,9 @@ stop the running turn the same way. A Stop is final:
 - Automated work stays paused until your next message starts a turn. Work that
   flow control was still holding is kept. Automated input that the Stop reached
   before the provider received it, such as a task continuation or a job result,
-  is not sent later.
+  is sent once when automatic work resumes. The stopped copy stays in the
+  conversation history but is left out of later requests, so the model sees the
+  input once.
 
 `/compact` and an extension that aborts a turn stop the running turn without
 cancelling prompts already sent. A request they stop before the provider

@@ -74,6 +74,12 @@ export interface FlowAttempt {
 	generation: number;
 	phase: FlowAttemptPhase;
 	consumed?: boolean;
+	/**
+	 * Consumed into the conversation, but treated as never delivered: a Stop reached it before any
+	 * provider received it, or the user resolved an uncertain send as undelivered. Its work returns
+	 * to admission, and the attempt keeps excluding its own copy from model context.
+	 */
+	undelivered?: true;
 	admission?: { choice: FlowAdmissionChoice; charged: boolean };
 	members: FlowMember[];
 	queue?: { id: string; revision: number };
@@ -358,6 +364,11 @@ export class FlowReceiptLedger {
 			}
 			if (attempt.consumed !== undefined && typeof attempt.consumed !== "boolean")
 				throw new FlowLedgerError("schema", "Invalid native consumption fact.");
+			if (
+				attempt.undelivered !== undefined &&
+				(attempt.undelivered !== true || attempt.phase !== "cancelled" || attempt.consumed !== true)
+			)
+				throw new FlowLedgerError("schema", "Invalid undelivered flow attempt.");
 			try {
 				validateFlowRequestSummary(attempt);
 			} catch (error) {
@@ -697,6 +708,7 @@ export class FlowReceiptLedger {
 				// The consumption fact is unchanged by the resolution: what changes is that this attempt
 				// is not a success, so its work becomes eligible for a fresh attempt.
 				attempt.phase = "cancelled";
+				if (attempt.consumed === true) attempt.undelivered = true;
 			}
 			delete state.activeAttemptId;
 		});
@@ -772,7 +784,13 @@ export class FlowReceiptLedger {
 		}, assertCurrent);
 	}
 
-	cancel(id: string, reason: string): Promise<void> {
+	/**
+	 * Cancel an attempt no provider received. `stopped` marks a Stop (an abort that cancels prompts):
+	 * consumed automated input then returns to admission instead of being fenced. An attempt with a
+	 * user member stays fenced, because a user's cancellation is final; a user message in the same run
+	 * stays in the conversation either way and is never re-offered by a producer.
+	 */
+	cancel(id: string, reason: string, stopped = false): Promise<void> {
 		requireIdentity(reason);
 		return this.mutate((state) => {
 			const attempt = this.attempt(state, id, ["selected", "queued", "claimed", "prepared", "cancelled"]);
@@ -780,6 +798,8 @@ export class FlowReceiptLedger {
 				throw new FlowLedgerError("transition", "Started runs require host settlement before cancellation.");
 			attempt.phase = "cancelled";
 			attempt.reason = reason;
+			if (stopped && attempt.consumed === true && !attempt.members.some((member) => member.kind === "user"))
+				attempt.undelivered = true;
 			if (state.activeAttemptId === id) delete state.activeAttemptId;
 		});
 	}

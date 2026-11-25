@@ -30,6 +30,8 @@ interface Pending {
 	valid: () => Promise<boolean>;
 	item?: { id: string; revision: number };
 	revoked: boolean;
+	/** The session's count of prompt-cancelling aborts when this input was queued. */
+	stops: number;
 }
 const attached = new WeakSet<AgentSession>();
 
@@ -221,7 +223,7 @@ export class PiControllerHost implements FlowControllerHost {
 	async enqueue(input: FlowModelInput, valid: () => Promise<boolean>): Promise<void> {
 		this.assertActive();
 		if (this.pending) throw new FlowLedgerError("busy", "A controller input is already pending.");
-		const pending: Pending = { input, valid, revoked: false };
+		const pending: Pending = { input, valid, revoked: false, stops: this.session.promptAbortCount };
 		this.pending = pending;
 		this.requests.register(input);
 		await this.queue.enqueue(input.attemptId, () => {
@@ -277,7 +279,11 @@ export class PiControllerHost implements FlowControllerHost {
 			if (result.kind === "busy") return;
 		} else {
 			await this.boundary.atIdle(() => this.history.flush());
-			await this.boundary.reconcile(this.ledger, attemptId);
+			// A Stop, session switch or shutdown since this input was queued is an abort that cancels
+			// prompts. Settlement then returns consumed automated input that no provider received.
+			const pending = this.pending?.input.attemptId === attemptId ? this.pending : undefined;
+			const stopped = pending !== undefined && this.session.promptAbortCount !== pending.stops;
+			await this.boundary.reconcile(this.ledger, attemptId, stopped);
 		}
 		if ((await this.ledger.snapshot()).activeAttemptId !== attemptId) {
 			this.requests.forget(attemptId);

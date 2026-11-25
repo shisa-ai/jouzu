@@ -823,7 +823,7 @@ test("Pi: user arrival during native claim cancels automation before the provide
 	assert.equal(attempt.consumed, false);
 });
 
-test("Pi: a Stop before handoff keeps held work and does not send the stopped automated input again", async (t) => {
+test("Pi: a Stop before handoff keeps held work and sends the stopped automated input once after resuming", async (t) => {
 	const entered = deferred(),
 		release = deferred();
 	let gated = true;
@@ -862,27 +862,115 @@ test("Pi: a Stop before handoff keeps held work and does not send the stopped au
 	policy.waitingWorkIds = ["beta"];
 	const running = controller.wake();
 	await entered.promise;
+	// The runtime pauses automated work as the Stop ends the turn, before settlement, until the user's
+	// next message.
+	policy.automatedPaused = true;
 	const stopping = session.abort();
 	release.resolve();
 	await Promise.all([running, stopping]);
 	assert.deepEqual(sent, []);
-	// Pi took alpha into the conversation before the Stop. Its attempt is cancelled with the input
-	// consumed, so it is not dispatched again, and later requests leave its copy out (#81).
+	// Pi took alpha into the conversation before the Stop, but no provider received it (#81). Its
+	// attempt is cancelled as undelivered: alpha is offered again and this copy stays out of context.
 	const [stopped] = (await ledger.snapshot()).attempts;
 	assert.equal(stopped.phase, "cancelled");
 	assert.equal(stopped.consumed, true);
+	assert.equal(stopped.undelivered, true);
 	await controller.wake();
 	assert.deepEqual(sent, []);
 	await session.prompt("next");
-	assert.deepEqual(sent, [[]]);
+	assert.deepEqual(sent, [[]], "the user's request leaves the stopped copy out");
+	policy.automatedPaused = false;
+	await controller.wake();
+	assert.deepEqual(sent, [[], ["alpha"]], "alpha is sent once, without its stopped copy");
 	// Held work still runs once released.
 	policy.waitingWorkIds = [];
 	await controller.wake();
-	assert.deepEqual(sent, [[], ["beta"]]);
+	assert.deepEqual(sent, [[], ["alpha"], ["alpha", "beta"]]);
 	assert.deepEqual(
 		(await ledger.snapshot()).attempts.map((attempt) => attempt.phase),
-		["cancelled", "settled"],
+		["cancelled", "settled", "settled"],
 	);
+});
+
+test("Pi: a job result stopped before handoff is delivered once after resuming", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	let gated = true;
+	const sent = [];
+	const carried = (body) =>
+		body.messages.flatMap((message) => {
+			if (message.role !== "user") return [];
+			const text = typeof message.content === "string" ? message.content : message.content[0].text;
+			try {
+				return [JSON.parse(text).flowInput[2]];
+			} catch {
+				return [];
+			}
+		});
+	const { controller, session, ledger, policy } = await fixture(t, true, {
+		extensions: [
+			(pi) =>
+				pi.on("before_provider_request", async ({ payload }) => {
+					if (gated) {
+						gated = false;
+						entered.resolve();
+						await release.promise;
+					}
+					return payload;
+				}),
+		],
+		fetch: async (_url, init) => {
+			sent.push(carried(JSON.parse(init.body)));
+			return answer();
+		},
+	});
+	controller.register(producer("jobs", [descriptor("jobs", "job-result", 6)]));
+	const running = controller.wake();
+	await entered.promise;
+	policy.automatedPaused = true;
+	const stopping = session.abort();
+	release.resolve();
+	await Promise.all([running, stopping]);
+	const [stopped] = (await ledger.snapshot()).attempts;
+	assert.equal(stopped.undelivered, true);
+	assert.ok(stopped.admission.choice.resultSnapshot?.some((sample) => sample.id === "job-result"));
+	await session.prompt("next");
+	assert.deepEqual(sent, [[]]);
+	policy.automatedPaused = false;
+	await controller.wake();
+	assert.deepEqual(sent, [[], ["job-result"]], "the stopped result can trigger its own delivery");
+	await controller.wake();
+	assert.deepEqual(sent, [[], ["job-result"]], "and is delivered only once");
+});
+
+test("Pi: closing the host before handoff, as a session switch or quit does, leaves automated input undelivered", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	let gated = true;
+	const { controller, host, ledger } = await fixture(t, true, {
+		extensions: [
+			(pi) =>
+				pi.on("before_provider_request", async ({ payload }) => {
+					if (gated) {
+						gated = false;
+						entered.resolve();
+						await release.promise;
+					}
+					return payload;
+				}),
+		],
+		fetch: async () => assert.fail("nothing reaches the provider"),
+	});
+	controller.register(producer("alpha", [{ ...descriptor("alpha"), independent: true }]));
+	const running = controller.wake();
+	await entered.promise;
+	const closing = host.close();
+	release.resolve();
+	await Promise.allSettled([running, closing]);
+	const [attempt] = (await ledger.snapshot()).attempts;
+	assert.equal(attempt.phase, "cancelled");
+	assert.equal(attempt.consumed, true);
+	assert.equal(attempt.undelivered, true);
 });
 
 test("duplicate namespaces and disposed producer callbacks are rejected", async (t) => {

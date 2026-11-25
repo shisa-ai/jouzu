@@ -581,3 +581,141 @@ test("indexed retirement crosses the old lifetime budget without growing the ope
 	assert.deepEqual(facts.members, [spent[0], spent.at(-1), retiredMemberHash("loop", "r1")]);
 	assert.deepEqual(facts.settled, [{ id: "loop", count: 12 }]);
 });
+
+/** Drive one attempt to a claimed or prepared state that no provider received, then cancel it. */
+async function unsentAttempt(ledger, attemptId, items, { prepare = true, stopped = true } = {}) {
+	const revision = (await ledger.snapshot()).admission?.revision ?? 0;
+	await ledger.select(attemptId, items, {
+		revision,
+		intent: intent(items[0].id),
+		coalescedIds: [],
+		next: { ...initialFlowAdmission(), revision: revision + 1 },
+	});
+	const queue = { id: `queue-${attemptId}`, revision: 1 };
+	await ledger.queued(attemptId, queue);
+	await ledger.claim(attemptId, queue);
+	if (prepare) await ledger.prepare(attemptId, `request-${attemptId}`, items.map(included), false);
+	await ledger.cancel(attemptId, "Host became idle before transport handoff.", stopped);
+	return (await ledger.snapshot()).attempts.find((attempt) => attempt.id === attemptId);
+}
+
+test("a stopped attempt no provider received offers its work again and keeps its context evidence", async (t) => {
+	const repo = new MemorySessionRepo();
+	const session = await repo.create({}, context);
+	t.after(() => repo.close(context));
+	const store = createPiLedgerStore(session);
+	let ledger = await FlowReceiptLedger.attach(store, scope);
+	const work = member("continuation");
+	const stopped = await unsentAttempt(ledger, "stopped", [work]);
+	assert.equal(stopped.phase, "cancelled");
+	assert.equal(stopped.consumed, true);
+	assert.equal(stopped.undelivered, true);
+	const memberIntent = { ...intent(work.id), rank: 6, workId: undefined, workRevision: undefined };
+	assert.equal(retainedByReceipt(intent(work.id), await ledger.snapshot()), false, "its cadence work is offered again");
+	assert.equal(retainedByReceipt(memberIntent, await ledger.snapshot()), false, "its member is offered again");
+
+	// The decision is durable: a new attachment reads the same undelivered attempt.
+	ledger = await FlowReceiptLedger.attach(store, scope);
+	assert.equal((await ledger.snapshot()).attempts[0].undelivered, true);
+	assert.equal(retainedByReceipt(intent(work.id), await ledger.snapshot()), false);
+
+	// Retirement folds no fence for it, and archived context still identifies the copy to exclude.
+	assert.equal(await ledger.retire(0), 1);
+	const after = await ledger.snapshot();
+	after.retiredAttempts = await ledger.retired({
+		members: [retiredMemberHash(work.id, work.revision)],
+		work: [retiredWorkHash("campaign", "1:1")],
+	});
+	assert.deepEqual(after.retiredAttempts.members, []);
+	assert.deepEqual(after.retiredAttempts.work, []);
+	assert.equal(retainedByReceipt(intent(work.id), after), false, "retirement does not fence it");
+	const [archived] = (await ledger.contextSnapshot(["stopped"])).attempts;
+	assert.equal(archived.undelivered, true);
+	assert.deepEqual(archived.members, [work]);
+});
+
+test("cancellations other than a Stop of automated input stay fenced", async (t) => {
+	const ledger = await fixture(t);
+	// Not a Stop: the work is not offered again.
+	const failed = await unsentAttempt(ledger, "not-stopped", [member("failed-before-send")], { stopped: false });
+	assert.equal(failed.undelivered, undefined);
+	assert.equal(retainedByReceipt(intent("failed-before-send"), await ledger.snapshot()), true);
+	// A Stop of an attempt that carries a user member: the user's cancellation is final.
+	const user = await unsentAttempt(
+		ledger,
+		"user",
+		[member("with-user-input"), { ...member("typed", "user"), required: true }],
+		{
+			prepare: false,
+		},
+	);
+	assert.equal(user.undelivered, undefined);
+	assert.equal(retainedByReceipt(intent("with-user-input"), await ledger.snapshot()), true);
+	// A Stop before the queue claim consumed nothing, so there is nothing to mark.
+	await ledger.select("unclaimed", [member("queued-only")], {
+		revision: (await ledger.snapshot()).admission?.revision ?? 0,
+		intent: intent("queued-only"),
+		coalescedIds: [],
+		next: { ...initialFlowAdmission(), revision: ((await ledger.snapshot()).admission?.revision ?? 0) + 1 },
+	});
+	await ledger.cancel("unclaimed", "Controller input was not consumed by the native run.", true);
+	const unclaimed = (await ledger.snapshot()).attempts.find((attempt) => attempt.id === "unclaimed");
+	assert.equal(unclaimed.consumed, false);
+	assert.equal(unclaimed.undelivered, undefined);
+});
+
+test("only a consumed cancelled attempt can be undelivered", async () => {
+	for (const attempt of [
+		{ phase: "settled", outcome: "success", consumed: true, undelivered: true },
+		{ phase: "cancelled", consumed: false, undelivered: true },
+		{ phase: "cancelled", consumed: true, undelivered: false },
+	]) {
+		let state = {
+			schemaVersion: 1,
+			scope,
+			generation: 1,
+			revision: 0,
+			attempts: [{ id: "a", generation: 1, members: [member("work")], history: [], requests: [], ...attempt }],
+		};
+		const store = {
+			read: async () => structuredClone(state),
+			transact: async (update) => {
+				const result = update(structuredClone(state));
+				state = result.state;
+				return result.result;
+			},
+		};
+		await assert.rejects(
+			FlowReceiptLedger.attach(store, scope),
+			/Invalid undelivered flow attempt/,
+			JSON.stringify(attempt),
+		);
+	}
+});
+
+test("a stopped result no provider received does not count as serving its producer", async (t) => {
+	const ledger = await fixture(t);
+	const work = member("loop"),
+		result = member("result-stopped", "result");
+	await ledger.select("stopped", [work, result], {
+		revision: 0,
+		intent: intent(work.id),
+		coalescedIds: [],
+		next: { ...initialFlowAdmission(), revision: 1 },
+		resultSnapshot: [
+			{ id: result.id, revision: "r1", producer: "alpha" },
+			{ id: "pending-beta", revision: "r1", producer: "beta" },
+		],
+	});
+	const queue = { id: "queue-stopped", revision: 1 };
+	await ledger.queued("stopped", queue);
+	await ledger.claim("stopped", queue);
+	await ledger.prepare("stopped", "request-stopped", [included(work), included(result)], false);
+	await ledger.cancel("stopped", "Host became idle before transport handoff.", true);
+	const eligible = [
+		intent("next-alpha", { rank: 6, producer: "alpha", sequence: 0 }),
+		intent("pending-beta", { rank: 6, producer: "beta", sequence: 1 }),
+	];
+	// A delivered alpha result would put beta first; the stopped one leaves the round where it was.
+	assert.deepEqual(orderFlowResultProducers(eligible, await ledger.snapshot()), ["alpha", "beta"]);
+});

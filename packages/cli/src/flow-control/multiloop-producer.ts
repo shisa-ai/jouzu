@@ -165,7 +165,8 @@ export class MultiloopFlowProducer implements FlowProducer {
 			const id = this.id(entry.lane, work.id);
 			const attempts = ledger.attempts.filter(
 				(attempt) =>
-					attempt.admission?.choice.intent.id === id && !(attempt.phase === "cancelled" && attempt.consumed === false),
+					attempt.admission?.choice.intent.id === id &&
+					!(attempt.phase === "cancelled" && (attempt.consumed === false || attempt.undelivered)),
 			);
 			const settled = attempts.filter((attempt) => attempt.phase === "settled" && attempt.outcome === "success");
 			const cached = entry.revision;
@@ -268,7 +269,8 @@ export class MultiloopFlowProducer implements FlowProducer {
 		if (this.admittedAttempts.has(attempt.id)) return;
 		const entry = [...this.entries.values()].find((entry) => this.id(entry.lane, entry.workId) === intent.id);
 		if (!entry?.continuation) throw new FlowLedgerError("stale", "Consumed multiloop continuation is detached.");
-		entry.continuation.admitted();
+		// An undelivered continuation sent again was counted when it was first admitted.
+		if (entry.retained) entry.continuation.admitted();
 		entry.retained = false;
 		this.admittedAttempts.add(attempt.id);
 	}

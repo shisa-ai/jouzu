@@ -87,7 +87,7 @@ export function retainedByReceipt(intent: FlowIntent, state: FlowLedgerState): b
 	)
 		return true;
 	return state.attempts.some((attempt) => {
-		if (attempt.phase === "cancelled" && attempt.consumed === false) return false;
+		if (attempt.phase === "cancelled" && (attempt.consumed === false || attempt.undelivered)) return false;
 		const selected = attempt.admission?.choice.intent;
 		return (
 			attempt.members.some((member) => member.id === intent.id && member.revision === intent.revision) ||
@@ -349,6 +349,7 @@ export class SessionFlowController {
 								!state.attempts.some(
 									(attempt) =>
 										attempt.consumed !== false &&
+										!attempt.undelivered &&
 										attempt.admission?.choice.resultSnapshot?.some(
 											(sample) => sample.id === item.id && sample.revision === item.revision,
 										),

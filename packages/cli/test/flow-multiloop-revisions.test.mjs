@@ -157,3 +157,23 @@ test("a consumed cancelled multiloop continuation remains fenced", async (t) => 
 	assert.equal(await f.fenced(next), true);
 	assert.deepEqual(f.admitted, ["first"]);
 });
+
+for (const accounted of [true, false])
+	test(`a multiloop continuation stopped before any provider received it is sent again and counted once: accounted=${accounted}`, async (t) => {
+		const f = await fixture(t);
+		f.submit("first");
+		const first = await f.queue("first");
+		await f.ledger.claim("first", first.queue);
+		// A Stop can also land between the durable claim and the producer's accounting callback.
+		if (accounted) f.producer.admitted((await f.ledger.snapshot()).attempts[0]);
+		await f.ledger.cancel("first", "Host became idle before transport handoff.", true);
+		assert.equal((await f.ledger.snapshot()).attempts[0].undelivered, true);
+		const next = await f.snapshot();
+		assert.equal(next.revision, first.intent.revision, "the same continuation is offered again");
+		assert.equal(next.runnable, true);
+		assert.equal(await f.fenced(next), false);
+		await f.begin("again");
+		await f.ledger.settle("again", "success");
+		assert.deepEqual(f.admitted, ["first"], "the loop turn is counted once");
+		assert.equal(await f.fenced(await f.snapshot()), true, "the delivered continuation is fenced");
+	});

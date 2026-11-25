@@ -82,7 +82,8 @@ export const retiredByReceipt = (retired: FlowRetiredAttempts | undefined, membe
 
 /**
  * Select terminal attempts whose context quarantine evidence remains available. Callers must also reconcile
- * producer delivery and wait observation before pruning. Unconsumed cancellations carry no fence.
+ * producer delivery and wait observation before pruning. Unconsumed and undelivered cancellations carry
+ * no fence.
  */
 export function retirableAttempts(state: FlowLedgerState, keep: number, archivedContext = false): FlowAttempt[] {
 	const settledOnly = state.attempts.filter(
@@ -117,7 +118,7 @@ export function foldRetiredAttempts(
 	const settled = new Map(retired.settled.map((entry) => [entry.id, entry.count]));
 	for (const attempt of retiring) {
 		const selected = attempt.admission?.choice.intent;
-		if (attempt.phase === "cancelled" && attempt.consumed === false) continue;
+		if (attempt.phase === "cancelled" && (attempt.consumed === false || attempt.undelivered)) continue;
 		if (attempt.consumed !== false)
 			for (const sample of attempt.admission?.choice.resultSnapshot ?? [])
 				triggers.add(retiredMemberHash(sample.id, sample.revision));

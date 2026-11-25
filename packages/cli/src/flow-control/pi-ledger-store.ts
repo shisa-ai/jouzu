@@ -107,7 +107,7 @@ export function createPiLedgerStore(
 						const attempt = stored.value;
 						if (!attempt || attempt.id !== key[1])
 							throw new FlowLedgerError("schema", "Invalid archived attempt identity.");
-						if (attempt.consumed === false) continue;
+						if (attempt.consumed === false || attempt.undelivered) continue;
 						for (const sample of attempt.admission?.choice.resultSnapshot ?? [])
 							triggers.add(retiredMemberHash(sample.id, sample.revision));
 					}

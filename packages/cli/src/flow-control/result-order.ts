@@ -9,7 +9,7 @@ export function replayFlowResultRound(state: FlowLedgerState): string[] {
 	for (const attempt of state.attempts) {
 		if (attempt.resultRoundFolded) continue;
 		const snapshot = attempt.admission?.choice.resultSnapshot;
-		if (!snapshot || attempt.consumed === false) continue;
+		if (!snapshot || attempt.consumed === false || attempt.undelivered) continue;
 		const producers = new Set(snapshot.flatMap((item) => (item.producer ? [item.producer] : [])));
 		// Earlier snapshots without producer identity supply no sampling evidence.
 		if (!producers.size) continue;
