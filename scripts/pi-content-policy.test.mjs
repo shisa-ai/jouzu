@@ -1,6 +1,7 @@
 import "./pi-bug-report.test.mjs";
 import "./pi-ime-slash.test.mjs";
 import "./pi-login-default.test.mjs";
+import "./pi-models-store-exit.test.mjs";
 import "./pi-resume-argument.test.mjs";
 import "./pi-summary-preparation.test.mjs";
 import assert from "node:assert/strict";

@@ -52,6 +52,7 @@ import {
 	rejectHeldCatalog,
 } from "./model-catalog-sync.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
+import { createModelsStoreExitExtension } from "./models-store-exit.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { offerPiConfigurationImport, PiImportError } from "./pi-import.js";
 import { buildPreRuntimeContext } from "./pre-runtime.js";
@@ -867,6 +868,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 				help,
 				createScrollbackExtension({ isShellBusy: scrollbackSession.isShellBusy, catalog: preRuntime.catalog.bundle }),
 				releaseDiagnostics,
+				// Last of the built-ins, so their shutdown handlers finish any store work before it closes.
+				createModelsStoreExitExtension(() => pi.closeModelsStores()),
 			],
 		});
 	const runPi = async () => {

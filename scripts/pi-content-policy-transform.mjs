@@ -2579,6 +2579,49 @@ export interface LoadSkillsResult {
 			'if (!SYSTEM_PROMPT_SECTION_NAME.test(name) || name === "preamble") {',
 			"if (!SYSTEM_PROMPT_SECTION_NAME.test(name)) {",
 		);
+	} else if (path === "dist/core/models-store.js") {
+		// A runtime that exits while proper-lockfile is still creating the store lock leaves the lock
+		// directory behind, and the next start waits up to 30 s for it to go stale. Track every locked
+		// operation so disposal for exit can stop new ones and wait for those in progress.
+		change(
+			"// Optimize the common path without retaining an unbounded set of custom paths.\nlet sharedModelsFileReadState;",
+			`const storeOperations = new Set();
+const storeClosing = new AbortController();
+function withStoreLock(storage, fn, options) {
+    const signal = options?.signal ? AbortSignal.any([options.signal, storeClosing.signal]) : storeClosing.signal;
+    const operation = storage.withLockAsync(fn, { ...options, signal });
+    storeOperations.add(operation);
+    const settle = () => storeOperations.delete(operation);
+    operation.then(settle, settle);
+    return operation;
+}
+/**
+ * Stop new models store operations in this process and wait for those in progress. One still waiting
+ * for the lock gives up, and one that holds it releases it, so the process can exit without leaving it.
+ */
+export async function closeModelsStores() {
+    storeClosing.abort();
+    await Promise.allSettled([...storeOperations]);
+}
+// Optimize the common path without retaining an unbounded set of custom paths.
+let sharedModelsFileReadState;`,
+		);
+		change("this.storage.withLockAsync(", "withStoreLock(this.storage, ", 3);
+	} else if (path === "dist/core/models-store.d.ts") {
+		change(
+			"/** Locked JSON-backed storage for dynamically refreshed provider catalogs. */",
+			"/** Stop new models store operations in this process and wait for those in progress. */\nexport declare function closeModelsStores(): Promise<void>;\n/** Locked JSON-backed storage for dynamically refreshed provider catalogs. */",
+		);
+	} else if (path === "dist/index.js") {
+		change(
+			'export { ModelRegistry } from "./core/model-registry.js";',
+			'export { ModelRegistry } from "./core/model-registry.js";\nexport { closeModelsStores } from "./core/models-store.js";',
+		);
+	} else if (path === "dist/index.d.ts") {
+		change(
+			'export { ModelRegistry } from "./core/model-registry.ts";',
+			'export { ModelRegistry } from "./core/model-registry.ts";\nexport { closeModelsStores } from "./core/models-store.ts";',
+		);
 	} else {
 		throw new Error(`Unknown patch path ${path}`);
 	}
@@ -2626,4 +2669,8 @@ export const paths = [
 	"dist/core/settings-defaults.d.ts",
 	"dist/core/settings-schema.js",
 	"dist/core/system-prompt.js",
+	"dist/core/models-store.js",
+	"dist/core/models-store.d.ts",
+	"dist/index.js",
+	"dist/index.d.ts",
 ];
