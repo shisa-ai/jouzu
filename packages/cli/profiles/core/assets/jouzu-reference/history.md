@@ -29,8 +29,24 @@ Relative to the resolved state root:
 | `localization-session.json` | Session-keyed language overrides |
 | `sessions/` | Default parent conversation JSONL files; launch overrides can change location |
 | `subagents/` | Child records, event output and conversation files, grouped by parent identity/run ID |
+| `flow/` | Parent flow state, keyed by session and branch digest |
 
-Use session/run metadata for the exact file, or a bounded listing of the reported root. Titles are not filenames. Child `events.jsonl` is execution output, separate from the saved conversation JSONL. Child history has no automatic deletion. Do not rewrite runtime state or restore the whole directory to undo one setting.
+Use session/run metadata for the exact file, or a bounded listing of the reported root. Titles are not filenames. Child history has no automatic deletion. Do not rewrite runtime state or restore the whole directory to undo one setting.
+
+### Trace locations
+
+Resolve the state root with `jz doctor --json`; paths below are relative to it.
+
+| What | Location |
+| --- | --- |
+| Parent session | `sessions/<UTC timestamp>_<session-uuid>.jsonl` |
+| Child run directory | `subagents/<parent-session-digest>/<run-id>/` |
+| Child conversation | The run directory's `<UTC timestamp>_<session-uuid>.jsonl` |
+| Child execution output | The run directory's `events.jsonl` |
+| Child flow state | The run directory's `flow/<session-branch-digest>/` |
+| Parent flow state | `flow/<session-branch-digest>/` |
+
+`PI_SESSION_FILE` is the exact current session file; `PI_CODING_AGENT_SESSION_DIR` is the session root. Launch overrides can move the directory. A flow directory contains `schema.json`, `owner.sqlite`, and `sessions/flow/<UTC timestamp>_flow.jsonl`. Digest components are 32 lowercase hexadecimal characters; resolve them from session/run metadata instead of guessing. `run.json` identifies a child run.
 
 ## History access
 
@@ -44,6 +60,6 @@ Use session/run metadata for the exact file, or a bounded listing of the reporte
 | Live session identity | User `/status` or `/session` |
 | Active branch in terminal history | User `/scrollback` while agent/shell work is idle |
 
-Use only exposed tools. Recall is not cross-session search. Trace can include other branches; it excludes thinking/images and does not rewrite history. Filters: `kind`, literal case-insensitive `query`, exact `entryId`. Follow byte `nextOffset` with unchanged filters; calls are bounded to 8 MiB scanned, 100 records, 48 KB returned. Trace does not acknowledge child completion; read terminal output separately.
+Use only exposed tools. Recall is not cross-session search. Trace can include other branches; it excludes thinking/images and does not rewrite history. Filters: `kind`, literal case-insensitive `query`, exact `entryId`. Follow byte `nextOffset` with unchanged filters; calls scan at most 8 MiB, return at most 100 records (default 20), and bound the response to 46 KB. Trace does not acknowledge child completion; read terminal output separately.
 
 `compact_context` requests compaction after the run settles; recall retrieves history but does not compact. `/scrollback` cannot recover output truncated before storage, and exported text stays in terminal history. Transcripts and events may contain secrets: inspect bounded excerpts and redact before sharing.

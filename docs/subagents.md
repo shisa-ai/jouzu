@@ -167,9 +167,11 @@ Use `subagent` with `op: "trace"` to inspect saved conversation entries. Supply 
 
 `kind` accepts `all`, `messages`, `tools`, `errors`, or `compaction`. `query` is a case-insensitive literal search. Results include entry IDs, text, tool-call arguments and linked results, and compaction summaries; thinking blocks and images are excluded. The trace reads the saved file without migrating or rewriting it and can include entries from other branches of that session.
 
-Each call scans at most 8 MiB and returns at most 100 records with a response bounded to 48 KB. Large records contain a UTF-8-safe preview. Continue with `nextOffset`, a JSONL byte cursor, using the same filters.
+Each call scans at most 8 MiB and returns at most 100 records (default 20) with a response bounded to 46 KB. Large records contain a UTF-8-safe preview. Continue with `nextOffset`, a JSONL byte cursor, using the same filters.
 
 A partial last line returns a retry cursor; malformed complete lines report an error. A single entry larger than the scan budget may require direct file inspection. Trace remains available when subagents are disabled and does not acknowledge completion notifications; use `read` or the delivered batch's acknowledgement instead.
+
+Parent session files are under the state root's `sessions/` directory. Child runs are under `subagents/<parent-session-digest>/<run-id>/`, with the child conversation JSONL, `events.jsonl`, and the run's own `flow/` state. Flow state is under `flow/<session-branch-digest>/` with `schema.json`, `owner.sqlite`, and `sessions/flow/*.jsonl`. `PI_SESSION_FILE` names the current session file and `PI_CODING_AGENT_SESSION_DIR` names the session root; launch overrides can move the root. Digests are 32 lowercase hexadecimal characters; resolve them from session/run metadata rather than guessing.
 
 ## Assignment guidance
 

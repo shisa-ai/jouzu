@@ -49,7 +49,7 @@ import {
 	SAME_MODEL,
 	type WorkspaceWriterPolicy,
 } from "./roles.js";
-import { readSessionTrace, type TraceQuery } from "./trace.js";
+import { readSessionTrace, TRACE_MAX_LIMIT, type TraceQuery } from "./trace.js";
 import { resolveWorkspace } from "./workspace.js";
 
 export interface WorkflowService {
@@ -695,7 +695,7 @@ export function createWorkflowIntegration(
 					query: { type: "string", description: "Trace: case-insensitive literal text search." },
 					kind: { type: "string", enum: ["all", "messages", "tools", "errors", "compaction"] },
 					entryId: { type: "string", description: "Trace: select one saved entry." },
-					limit: { type: "integer", minimum: 1, maximum: 100 },
+					limit: { type: "integer", minimum: 1, maximum: TRACE_MAX_LIMIT },
 					offset: { type: "integer", minimum: 0 },
 				},
 				required: ["op"],
