@@ -53,6 +53,7 @@ import {
 	rejectHeldCatalog,
 } from "./model-catalog-sync.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
+import { createModelsStoreExitExtension } from "./models-store-exit.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { offerPiConfigurationImport, PiImportError } from "./pi-import.js";
 import { buildPreRuntimeContext } from "./pre-runtime.js";
@@ -60,6 +61,7 @@ import { writeProfileChoice } from "./profile-choice.js";
 import {
 	applyProfile,
 	formatProfilePlan,
+	ProfileBusyError,
 	ProfileConflictError,
 	ProfileStateError,
 	planProfile,
@@ -772,9 +774,28 @@ export async function runMainCli(args: string[]): Promise<void> {
 				})
 			: undefined;
 	const scrollbackSession = createScrollbackSessionObserver();
+	const sessionMetadataCache =
+		interactiveStartup && process.env.JOUZU_SESSION_CACHE !== "0"
+			? (await import("./session-metadata-cache.js")).createSessionMetadataCache(paths.cacheDir)
+			: undefined;
+	// Recent sessions under the banner, only when the launch starts a new session with no prompt.
+	const startupSessionsModule = interactiveStartup ? await import("./startup-sessions.js") : undefined;
+	const startupScope = startupSessionsModule?.startupSessionsScope() ?? "off";
+	const startupSessions =
+		startupSessionsModule && startupScope !== "off" && startupSessionsModule.launchesFreshSession(parsed.args)
+			? startupSessionsModule.createStartupSessions({
+					scope: startupScope,
+					catalog: preRuntime.catalog.bundle,
+					cache: sessionMetadataCache,
+					...(flow ? { inUseLabel: (sessionId: string) => flow.resume.inUseLabel(sessionId) } : {}),
+				})
+			: undefined;
 	const startPi = () =>
 		pi.main(piArgs, {
 			sessionInfoFooter: runtimeDiagnostics.summary,
+			sessionResume: flow?.resume,
+			sessionMetadataCache,
+			...(startupSessions ? { resumeTarget: (argument: string) => startupSessions.resumeTarget(argument) } : {}),
 			contentPolicyFactory: nativeTextguard.createPolicy,
 			flowIngressFactory: async (context) =>
 				modelPicker.wrapSessionIngress(scrollbackSession.wrap(await flow?.flowIngressFactory(context))),
@@ -798,6 +819,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				languageContract.extension,
 				presentation.createJouzuPresentationExtension(metadata, profile, {
 					catalog: preRuntime.catalog.bundle,
+					...(startupSessions ? { startupSections: [startupSessions] } : {}),
 					responseLanguageSection: () => languageContract.currentSection(),
 					promptFeatures: () => ({
 						subagentsEnabled: modelPicker.workflowService.subagentsEnabled(),
@@ -849,6 +871,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 				releaseDiagnostics,
 				// Last context handler: it sees the images that are actually sent.
 				createImageOmissionExtension(preRuntime.catalog.bundle),
+				// Last of the built-ins, so their shutdown handlers finish any store work before it closes.
+				createModelsStoreExitExtension(() => pi.closeModelsStores()),
 			],
 		});
 	const runPi = async () => {
@@ -896,6 +920,12 @@ export function handleMainCliError(error: unknown, catalog: CatalogBundle = defa
 	}
 	if (error instanceof KeybindingConfigError) {
 		console.error(text(CliMessageId.keybindingConfig, { message: protectedSourceError(error.message) }));
+		process.exitCode = error.exitCode;
+		return;
+	}
+	if (error instanceof ProfileBusyError) {
+		// Another live process is applying the profile; nothing needs repair.
+		console.error(error.message);
 		process.exitCode = error.exitCode;
 		return;
 	}

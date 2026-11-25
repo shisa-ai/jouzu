@@ -8,6 +8,9 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { automaticWorkId } from "../dist/flow-control/automatic-work.js";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
+import { FlowOwnership } from "../dist/flow-control/ownership.js";
+import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
+import { PiFlowSessionRegistry } from "../dist/flow-control/pi-session-registry.js";
 import { PiFlowSessionService } from "../dist/flow-control/pi-session-service.js";
 import { legacyPathDigest, pathDigest } from "../dist/path-digest.js";
 import { afterCleanup, cleanupContext } from "./fixtures/cleanup.mjs";
@@ -74,6 +77,109 @@ async function fixture(t, config = {}) {
 		await service.close();
 	});
 	return { root, session, service, requests, treeScopes };
+}
+
+async function durableFirstSave(root, manager, scope, expected) {
+	const transcript = manager.getSessionFile();
+	const entries = await readFile(transcript, "utf8").then(
+		(text) => text.trim().split("\n").map(JSON.parse),
+		(error) => {
+			if (error.code !== "ENOENT") throw error;
+			return [];
+		},
+	);
+	const markers = entries.filter((entry) => entry.customType === "jouzu-flow-branch");
+	const registry = { sessionId: scope.sessionId, branchId: "registry" };
+	assert.equal(markers.length, expected.marker ? 1 : 0, "durable transcript marker");
+	if (expected.marker) assert.equal(markers[0].data.branchId, scope.branchId);
+	else assert.deepEqual(entries, [], "no durable transcript");
+	assert.equal(FlowOwnership.hasRecords(join(root, "session-registry-v1"), registry), expected.registry);
+	assert.equal(FlowOwnership.hasRecords(root, scope), expected.branch);
+	return entries;
+}
+
+const fullyStored = { marker: true, registry: true, branch: true };
+
+test("reopening after the registry was saved but before the branch journal accepts a prompt", async (t) => {
+	const first = await fixture(t, { retainInputs: true });
+	const { root, session, service } = first;
+	const { scope, attachment } = service.branch();
+	const interrupted = new Error("stopped before branch materialization");
+	t.mock.method(attachment, "materialize", async () => {
+		throw interrupted;
+	});
+	await assert.rejects(service.store(), (error) => error === interrupted);
+	await service.close(); // Release ownership without writing the in-memory branch.
+	const manager = session.sessionManager;
+	await durableFirstSave(root, manager, scope, { ...fullyStored, branch: false });
+
+	const notices = [];
+	const reopened = await fixture(t, {
+		root,
+		manager: SessionManager.open(manager.getSessionFile()),
+		retainInputs: true,
+		onRebuiltRegistry: (path) => notices.push(path),
+	});
+	assert.deepEqual(reopened.service.branch().scope, scope);
+	assert.deepEqual(notices, [], "the registry was not dropped or rebuilt");
+	await reopened.session.prompt("first prompt after recovery");
+	assert.equal(reopened.requests.length, 1);
+	await reopened.service.close();
+	const entries = await durableFirstSave(root, manager, scope, fullyStored);
+	assert.equal(entries.filter((entry) => entry.message?.role === "user").length, 1);
+	assert.equal(entries.find((entry) => entry.message?.role === "assistant").message.stopReason, "stop");
+});
+
+for (const promptFirst of [false, true]) {
+	test(`first prompt and close leave consistent storage (prompt starts saving first: ${promptFirst})`, async (t) => {
+		const entered = deferred();
+		const release = deferred();
+		const wait = async () => {
+			entered.resolve();
+			await release.promise;
+		};
+		if (promptFirst) {
+			const materialize = PiFlowSessionRegistry.prototype.materialize;
+			t.mock.method(PiFlowSessionRegistry.prototype, "materialize", async function () {
+				// The marker is durable, but the registry and branch journal are not yet written.
+				await wait();
+				await materialize.call(this);
+			});
+		} else {
+			const beforeFirstWrite = PiFlowAttachment.prototype.storeBeforeFirstWrite;
+			t.mock.method(PiFlowAttachment.prototype, "storeBeforeFirstWrite", function (store) {
+				return beforeFirstWrite.call(this, async () => {
+					// The prompt has reached its first commit, but has not decided to store yet.
+					await wait();
+					await store();
+				});
+			});
+		}
+		const { root, session, service, requests } = await fixture(t, { retainInputs: true });
+		const { scope } = service.branch();
+		// Closing aborts the session, which cancels a prompt that has not started its turn.
+		const dispositions = [];
+		const prompt = session.prompt("first prompt during close", {
+			preflightResult: (disposition) => dispositions.push(disposition),
+		});
+		let closing;
+		try {
+			await Promise.race([entered.promise, prompt]);
+			assert.equal(service.stored, false);
+			closing = service.close();
+		} finally {
+			release.resolve();
+			await Promise.all([prompt, closing]);
+		}
+		assert.deepEqual(dispositions, ["aborted"]);
+		assert.deepEqual(requests, []);
+		await durableFirstSave(
+			root,
+			session.sessionManager,
+			scope,
+			promptFirst ? fullyStored : { marker: false, registry: false, branch: false },
+		);
+	});
 }
 
 test("a second service cannot replace a live navigation guard or leak its registry lease", async (t) => {

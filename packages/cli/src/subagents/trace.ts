@@ -30,9 +30,11 @@ export interface TracePage {
 	totalBytes: number;
 	notice?: string;
 }
-const SCAN_BYTES = 8 * 1024 * 1024;
-const RESPONSE_BYTES = 46_000;
-const RECORD_BYTES = 24_000;
+export const TRACE_SCAN_BYTES = 8 * 1024 * 1024;
+export const TRACE_RESPONSE_BYTES = 46_000;
+export const TRACE_RECORD_BYTES = 24_000;
+export const TRACE_DEFAULT_LIMIT = 20;
+export const TRACE_MAX_LIMIT = 100;
 
 function textContent(content: unknown): string {
 	if (typeof content === "string") return content;
@@ -96,7 +98,7 @@ function matches(record: TraceRecord, options: TraceQuery): boolean {
 }
 function bounded(record: TraceRecord): TraceRecord {
 	const json = JSON.stringify(record);
-	if (Buffer.byteLength(json) <= RECORD_BYTES) return record;
+	if (Buffer.byteLength(json) <= TRACE_RECORD_BYTES) return record;
 	// Preserve routing fields even when a large arguments/result object needs a preview.
 	const bytes = Buffer.from(json);
 	let end = 16_000;
@@ -113,7 +115,7 @@ function bounded(record: TraceRecord): TraceRecord {
 		truncated: true,
 		preview: bytes.subarray(0, end).toString("utf8"),
 	};
-	while (Buffer.byteLength(JSON.stringify(preview)) > RECORD_BYTES) {
+	while (Buffer.byteLength(JSON.stringify(preview)) > TRACE_RECORD_BYTES) {
 		end = Math.floor(end / 2);
 		while ((bytes[end] & 0xc0) === 0x80) end--;
 		preview.preview = bytes.subarray(0, end).toString("utf8");
@@ -127,10 +129,10 @@ export async function readSessionTrace(
 	options: TraceQuery = {},
 	catalog: CatalogBundle = defaultCatalog(),
 ): Promise<TracePage> {
-	const { offset = 0, limit = 20 } = options;
+	const { offset = 0, limit = TRACE_DEFAULT_LIMIT } = options;
 	const msg = (id: CatalogMessageId, args?: Readonly<Record<string, string | number>>) =>
 		catalogText(catalog, id, args);
-	if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 1 || limit > 100)
+	if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 1 || limit > TRACE_MAX_LIMIT)
 		throw new Error(msg(CatalogMessageId.subagentTraceBounds));
 	if (options.kind !== undefined && !["all", "messages", "tools", "errors", "compaction"].includes(options.kind))
 		throw new Error(msg(CatalogMessageId.subagentTraceKind));
@@ -160,8 +162,8 @@ export async function readSessionTrace(
 			totalBytes: stat.size,
 			...(notice ? { notice } : {}),
 		});
-		while (position < stat.size && position - offset < SCAN_BYTES) {
-			const chunk = Buffer.alloc(Math.min(64 * 1024, stat.size - position, SCAN_BYTES - (position - offset)));
+		while (position < stat.size && position - offset < TRACE_SCAN_BYTES) {
+			const chunk = Buffer.alloc(Math.min(64 * 1024, stat.size - position, TRACE_SCAN_BYTES - (position - offset)));
 			const { bytesRead } = await file.read(chunk, 0, chunk.length, position);
 			if (!bytesRead) break;
 			position += bytesRead;
@@ -181,7 +183,7 @@ export async function readSessionTrace(
 				if (record && matches(record, options)) {
 					const value = bounded(record);
 					const size = Buffer.byteLength(JSON.stringify(value));
-					if (records.length && bytes + size > RESPONSE_BYTES)
+					if (records.length && bytes + size > TRACE_RESPONSE_BYTES)
 						return page(lineStart, "Response limit reached. Continue with nextOffset.");
 					records.push(value);
 					bytes += size;

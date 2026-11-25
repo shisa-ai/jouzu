@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createSessionUiExtension, WorkDashboardController } from "../dist/index.js";
-import { dashboardAvailableRows } from "../dist/work-dashboard-height.js";
+import { dashboardAvailableRows, dockRows } from "../dist/work-dashboard-height.js";
 
 const block = (rows) => ({ render: () => Array(rows).fill(""), invalidate() {} });
 
@@ -51,10 +51,13 @@ test("dock measurement reserves native widgets, multiline editor, status and foo
 		],
 	};
 	assert.equal(dashboardAvailableRows(tui, dashboard, 80), 8);
+	assert.equal(dockRows(tui, 80, dashboard), 16, "every dock component except the excluded widget");
+	assert.equal(dockRows(tui, 80), undefined, "a component that fails to render fails closed");
 	editorRows = 20;
 	assert.equal(dashboardAvailableRows(tui, dashboard, 80), 0);
 	tui.children.pop();
 	assert.equal(dashboardAvailableRows(tui, dashboard, 80), 0);
+	assert.equal(dockRows(tui, 80), undefined, "an unknown layout is not measured");
 });
 test("dashboard registers once per attachment above the editor-hosted Session Line and tree changes do not move it", async () => {
 	const handlers = new Map();

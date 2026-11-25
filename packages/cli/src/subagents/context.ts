@@ -1,7 +1,7 @@
 import type { SessionEntry, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
-import { readSessionTrace, type TraceQuery } from "./trace.js";
+import { readSessionTrace, TRACE_MAX_LIMIT, type TraceQuery } from "./trace.js";
 
 /** The catalog ID the parent_context tool label reads its display text from. */
 const PARENT_CONTEXT_LABEL_ID = "jouzu.cli.tool.parentContext.label";
@@ -146,7 +146,7 @@ export function parentContextTool(path: string, catalog: CatalogBundle = default
 				query: { type: "string" },
 				entryId: { type: "string" },
 				offset: { type: "integer", minimum: 0 },
-				limit: { type: "integer", minimum: 1, maximum: 100 },
+				limit: { type: "integer", minimum: 1, maximum: TRACE_MAX_LIMIT },
 				kind: { type: "string", enum: ["all", "messages", "tools", "errors", "compaction"] },
 			},
 			additionalProperties: false,

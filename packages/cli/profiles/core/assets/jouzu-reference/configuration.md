@@ -1,6 +1,6 @@
 # Configuration
 
-`jz doctor --json` is read-only: it reports resolved paths, language sources, profile and credential presence, using cached catalogs. Exit 1 means a reported problem; its JSON schema is experimental.
+`jz doctor --json` is read-only: it reports resolved paths, language sources, profile and credential presence, using cached catalogs. Exit 1 means at least one issue has severity `problem`; warnings alone exit 0. Its JSON schema is experimental.
 
 ## Roots and files
 
@@ -9,7 +9,7 @@
 | Platform | Configuration | State | Cache |
 | --- | --- | --- | --- |
 | Linux | `${XDG_CONFIG_HOME:-~/.config}/jouzu` | `${XDG_STATE_HOME:-~/.local/state}/jouzu` | `${XDG_CACHE_HOME:-~/.cache}/jouzu` |
-| macOS | `~/Library/Application Support/Jouzu` | Configuration + `/state` | `~/Library/Caches/Jouzu` |
+| macOS | `~/Library/Application Support/Jouzu` | `~/Library/Application Support/Jouzu/state` | `~/Library/Caches/Jouzu` |
 | Windows CLI | `%APPDATA%\Jouzu` | `%LOCALAPPDATA%\Jouzu\state` | `%LOCALAPPDATA%\Jouzu\cache` |
 
 The Windows launcher defaults to `%LOCALAPPDATA%\Shisa.ai\Jouzu\data` as its home unless overridden. Prefer doctor over assuming platform defaults.
@@ -28,9 +28,16 @@ Relative to the configuration root:
 | `context-policy.json` | Context ceiling |
 | `agents.json` | Workflow definitions, concurrency and writer policy |
 | `agent/mcp.json` | User MCP servers; `/reload` after edits |
+| `agent/APPEND_SYSTEM.md` | Extra system-prompt text; the `ja` profile manages it |
+| `session-labels.json` | Automatic session names (`/labels`) |
+| `dashboard-policy.json` | Dashboard setting |
+| `agent/user-input-adapters.json` | Extensions allowed to submit human input; never add a grant implicitly |
+| `agent/pi-vcc-config.json` | History recall and compaction settings |
+| `agent/trust.json` | Project folders trusted to load `.pi` resources |
+| `agent/models-store.json`, `agent/crashes.json` | Model catalog cache and crash log |
 | `agent/skills/`, `agent/prompts/`, `agent/extensions/`, `agent/themes/` | Resources |
 
-Trusted project `.pi` resources and shared `~/.agents/skills` are separate. Do not substitute stock Pi roots. First-run Pi import offers only `models.json` and `auth.json`, separately with confirmation, without replacing existing files.
+Jouzu runs on the Pi coding agent but keeps its own roots; do not use stock Pi's `~/.pi/agent`. A project's `.pi/` settings, MCP servers, extensions, skills, prompts and themes load only after the user trusts that folder. Shared `~/.agents/skills` are separate. First-run Pi import offers only `models.json` and `auth.json`, separately with confirmation, without replacing existing files.
 
 ## Language
 

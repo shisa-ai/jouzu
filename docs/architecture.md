@@ -40,6 +40,8 @@ Runtime modules composed by main-cli.ts:
   ├─ work-dashboard-sources.ts  automatic-work dashboard adapters
   ├─ doctor.ts           diagnostics (read-only), typed report plus text renderer
   ├─ presentation.ts     startup presentation extension
+  ├─ startup-panel.ts    shared rows under the startup banner
+  ├─ startup-sessions.ts recent sessions under the banner and `/resume <number>`
   ├─ palette.ts          floating/replacement Palette surface host
   ├─ model-picker*.ts    Models view, ranking, and private picker state
   ├─ command-report.ts   shared styling for doctor/catalog/keybindings/profile text output
@@ -100,6 +102,10 @@ released by `state-lock.ts`, the state-lock primitive used by the
 updater, profile, Pi-import, keybinding, model-picker, and catalog operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and
 recovers a dead owner's or owner-unknown lock after the stale threshold.
+Startup profile convergence is the exception to an immediate refusal: when another
+live process holds `profile.lock`, a start waits up to 15 seconds, re-planning as it
+waits. It continues as soon as the profile is converged or the lock is free, and
+otherwise exits reporting that another profile operation is in progress.
 
 A subagent session's `owner.sqlite` and each workspace-writer
 `<digest>.sqlite`, which the `serialize` writer policy takes, use

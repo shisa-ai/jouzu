@@ -167,9 +167,17 @@ Use `subagent` with `op: "trace"` to inspect saved conversation entries. Supply 
 
 `kind` accepts `all`, `messages`, `tools`, `errors`, or `compaction`. `query` is a case-insensitive literal search. Results include entry IDs, text, tool-call arguments and linked results, and compaction summaries; thinking blocks and images are excluded. The trace reads the saved file without migrating or rewriting it and can include entries from other branches of that session.
 
-Each call scans at most 8 MiB and returns at most 100 records with a response bounded to 48 KB. Large records contain a UTF-8-safe preview. Continue with `nextOffset`, a JSONL byte cursor, using the same filters.
+Each call scans at most 8 MiB and returns at most 100 records (default 20) with a response bounded to 46 KB. Large records contain a UTF-8-safe preview. Continue with `nextOffset`, a JSONL byte cursor, using the same filters.
 
 A partial last line returns a retry cursor; malformed complete lines report an error. A single entry larger than the scan budget may require direct file inspection. Trace remains available when subagents are disabled and does not acknowledge completion notifications; use `read` or the delivered batch's acknowledgement instead.
+
+In the agent's `bash` and `powershell` tools, `PI_SESSION_FILE` names the current conversation file and `PI_SESSION_ID` its session ID. `PI_SESSION_FILE` is unset when the session is not saved. Other saved files are under Jouzu's state directory: `jz doctor --json` reports it in its `fields` list, in the entry whose `id` is `paths.stateDir`. Parent conversations are saved in its `sessions/` folder as `<UTC timestamp>_<session-id>.jsonl`, unless Jouzu was launched with `--session` or `--session-dir`.
+
+The child runs of one parent session share `subagents/<parent-digest>/`. Each run has a `<run-id>/` folder that holds `run.json` (the run record) and `events.jsonl` (its execution output). The child conversation file is in the folder of the run that started it, and a resumed run continues that file; `op: "list"` reports its path as `sessionFile`. A launch with parent lookup on (`parentContext`, which defaults to true for ordinary roles), or with `fork` or `splice` context, also saves a parent snapshot as `parent-context.jsonl`. The child gets the `parent_context` tool only when parent lookup is on, and a resumed run keeps the original snapshot and setting. `/btw` side conversations are saved as runs too, but `subagent` does not list, read, or trace them.
+
+Flow-control state is in a `flow/` folder: at the state root for the parent session, and beside the child conversation for a child. It holds one folder per session branch, with `schema.json`, an `owner.sqlite` lock, and a journal under that folder's own `sessions/flow/`. Beside the branch folders, `session-registry-v1/` holds one folder per session that lists its branches. A session's flow folders are created when flow control first records something for it. Folder names are digests of 32 lowercase hexadecimal characters; find a child's folder from its `sessionFile` instead of computing the digest.
+
+Child runs saved before v0.1.15 are in a `subagents/` folder whose name is a 64-character digest. `subagent` cannot list, read, or trace them; read those files directly. When a session branch is next opened, Jouzu renames its flow folder from the 64-character name to the shorter one if it can.
 
 ## Assignment guidance
 

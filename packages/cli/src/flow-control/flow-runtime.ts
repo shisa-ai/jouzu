@@ -18,6 +18,7 @@ import { createScheduleWaitExtension } from "./schedule-waits.js";
 import { createSubagentObservationExtension } from "./subagent-observation-extension.js";
 import { createSubagentWaitExtension } from "./subagent-waits.js";
 import { createTaskControllerExtension } from "./task-extension.js";
+import { createSessionResume } from "./session-resume.js";
 import type { FlowTask } from "./task-producer.js";
 import { createFlowWaitExtension } from "./wait-tools.js";
 
@@ -56,6 +57,7 @@ export interface FlowControlRuntimeOptions {
 }
 
 export interface FlowControlRuntime {
+	resume: ReturnType<typeof createSessionResume>;
 	/** Pass to `pi.main` so the ingress attaches at the session creation boundary. */
 	flowIngressFactory(context: { cwd: string; sessionManager: SessionManager }): Promise<PiSessionFlowIngress>;
 	/** Register with `pi.main` in this order; each binds to the same ingress. */
@@ -83,6 +85,7 @@ export interface FlowControlRuntime {
 export function createFlowControlRuntime(options: FlowControlRuntimeOptions): FlowControlRuntime {
 	const limits = { ...defaultFlowControlLimits, ...options.limits };
 	const catalog = options.catalog ?? defaultCatalog();
+	const resume = createSessionResume(options.root, catalog);
 	let attached: PiSessionFlowIngress | undefined;
 	const ingress = () => {
 		if (!attached) throw new FlowLedgerError("stale", "Flow control ingress is not attached.");
@@ -183,6 +186,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				captureFlowStatusContext(submissions, requests, [], []),
 			);
 		},
+		resume,
 		async flowIngressFactory({ cwd, sessionManager }) {
 			// The host replaces the session for resume, fork, rewind, and session switching, and calls
 			// this again for each one after tearing the previous session down. One ingress serves one
@@ -198,6 +202,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 			}
 			attached = new PiSessionFlowIngress({
 				root: options.root,
+				takeRegistryOwnership: () => resume.take(sessionManager.getSessionId()),
 				agentDir: options.agentDir,
 				// Only valid here: extensions cannot replace the stream before the SDK boundary.
 				qualifyProviderRoute: true,

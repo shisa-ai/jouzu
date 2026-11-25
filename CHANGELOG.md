@@ -4,6 +4,7 @@
 
 ### Added
 
+- List up to three recent sessions from the current folder, and other folders with sessions, under the startup banner. `/resume <number>` opens a listed session and `/resume <text>` opens the picker with that search. Set `JOUZU_STARTUP_SESSIONS` to `project` or `off` to narrow or hide the list. See [Configuration](docs/configuration.md#recent-sessions-at-startup).
 - Publish read-only TextGuard and flow-control state as JSON status (`jouzu-textguard`, `jouzu-flow`) to RPC clients, and to ACP hosts that opt in, as `_jouzu/status` notifications: mode, items waiting for review, holds with stable reason codes, and uncertain attempts. See [TextGuard](docs/textguard.md#notifications), [Flow control](docs/flow-control.md#rpc-and-acp-clients), and [ACP](docs/acp.md#jouzu-status).
 - Report a provider's rejection of an image in the conversation and add `/images omit` and `/images restore`, so a session whose image a provider refuses can continue. RPC clients receive the state as `jouzu-images` status JSON. See [Models](docs/models.md#images-a-provider-rejects).
 
@@ -16,6 +17,10 @@
 - Send TextGuard messages to RPC and ACP clients as notifications instead of stderr.
 - Announce a flow-control recovery hold once per hold, and never after it was released.
 - Make Stop final. A prompt stopped before its turn starts is cancelled instead of running later; RPC answers it with the disposition `aborted`, and ACP reports `cancelled`. A model request the Stop reaches before the provider receives it no longer holds later messages for a recovery decision. See [Flow control](docs/flow-control.md#stopping-a-turn).
+- Keep Flow state usable when the Jouzu home folder moves or is reached through another absolute path. See [Flow control](docs/flow-control.md#branches-and-resuming).
+- Wait for another live process that is applying the profile at startup instead of exiting with a misleading "profile state is unreadable" error.
+- Leave nothing behind for a session that is started and closed without a message. Flow state and the session file are written the first time Flow records something; background-task state and the child-agent owner lock are created on first use. See [Flow control](docs/flow-control.md#branches-and-resuming).
+- Stop a runtime that exits during a background model catalog refresh from delaying the next start by about 30 seconds. On exit, Jouzu waits for catalog saves that are already running and starts no new ones.
 
 ## 0.2.6 - 2026-11-16
 

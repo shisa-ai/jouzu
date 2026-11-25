@@ -68,6 +68,15 @@ export function backgroundWidgetPredecessor(source) {
 	);
 }
 
+/** The store before a session with no background state stopped creating its file. */
+export function backgroundStorePredecessor(source) {
+	return replace(
+		source,
+		"\t\t// A session that never ran a background task has nothing to record. Creating its\n\t\t// store would leave files behind for every session that is opened and closed unused.\n\t\tif (!priorState() && deps.tasks().length === 0 && deps.results().length === 0) return;\n",
+		"",
+	);
+}
+
 /** Reconstruct each supported partial patch, preserving all fork-owned source bytes. */
 export function multiloopPredecessors(source) {
 	source = replace(source, "      if (flow.retained?.(lane)) continue;\n", "");

@@ -71,7 +71,7 @@ function interactiveContext() {
 	return { calls, ctx };
 }
 
-function installExtension(catalog) {
+function installExtension(catalog, startupSections) {
 	const handlers = new Map();
 	const commands = new Map();
 	const tools = new Map();
@@ -87,6 +87,7 @@ function installExtension(catalog) {
 	createJouzuPresentationExtension(metadata, profile, {
 		colorMode: "none",
 		...(catalog ? { catalog } : {}),
+		...(startupSections ? { startupSections } : {}),
 	}).factory(pi);
 	return { handlers, commands, tools, sent };
 }
@@ -377,6 +378,56 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 	]);
 	assert.equal(component.render(12)[0], "J O U Z U");
 	for (const line of component.render(12)) assert.ok(line.length <= 12, line);
+});
+
+test("a fresh launch header shows startup sections in the rows between the banner and the prompt", async () => {
+	const events = [];
+	const section = {
+		start: (context) => events.push(["start", context.cwd, typeof context.requestRender]),
+		freeze: () => events.push(["freeze"]),
+		reset: () => events.push(["reset"]),
+		render: (width, rows) => {
+			events.push(["render", width, rows]);
+			return ["", "Recent sessions"];
+		},
+	};
+	const { handlers } = installExtension(undefined, [section]);
+	const { calls, ctx } = interactiveContext();
+	const block = (count) => ({ render: () => Array(count).fill("") });
+	let redraws = 0;
+	const tui = {
+		terminal: { rows: 24 },
+		children: [block(0), block(0), block(0), { children: [] }, block(4), block(0), block(1)],
+		requestRender: () => {
+			redraws += 1;
+		},
+	};
+	await handlers.get("session_start")({ reason: "startup" }, ctx);
+	const header = calls.header[0](tui, identityTheme);
+	assert.deepEqual(header.render(80).slice(4), ["", "Recent sessions"]);
+	// 24 rows less a five-row dock, the four banner lines, and four rows kept free.
+	assert.deepEqual(events, [
+		["start", "/work/日本語 project", "function"],
+		["render", 80, 11],
+	]);
+	await handlers.get("input")({ type: "input", text: "hello", source: "interactive" }, ctx);
+	assert.deepEqual(events.at(-1), ["freeze"]);
+
+	events.length = 0;
+	await handlers.get("session_start")({ reason: "reload" }, ctx);
+	assert.deepEqual(calls.header[1](tui, identityTheme).render(80).slice(4), ["", "Recent sessions"]);
+	assert.ok(!events.some(([name]) => name === "start" || name === "reset"), "a reload keeps the launch blocks");
+
+	events.length = 0;
+	await handlers.get("session_start")({ reason: "resume" }, ctx);
+	assert.deepEqual(events, [["reset"]]);
+	assert.equal(calls.header[2](tui, identityTheme).render(80).length, 4, "a resumed session shows the banner alone");
+	assert.equal(redraws, 0);
+});
+
+test("without startup sections the header registers no input handler", () => {
+	const { handlers } = installExtension();
+	assert.equal(handlers.has("input"), false);
 });
 
 test("renders the banner labels from the catalog without changing the decoration", () => {

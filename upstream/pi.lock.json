@@ -23,7 +23,7 @@
 		},
 		{
 			"path": "upstream/pi-content-policy/patch.lock.json",
-			"sha256": "3b72faa4eee814c7c09c42e187a310f410341275dcd5d25bbe04145b324e69e0"
+			"sha256": "31ac37a4b816fb92faf74c0c2bb45a60021f49835fc384db4542445be8082748"
 		},
 		{
 			"path": "upstream/pi-flow-control/patch.lock.json",
@@ -43,7 +43,7 @@
 		},
 		{
 			"path": "upstream/background-flow/patch.lock.json",
-			"sha256": "701ffe0a79ad2dd45dbc1a4e3b1a6cddc54a11076916cf7f41d2deee233dfc80"
+			"sha256": "bd742e867b53a18506d40d19597918961792486ea995ad63f71f8176414978ab"
 		},
 		{
 			"path": "upstream/multiloop-wait-skill/patch.lock.json",

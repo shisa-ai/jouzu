@@ -1,6 +1,6 @@
 # Profiles and history
 
-Use `jz doctor` for roots; see [Configuration](configuration.md).
+Use `jz doctor` for roots; see [Configuration](configuration.md). File locations are in [Saved files](saved-files.md).
 
 ## Profiles
 
@@ -17,33 +17,22 @@ Every launch reconciles managed assets. User edits cause conflicts (exit 3), not
 
 Skills load from their listed locations on demand; users can invoke `/skill:jouzu-reference`. Editing a managed skill can block later reconciliation.
 
-## State map
-
-Relative to the resolved state root:
-
-| Path | Contents |
-| --- | --- |
-| `profile-choice.json`, `profile-state.json` | Profile selection and managed asset records |
-| `backups/` | Profile application backups |
-| `model-picker.json` | Favorites, recents, defaults and thinking choices |
-| `localization-session.json` | Session-keyed language overrides |
-| `sessions/` | Default parent conversation JSONL files; launch overrides can change location |
-| `subagents/` | Child records, event output and conversation files, grouped by parent identity/run ID |
-
-Use session/run metadata for the exact file, or a bounded listing of the reported root. Titles are not filenames. Child `events.jsonl` is execution output, separate from the saved conversation JSONL. Child history has no automatic deletion. Do not rewrite runtime state or restore the whole directory to undo one setting.
-
 ## History access
 
 | Need | Tool or user command |
 | --- | --- |
-| Current-session decisions, including compacted entries | `vcc_recall` query/range/expand |
-| Parent saved messages/tools/errors | `subagent` `op: "trace"`, omit run `id` |
-| Child conversation | `subagent` `op: "trace"` with returned run `id` |
+| This session's earlier decisions, including compacted entries | `vcc_recall` query/range/expand; this session only |
+| Parent saved messages/tools/errors | `subagent` `op: "trace"`, omit run `id`; reads the saved conversation file |
+| Child conversation | `subagent` `op: "trace"` with the run `id` |
 | Child execution output and completion | `subagent` `op: "read"`; follow `nextOffset` |
-| Run IDs and saved paths | `subagent` `op: "list"` and run details |
+| Parent snapshot, from inside a child | `parent_context`, if the launch enabled parent lookup; same filters and bounds as trace |
+| Run IDs and saved paths | `subagent` `op: "list"`, 20 runs per call, follow `nextOffset`: `sessionFile`, `childSessionId`, `previousRunId` |
 | Live session identity | User `/status` or `/session` |
+| Reopen an earlier session | User `/resume` to browse or search; launch `jz --session <path or ID>` |
 | Active branch in terminal history | User `/scrollback` while agent/shell work is idle |
 
-Use only exposed tools. Recall is not cross-session search. Trace can include other branches; it excludes thinking/images and does not rewrite history. Filters: `kind`, literal case-insensitive `query`, exact `entryId`. Follow byte `nextOffset` with unchanged filters; calls are bounded to 8 MiB scanned, 100 records, 48 KB returned. Trace does not acknowledge child completion; read terminal output separately.
+Use only tools declared in this session. Recall does not search other sessions. Trace can include other branches; it excludes thinking/images and does not rewrite history. Filters: `kind`, literal case-insensitive `query`, exact `entryId` (each trace record carries one). Follow byte `nextOffset` with unchanged filters; calls scan at most 8 MiB, return at most 100 records (default 20), and bound the response to 46 KB.
+
+`previousRunId` names the run a resume continued; `childSessionId` is the child conversation's session ID. Trace does not acknowledge child completion. Read all terminal output with `op: "read"`, or call `{"op":"acknowledge","batchId":"<delivered batch ID>"}` alone when no reply is needed.
 
 `compact_context` requests compaction after the run settles; recall retrieves history but does not compact. `/scrollback` cannot recover output truncated before storage, and exported text stays in terminal history. Transcripts and events may contain secrets: inspect bounded excerpts and redact before sharing.

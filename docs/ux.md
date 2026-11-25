@@ -11,7 +11,7 @@ The guide states intended behavior. Tests encode it. A view that disagrees with 
 | Palette (Models, Workflow, Settings / Catalogs) | `packages/cli/src/palette.ts`, `model-picker.ts`, `workflow.ts`, `catalog-settings.ts`, `shisa-link/account.ts` | Floating overlay or in-place replacement | [`palette-ux.md`](palette-ux.md) |
 | Help | `packages/cli/src/help.ts` | Floating overlay | This guide; see [Known deviations](#known-deviations) |
 | Session Frame (prompt frame, session line, status bar) | `packages/session-ui/src` | Persistent, around Pi's editor | This guide |
-| Startup header | `packages/cli/src/presentation.ts` | One-time output | This guide |
+| Startup header and recent sessions | `packages/cli/src/presentation.ts`, `startup-panel.ts`, `startup-sessions.ts` | One-time output | This guide |
 | First-run prompts (interface and response language, Pi import, Shisa account) | `language-choice.ts`, `pi-import.ts`, `shisa-link/onboarding.ts` | Line-oriented `readline` | This guide, [Non-interactive and degraded modes](#non-interactive-and-degraded-modes) |
 | Command output (`doctor`, `catalog`, `keybindings`, `profile`, `self-update`) | `doctor.ts`, `catalog-command.ts`, `keybindings.ts`, `profile-manager.ts`, `updater.ts` | Text and `--json` | This guide, [Command output](#command-output), [Messages](#messages) |
 
@@ -120,6 +120,22 @@ finished subagent or job result that has not reached the model yet.
 In the TUI, labels use the theme's muted color and values its text color;
 warnings use the warning color. The `!` and `·` markers carry their meaning
 without color. RPC and print modes produce the same text without styling.
+
+## Resume sessions
+
+Use `/resume` in a session or `jz --resume` at startup to browse saved sessions.
+`/resume <text>` opens the picker with that search. A launch that starts a new
+session lists up to three recent sessions under the banner, numbered from 1;
+`/resume <number>` opens a listed session directly. See
+[Recent sessions at startup](configuration.md#recent-sessions-at-startup).
+An **In use** label means another attachment holds the session. If the session
+is still in use when you select it, choose **Fork into a new session** to
+continue from the saved transcript under a new session ID. The original session
+and its pending work stay with the existing attachment. **Cancel** leaves the
+original untouched and, from `/resume`, returns you to your current session.
+
+Outside an interactive terminal, use `jz --fork <session-id-or-path>` to request
+a copy explicitly.
 
 ## Flow recovery
 

@@ -55,6 +55,7 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-reference/references/controls.md",
 			"skills/jouzu-reference/references/history.md",
 			"skills/jouzu-reference/references/models.md",
+			"skills/jouzu-reference/references/saved-files.md",
 			"skills/jouzu-reference/SKILL.md",
 			"skills/jouzu-source-check/SKILL.md",
 		],
@@ -72,12 +73,13 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-reference/references/controls.md",
 			"skills/jouzu-reference/references/history.md",
 			"skills/jouzu-reference/references/models.md",
+			"skills/jouzu-reference/references/saved-files.md",
 			"skills/jouzu-reference/SKILL.md",
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "494ebad0eac431b00a038f7bae60c0c69f46e36a4969aea28d162548d5e53c64");
-	assert.equal(ja.manifestSha256, "6c804341cc44926cc4b5b844c8c63c405ba574acc9f1adb5bddfa9aca87b57bf");
+	assert.equal(core.manifestSha256, "74751dad27c1c6f5c6cf672a5694720686d257b373a8e08eb12a8c3dbfba2ffe");
+	assert.equal(ja.manifestSha256, "0f9cad0be03efbbf91577b825e2df92fc0aca6e5f017f1afe4d8e945511bd3f4");
 });
 
 test("reference skill has compact entry and offline links in both profiles", () => {
@@ -88,7 +90,7 @@ test("reference skill has compact entry and offline links in both profiles", () 
 		assert.match(entry, /^---\nname: jouzu-reference\n/);
 		assert.ok(entry.length < 2200, "keep the entry point compact; load detail on demand");
 		const links = [...entry.matchAll(/\]\((references\/[a-z-]+\.md)\)/g)].map((match) => match[1]);
-		assert.equal(links.length, 4);
+		assert.equal(links.length, 5);
 		for (const link of links) {
 			const asset = assets.find((candidate) => candidate.target === `${base}${link}`);
 			assert.ok(asset, `${id}: missing offline reference ${link}`);

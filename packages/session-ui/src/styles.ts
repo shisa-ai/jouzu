@@ -68,7 +68,16 @@ export type SessionUiStyleRole =
 	| "palette.message.error"
 	| "palette.message.warning"
 	| "palette.message.info"
-	| "palette.hint";
+	| "palette.hint"
+	| "startup.heading"
+	| "startup.workspace"
+	| "startup.index"
+	| "startup.title"
+	| "startup.age"
+	| "startup.badge"
+	| "startup.label"
+	| "startup.separator"
+	| "startup.hint";
 
 type ThemeColor = Parameters<Theme["fg"]>[0];
 
@@ -183,6 +192,18 @@ function sessionUiStyleScheme(brand: SessionUiBrandColors): SessionUiStyleScheme
 		"palette.message.warning": theme("warning"),
 		"palette.message.info": theme("muted"),
 		"palette.hint": theme("dim"),
+		// Recent sessions under the startup banner: the heading matches Palette
+		// headings, project names match the status bar workspace, and ages and
+		// hints stay as quiet as the resume picker's and the banner's.
+		"startup.heading": brand.blue,
+		"startup.workspace": brand.workspace,
+		"startup.index": theme("accent"),
+		"startup.title": theme("text"),
+		"startup.age": theme("dim"),
+		"startup.badge": theme("warning"),
+		"startup.label": theme("muted"),
+		"startup.separator": theme("borderMuted"),
+		"startup.hint": theme("dim"),
 	});
 }
 

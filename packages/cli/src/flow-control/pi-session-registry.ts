@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { openLocalFlowSession } from "./local-storage.js";
+import { createDeferredJournal, type DeferredJournal } from "./journal-storage.js";
+import { materializeLocalFlowSession, openLocalFlowSession } from "./local-storage.js";
 import { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { BACKGROUND_CONTEXT, type Session, setValue, value } from "./scalar-storage.js";
@@ -66,13 +67,27 @@ const validPosition = (position: FlowBranchPosition) =>
 const samePosition = (a?: FlowBranchPosition, b?: FlowBranchPosition) =>
 	a?.entryId === b?.entryId && a?.entryHash === b?.entryHash && a?.memoryInstanceId === b?.memoryInstanceId;
 
+export function flowRegistryScope(root: string, sessionId: string) {
+	return { root: join(root, "session-registry-v1"), scope: { sessionId, branchId: "registry" } };
+}
+
 /** Session-wide writer reservation and branch identities in Pi storage. Reads grant no dispatch authority. */
 export class PiFlowSessionRegistry {
 	private initialized = false;
 	private constructor(
 		private readonly ownership: FlowOwnership,
 		private readonly session: Session,
+		private readonly deferred?: DeferredJournal,
 	) {}
+	/** Whether a session has registry storage under `root`. */
+	static exists(root: string, sessionId: string): boolean {
+		const target = flowRegistryScope(root, sessionId);
+		return FlowOwnership.exists(target.root, target.scope);
+	}
+	/**
+	 * Open the session's registry. With `deferred`, for a session that has nothing recorded yet,
+	 * the registry lives in memory and nothing is written until `materialize`.
+	 */
 	static async open(
 		root: string,
 		sessionId: string,
@@ -81,13 +96,22 @@ export class PiFlowSessionRegistry {
 			directory: string,
 			acceptedDirectories?: readonly string[],
 		) => Promise<Session> = openLocalFlowSession,
+		takeOwnership?: () => FlowOwnership | undefined,
+		deferred = false,
 	): Promise<PiFlowSessionRegistry> {
 		if (!leaf(initialLeafId)) throw new FlowLedgerError("identity", "Invalid initial transcript position.");
-		const ownership = FlowOwnership.acquire(join(root, "session-registry-v1"), { sessionId, branchId: "registry" });
+		const target = flowRegistryScope(root, sessionId);
+		const ownership =
+			takeOwnership?.() ??
+			(deferred
+				? FlowOwnership.reserve(target.root, target.scope)
+				: FlowOwnership.acquire(target.root, target.scope));
+		// Ownership taken from a resume reservation is already claimed, so its storage is not deferred.
+		const journal = ownership.claimedStorage ? undefined : createDeferredJournal();
 		let session: Session | undefined;
 		try {
-			session = await openSession(ownership.directory, ownership.sessionDirectories);
-			const registry = new PiFlowSessionRegistry(ownership, session);
+			session = journal ? journal.session : await openSession(ownership.directory, ownership.sessionDirectories);
+			const registry = new PiFlowSessionRegistry(ownership, session, journal);
 			await registry.transact((state) => ({ result: state, changed: false }), initialLeafId);
 			registry.initialized = true;
 			return registry;
@@ -232,8 +256,17 @@ export class PiFlowSessionRegistry {
 		});
 	}
 	/** Bind the initial branch to verified transcript metadata once. */
-	bindInitialPosition(expectedRevision: number, position: FlowBranchPosition): Promise<void> {
-		if (!validPosition(position))
+	/**
+	 * Bind the first branch to its marker. `enteredAtLeafId` moves the unbound branch's entry point to
+	 * the marker's parent, for a marker written after the session already recorded non-conversation
+	 * entries such as a model change.
+	 */
+	bindInitialPosition(
+		expectedRevision: number,
+		position: FlowBranchPosition,
+		enteredAtLeafId?: string | null,
+	): Promise<void> {
+		if (!validPosition(position) || (enteredAtLeafId !== undefined && !leaf(enteredAtLeafId)))
 			return Promise.reject(new FlowLedgerError("identity", "Invalid branch position evidence."));
 		return this.transact((state) => {
 			if (state.revision !== expectedRevision || state.transition || !neverNavigated(state))
@@ -242,6 +275,7 @@ export class PiFlowSessionRegistry {
 			if (branch.position && !samePosition(branch.position, position))
 				throw new FlowLedgerError("identity", "Initial branch position is already bound.");
 			const changed = !branch.position;
+			if (changed && enteredAtLeafId !== undefined) branch.enteredAtLeafId = enteredAtLeafId;
 			branch.position = structuredClone(position);
 			return { result: undefined, changed };
 		});
@@ -398,6 +432,31 @@ export class PiFlowSessionRegistry {
 		return { isolated, dropped };
 	}
 
+	/**
+	 * Adopt the marker of a session whose registry was never written: the first save wrote the marker
+	 * and stopped before the registry. A registry this new holds nothing to drop, so nothing is
+	 * isolated or reported. Returns false when the registry already holds state.
+	 */
+	adoptInitialMarker(branchId: string, enteredAtLeafId: string | null, position: FlowBranchPosition): Promise<boolean> {
+		if (!identity(branchId) || !leaf(enteredAtLeafId) || !validPosition(position))
+			return Promise.reject(new FlowLedgerError("identity", "Invalid registry rebuild evidence."));
+		return this.transact((state) => {
+			const only = state.branches[0];
+			if (
+				state.branches.length !== 1 ||
+				only.position ||
+				only.fromBranchId !== undefined ||
+				state.transition ||
+				state.retired ||
+				!neverNavigated(state)
+			)
+				return { result: false, changed: false };
+			state.branches = [{ id: branchId, enteredAtLeafId, position: structuredClone(position) }];
+			state.activeBranchId = branchId;
+			return { result: true, changed: true };
+		});
+	}
+
 	/** Write the state being discarded beside the live one, so a drop stays auditable. */
 	private async isolateRegistryState(state: FlowSessionRegistryState): Promise<string | undefined> {
 		if (!state.branches.length) return undefined;
@@ -481,6 +540,23 @@ export class PiFlowSessionRegistry {
 			state.activeBranchId = branchId;
 			delete state.transition;
 			return { result: { sessionId: state.sessionId, branchId }, changed: true };
+		});
+	}
+	/** Whether the registry is on disk. A deferred registry is in memory until `materialize`. */
+	get stored(): boolean {
+		return !this.deferred || this.deferred.materialized;
+	}
+	/** Take the registry's lock for a deferred registry, refusing one that another process recorded. */
+	claimStorage(): void {
+		if (this.deferred && !this.ownership.claimedStorage) this.ownership.claimNew();
+	}
+	/** Claim the registry directory and write the in-memory registry to it. */
+	materialize(): Promise<void> {
+		const journal = this.deferred;
+		if (!journal || journal.materialized) return Promise.resolve();
+		return this.ownership.run(async () => {
+			this.claimStorage();
+			await materializeLocalFlowSession(journal, this.ownership.directory);
 		});
 	}
 	/** Keep the session lease until branch writers and registry storage have closed. */

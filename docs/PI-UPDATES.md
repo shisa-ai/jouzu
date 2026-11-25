@@ -33,6 +33,7 @@ Review changes to:
 - custom editors, overlays, themes, width calculation, IME behavior, and no-color rendering;
 - extension lifecycle, provider registration, commands, tools, events, and project trust;
 - system prompt sections, section diffs and their update framing, and the `preamble` section override that `pi-content-policy` patches into `dist/core/system-prompt.js` (retire it when Pi accepts a preamble section);
+- `closeModelsStores`, which `pi-content-policy` adds to `dist/core/models-store.js` and exports from `dist/index.js`. Jouzu calls it when the runtime quits, so a catalog save still running at exit cannot leave `models-store.json.lock` behind (retire it when Pi's runtime disposal stops and waits for models store operations, including the RPC background catalog refresh);
 - session files, compaction, branch navigation, usage, and resume behavior;
 - provider catalogs, authentication, request serialization, routing, usage, and pricing; and
 - updater, package manager, Windows, RPC, JSON, and print-mode behavior.

@@ -6,7 +6,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { deferred, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
-import { PiFlowSessionRegistry } from "../dist/flow-control/pi-session-registry.js";
+import { FlowOwnership } from "../dist/flow-control/ownership.js";
+import { flowRegistryScope, PiFlowSessionRegistry } from "../dist/flow-control/pi-session-registry.js";
 import { BACKGROUND_CONTEXT, MemorySessionRepo, setValue, value } from "./fixtures/flow-storage.mjs";
 
 async function fixture(t) {
@@ -599,4 +600,18 @@ test("legacy single-parent retirement normalizes on read and validates as an arr
 		BACKGROUND_CONTEXT,
 	);
 	await assert.rejects(registry.currentScope(), { code: "schema" });
+});
+
+test("a registry opened with taken ownership is on disk at once, even for a session with nothing recorded", async (t) => {
+	const { root, cleanup } = await fixture(t);
+	const target = flowRegistryScope(root, "resumed");
+	const owner = FlowOwnership.acquire(target.root, target.scope);
+	const registry = await PiFlowSessionRegistry.open(root, "resumed", null, undefined, () => owner, true);
+	cleanup(() => registry.close());
+	assert.equal(registry.stored, true);
+	assert.equal(FlowOwnership.isBusy(target.root, target.scope), true, "the reservation's lock is kept");
+	const fresh = await PiFlowSessionRegistry.open(root, "fresh", null, undefined, undefined, true);
+	cleanup(() => fresh.close());
+	assert.equal(fresh.stored, false);
+	assert.equal(PiFlowSessionRegistry.exists(root, "fresh"), false);
 });
