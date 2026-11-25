@@ -37,9 +37,9 @@ const SESSIONS = [
 	session("/s/stop.jsonl", "/work/jouzu", "Integrate PR 73 Stop fix with simpler request recording", 3 * DAY),
 	session("/s/current.jsonl", "/work/jouzu", "The session this launch just created", 0),
 	session("/s/empty.jsonl", "/work/jouzu", "(no messages)", MINUTE, { messageCount: 0 }),
-	session("/s/dev.jsonl", "/work/jouzu-dev", "Planning", 40 * MINUTE),
-	session("/s/api.jsonl", "/work/shisa-api", "Rate limits", 2 * DAY),
-	session("/s/api-old.jsonl", "/clone/shisa-api", "Same folder name elsewhere", 4 * DAY),
+	session("/s/dev.jsonl", "/work/notes", "Planning", 40 * MINUTE),
+	session("/s/api.jsonl", "/work/api-server", "Rate limits", 2 * DAY),
+	session("/s/api-old.jsonl", "/clone/api-server", "Same folder name elsewhere", 4 * DAY),
 	session("/s/dots.jsonl", "/work/dotfiles", "tmux keys", 6 * DAY),
 ];
 
@@ -105,7 +105,7 @@ test("lists this project's newest sessions, then other project folders", async (
 		row(1, "Cache session metadata for resume pickers", "2h", "In use"),
 		row(2, "Offer a fork when a session is in use", "1d"),
 		row(3, "Integrate PR 73 Stop fix with simpler request recording", "3d"),
-		" Elsewhere  jouzu-dev 40m · shisa-api 2d · dotfiles 6d",
+		" Elsewhere  notes 40m · api-server 2d · dotfiles 6d",
 	]);
 });
 
@@ -130,8 +130,8 @@ test("styles each part with the shared roles and keeps meaning without color", a
 	const separator = paint("borderMuted", " · ");
 	assert.equal(
 		elsewhere,
-		`${paint("muted", " Elsewhere  ")}${brand("215;215;255", "jouzu-dev")} ${paint("dim", "40m")}${separator}` +
-			`${brand("215;215;255", "shisa-api")} ${paint("dim", "2d")}${separator}` +
+		`${paint("muted", " Elsewhere  ")}${brand("215;215;255", "notes")} ${paint("dim", "40m")}${separator}` +
+			`${brand("215;215;255", "api-server")} ${paint("dim", "2d")}${separator}` +
 			`${brand("215;215;255", "dotfiles")} ${paint("dim", "6d")}`,
 	);
 });
@@ -218,7 +218,7 @@ test("the project scope reads only this folder and leaves other projects out", a
 test("other projects alone show without a heading, and an empty history shows nothing", async () => {
 	const elsewhere = SESSIONS.filter((item) => item.cwd !== "/work/jouzu");
 	const { section } = await loaded({ listers: listers(elsewhere) });
-	assert.deepEqual(section.render(80, 10, plain), ["", " Elsewhere  jouzu-dev 40m · shisa-api 2d · dotfiles 6d"]);
+	assert.deepEqual(section.render(80, 10, plain), ["", " Elsewhere  notes 40m · api-server 2d · dotfiles 6d"]);
 	const empty = await loaded({ listers: listers([]) });
 	assert.deepEqual(empty.section.render(80, 10, plain), []);
 });
