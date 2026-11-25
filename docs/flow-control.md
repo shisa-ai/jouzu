@@ -184,6 +184,8 @@ receipts, waits, and running jobs. Continue with a new message after clearing it
 | Reopen a session after moving the Jouzu home folder | Continues with its flow state; storage is identified by its place inside the home, not by the absolute path |
 | Start a session and quit without sending a message | Nothing is saved. Flow control keeps a new session's state in memory and writes it, with the session file, the first time it records something, such as your first message |
 
+Flow state is saved in Jouzu's state directory. [Session traces](subagents.md#session-traces) lists its folders.
+
 Extension commands can await `ctx.navigateTree()` with flow control on or off. Navigation requires an idle session with no queued input or other active host operations. A busy refusal leaves the current branch usable. Wait for navigation to finish before starting another host operation, including while the old branch attachment closes and the new one opens.
 
 A command continues to own host work on the selected branch until its callback ends; independent navigation remains busy during that continuation. Retained input captured before navigation stays bound to its original branch. A callback that outlives the command cannot use the command's old attachment after navigation.
