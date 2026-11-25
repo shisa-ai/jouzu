@@ -81,7 +81,9 @@ export async function applyBackgroundFlow(packageRoot, checkOnly = false) {
 		throw error;
 	});
 	if (installedStore !== store) {
-		if (checkOnly || installedStore !== undefined) throw new Error("Background flow installed store mismatch.");
+		// An install from the previous store revision upgrades in place; anything else is unexpected.
+		if (checkOnly || (installedStore !== undefined && sha(installedStore) !== lock.previousStore))
+			throw new Error("Background flow installed store mismatch.");
 		writes.push([storeDestination, store]);
 	}
 	for (const [path, text] of writes) await writeFile(path, text);

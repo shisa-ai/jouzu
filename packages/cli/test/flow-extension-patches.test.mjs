@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { paths } from "../../../scripts/background-flow-transform.mjs";
 import { transformBackgroundResources } from "../../../scripts/background-resource-transform.mjs";
 import {
+	backgroundStorePredecessor,
 	backgroundWidgetPredecessor,
 	extensionPatchFixture,
 	multiloopPredecessors,
@@ -81,6 +82,24 @@ test("background widget guard upgrades only the pinned candidate predecessor", a
 	assert.equal(await readFile(path, "utf8"), previous);
 	await writeFile(path, `${previous}\n`);
 	await assert.rejects(f.apply(f.packageRoot), /hash mismatch/);
+	await writeFile(path, previous);
+	assert.equal(await f.apply(f.packageRoot), 1);
+	assert.equal(await readFile(path, "utf8"), final);
+	assert.equal(await f.apply(f.packageRoot, true), 0);
+});
+
+test("background store upgrades only the pinned previous store", async (t) => {
+	const f = await extensionPatchFixture(t, "background", process.env.JOUZU_BACKGROUND_SOURCE);
+	await f.apply(f.packageRoot);
+	const path = join(f.packageRoot, "extensions/jouzu-store.ts");
+	const final = await readFile(path, "utf8");
+	const previous = backgroundStorePredecessor(final);
+	assert.equal(sha256(previous), f.lock.previousStore);
+	await writeFile(path, previous);
+	await assert.rejects(f.apply(f.packageRoot, true), /installed store mismatch/);
+	assert.equal(await readFile(path, "utf8"), previous);
+	await writeFile(path, `${previous}\n`);
+	await assert.rejects(f.apply(f.packageRoot), /installed store mismatch/);
 	await writeFile(path, previous);
 	assert.equal(await f.apply(f.packageRoot), 1);
 	assert.equal(await readFile(path, "utf8"), final);
