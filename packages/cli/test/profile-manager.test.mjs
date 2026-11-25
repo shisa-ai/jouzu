@@ -106,6 +106,7 @@ test("profile planning is non-mutating and apply converges", () => {
 					"references/controls.md",
 					"references/history.md",
 					"references/models.md",
+					"references/saved-files.md",
 					"SKILL.md",
 				].map((name) => ({
 					type: "create",
@@ -142,7 +143,7 @@ test("reference files are installed exactly and preserve user edits on reapply",
 		const profile = loadBundledProfile("core");
 		applyProfile(profile, fixture.paths, "0.1.0");
 		const references = profile.assets.filter((asset) => asset.target.startsWith("skills/jouzu-reference/"));
-		assert.equal(references.length, 5);
+		assert.equal(references.length, 6);
 		for (const asset of references) {
 			assert.deepEqual(readFileSync(join(fixture.paths.agentDir, asset.target)), asset.bytes);
 		}

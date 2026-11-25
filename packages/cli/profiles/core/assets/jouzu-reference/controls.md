@@ -14,6 +14,11 @@
 | Background jobs | `/bg`, `/bg watch <task>`, `Alt+Shift+H` |
 | Automatic session names | `/labels` |
 | MCP connections | `/mcp` |
+| Side question without interrupting work | `/btw` |
+| Child runs | `/subagents`; `show` or `hide` toggles the dashboard |
+| Help and shortcuts | `/help`, `/hotkeys`, `Ctrl+/` |
+| Plugins and customization | `/plugins` |
+| Flagged external content | `/textguard` |
 
 Tab/Shift+Tab switch Palette sections; Esc cancels or closes. Page Up/Page Down scrolls overflowing content; position indicators show more above or below. Slash commands are user actions, not shell commands.
 
@@ -29,8 +34,9 @@ Use the session's declarations and existing skills for argument details:
 | User-started goal | `get_goal`, `update_goal`; user starts with `/goal` |
 | Approved measured loop | `multiloop_*`; read `multiloop` skill |
 | Child agents | `subagent`; discover `roles`, read `jouzu-delegation` |
-| Await producer | `agent_wait`; copy the producer's returned dependency and end the turn after waiting |
-| History | `vcc_recall`, `subagent` trace; see [History](history.md) |
+| Await producer | `agent_wait`; copy the producer's returned dependency and end the turn after waiting. `agent_wait_cancel` removes a wait, not its job |
+| Delivered result that needs no answer | `agent_no_reply` with the permission that result carried |
+| History | `vcc_recall`, `subagent` trace, `compact_context`; see [History](history.md) |
 | Known URLs | `web_fetch`, `batch_web_fetch` |
 | Web search/rendering | `tff-search_web`, `tff-fetch_url` |
 | Deferred tools | `tool_search`, then call the discovered tool |
@@ -47,7 +53,8 @@ Inspect `/flow` first. These user controls have different effects:
 | `/flow clear` | Idle-only reservation repair; preserves receipts, waits and jobs |
 | `/flow cancel <token>` | Remove the whole wait, not its jobs or open work |
 | `/flow retry <request>` | Retry a withheld request's pre-send checks |
-| `/flow resolve <attempt> retry|discard` | Resolve an unknown outcome; retry may duplicate execution |
+| `/flow resolve <attempt> retry` | Let an attempt with an unknown outcome run again; may duplicate execution |
+| `/flow resolve <attempt> discard` | Record that attempt as failed; it does not run again |
 | `/flow reset` | Explain reset |
 | `/flow reset confirm` | Destructively discard queued messages, receipts and waits while idle; jobs remain |
 | `/flow runtime` | Startup package paths/hashes |
