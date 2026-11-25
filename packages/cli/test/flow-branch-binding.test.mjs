@@ -7,8 +7,10 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { FlowOwnership } from "../dist/flow-control/ownership.js";
 import {
 	bindPiFlowBranch,
+	bindPiFlowInitialMarker,
 	completePiFlowNavigation,
 	piTranscriptBranchOwners,
 } from "../dist/flow-control/pi-branch-binding.js";
@@ -706,4 +708,63 @@ test("a registry that cannot be reconciled with the transcript rebuilds instead 
 	const again = [];
 	assert.deepEqual(await bindPiFlowBranch(rebuilt, manager, (path) => again.push(path)), scope);
 	assert.deepEqual(again, []);
+});
+
+test("a first save interrupted after its marker adopts the marker without reporting a drop", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "jouzu-branch-binding-"));
+	const registries = [];
+	t.after(async () => {
+		for (const registry of registries.reverse()) await registry.close();
+		await rm(root, { recursive: true, force: true });
+	});
+	const manager = SessionManager.create(root, join(root, "history"));
+	const sessionId = manager.getSessionId();
+	// Open as a new session does, then save in the order the session service uses: claim the
+	// registry and the branch (which creates their directories), then write the marker.
+	const registry = await PiFlowSessionRegistry.open(root, sessionId, manager.getLeafId(), undefined, undefined, true);
+	const original = await bindPiFlowBranch(registry, manager, undefined, true);
+	registry.claimStorage();
+	const branch = FlowOwnership.reserve(root, original);
+	branch.claimNew();
+	await bindPiFlowInitialMarker(registry, manager);
+	// The process stops before the registry and branch journals are written.
+	await registry.close();
+	await branch.close();
+	assert.equal(FlowOwnership.hasRecords(root, original), false, "the claimed branch recorded nothing");
+	const host = SessionManager.open(manager.getSessionFile());
+	const reopened = await PiFlowSessionRegistry.open(root, sessionId, host.getLeafId());
+	registries.push(reopened);
+	const notices = [];
+	const scope = await bindPiFlowBranch(
+		reopened,
+		host,
+		(path) => notices.push(path),
+		false,
+		(branchId) => FlowOwnership.hasRecords(root, { sessionId, branchId }),
+	);
+	assert.deepEqual(scope, original);
+	assert.deepEqual(notices, [], "nothing was lost, so nothing is reported");
+	assert.equal((await reopened.snapshot()).retired, undefined);
+	const dropped = [];
+	for (const directory of await readdir(join(root, "session-registry-v1")))
+		for (const file of await readdir(join(root, "session-registry-v1", directory)))
+			if (file.startsWith("dropped-")) dropped.push(file);
+	assert.deepEqual(dropped, [], "no discarded state is written aside");
+});
+
+test("a marker whose first flush failed is reused by the next save", async (t) => {
+	const { manager, registry } = await fixture(t);
+	const scope = await bindPiFlowBranch(registry, manager, undefined, true);
+	assert.equal(manager.getEntries().length, 0, "a deferred first branch writes no marker");
+	const flush = manager.flush.bind(manager);
+	manager.flush = () => {
+		manager.flush = flush;
+		throw new Error("disk full");
+	};
+	await assert.rejects(bindPiFlowInitialMarker(registry, manager), /disk full/);
+	await bindPiFlowInitialMarker(registry, manager);
+	const markers = manager.getEntries().filter((entry) => entry.customType === "jouzu-flow-branch");
+	assert.equal(markers.length, 1, "the retry flushes the same marker instead of adding another");
+	assert.equal(markers[0].data.branchId, scope.branchId);
+	assert.ok((await registry.snapshot()).branches[0].position, "the branch is bound to its marker");
 });

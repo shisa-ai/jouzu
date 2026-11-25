@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { randomUUID } from "node:crypto";
-import { existsSync, realpathSync, renameSync } from "node:fs";
+import { existsSync, readdirSync, realpathSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { CatalogMessageId, catalogText, defaultCatalog } from "../cli-messages.js";
 import type { CatalogBundle } from "../locale-catalog.js";
@@ -8,6 +8,15 @@ import { legacyPathDigest, pathDigest } from "../path-digest.js";
 import { ensurePrivateDirectory } from "../private-fs.js";
 import { acquireProcessLock, isProcessLockBusy, type ProcessLock, ProcessLockError } from "../process-lock.js";
 import type { FlowScope } from "./receipt-ledger.js";
+
+/** Whether an owned directory holds any session record; an unreadable one counts as holding some. */
+function hasSessionRecords(directory: string): boolean {
+	try {
+		return readdirSync(join(directory, "sessions")).length > 0;
+	} catch (error) {
+		return (error as { code?: string }).code !== "ENOENT";
+	}
+}
 
 export class FlowOwnershipError extends Error {
 	constructor(
@@ -59,14 +68,21 @@ export class FlowOwnership {
 	private closePromise?: Promise<void>;
 	private readonly operations = new AsyncLocalStorage<{ active: boolean }>();
 
+	private lock?: ProcessLock;
+	private claimed?: { directory: string; sessionDirectories: readonly string[] };
+
 	private constructor(
-		private readonly lock: ProcessLock,
+		private readonly root: string,
 		scope: FlowScope,
-		readonly directory: string,
-		legacyDirectory: string,
+		private readonly catalog: CatalogBundle,
 	) {
 		this.scope = Object.freeze({ ...scope });
-		this.sessionDirectories = Object.freeze([directory, legacyDirectory]);
+	}
+
+	/** The owned directory. It exists only once ownership is claimed. */
+	get directory(): string {
+		if (!this.claimed) throw new FlowOwnershipError("lifecycle", "Flow storage has not been created yet.");
+		return this.claimed.directory;
 	}
 
 	/**
@@ -74,7 +90,15 @@ export class FlowOwnership {
 	 * under the shortened digest moves a session file that still names the path it was written at,
 	 * so the previous path stays acceptable.
 	 */
-	readonly sessionDirectories: readonly string[];
+	get sessionDirectories(): readonly string[] {
+		if (!this.claimed) throw new FlowOwnershipError("lifecycle", "Flow storage has not been created yet.");
+		return this.claimed.sessionDirectories;
+	}
+
+	/** Whether the directory and its process lock exist. */
+	get claimedStorage(): boolean {
+		return !!this.claimed;
+	}
 
 	static isBusy(root: string, scope: FlowScope): boolean {
 		const [directory, legacyDirectory] = scopeDirectories(root, scope);
@@ -82,10 +106,60 @@ export class FlowOwnership {
 	}
 
 	static acquire(root: string, scope: FlowScope, catalog: CatalogBundle = defaultCatalog()): FlowOwnership {
+		const ownership = FlowOwnership.reserve(root, scope, catalog);
+		ownership.claim();
+		return ownership;
+	}
+
+	/**
+	 * Ownership of storage that does not exist yet, for a session with nothing to record. Nothing is
+	 * created on disk until `claim`, which another process can still win; a fresh session's IDs are
+	 * new, so no other owner can hold its records before then.
+	 */
+	static reserve(root: string, scope: FlowScope, catalog: CatalogBundle = defaultCatalog()): FlowOwnership {
 		for (const id of [scope.sessionId, scope.branchId]) {
 			if (typeof id !== "string" || id.length === 0 || id.length > 512)
 				throw new FlowOwnershipError("identity", "Session and branch IDs must contain 1–512 characters.");
 		}
+		return new FlowOwnership(root, scope, catalog);
+	}
+
+	/** Whether this scope already has storage under `root`, under either digest. */
+	static exists(root: string, scope: FlowScope): boolean {
+		return scopeDirectories(root, scope).some((directory) => existsSync(directory));
+	}
+
+	/**
+	 * Whether this scope has recorded anything under `root`. A directory with only its lock file is
+	 * storage a process claimed and never wrote, for example one that stopped during its first save.
+	 */
+	static hasRecords(root: string, scope: FlowScope): boolean {
+		return scopeDirectories(root, scope).some(hasSessionRecords);
+	}
+
+	/**
+	 * Claim storage that this process kept in memory, for records nobody else may have written. A
+	 * session ID can be reused, for example with `--session-id`, by a process that recorded first;
+	 * its records are not this process's to overwrite or duplicate, so finding any is refused as busy
+	 * and the lock is released again.
+	 */
+	claimNew(): void {
+		this.claim();
+		if (!hasSessionRecords(this.directory)) return;
+		const lock = this.lock;
+		this.lock = undefined;
+		this.claimed = undefined;
+		try {
+			lock?.release();
+		} catch {}
+		throw new FlowOwnershipError("busy", catalogText(this.catalog, CatalogMessageId.flowOwnershipBusy));
+	}
+
+	/** Create the owned directory and take its process lock. Idempotent once it succeeds. */
+	claim(): void {
+		this.assertActive();
+		if (this.claimed) return;
+		const { root, scope, catalog } = this;
 		let lock: ProcessLock | undefined;
 		try {
 			ensurePrivateDirectory(root);
@@ -97,7 +171,8 @@ export class FlowOwnership {
 			// The lock file is a rendezvous point, not a record: its presence
 			// never means "held", so a leftover file cannot block a new owner.
 			lock = acquireProcessLock(join(directory, lockFileName));
-			return new FlowOwnership(lock, scope, directory, legacyDirectory);
+			this.lock = lock;
+			this.claimed = { directory, sessionDirectories: Object.freeze([directory, legacyDirectory]) };
 		} catch (error) {
 			try {
 				lock?.release();
@@ -146,7 +221,7 @@ export class FlowOwnership {
 		this.closePromise = drain
 			.then(async () => {
 				await beforeRelease?.();
-				this.lock.release();
+				this.lock?.release();
 			})
 			.catch((cause) => {
 				FlowOwnership.failedClosures.add(this);
