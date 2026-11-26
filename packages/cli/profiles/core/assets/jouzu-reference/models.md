@@ -39,3 +39,7 @@ Built-in `shisa-api`: `https://api.shisa.ai/v1/jouzu/model-catalog`. Credential 
 `JOUZU_MODEL_CATALOG_URL` and optional `JOUZU_MODEL_CATALOG_TOKEN` supply a source only when `catalogs.json` is absent.
 
 For missing models, check the exact source, enabled state, credential presence, held revision, last error and scoped model arguments before refreshing. Catalog-added models need text modality and context/output limits; missing thinking declarations can disable reasoning choices. Report missing/ambiguous IDs rather than substituting a model.
+
+## Rejected images
+
+When a provider rejects a request because of an image in the conversation, every later request would fail the same way. Jouzu reports the rejection and suggests `/images omit`, which leaves those images out of later requests (the model sees `[image omitted]`; the session file keeps them). `/images restore` sends them again. Jouzu never omits images on its own.
