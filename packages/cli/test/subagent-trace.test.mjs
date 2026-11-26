@@ -71,6 +71,31 @@ test("trace exposes arguments and linked results, filters evidence, and never re
 	});
 });
 
+test("trace preserves the structured inference message and suffix", async () => {
+	const { normalizeProviderError, formatProviderError } = await import(
+		"../../../node_modules/@earendil-works/pi-ai/dist/utils/error-body.js"
+	);
+	const errorMessage = formatProviderError(
+		normalizeProviderError(
+			Object.assign(new Error("SDK error"), {
+				status: 429,
+				error: {
+					code: "free_allowance_exhausted",
+					type: "free_allowance_exhausted",
+					message: "Add credits.\u001b\u202e\r\n日本語",
+				},
+			}),
+		),
+	);
+	await fixture(
+		[message("provider-error", { role: "assistant", content: [], stopReason: "error", errorMessage })],
+		async (path) => {
+			const result = await readSessionTrace(path, { kind: "errors" });
+			assert.equal(result.records[0].text.trim(), "429: Add credits. 日本語 (free_allowance_exhausted)");
+		},
+	);
+});
+
 test("trace byte cursors preserve Unicode, filtering, and multiple tool calls in an entry", async () => {
 	await fixture(
 		[

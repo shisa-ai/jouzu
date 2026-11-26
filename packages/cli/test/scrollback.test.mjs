@@ -690,6 +690,37 @@ test("fits every rendered line to the requested width with CJK and emoji", () =>
 	}
 });
 
+test("structured inference text survives scrollback width wrapping", async () => {
+	const { normalizeProviderError, formatProviderError } = await import(
+		"../../../node_modules/@earendil-works/pi-ai/dist/utils/error-body.js"
+	);
+	const errorMessage = formatProviderError(
+		normalizeProviderError(
+			Object.assign(new Error("SDK error"), {
+				status: 429,
+				error: {
+					code: "free_allowance_exhausted",
+					type: "free_allowance_exhausted",
+					message: "Add credits.\u001b\u202e\r\n日本語 👩‍💻",
+				},
+			}),
+		),
+	);
+	for (const width of [24, 48, 100]) {
+		const document = renderScrollbackTranscript(
+			[message("assistant", { content: [], stopReason: "error", errorMessage })],
+			{ width, sessionId: "structured", exportedAt: EXPORTED_AT },
+		);
+		const text = document.lines.map((line) => line.trim()).join("");
+		assert.ok(text.includes("Addcredits.") || text.includes("Add credits."));
+		assert.ok(text.includes("free_allowance_exhausted"));
+		assert.equal(text.includes("\u001b"), false);
+		assert.equal(text.includes("\u202e"), false);
+		assert.doesNotMatch(text, /"type":/);
+		for (const line of document.lines) assert.ok(visibleWidth(line) <= width);
+	}
+});
+
 test("renders 150k+ lines without argument overflow", () => {
 	const count = 150_500;
 	const content = Array.from({ length: count }, (_value, index) => `line ${index}`).join("\n");

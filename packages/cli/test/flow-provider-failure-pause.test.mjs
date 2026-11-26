@@ -81,6 +81,30 @@ test("a provider failure that ends a turn holds automated work and reports why",
 	assert.doesNotMatch(listed, /\/flow clear/, "a provider rejection is not repaired by releasing a reservation");
 });
 
+for (const [code, attempts] of [
+	["free_allowance_exhausted", 1],
+	["backend_at_capacity", 3],
+])
+	test(`structured ${code} reaches flow failure reporting with the agent retry budget`, async (t) => {
+		const f = await assembledSession(t, {
+			producerExtensions: await installedProducerExtensions(),
+			settings: { retry: { enabled: true, maxRetries: 2, baseDelayMs: 0, maxAgentDelayMs: 0 } },
+			script: () => ({
+				httpStatus: 429,
+				httpBody: { error: { code, type: code, message: "Service action needed.\u001b\u202e\r\nTry later." } },
+			}),
+		});
+		const notices = capturedNotices(f.session);
+		await f.session.prompt("Do the work");
+		await f.session.waitForIdle();
+		assert.equal(f.bodies.length, attempts);
+		assert.ok(isProviderPause(f.ingress.automatedPause() ?? ""));
+		assert.ok(f.ingress.automatedPause().includes(`429: Service action needed. Try later. (${code})`));
+		assert.doesNotMatch(f.ingress.automatedPause(), /\u202e|"type":/);
+		assert.equal(f.ingress.automatedPause().includes("\u001b"), false);
+		assert.equal(notices.filter((notice) => notice.text.includes("Flow control paused")).length, 1);
+	});
+
 test("a provider failure that survives the host's retries is one stop, reported once", async (t) => {
 	const f = await assembledSession(t, {
 		producerExtensions: await installedProducerExtensions(),
