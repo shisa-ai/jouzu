@@ -125,6 +125,13 @@ Approvals are stored in the Jouzu cache under `textguard/approvals.json`
 Delete that file to revoke all persistent approvals. Child agents do not share
 the store and cannot create approvals.
 
+The agent's `write` and `edit` tools cannot change Jouzu's state or cache
+folders, including through a relative path or a symbolic link from the
+workspace, so they cannot add approvals, record scan results, or alter
+flow-control holds. Shell
+commands still run with your own operating-system access; containing them needs
+process-level isolation.
+
 Checks limited by input size, time, decoding, or scanner failure are incomplete,
 not clean. An incomplete check can be approved: the approval covers those exact
 bytes, and a later check of the same content that is interrupted does not
@@ -159,9 +166,9 @@ resumed from that CLI session. Role-based tool restrictions still apply.
 
 ## Limits
 
-The scanner caches up to 128 complete results in a file limited to 256 KiB. It
-stores content hashes and scan evidence, not the source content. Incomplete
-results are not cached as clean verdicts.
+The scanner caches up to 128 complete results in the Jouzu cache, in a file
+limited to 256 KiB. It stores content hashes and scan evidence, not the source
+content. Incomplete results are not cached as clean verdicts.
 
 Persistent approvals are stored separately, with up to 128 records identified
 by content hash.

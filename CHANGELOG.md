@@ -22,6 +22,10 @@
 - Leave nothing behind for a session that is started and closed without a message. Flow state and the session file are written the first time Flow records something; background-task state and the child-agent owner lock are created on first use. See [Flow control](docs/flow-control.md#branches-and-resuming).
 - Stop a runtime that exits during a background model catalog refresh from delaying the next start by about 30 seconds. On exit, Jouzu waits for catalog saves that are already running and starts no new ones.
 
+### Security
+
+- Refuse `write` and `edit` tool calls that target Jouzu's state or cache folders, in the main session and in child agents, so the agent's file tools cannot add TextGuard approvals or change flow-control state. See [TextGuard](docs/textguard.md#approvals-and-their-scope).
+
 ## 0.2.6 - 2026-11-16
 
 ### Added
