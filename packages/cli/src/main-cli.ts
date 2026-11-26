@@ -22,6 +22,7 @@ import { createDisplayCatalog } from "./display-catalog.js";
 import { createDoctorReport } from "./doctor.js";
 import { createFastModeExtension, FAST_MODE_STATUS } from "./fast-mode.js";
 import { CliMessageId, protectedSourceError } from "./human-messages.js";
+import { createImageOmissionExtension } from "./image-omission.js";
 import { isInteractivePiStartup, usesMachineReadableStdout } from "./interactive-startup.js";
 import { formatKeyId } from "./keybinding-hints.js";
 import {
@@ -868,6 +869,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 				help,
 				createScrollbackExtension({ isShellBusy: scrollbackSession.isShellBusy, catalog: preRuntime.catalog.bundle }),
 				releaseDiagnostics,
+				// Last context handler: it sees the images that are actually sent.
+				createImageOmissionExtension(preRuntime.catalog.bundle),
 				// Last of the built-ins, so their shutdown handlers finish any store work before it closes.
 				createModelsStoreExitExtension(() => pi.closeModelsStores()),
 			],
